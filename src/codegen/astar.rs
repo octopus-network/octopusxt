@@ -5565,7 +5565,7 @@ pub mod api {
         }
         pub mod cumulus_primitives_parachain_inherent {
             use super::runtime_types;
-            #[derive(::subxt::codec::Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
             pub struct ParachainInherentData {
                 pub validation_data:
                     runtime_types::polkadot_primitives::v1::PersistedValidationData<
@@ -5972,7 +5972,7 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    ChainError(runtime_types::frame_support::weights::DispatchInfo),
+                    ExtrinsicSuccess(runtime_types::frame_support::weights::DispatchInfo),
                     #[codec(index = 1)]
                     ExtrinsicFailed(
                         runtime_types::sp_runtime::DispatchError,
