@@ -1,5 +1,5 @@
 use sp_keyring::AccountKeyring;
-use subxt::{ClientBuilder, EventSubscription, PairSigner};
+use subxt::{Client, ClientBuilder, EventSubscription, PairSigner};
 
 mod codegen;
 pub use codegen::astar::*;
@@ -10,11 +10,19 @@ pub use codegen::astar::*;
 )]
 pub mod ibc_node {}
 
-use ibc_node::runtime_types::frame_support::PalletId;
-
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let pallet_id = PalletId([1u8; 8]);
-    let _ = <PalletId as Clone>::clone(&pallet_id);
+    env_logger::init();
+
+    let api = ClientBuilder::new()
+        .build()
+        .await?
+        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let mut iter = api.storage().system().account_iter(None).await?;
+
+    while let Some((key, account)) = iter.next().await? {
+        println!("{}: {}", hex::encode(key), account.data.free);
+    }
     Ok(())
 }

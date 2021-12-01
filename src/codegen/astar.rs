@@ -5972,7 +5972,7 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    ExtrinsicSuccess(runtime_types::frame_support::weights::DispatchInfo),
+                    ChainError(runtime_types::frame_support::weights::DispatchInfo),
                     #[codec(index = 1)]
                     ExtrinsicFailed(
                         runtime_types::sp_runtime::DispatchError,

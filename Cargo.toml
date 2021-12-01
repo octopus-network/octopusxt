@@ -6,9 +6,23 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-subxt = { version = "0.15.0", git = "https://github.com/paritytech/subxt.git", rev = "a701d80e24fdc" }
+subxt = { version = "0.15.0", git = "https://github.com/octopus-network/substrate-subxt.git", branch = "octopus-v0.9.12" }
 async-std = { version = "1.9.0", features = ["attributes", "tokio1"] }
-sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "master" }
+sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 codec = { package = "parity-scale-codec", version = "2", default-features = false, features = ["derive", "full", "bit-vec"] }
 env_logger = "0.8.3"
 hex = "0.4.3"
+
+
+#[patch.crates-io]
+#tendermint              = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
+#tendermint-rpc          = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
+#tendermint-proto        = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
+#tendermint-light-client = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
+#tendermint-testgen      = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
+#ics23                   = { git = "https://github.com/informalsystems/ics23.git", branch = "master" }
+#safe-regex          = { git = "https://github.com/informalsystems/safe-regex.git", branch = "main" }
+#safe-regex-macro    = { git = "https://github.com/informalsystems/safe-regex.git", branch = "main" }
+#safe-regex-compiler = { git = "https://github.com/informalsystems/safe-regex.git", branch = "main" }
+#safe-quote          = { git = "https://github.com/informalsystems/safe-regex.git", branch = "main" }
+#safe-proc-macro2    = { git = "https://github.com/informalsystems/safe-regex.git", branch = "main" }
