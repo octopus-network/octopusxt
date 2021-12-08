@@ -577,6 +577,33 @@ pub async fn subscribe_ibc_event(
     Ok(events)
 }
 
+/// get latest height used by subscribe_blocks
+pub async fn get_latest_height(client: Client<ibc_node::DefaultConfig>) -> Result<u64, Box<dyn std::error::Error>> {
+    tracing::info!("In call_ibc: [get_latest_height]");
+
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let mut blocks = api
+        .client
+        .rpc()
+        .subscribe_finalized_blocks()
+        .await?;
+
+    let height = match blocks.next().await {
+        Ok(Some(header)) => header.number as u64,
+        Ok(None) => {
+            tracing::info!("In call_ibc: [get_latest_height] >> None");
+            0
+        }
+        Err(err) => {
+            tracing::info!(" In call_ibc: [get_latest_height] >> error: {:?} ", err);
+            0
+        }
+    };
+    tracing::info!("In call_ibc: [get_latest_height] >> height: {:?}", height);
+    Ok(height)
+}
+
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
 pub async fn get_connection_end(
     connection_identifier: &ConnectionId,

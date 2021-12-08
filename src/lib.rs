@@ -1,6 +1,3 @@
-// use sp_keyring::AccountKeyring;
-// use subxt::{Client, ClientBuilder, EventSubscription, PairSigner};
-
 // mod codegen;
 
 pub mod call_ibc;
@@ -13,7 +10,8 @@ pub use call_ibc::{
     get_connection_channels, get_unreceipt_packet,
     get_packet_receipt, get_packet_commitment,
     get_consensus_state_with_height, get_connections,
-    get_connection_end, get_client_consensus
+    get_connection_end, get_client_consensus,
+    get_latest_height,
 };
 
 use codec::{Decode, Encode};
