@@ -1,181 +1,25 @@
+use octopusxt::ibc_node;
+
 use sp_keyring::AccountKeyring;
 use subxt::{Client, ClientBuilder, EventSubscription, PairSigner};
 
-// mod codegen;
-// pub use codegen::astar::*;
+// can test
+// use ibc_node::runtime_types::frame_support::PalletId;
+// //
+// #[tokio::main]
+// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//     let pallet_id = PalletId([1u8; 8]);
+//     let _ = <PalletId as Clone>::clone(&pallet_id);
+//     Ok(())
+// }
 
-use codec::{Decode, Encode};
-use prost_types::Any;
-use core::str::FromStr;
-
-// #[derive(Eq, PartialEq, Encode, Decode)]
-// pub struct ParachainId(u32);
-
-#[derive(Encode, Decode)]
-pub enum ClientType {
-    Tendermint,
-    Grandpa,
-}
-
-impl ClientType {
-    pub fn to_ibc_client_type(self) -> ibc::ics02_client::client_type::ClientType {
-        match self {
-            ClientType::Tendermint => ibc::ics02_client::client_type::ClientType::Tendermint,
-            ClientType::Grandpa => ibc::ics02_client::client_type::ClientType::Grandpa,
-            _ => unreachable!(),
-        }
-    }
-}
-
-#[derive(Encode, Decode)]
-pub struct MessageQueueChain(pub subxt::sp_core::H256);
-
-#[subxt::subxt(runtime_metadata_path = "metadata_file/metadata.scale")]
-pub mod ibc_node {
-    // #[subxt(substitute_type = "polkadot_parachain::primitives::Id")]
-    // use crate::ParachainId;
-
-    // #[subxt(substitute_type = "polkadot_core_primitives::InboundHrmpMessage")]
-    // use crate::ibc_node::runtime_types::polkadot_core_primitives::InboundHrmpMessage;
-
-    #[subxt(substitute_type = "cumulus_pallet_parachain_system::MessageQueueChain")]
-    use crate::MessageQueueChain;
-
-}
-
-
-
-const _: () = {
-    use ibc_node::runtime_types::polkadot_parachain::primitives::Id;
-
-    impl PartialEq for Id {
-        fn eq(&self, other: &Self) -> bool {
-            self.0 == other.0
-        }
-    }
-
-    impl Eq for Id {
-
-    }
-
-    impl PartialOrd for Id {
-        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-            self.0.partial_cmp(&other.0)
-        }
-    }
-
-    impl Ord for Id {
-        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-            self.0.cmp(&other.0)
-        }
-    }
-};
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
-    pub fn to_ibc_height(self) -> ibc::Height {
-        ibc::Height {
-            revision_number: self.revision_number,
-            revision_height: self.revision_height,
-        }
-    }
-}
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Packet {
-    pub fn to_ibc_packet(self) -> ibc::ics04_channel::packet::Packet {
-        ibc::ics04_channel::packet::Packet {
-            sequence: self.sequence.to_ibc_sequence(),
-            source_port: self.source_port.to_ibc_port_id(),
-            source_channel: self.source_channel.to_ibc_channel_id(),
-            destination_port: self.destination_port.to_ibc_port_id(),
-            destination_channel: self.destination_channel.to_ibc_channel_id(),
-            data: self.data,
-            timeout_height: self.timeout_height.to_ibc_height(),
-            timeout_timestamp: self.timeout_timestamp.to_ibc_timestamp(),
-        }
-    }
-
-}
-
-impl  ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId {
-    pub fn to_ibc_connection_id(self) -> ibc::ics24_host::identifier::ConnectionId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::ConnectionId(value)
-    }
-}
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId {
-    pub fn to_ibc_channel_id(self) -> ibc::ics24_host::identifier::ChannelId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::ChannelId (value)
-    }
-}
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::PortId {
-    pub fn to_ibc_port_id(self) -> ibc::ics24_host::identifier::PortId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::PortId(value)
-    }
-}
-
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId {
-    pub fn to_ibc_client_id(self) -> ibc::ics24_host::identifier::ClientId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::ClientId(value)
-    }
-}
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
-    pub fn to_ibc_sequence(self) -> ibc::ics04_channel::packet::Sequence {
-        ibc::ics04_channel::packet::Sequence(self.0)
-    }
-}
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp {
-    pub fn to_ibc_timestamp(self) -> ibc::timestamp::Timestamp {
-        let value = String::from_utf8(self.0).unwrap();
-        let timestamp = ibc::timestamp::Timestamp::from_str(&value).unwrap();
-        timestamp
-    }
-}
-
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientTy {
-    pub fn to_ibc_client_type(self) -> ibc::ics02_client::client_type::ClientType {
-        match self {
-            ibc_node::runtime_types::pallet_ibc::event::primitive::ClientTy::Tendermint => ibc::ics02_client::client_type::ClientType::Tendermint,
-            ibc_node::runtime_types::pallet_ibc::event::primitive::ClientTy::Grandpa => ibc::ics02_client::client_type::ClientType::Grandpa,
-            _ => unreachable!(),
-        }
-    }
-}
-
-
-impl From<Any> for ibc_node::runtime_types::pallet_ibc::Any {
-    fn from(value : Any) -> Self {
-        ibc_node::runtime_types::pallet_ibc::Any {
-            type_url: value.type_url.as_bytes().to_vec(),
-            value: value.value,
-        }
-    }
-}
-
-impl Copy for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {}
-
-impl Clone for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
-    fn clone(&self) -> Self {
-        Self {
-            revision_number: self.revision_number,
-            revision_height: self.revision_height,
-        }
-    }
-}
-
-#[async_std::main]
+// can test
+#[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
     let api = ClientBuilder::new()
+         .set_url("ws://localhost:9988")
         .build()
         .await?
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
@@ -187,3 +31,125 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     Ok(())
 }
+
+// can pass
+// #[tokio::main]
+// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//     env_logger::init();
+//
+//     let api = ClientBuilder::new()
+//         .set_url("ws://localhost:9988")
+//         .build()
+//         .await?
+//         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+//
+//     let block_number = 1;
+//
+//     let block_hash = api
+//         .client
+//         .rpc()
+//         .block_hash(Some(block_number.into()))
+//         .await?;
+//
+//     if let Some(hash) = block_hash {
+//         println!("Block hash for block number {}: {}", block_number, hash);
+//     } else {
+//         println!("Block number {} not found.", block_number);
+//     }
+//
+//     Ok(())
+// }
+
+// cannot pass
+
+// #[tokio::main]
+// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//     env_logger::init();
+//
+//     let signer = PairSigner::new(AccountKeyring::Alice.pair());
+//     let dest = AccountKeyring::Bob.to_account_id().into();
+//
+//     let api = ClientBuilder::new()
+//         .set_url("ws://localhost:9988")
+//         .build()
+//         .await?
+//         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+//
+//     let hash = api
+//         .tx()
+//         .balances()
+//         .transfer(dest, 10_000)
+//         .sign_and_submit(&signer)
+//         .await?;
+//
+//     println!("Balance transfer extrinsic submitted: {}", hash);
+//
+//     Ok(())
+// }
+
+// cannot pass
+
+// #[tokio::main]
+// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//     env_logger::init();
+//
+//     let signer = PairSigner::new(AccountKeyring::Alice.pair());
+//     let dest = AccountKeyring::Bob.to_account_id().into();
+//
+//     let api = ClientBuilder::new()
+//         .set_url("ws://localhost:9988")
+//         .build()
+//         .await?
+//         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+//     let result = api
+//         .tx()
+//         .balances()
+//         .transfer(dest, 10_000)
+//         .sign_and_submit_then_watch(&signer)
+//         .await?;
+//
+//     if let Some(event) = result.find_event::<ibc_node::balances::events::Transfer>()? {
+//         println!("Balance transfer success: value: {:?}", event.2);
+//     } else {
+//         println!("Failed to find Balances::Transfer Event");
+//     }
+//     Ok(())
+// }
+
+
+// #[tokio::main]
+// async fn main() -> Result<(), Box<dyn std::error::Error>> {
+//     env_logger::init();
+//
+//     let signer = PairSigner::new(AccountKeyring::Alice.pair());
+//     let dest = AccountKeyring::Bob.to_account_id().into();
+//     println!("dest: {}", dest);
+//
+//     let api = ClientBuilder::new()
+//         .set_url("ws://localhost:9988")
+//         .build()
+//         .await?
+//         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+//
+//     let sub = api.client.rpc().subscribe_events().await?;
+//     let decoder = api.client.events_decoder();
+//     let mut sub = EventSubscription::<ibc_node::DefaultConfig>::new(sub, decoder);
+//     sub.filter_event::<ibc_node::balances::events::Transfer>();
+//
+//     api.tx()
+//         .balances()
+//         .transfer(dest, 10_000)
+//         .sign_and_submit(&signer)
+//         .await?;
+//
+//     let raw = sub.next().await.unwrap().unwrap();
+//     let event = <ibc_node::balances::events::Transfer as codec::Decode>::decode(
+//         &mut &raw.data[..],
+//     );
+//     if let Ok(e) = event {
+//         println!("Balance transfer success: value: {:?}", e.2);
+//     } else {
+//         println!("Failed to subscribe to Balances::Transfer Event");
+//     }
+//     Ok(())
+// }
