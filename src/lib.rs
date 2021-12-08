@@ -4,6 +4,17 @@
 // mod codegen;
 
 pub mod call_ibc;
+pub use call_ibc::{
+    deliver, get_channel_end,
+    get_channels, subscribe_ibc_event,
+    get_send_packet_event, get_clients,
+    get_client_state, get_acknowledge_packet_state,
+    get_client_connections, get_commitment_packet_state,
+    get_connection_channels, get_unreceipt_packet,
+    get_packet_receipt, get_packet_commitment,
+    get_consensus_state_with_height, get_connections,
+    get_connection_end, get_client_consensus
+};
 
 use codec::{Decode, Encode};
 use core::str::FromStr;
