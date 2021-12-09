@@ -170,7 +170,8 @@ use ibc::ics02_client::client_state::AnyClientState;
 use ibc::ics04_channel::channel::ChannelEnd;
 use tendermint_proto::Protobuf;
 
-#[async_std::main]
+// #[async_std::main]
+#[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
 
