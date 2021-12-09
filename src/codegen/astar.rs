@@ -4703,7 +4703,7 @@ pub mod api {
             pub struct CreateClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientTy,
+                pub runtime_types::pallet_ibc::event::primitive::ClientType,
                 pub runtime_types::pallet_ibc::event::primitive::Height,
             );
             impl ::subxt::Event for CreateClient {
@@ -4714,7 +4714,7 @@ pub mod api {
             pub struct UpdateClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientTy,
+                pub runtime_types::pallet_ibc::event::primitive::ClientType,
                 pub runtime_types::pallet_ibc::event::primitive::Height,
             );
             impl ::subxt::Event for UpdateClient {
@@ -4725,7 +4725,7 @@ pub mod api {
             pub struct UpgradeClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientTy,
+                pub runtime_types::pallet_ibc::event::primitive::ClientType,
                 pub runtime_types::pallet_ibc::event::primitive::Height,
             );
             impl ::subxt::Event for UpgradeClient {
@@ -4736,7 +4736,7 @@ pub mod api {
             pub struct ClientMisbehaviour(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientTy,
+                pub runtime_types::pallet_ibc::event::primitive::ClientType,
                 pub runtime_types::pallet_ibc::event::primitive::Height,
             );
             impl ::subxt::Event for ClientMisbehaviour {
@@ -6618,7 +6618,7 @@ pub mod api {
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
                     pub struct ClientId(pub ::std::vec::Vec<::core::primitive::u8>);
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub enum ClientTy {
+                    pub enum ClientType {
                         #[codec(index = 1)]
                         Tendermint,
                         #[codec(index = 2)]
@@ -6676,28 +6676,28 @@ pub mod api {
                     CreateClient(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientTy,
+                        runtime_types::pallet_ibc::event::primitive::ClientType,
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
                     #[codec(index = 2)]
                     UpdateClient(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientTy,
+                        runtime_types::pallet_ibc::event::primitive::ClientType,
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
                     #[codec(index = 3)]
                     UpgradeClient(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientTy,
+                        runtime_types::pallet_ibc::event::primitive::ClientType,
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
                     #[codec(index = 4)]
                     ClientMisbehaviour(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientTy,
+                        runtime_types::pallet_ibc::event::primitive::ClientType,
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
                     #[codec(index = 5)]

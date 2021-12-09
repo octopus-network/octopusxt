@@ -43,8 +43,6 @@ pub mod ibc_node {
 
 }
 
-
-
 const _: () = {
     use ibc_node::runtime_types::polkadot_parachain::primitives::Id;
 
@@ -117,7 +115,6 @@ impl ibc_node::runtime_types::pallet_ibc::event::primitive::PortId {
     }
 }
 
-
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId {
     pub fn to_ibc_client_id(self) -> ibc::ics24_host::identifier::ClientId {
         let value = String::from_utf8(self.0).unwrap();
@@ -133,23 +130,21 @@ impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp {
     pub fn to_ibc_timestamp(self) -> ibc::timestamp::Timestamp {
-        let value = String::from_utf8(self.0).unwrap();
+        let value = String::from_utf8(self.time).unwrap();
         let timestamp = ibc::timestamp::Timestamp::from_str(&value).unwrap();
         timestamp
     }
 }
 
-
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientTy {
+impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientType {
     pub fn to_ibc_client_type(self) -> ibc::ics02_client::client_type::ClientType {
         match self {
-            ibc_node::runtime_types::pallet_ibc::event::primitive::ClientTy::Tendermint => ibc::ics02_client::client_type::ClientType::Tendermint,
-            ibc_node::runtime_types::pallet_ibc::event::primitive::ClientTy::Grandpa => ibc::ics02_client::client_type::ClientType::Grandpa,
+            ibc_node::runtime_types::pallet_ibc::event::primitive::ClientType::Tendermint => ibc::ics02_client::client_type::ClientType::Tendermint,
+            ibc_node::runtime_types::pallet_ibc::event::primitive::ClientType::Grandpa => ibc::ics02_client::client_type::ClientType::Grandpa,
             _ => unreachable!(),
         }
     }
 }
-
 
 impl From<Any> for ibc_node::runtime_types::pallet_ibc::Any {
     fn from(value : Any) -> Self {
@@ -171,6 +166,10 @@ impl Clone for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
     }
 }
 
+use ibc::ics02_client::client_state::AnyClientState;
+use ibc::ics04_channel::channel::ChannelEnd;
+use tendermint_proto::Protobuf;
+
 #[async_std::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
@@ -180,10 +179,61 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
+    let mut block = api
+        .client
+        .rpc()
+        .subscribe_finalized_blocks()
+        .await?;
+    let block_header = block.next().await.unwrap().unwrap();
+    let block_hash = block_header.hash();
+
     let mut iter = api.storage().system().account_iter(None).await?;
 
     while let Some((key, account)) = iter.next().await? {
         println!("{}: {}", hex::encode(key), account.data.free);
     }
+
+    let data : Vec<u8> = api
+        .storage()
+        .ibc()
+        .client_states(
+            "07-tendermint-0".as_bytes().to_vec(),
+            Some(block_hash),
+        )
+        .await?;
+
+    println!("in substrate [get_client_state]: client_state: {:?}",data);
+    let client_state = AnyClientState::decode_vec(&*data).unwrap();
+    println!("in substrate [get_client_state]: any_client_state : {:?}", client_state);
+
+    let data = api
+        .storage()
+        .ibc()
+        .channels(
+            "transfer1234".as_bytes().to_vec(),
+            "channel-1234".as_bytes().to_vec(),
+            Some(block_hash)
+        )
+        .await?;
+
+    let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
+    println!(
+        "In substrate: [get_channelend] >> channel_end: {:?}",
+        channel_end
+    );
+
+    let sub = api.client.rpc().subscribe_events().await.unwrap();
+    let decoder = api.client.events_decoder();
+    let mut sub = EventSubscription::<ibc_node::DefaultConfig>::new(sub, decoder);
+
+    while let Some(raw_event) = sub.next().await {
+        if let Err(err) = raw_event {
+            println!("In substrate_mointor: [run_loop] >> raw_event error: {:?}", err);
+            continue;
+        }
+        let raw_event = raw_event.unwrap();
+        println!("in substrate_mointor: [run_loop] >> raw_event : {:?}", raw_event);
+    }
+
     Ok(())
 }

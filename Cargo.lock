@@ -1756,6 +1756,7 @@ dependencies = [
  "parity-scale-codec",
  "sp-keyring",
  "subxt",
+ "tendermint-proto",
 ]
 
 [[package]]

@@ -13,7 +13,7 @@ codec = { package = "parity-scale-codec", version = "2", default-features = fals
 env_logger = "0.8.3"
 hex = "0.4.3"
 prost-types = { package = "informalsystems-prost-types", version = "0.8.1", default-features = false }
-
+tendermint-proto = { version = "=0.22.0", default-features = false }
 ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dv-update-subxt" }
 
 
