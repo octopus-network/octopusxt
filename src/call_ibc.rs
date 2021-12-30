@@ -440,7 +440,6 @@ pub async fn subscribe_ibc_event(
                 .unwrap();
                 tracing::info!("In call_ibc: [substrate_events] >> WriteAcknowledgement Event");
 
-
                 let height = event.0;
                 let packet = event.1;
 
@@ -464,7 +463,6 @@ pub async fn subscribe_ibc_event(
                 .unwrap();
                 tracing::info!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
 
-
                 let height = event.0;
                 let packet = event.1;
 
@@ -484,7 +482,6 @@ pub async fn subscribe_ibc_event(
                 )
                 .unwrap();
                 tracing::info!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
-
 
                 let height = event.0;
                 let packet = event.1;
@@ -577,16 +574,14 @@ pub async fn subscribe_ibc_event(
 }
 
 /// get latest height used by subscribe_blocks
-pub async fn get_latest_height(client: Client<ibc_node::DefaultConfig>) -> Result<u64, Box<dyn std::error::Error>> {
+pub async fn get_latest_height(
+    client: Client<ibc_node::DefaultConfig>,
+) -> Result<u64, Box<dyn std::error::Error>> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let mut blocks = api
-        .client
-        .rpc()
-        .subscribe_finalized_blocks()
-        .await?;
+    let mut blocks = api.client.rpc().subscribe_finalized_blocks().await?;
 
     let height = match blocks.next().await {
         Ok(Some(header)) => header.number as u64,
@@ -626,7 +621,7 @@ pub async fn get_connection_end(
         .ibc()
         .connections(connection_identifier.as_bytes().to_vec(), Some(block_hash))
         .await?;
-    
+
     assert!(!data.is_empty());
 
     let connection_end = ConnectionEnd::decode_vec(&*data).unwrap();
@@ -934,54 +929,54 @@ pub async fn get_clients(
 ) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
     tracing::info!("in Substrate: [get_clients]");
 
-        let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-        let block_header = block.next().await.unwrap().unwrap();
+    let block_header = block.next().await.unwrap().unwrap();
 
-        let block_hash = block_header.hash();
-        tracing::info!(
-            "In substrate: [get_clients] >> block_hash: {:?}",
-            block_hash
-        );
+    let block_hash = block_header.hash();
+    tracing::info!(
+        "In substrate: [get_clients] >> block_hash: {:?}",
+        block_hash
+    );
 
-        // vector key-value
-        let mut ret = vec![];
+    // vector key-value
+    let mut ret = vec![];
 
-        // get client_state Keys
-        let client_states_keys: Vec<Vec<u8>> = api
+    // get client_state Keys
+    let client_states_keys: Vec<Vec<u8>> = api
+        .storage()
+        .ibc()
+        .client_states_keys(Some(block_hash))
+        .await?;
+    assert!(!client_states_keys.is_empty());
+
+    // enumate every item get client_state value
+    for key in client_states_keys {
+        // get client_state value
+        let client_states_value: Vec<u8> = api
             .storage()
             .ibc()
-            .client_states_keys(Some(block_hash))
+            .client_states(key.clone(), Some(block_hash))
             .await?;
-        assert!(!client_states_keys.is_empty());
+        assert!(!client_states_value.is_empty());
+        // store key-value
+        ret.push((key.clone(), client_states_value));
+    }
 
-        // enumate every item get client_state value
-        for key in client_states_keys {
-            // get client_state value
-            let client_states_value: Vec<u8> = api
-                .storage()
-                .ibc()
-                .client_states(key.clone(), Some(block_hash))
-                .await?;
-            assert!(!client_states_value.is_empty());
-            // store key-value
-            ret.push((key.clone(), client_states_value));
-        }
+    let mut result = vec![];
 
-        let mut result = vec![];
+    for (client_id, client_state) in ret.iter() {
+        let client_id_str = String::from_utf8(client_id.clone()).unwrap();
+        let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
 
-        for (client_id, client_state) in ret.iter() {
-            let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+        let client_state = AnyClientState::decode_vec(&*client_state).unwrap();
 
-            let client_state = AnyClientState::decode_vec(&*client_state).unwrap();
+        result.push(IdentifiedAnyClientState::new(client_id, client_state));
+    }
 
-            result.push(IdentifiedAnyClientState::new(client_id, client_state));
-        }
-
-        Ok(result)
+    Ok(result)
 }
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
