@@ -3,7 +3,7 @@ use core::time::Duration;
 use ibc::events::IbcEvent;
 use ibc::ics02_client::client_consensus::AnyConsensusState;
 use ibc::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
-use ibc::ics03_connection::connection::{ConnectionEnd, Counterparty, IdentifiedConnectionEnd};
+use ibc::ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd};
 use ibc::ics04_channel::channel::{ChannelEnd, IdentifiedChannelEnd};
 use ibc::ics04_channel::error::Error as Ics04Error;
 use ibc::ics04_channel::packet::{Packet, Receipt, Sequence};
@@ -13,7 +13,6 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use codec::{Decode, Encode};
 use core::str::FromStr;
-use jsonrpsee::types::to_json_value;
 use prost_types::Any;
 use sp_keyring::AccountKeyring;
 use subxt::{Client, EventSubscription, PairSigner};
@@ -545,11 +544,11 @@ pub async fn subscribe_ibc_event(
                 let data = String::from_utf8(event.0).unwrap();
 
                 events.push(IbcEvent::Empty(data));
-                sleep(Duration::from_secs(10));
+                sleep(Duration::from_secs(10)).await;
                 break;
             }
             "ExtrinsicSuccess" => {
-                let event = <ibc_node::system::events::ExtrinsicSuccess as codec::Decode>::decode(
+                let _event = <ibc_node::system::events::ExtrinsicSuccess as codec::Decode>::decode(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
@@ -627,6 +626,8 @@ pub async fn get_connection_end(
         .ibc()
         .connections(connection_identifier.as_bytes().to_vec(), Some(block_hash))
         .await?;
+    
+    assert!(!data.is_empty());
 
     let connection_end = ConnectionEnd::decode_vec(&*data).unwrap();
 
@@ -639,34 +640,52 @@ pub async fn get_channel_end(
     channel_id: &ChannelId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<ChannelEnd, Box<dyn std::error::Error>> {
-    tracing::info!("in call_ibc: [get_channel_end]");
+    tracing::info!("in Substrate: [get_channel_end]");
     tracing::info!(
-        "in call_ibc: [get_channel_end] >> port_id: {:?}, channel_id: {:?}",
+        "in Substrate: [get_channel_end] >> port_id: {:?}, channel_id: {:?}",
         port_id.clone(),
         channel_id.clone()
     );
 
-    let rpc_client = client.rpc().client.clone();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let params = &[
-        to_json_value(port_id.as_bytes())?,
-        to_json_value(channel_id.as_bytes())?,
-    ];
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash = block_header.hash();
     tracing::info!(
-        "in call_ibc: [get_channel_end] >> params: {:?}",
-        params.clone()
+        "In substrate: [get_channelend] >> block_hash: {:?}",
+        block_hash
     );
 
-    let data: Vec<u8> = rpc_client.request("get_channel_end", params).await?;
+    let data: Vec<u8> = loop {
+        let data: Vec<u8> = api
+            .storage()
+            .ibc()
+            .channels(
+                port_id.as_bytes().to_vec(),
+                channel_id.as_bytes().to_vec(),
+                Some(block_hash),
+            )
+            .await?;
+
+        if !data.is_empty() {
+            break data;
+        } else {
+            continue;
+        }
+    };
+    assert!(!data.is_empty());
 
     tracing::info!(
-        "in call_ibc: [get_channel_end] >> data >> {:?}",
+        "in substrate: [get_channel_end] >> data >> {:?}",
         data.clone()
     );
 
     let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
     tracing::info!(
-        "in call_ibc: [get_channel_end] >> channel_end >> {:?}",
+        "in substrate: [get_channel_end] >> channel_end >> {:?}",
         channel_end.clone()
     );
 
@@ -705,6 +724,7 @@ pub async fn get_packet_receipt(
             Some(block_hash),
         )
         .await?;
+    assert!(!data.is_empty());
 
     let _data = String::from_utf8(data).unwrap();
     if _data.eq("Ok") {
@@ -744,6 +764,7 @@ pub async fn get_send_packet_event(
             Some(block_hash),
         )
         .await?;
+    assert!(!data.is_empty());
 
     let packet = Packet::decode_vec(&*data).unwrap();
     Ok(packet)
@@ -768,6 +789,7 @@ pub async fn get_client_state(
         .ibc()
         .client_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
+    assert!(!data.is_empty());
 
     tracing::info!("in call_ibc: [get_client_state]: client_state: {:?}", data);
 
@@ -807,6 +829,7 @@ pub async fn get_client_consensus(
         .ibc()
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
+    assert!(!data.is_empty());
 
     // get the height consensus_state
     let mut consensus_state = vec![];
@@ -845,6 +868,7 @@ pub async fn get_consensus_state_with_height(
         .ibc()
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
+    assert!(!ret.is_empty());
 
     let mut result = vec![];
     for (height, consensus_state) in ret.iter() {
@@ -908,39 +932,96 @@ pub async fn get_unreceipt_packet(
 pub async fn get_clients(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
-    tracing::info!("in call_ibc: [get_clients]");
+    tracing::info!("in Substrate: [get_clients]");
 
-    let rpc_client = client.rpc().client.clone();
+        let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let ret: Vec<(Vec<u8>, Vec<u8>)> = rpc_client
-        .request("get_identified_any_client_state", &[])
-        .await?;
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-    let mut result = vec![];
+        let block_header = block.next().await.unwrap().unwrap();
 
-    for (client_id, client_state) in ret.iter() {
-        let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-        let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+        let block_hash = block_header.hash();
+        tracing::info!(
+            "In substrate: [get_clients] >> block_hash: {:?}",
+            block_hash
+        );
 
-        let client_state = AnyClientState::decode_vec(&*client_state).unwrap();
+        // vector key-value
+        let mut ret = vec![];
 
-        result.push(IdentifiedAnyClientState::new(client_id, client_state));
-    }
+        // get client_state Keys
+        let client_states_keys: Vec<Vec<u8>> = api
+            .storage()
+            .ibc()
+            .client_states_keys(Some(block_hash))
+            .await?;
+        assert!(!client_states_keys.is_empty());
 
-    Ok(result)
+        // enumate every item get client_state value
+        for key in client_states_keys {
+            // get client_state value
+            let client_states_value: Vec<u8> = api
+                .storage()
+                .ibc()
+                .client_states(key.clone(), Some(block_hash))
+                .await?;
+            assert!(!client_states_value.is_empty());
+            // store key-value
+            ret.push((key.clone(), client_states_value));
+        }
+
+        let mut result = vec![];
+
+        for (client_id, client_state) in ret.iter() {
+            let client_id_str = String::from_utf8(client_id.clone()).unwrap();
+            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+
+            let client_state = AnyClientState::decode_vec(&*client_state).unwrap();
+
+            result.push(IdentifiedAnyClientState::new(client_id, client_state));
+        }
+
+        Ok(result)
 }
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
 pub async fn get_connections(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedConnectionEnd>, Box<dyn std::error::Error>> {
-    tracing::info!("in call_ibc: [get_connections]");
+    tracing::info!("in Substrate: [get_connctions]");
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let rpc_client = client.rpc().client.clone();
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-    let ret: Vec<(Vec<u8>, Vec<u8>)> = rpc_client
-        .request("get_identified_connection_end", &[])
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash = block_header.hash();
+    tracing::info!(
+        "In substrate: [get_connctions] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let mut ret = vec![];
+
+    // get connection_keys
+    let connection_keys: Vec<Vec<u8>> = api
+        .storage()
+        .ibc()
+        .connections_keys(Some(block_hash))
         .await?;
+    assert!(!connection_keys.is_empty());
+
+    for key in connection_keys {
+        // get connectons value
+        let value: Vec<u8> = api
+            .storage()
+            .ibc()
+            .connections(key.clone(), Some(block_hash))
+            .await?;
+        assert!(!value.is_empty());
+        // store key-value
+        ret.push((key.clone(), value.clone()));
+    }
 
     let mut result = vec![];
 
@@ -960,12 +1041,38 @@ pub async fn get_connections(
 pub async fn get_channels(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
-    tracing::info!("in call_ibc: [get_channels]");
+    tracing::info!("in Substrate: [get_channels]");
 
-    let rpc_client = client.rpc().client.clone();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let ret: Vec<(Vec<u8>, Vec<u8>, Vec<u8>)> = rpc_client.request("get_channel_end", &[]).await?;
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash = block_header.hash();
+    tracing::info!(
+        "In substrate: [get_channels] >> block_hash: {:?}",
+        block_hash
+    );
+
+    // vector key-value
+    let mut ret = vec![];
+
+    let channels_keys: Vec<(Vec<u8>, Vec<u8>)> =
+        api.storage().ibc().channels_keys(Some(block_hash)).await?;
+    assert!(!channels_keys.is_empty());
+
+    for key in channels_keys {
+        // get value
+        let value: Vec<u8> = api
+            .storage()
+            .ibc()
+            .channels(key.0.clone(), key.1.clone(), Some(block_hash))
+            .await?;
+        assert!(!value.is_empty());
+        // store key-value
+        ret.push((key.0.clone(), key.1.clone(), value));
+    }
     let mut result = vec![];
 
     for (port_id, channel_id, channel_end) in ret.iter() {
@@ -987,13 +1094,44 @@ pub async fn get_channels(
 pub async fn get_commitment_packet_state(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
-    tracing::info!("in call_ibc: [get_commitment_packet_state]");
+    tracing::info!("in Substrate: [get_commitment_packet_state]");
 
-    let rpc_client = client.rpc().client.clone();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let ret: Vec<(Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>)> = rpc_client
-        .request("get_packet_commitment_state", &[])
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash = block_header.hash();
+    tracing::info!(
+        "In substrate: [get_commitment_packet_state] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let mut ret = vec![];
+    let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, Vec<u8>)> = api
+        .storage()
+        .ibc()
+        .packet_commitment_keys(Some(block_hash))
         .await?;
+    assert!(!packet_commitments_keys.is_empty());
+
+    for key in packet_commitments_keys {
+        // get value
+        let value: Vec<u8> = api
+            .storage()
+            .ibc()
+            .packet_commitment(
+                key.0.clone(),
+                key.1.clone(),
+                key.2.clone(),
+                Some(block_hash),
+            )
+            .await?;
+        assert!(!!value.is_empty());
+        // store key-value
+        ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
+    }
 
     let mut result = vec![];
 
@@ -1061,13 +1199,43 @@ pub async fn get_packet_commitment(
 pub async fn get_acknowledge_packet_state(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
-    tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
+    tracing::info!("in Substrate: [get_acknowledge_packet_state]");
 
-    let rpc_client = client.rpc().client.clone();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let ret: Vec<(Vec<u8>, Vec<u8>, Vec<u8>, Vec<u8>)> = rpc_client
-        .request("get_packet_acknowledge_state", &[])
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash = block_header.hash();
+    tracing::info!(
+        "In substrate: [get_acknowledge_packet_state] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let mut ret = vec![];
+
+    let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, Vec<u8>)> = api
+        .storage()
+        .ibc()
+        .acknowledgements_keys(Some(block_hash))
         .await?;
+    assert!(!acknowledgements_keys.is_empty());
+
+    for key in acknowledgements_keys {
+        let value: Vec<u8> = api
+            .storage()
+            .ibc()
+            .acknowledgements(
+                key.0.clone(),
+                key.1.clone(),
+                key.2.clone(),
+                Some(block_hash),
+            )
+            .await?;
+        assert!(!value.is_empty());
+        ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
+    }
 
     let mut result = vec![];
 

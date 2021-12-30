@@ -29,7 +29,6 @@ impl ClientType {
         match self {
             ClientType::Tendermint => ibc::ics02_client::client_type::ClientType::Tendermint,
             ClientType::Grandpa => ibc::ics02_client::client_type::ClientType::Grandpa,
-            _ => unreachable!(),
         }
     }
 }
@@ -46,29 +45,29 @@ pub mod ibc_node {
     use crate::MessageQueueChain;
 }
 
-const _: () = {
-    use ibc_node::runtime_types::polkadot_parachain::primitives::Id;
+// const _: () = {
+//     use ibc_node::runtime_types::polkadot_parachain::primitives::Id;
 
-    impl PartialEq for Id {
-        fn eq(&self, other: &Self) -> bool {
-            self.0 == other.0
-        }
-    }
+//     impl PartialEq for Id {
+//         fn eq(&self, other: &Self) -> bool {
+//             self.0 == other.0
+//         }
+//     }
 
-    impl Eq for Id {}
+//     impl Eq for Id {}
 
-    impl PartialOrd for Id {
-        fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-            self.0.partial_cmp(&other.0)
-        }
-    }
+//     impl PartialOrd for Id {
+//         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+//             self.0.partial_cmp(&other.0)
+//         }
+//     }
 
-    impl Ord for Id {
-        fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-            self.0.cmp(&other.0)
-        }
-    }
-};
+//     impl Ord for Id {
+//         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+//             self.0.cmp(&other.0)
+//         }
+//     }
+// };
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
     pub fn to_ibc_height(self) -> ibc::Height {

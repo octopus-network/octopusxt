@@ -8,17 +8,17 @@ edition = "2021"
 [dependencies]
 subxt = { version = "0.15.0", git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'octopus-v0.9.12' }
 tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
-#async-std = { version = "1.9.0", features = ["attributes", "tokio1"] }
 sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 codec = { package = "parity-scale-codec", version = "2", default-features = false, features = ["derive", "full", "bit-vec"] }
 env_logger = "0.8.3"
+log = { version = "0.4.0", default-features = false }
 hex = "0.4.3"
 jsonrpsee = { version = "0.5.1", features = ["macros", "ws-client", "http-client"] }
 tracing = { version = "0.1.28", default-features = false }
 prost-types = { package = "informalsystems-prost-types", version = "0.8.1", default-features = false }
 tendermint-proto = { version ="0.22.0", default-features = false }
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dv-update-subxt" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dv-update-subxt" }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dv-update-octopusxt" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dv-update-octopusxt" }
 
 
 [patch.crates-io]

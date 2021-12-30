@@ -972,7 +972,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.7.3"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dv-update-subxt#4709abc760608d7616bb066f63b54f81d2cccc4d"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dv-update-octopusxt#b4d12f06d6b3f7f37a63b3e3cf8029e75f750864"
 dependencies = [
  "bytes",
  "chrono",
@@ -995,7 +995,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.11.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dv-update-subxt#4709abc760608d7616bb066f63b54f81d2cccc4d"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dv-update-octopusxt#b4d12f06d6b3f7f37a63b3e3cf8029e75f750864"
 dependencies = [
  "bytes",
  "informalsystems-prost",
@@ -1640,6 +1640,7 @@ dependencies = [
  "ibc-proto",
  "informalsystems-prost-types",
  "jsonrpsee",
+ "log",
  "parity-scale-codec",
  "sp-keyring",
  "subxt",
