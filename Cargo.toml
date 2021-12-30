@@ -14,7 +14,6 @@ env_logger = "0.8.3"
 log = { version = "0.4.0", default-features = false }
 hex = "0.4.3"
 jsonrpsee = { version = "0.5.1", features = ["macros", "ws-client", "http-client"] }
-tracing = { version = "0.1.28", default-features = false }
 prost-types = { package = "informalsystems-prost-types", version = "0.8.1", default-features = false }
 tendermint-proto = { version ="0.22.0", default-features = false }
 ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dv-update-octopusxt" }
