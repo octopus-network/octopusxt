@@ -50,5 +50,10 @@ subxt codegen --url http://localhost:8545 | rustfmt --edition=2018 --emit=stdout
 cargo run
 ```
 
+## log crun
+```
+RUST_LOG=info cargo run
+```
+
 
 

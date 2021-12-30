@@ -55,7 +55,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
 
     let ret = octopusxt::get_channel_end(&port_id, &channel_id, client).await?;
-    println!("In substrate: [get_channelend] >> channel_end: {:?}", ret);
+    println!("In main: [get_channelend] >> channel_end: {:?}", ret);
 
     // example 3
     let sub = api.client.rpc().subscribe_events().await.unwrap();
@@ -66,7 +66,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     while let Some(raw_event) = sub.next().await {
         if let Err(err) = raw_event {
             println!(
-                "In substrate_mointor: [run_loop] >> raw_event error: {:?}",
+                "In main: [run_loop] >> raw_event error: {:?}",
                 err
             );
             continue;
@@ -77,7 +77,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         counter += 1;
         let raw_event = raw_event.unwrap();
         println!(
-            "in substrate_mointor: [run_loop] >> raw_event : {:?}",
+            "in main: [run_loop] >> raw_event : {:?}",
             raw_event
         );
     }
