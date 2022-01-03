@@ -1,6 +1,6 @@
 use octopusxt::ibc_node;
 use std::str::FromStr;
-use subxt::{ClientBuilder, EventSubscription};
+use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -82,44 +82,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     );
     // }
 
-    // mmr exeample 4 
-    // 1
-    let root_hash = api.storage().mmr().root_hash(Some(block_hash)).await?;
-    println!("root_hash : {:?}", root_hash);
+    // example 4 rpc mmr_generate_proof
+    use jsonrpsee::types::to_json_value;
+    let params = &[to_json_value(2)?];
+    // need to use `to_json_value` to convert the params to json value
+    // need make sure mmr_generate_proof index is u64
+    let generate_proof: pallet_mmr_rpc::LeafProof<String> = api.client.rpc().client.request("mmr_generateProof", params).await?;
+    println!("generate_proof : {:?}", generate_proof);
 
-    // 2
-    let number_of_leaves = api.storage().mmr().number_of_leaves(Some(block_hash)).await?;
-    println!("number_of_leaves : {:?}", number_of_leaves);
-
-
-    // 3
-    let mut mmr = api.storage().mmr().nodes_iter(Some(block_hash)).await?;
-    let mut counter = 0;
-    while let Some(mmr_item) = mmr.next().await? {
-        counter += 1;
-        println!("mmr: {}", hex::encode(mmr_item.0));
-    }
-    println!("counter : {}", counter);
-
-    // 4 
-    let mmr_node = api.storage().mmr().nodes(1, Some(block_hash)).await?;
-    println!("mmr_node : {:?}", mmr_node);
-    println!("mmr_node_encode: {}", hex::encode(mmr_node.unwrap()));
-
-    // beefy 
-    let authorities = api.storage().beefy().authorities(Some(block_hash)).await?;
-    // println!("authorities : {:?}", authorities);
-
-    let validator_set_id = api.storage().beefy().validator_set_id(Some(block_hash)).await?;
-    println!("validator_set_id : {:?}", validator_set_id);
-
-    let next_authorities = api.storage().beefy().next_authorities(Some(block_hash)).await?;
-    // println!("next_authorities : {:?}", next_authorities);
-
-    // mmr_leaf
-    let beefy_next_authorities = api.storage().mmr_leaf().beefy_next_authorities(Some(block_hash)).await?;
-    // println!("beefy_next_authorities : {:?}", beefy_next_authorities);
-    
+    let rpc_methods : sc_cli::RpcMethods = api.client.rpc().client.request("rpc_methods", &[]).await?;
+    println!("rpc_methods : {:?}", rpc_methods);
 
     Ok(())
 }
