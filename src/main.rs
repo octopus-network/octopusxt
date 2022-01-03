@@ -90,8 +90,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let generate_proof: pallet_mmr_rpc::LeafProof<String> = api.client.rpc().client.request("mmr_generateProof", params).await?;
     println!("generate_proof : {:?}", generate_proof);
 
-    let rpc_methods : sc_cli::RpcMethods = api.client.rpc().client.request("rpc_methods", &[]).await?;
-    println!("rpc_methods : {:?}", rpc_methods);
+    // let rpc_methods : sc_cli::RpcMethods = api.client.rpc().client.request("rpc_methods", &[]).await?;
+    // println!("rpc_methods : {:?}", rpc_methods);
 
     Ok(())
 }
