@@ -1,6 +1,7 @@
 use octopusxt::ibc_node;
 use std::{str::FromStr, collections::HashMap};
 use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
+use subxt::BlockNumber;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -155,6 +156,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // summary: Returns the block most recently finalized by BEEFY, alongside side its justification.
     let beefy_subscribeJustifications : String = api.client.rpc().client.request("beefy_subscribeJustifications", &[]).await?;
     println!("beefy_subscribeJustifications : {:?}", beefy_subscribeJustifications);
+
+    let block_hash = api.client.rpc().block_hash(None).await?;
+    println!("block_hash : {:?}", block_hash);
+
+    let block_hash = api.client.rpc().block_hash(Some(BlockNumber::from(12))).await?;
+    println!("block_hash : {:?}", block_hash);
+
+    // let finalized_head = api.client.rpc().finalized_head().await?;
+    // println!("finalized_head : {:?}", finalized_head);
+
+    // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
+    // println!("block : {:?}", block);
 
     Ok(())
 }
