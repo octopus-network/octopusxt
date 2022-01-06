@@ -38,6 +38,9 @@ pub mod ibc_node {
 
     #[subxt(substitute_type = "cumulus_pallet_parachain_system::MessageQueueChain")]
     use crate::MessageQueueChain;
+
+    #[subxt(substitute_type = "beefy_primitives::crypto::Public")]
+    use beefy_primitives::crypto::Public;
 }
 
 // const _: () = {

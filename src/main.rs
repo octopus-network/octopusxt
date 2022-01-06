@@ -2,6 +2,7 @@ use octopusxt::ibc_node;
 use std::{str::FromStr, collections::HashMap};
 use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
 use subxt::BlockNumber;
+use subxt::sp_core::Public;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -103,6 +104,20 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let authorities = api.storage().beefy().authorities(Some(block_hash)).await?;
     println!("authorities length : {:?}", authorities.len());
+    for item in authorities.iter() {
+        println!("authorities display: {}", item);
+        println!("authorities debug: {:?}", item);
+        println!("authorities raw vec: {:?}", item.to_raw_vec());
+        let result =  format!("0x{}", subxt::sp_core::hexdisplay::HexDisplay::from(&  item.to_raw_vec()));
+        println!("authorities name = {}", result);
+    }
+
+    let result : Vec<String> = authorities
+        .into_iter()
+        .map(|val| format!("0x{}", subxt::sp_core::hexdisplay::HexDisplay::from(&  val.to_raw_vec())))
+        .collect();
+    println!("result = {:?}", result);
+    
 
     let validator_set_id = api.storage().beefy().validator_set_id(Some(block_hash)).await?;
     println!("validator_set_id : {:?}", validator_set_id);
@@ -142,26 +157,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // interface: api.rpc.mmr.generateProof
     // jsonrpc: mmr_generateProof
     // summary: Generate MMR proof for given leaf index.
-    use jsonrpsee::types::to_json_value;
-    let params = &[to_json_value(2)?];
+    // use jsonrpsee::types::to_json_value;
+    // let params = &[to_json_value(2)?];
     // need to use `to_json_value` to convert the params to json value
     // need make sure mmr_generate_proof index is u64
-    let generate_proof: pallet_mmr_rpc::LeafProof<String> = api.client.rpc().client.request("mmr_generateProof", params).await?;
-    println!("generate_proof : {:?}", generate_proof);
+    // let generate_proof: pallet_mmr_rpc::LeafProof<String> = api.client.rpc().client.request("mmr_generateProof", params).await?;
+    // println!("generate_proof : {:?}", generate_proof);
 
     //   # beefy
     // subscribeJustifications(): BeefySignedCommitment
     // interface: api.rpc.beefy.subscribeJustifications
     // jsonrpc: beefy_subscribeJustifications
     // summary: Returns the block most recently finalized by BEEFY, alongside side its justification.
-    let beefy_subscribeJustifications : String = api.client.rpc().client.request("beefy_subscribeJustifications", &[]).await?;
-    println!("beefy_subscribeJustifications : {:?}", beefy_subscribeJustifications);
-
-    let block_hash = api.client.rpc().block_hash(None).await?;
-    println!("block_hash : {:?}", block_hash);
-
-    let block_hash = api.client.rpc().block_hash(Some(BlockNumber::from(12))).await?;
-    println!("block_hash : {:?}", block_hash);
+    // let beefy_subscribeJustifications : String = api.client.rpc().client.request("beefy_subscribeJustifications", &[]).await?;
+    // println!("beefy_subscribeJustifications : {:?}", beefy_subscribeJustifications);
+    //
+    // let block_hash = api.client.rpc().block_hash(None).await?;
+    // println!("block_hash : {:?}", block_hash);
+    //
+    // let block_hash = api.client.rpc().block_hash(Some(BlockNumber::from(12))).await?;
+    // println!("block_hash : {:?}", block_hash);
 
     // let finalized_head = api.client.rpc().finalized_head().await?;
     // println!("finalized_head : {:?}", finalized_head);
