@@ -18,6 +18,7 @@ use sp_keyring::AccountKeyring;
 use subxt::{Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
+use jsonrpsee::types::to_json_value;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1362,4 +1363,36 @@ pub async fn deliver(
     log::info!("deliver result: {:?}", result);
 
     Ok(result)
+}
+
+/// # get_mmr_leaf_and_mmr_proof
+///
+/// This get_mmr_leaf_and_mmr_proof api generate form generateProof api
+/// generateProof(leafIndex: u64, at?: BlockHash): MmrLeafProof
+/// interface: api.rpc.mmr.generateProof
+/// jsonrpc: mmr_generateProof
+/// summary: Generate MMR proof for given leaf index.
+///
+/// Return value a tuple (mmr_leaf, mmr_proof)
+pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_node::DefaultConfig>,)
+    -> Result<(Vec<u8>, Vec<u8>),Box<dyn std::error::Error>> {
+    log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
+
+    let api = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    // need to use `to_json_value` to convert the params to json value
+    // need make sure mmr_generate_proof index is u64
+    let params = &[to_json_value(block_number)?];
+    let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
+        .client
+        .rpc()
+        .client
+        .request("mmr_generateProof", params).await?;
+
+    log::info!("info generate_proof : {:?}", generate_proof);
+
+    // return mmr_leaf, mmr_proof
+    Ok((generate_proof.leaf.0, generate_proof.proof.0))
 }

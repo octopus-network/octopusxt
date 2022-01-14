@@ -1,5 +1,7 @@
 use octopusxt::ibc_node;
 use std::{str::FromStr, collections::HashMap};
+use beefy_light_client::header::Digest;
+use beefy_light_client::Hash;
 use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
 use subxt::BlockNumber;
 use subxt::sp_core::Public;
@@ -151,27 +153,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("beefy_next_authorities root: {:?}", hex::encode(result.root));
     
 
-    // example 4 rpc mmr_generate_proof
-    //     mmr
-    // generateProof(leafIndex: u64, at?: BlockHash): MmrLeafProof
-    // interface: api.rpc.mmr.generateProof
-    // jsonrpc: mmr_generateProof
-    // summary: Generate MMR proof for given leaf index.
-    // use jsonrpsee::types::to_json_value;
-    // let params = &[to_json_value(2)?];
-    // need to use `to_json_value` to convert the params to json value
-    // need make sure mmr_generate_proof index is u64
-    // let generate_proof: pallet_mmr_rpc::LeafProof<String> = api.client.rpc().client.request("mmr_generateProof", params).await?;
-    // println!("generate_proof : {:?}", generate_proof);
 
-    //   # beefy
-    // subscribeJustifications(): BeefySignedCommitment
-    // interface: api.rpc.beefy.subscribeJustifications
-    // jsonrpc: beefy_subscribeJustifications
-    // summary: Returns the block most recently finalized by BEEFY, alongside side its justification.
-    // let beefy_subscribeJustifications : String = api.client.rpc().client.request("beefy_subscribeJustifications", &[]).await?;
-    // println!("beefy_subscribeJustifications : {:?}", beefy_subscribeJustifications);
-    //
+
     // let block_hash = api.client.rpc().block_hash(None).await?;
     // println!("block_hash : {:?}", block_hash);
     //
@@ -183,6 +166,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
     // println!("block : {:?}", block);
+
+    // getHeader(hash?: BlockHash): Header
+    // interface: api.rpc.chain.getHeader
+    // jsonrpc: chain_getHeader
+    // summary: Retrieves the header for a specific block
+
+    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> = api.client.rpc().header(None).await?.unwrap();
+    println!("header = {:?}", header);
+    // let header  = beefy_light_client::header::Header::from(header);
+    // println!("header = {:?}", header);
 
     Ok(())
 }
