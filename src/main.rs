@@ -5,6 +5,7 @@ use beefy_light_client::Hash;
 use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
 use subxt::BlockNumber;
 use subxt::sp_core::Public;
+use octopusxt::call_ibc::{convert_substrate_header_to_ibc_header, get_block_header};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -167,15 +168,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
     // println!("block : {:?}", block);
 
+    // example get substate_header
     // getHeader(hash?: BlockHash): Header
     // interface: api.rpc.chain.getHeader
     // jsonrpc: chain_getHeader
     // summary: Retrieves the header for a specific block
 
-    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> = api.client.rpc().header(None).await?.unwrap();
-    println!("header = {:?}", header);
-    // let header  = beefy_light_client::header::Header::from(header);
-    // println!("header = {:?}", header);
+
 
     Ok(())
 }

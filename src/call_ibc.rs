@@ -19,6 +19,7 @@ use subxt::{Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
 use jsonrpsee::types::to_json_value;
+use log::log;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1395,4 +1396,56 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_no
 
     // return mmr_leaf, mmr_proof
     Ok((generate_proof.leaf.0, generate_proof.proof.0))
+}
+
+pub async fn get_block_header(client: Client<ibc_node::DefaultConfig>)
+    -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
+
+    let api = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> = api.client.rpc().header(None).await?.unwrap();
+    log::info!("header = {:?}", header);
+
+    let header  = convert_substrate_header_to_ibc_header(header);
+    log::info!("convert header = {:?}", header);
+
+    Ok(header)
+}
+
+/// convert substrate Header to Ibc Header
+pub fn convert_substrate_header_to_ibc_header(header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>)
+    -> ibc::ics10_grandpa::help::BlockHeader
+{
+    let digest = header.digest.logs.to_vec().encode();
+    ibc::ics10_grandpa::help::BlockHeader {
+        parent_hash: header.parent_hash.0.to_vec(),
+        block_number: header.number,
+        state_root: header.state_root.0.to_vec(),
+        extrinsics_root: header.extrinsics_root.0.to_vec(),
+        digest,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::ibc_node;
+    use super::*;
+    use subxt::ClientBuilder;
+
+    // test API get_block_header
+    // use `cargo test -- --captuer` can print content
+    #[tokio::test]
+    async fn test_get_block_header()  -> Result<(), Box<dyn std::error::Error>>  {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let header = get_block_header(client).await?;
+        println!("convert header = {:?}", header);
+
+        Ok(())
+    }
 }
