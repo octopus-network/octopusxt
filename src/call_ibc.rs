@@ -20,6 +20,8 @@ use tendermint_proto::Protobuf;
 use tokio::time::sleep;
 use jsonrpsee::types::to_json_value;
 use log::log;
+use sp_core::storage::StorageKey;
+use subxt::ClientBuilder;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1448,4 +1450,444 @@ mod tests {
 
         Ok(())
     }
+
+    #[tokio::test]
+    async fn test_get_client_states_keys_key() -> Result<(), Box<dyn std::error::Error>> {
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_client_states_keys_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_client_states_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ClientStates
+        let ibc = crate::ibc_node::ibc::storage::ClientStates(vec![1, 2, 3]);
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_client_states_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_consensus_states_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ConsensusStates
+        let ibc = crate::ibc_node::ibc::storage::ConsensusStates(vec![1, 2, 3]);
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_consensus_states_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_connections_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for Connections
+        let ibc = crate::ibc_node::ibc::storage::Connections(vec![1, 2, 3]);
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_connections_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_connections_keys_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ConnectionsKeys
+        let ibc = crate::ibc_node::ibc::storage::ConnectionsKeys;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_connections_keys_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    // #[tokio::test]
+    // async fn test_get_channels_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for Channels
+    //     let ibc = crate::ibc_node::ibc::storage::Channels(vec![1, 2, 3]);
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_channels_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    #[tokio::test]
+    async fn test_get_channels_keys_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ChannelsKeys
+        let ibc = crate::ibc_node::ibc::storage::ChannelsKeys;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_channels_keys_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_channels_connection_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ChannelsConnection
+        let ibc = crate::ibc_node::ibc::storage::ChannelsConnection(vec![1, 2, 3]);
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_channels_connection_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    // #[tokio::test]
+    // async fn test_get_next_sequence_send_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for NextSequenceSend
+    //     let ibc = crate::ibc_node::ibc::storage::NextSequenceSend(vec![1, 2, 3], vec![1, 2, 3]);
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_next_sequence_send_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    // #[tokio::test]
+    // async fn test_get_next_sequence_recv_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for NextSequenceRecv
+    //     let ibc = crate::ibc_node::ibc::storage::NextSequenceRecv(vec![1, 2, 3], vec![1, 2, 3]);
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_next_sequence_recv_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+    //
+    // #[tokio::test]
+    // async fn test_get_next_sequence_ack_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for NextSequenceAck
+    //     let ibc = crate::ibc_node::ibc::storage::NextSequenceAck(vec![1, 2, 3], vec![1, 2, 3]);
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_next_sequence_ack_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    // #[tokio::test]
+    // async fn test_get_acknowledgements_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for Acknowledgements
+    //     let ibc = crate::ibc_node::ibc::storage::Acknowledgements(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_acknowledgements_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    #[tokio::test]
+    async fn test_get_acknowledgements_keys_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for AcknowledgementsKeys
+        let ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_acknowledgements_keys_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_client_counter_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ClientCounter
+        let ibc = crate::ibc_node::ibc::storage::ClientCounter;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_client_counter_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+
+    #[tokio::test]
+    async fn test_get_connection_counter_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ConnectionCounter
+        let ibc = crate::ibc_node::ibc::storage::ConnectionCounter;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_connection_counter_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_channel_counter_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ChannelCounter
+        let ibc = crate::ibc_node::ibc::storage::ChannelCounter;
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_channel_counter_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+     #[tokio::test]
+    async fn test_get_connection_client_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for ConnectionClient
+        let ibc = crate::ibc_node::ibc::storage::ConnectionClient(vec![1, 2, 3]);
+
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_channel_counter_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+
+    // #[tokio::test]
+    // async fn test_get_packet_receipt_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for PacketReceipt
+    //     let ibc = crate::ibc_node::ibc::storage::PacketReceipt(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+    //
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_packet_receipt_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    // #[tokio::test]
+    // async fn test_get_packet_commitment_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for PacketCommitment
+    //     let ibc = crate::ibc_node::ibc::storage::PacketCommitment(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+    //
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_packet_commitment_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+    //
+
+    #[tokio::test]
+    async fn test_get_packet_commitment_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for PacketCommitmentKeys
+        let ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
+
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_packet_commitment_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+
+    // #[tokio::test]
+    // async fn test_get_send_packet_event_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for SendPacketEvent
+    //     let ibc = crate::ibc_node::ibc::storage::SendPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 0);
+    //
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_send_packet_event_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    // #[tokio::test]
+    // async fn test_get_write_ack_packet_event_key() -> Result<(), Box<dyn std::error::Error>> {
+    //
+    //     let api = ClientBuilder::new()
+    //         .set_url("ws://localhost:9944")
+    //         .build::<ibc_node::DefaultConfig>()
+    //         .await?;
+    //
+    //     // need give correct key for WriteAckPacketEvent
+    //     let ibc = crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 0);
+    //
+    //     let storage_key = api.storage().fetch(&ibc, None).await?;
+    //
+    //     println!("test_get_write_ack_packet_event_key = {:?}", storage_key);
+    //
+    //     Ok(())
+    // }
+
+    #[tokio::test]
+    async fn test_get_latest_height_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for LatestHeight
+        let ibc = crate::ibc_node::ibc::storage::LatestHeight;
+
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_latest_height_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_old_height_key() -> Result<(), Box<dyn std::error::Error>> {
+
+        let api = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // need give correct key for OldHeight
+        let ibc = crate::ibc_node::ibc::storage::OldHeight;
+
+        let storage_key = api.storage().fetch(&ibc, None).await?;
+
+        println!("test_get_old_height_key = {:?}", storage_key);
+
+        Ok(())
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
