@@ -1307,7 +1307,7 @@ pub async fn get_connection_channels(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
 
     log::info!(
         "In call_ibc: [get_client_connections] >> block_hash: {:?}",
@@ -1400,14 +1400,14 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_no
     Ok((generate_proof.leaf.0, generate_proof.proof.0))
 }
 
-pub async fn get_block_header(client: Client<ibc_node::DefaultConfig>)
+pub async fn get_block_header(client: Client<ibc_node::DefaultConfig>, block_hash : Option<sp_core::H256>)
     -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
 
     let api = client
         .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> = api.client.rpc().header(None).await?.unwrap();
+    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> = api.client.rpc().header(block_hash).await?.unwrap();
     log::info!("header = {:?}", header);
 
     let header  = convert_substrate_header_to_ibc_header(header);
