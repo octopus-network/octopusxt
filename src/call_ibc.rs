@@ -1466,6 +1466,16 @@ mod tests {
         Ok(())
     }
 
+
+    #[tokio::test]
+    async fn test_get_key() -> Result<(), Box<dyn std::error::Error>> {
+        use subxt::StorageEntry;
+        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
+        let result = ibc.key();
+
+        Ok(())
+    }
+
     #[tokio::test]
     async fn test_get_client_states_key() -> Result<(), Box<dyn std::error::Error>> {
 
