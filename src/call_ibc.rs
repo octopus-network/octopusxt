@@ -1299,7 +1299,7 @@ pub async fn get_connection_channels(
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     log::info!("in call_ibc: [get_connection_channels]");
 
-    let api = client
+    let api = client.clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
