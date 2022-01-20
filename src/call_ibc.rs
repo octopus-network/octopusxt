@@ -15,7 +15,7 @@ use codec::{Decode, Encode};
 use core::str::FromStr;
 use prost_types::Any;
 use sp_keyring::AccountKeyring;
-use subxt::{Client, EventSubscription, PairSigner};
+use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
 use jsonrpsee::types::to_json_value;
@@ -1412,6 +1412,18 @@ pub async fn get_block_header(client: Client<ibc_node::DefaultConfig>, block_has
     Ok(header)
 }
 
+pub async fn get_block_header_by_block_number(client: Client<ibc_node::DefaultConfig>, block_number: u32)
+    -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>>
+{
+    let api = client.clone().to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let block_hash: sp_core::H256 = api.client.rpc().block_hash(Some(BlockNumber::from(block_number))).await?.unwrap();
+
+    let header = get_block_header(client, Some(block_hash)).await?;
+
+    Ok(header)
+}
+
 /// convert substrate Header to Ibc Header
 pub fn convert_substrate_header_to_ibc_header(header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>)
     -> ibc::ics10_grandpa::help::BlockHeader
@@ -1441,7 +1453,22 @@ mod tests {
             .build::<ibc_node::DefaultConfig>()
             .await?;
 
-        let header = get_block_header(client).await?;
+        let header = get_block_header(client, None).await?;
+        println!("convert header = {:?}", header);
+
+        Ok(())
+    }
+
+    // test api get_block_header_by_block_number
+    #[tokio::test]
+    async fn test_get_block_header_by_block_number() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let header = get_block_header_by_block_number(client, 4).await?;
+
         println!("convert header = {:?}", header);
 
         Ok(())
