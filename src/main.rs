@@ -29,20 +29,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build::<ibc_node::DefaultConfig>()
         .await?;
 
+    use serde::{Deserialize, Serialize};
+    use sp_core::{storage::StorageKey, Bytes};
+    use jsonrpsee::types::to_json_value;
+    use subxt::StorageEntryKey;
 
     let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
     fun_name(&api, &ibc).await?;
 
     let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-    let storage_key = api.storage().fetch(&ibc, None).await?;
+    let storage_key = api.storage().fetch(&ibc, None).await.unwrap().unwrap();
     // println!("connection storage_key = {:?}", storage_key);
     // println!("connection storage_key = {:?}", ibc);
     // let ibc = crate::ibc_node::ibc::storage::Channels(vec![1,2,3], vec![1,2,3]);
     // let storage_key = api.storage().fetch(&ibc, None).await?;
 
-    use serde::{Deserialize, Serialize};
-    use sp_core::{storage::StorageKey, Bytes};
-    use jsonrpsee::types::to_json_value;
+    let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec()).key();
+    let map_key = match storage_entry {
+        StorageEntryKey::Map(map_key) => map_key,
+        StorageEntryKey::Plain => todo!()
+    };
+    let storage_key = map_key.iter().map( |val| StorageKey(val.value.clone())).collect::<Vec<StorageKey>>();
+    println!("client storage_key = {:?}", storage_key);
+
     // let params = &[to_json_value(vec![StorageKey(vec![1,2,3])]).unwrap(), to_json_value(block_hash).unwrap()];
     let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
 
