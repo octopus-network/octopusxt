@@ -22,6 +22,7 @@ use jsonrpsee::types::to_json_value;
 use log::log;
 use sp_core::storage::StorageKey;
 use subxt::ClientBuilder;
+use subxt::storage::{StorageEntry, StorageKeyPrefix};
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1438,6 +1439,14 @@ pub fn convert_substrate_header_to_ibc_header(header: subxt::sp_runtime::generic
     }
 }
 
+pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey  {
+    let prefix = StorageKeyPrefix::new::<F>();
+    let key = store.key().final_key(prefix);
+    key
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use crate::ibc_node;
@@ -1481,5 +1490,13 @@ mod tests {
         let result = ibc.key();
 
         Ok(())
+    }
+
+    // add unit test for get storage key
+    #[test]
+    fn test_get_storage_key() {
+        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
+        let result = get_storage_key(&ibc);
+        println!("key = {:?}", result);
     }
 }
