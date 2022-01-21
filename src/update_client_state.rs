@@ -211,7 +211,7 @@ pub async fn start_update_clien_state(
         println!("signed commitment payload : {:?}", payload);
 
         let signatures: Vec<String> = signed_commmitment
-            .signatures
+            .signatures.clone()
             .into_iter()
             .map(|signature| {
                 format!(
@@ -232,7 +232,7 @@ pub async fn start_update_clien_state(
             .block_hash(Some(BlockNumber::from(block_number)))
             .await?;
         //   get block header
-        let block_header = get_block_header(src_client, block_hash).await.unwrap();
+        let block_header = get_block_header(src_client.clone(), block_hash).await.unwrap();
         println!("header = {:?}", block_header);
 
         // build proof
@@ -243,7 +243,7 @@ pub async fn start_update_clien_state(
 
         let mmr_root = help::MmrRoot {
             block_header: block_header,
-            signed_commitment: help::SignedCommitment::from(signed_commmitment),
+            signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
             validator_merkle_proofs: validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
