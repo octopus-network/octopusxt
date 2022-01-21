@@ -2007,6 +2007,7 @@ dependencies = [
  "log",
  "pallet-mmr-rpc",
  "parity-scale-codec",
+ "serde",
  "sp-core",
  "sp-keyring",
  "subxt",
