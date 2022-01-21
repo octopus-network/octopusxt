@@ -14,11 +14,13 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use jsonrpsee::types::to_json_value;
-use log::log;
+// use log::log;
 use prost_types::Any;
 use sp_keyring::AccountKeyring;
+
 use subxt::{BeefySubscription, Client, EventSubscription, PairSigner, SignedCommitment};
 use subxt::BlockNumber;
+
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
 
@@ -626,7 +628,7 @@ pub async fn get_connection_end(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc : [get_connection_end] >> block_hash: {:?}",
         block_hash
@@ -664,7 +666,7 @@ pub async fn get_channel_end(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_channelend] >> block_hash: {:?}",
         block_hash
@@ -717,7 +719,7 @@ pub async fn get_packet_receipt(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc : [get_packet_receipt] >> block_hash: {:?}",
         block_hash
@@ -759,7 +761,7 @@ pub async fn get_send_packet_event(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_send_packet_event] >> block_hash: {:?}",
         block_hash
@@ -793,7 +795,7 @@ pub async fn get_client_state(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
 
     let data: Vec<u8> = api
         .storage()
@@ -828,7 +830,7 @@ pub async fn get_client_consensus(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
 
     log::info!(
         "In call_ibc: [get_client_consensus] >> block_hash: {:?}",
@@ -867,7 +869,7 @@ pub async fn get_consensus_state_with_height(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_client_consensus] >> block_hash: {:?}",
         block_hash
@@ -905,7 +907,7 @@ pub async fn get_unreceipt_packet(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
 
     log::info!(
         "In call_ibc: [get_receipt_packet] >> block_hash: {:?}",
@@ -951,8 +953,11 @@ pub async fn get_clients(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
-    log::info!("In call_ibc: [get_clients] >> block_hash: {:?}", block_hash);
+    let block_hash: sp_core::H256 = block_header.hash();
+    log::info!(
+        "In call_ibc: [get_clients] >> block_hash: {:?}",
+        block_hash
+    );
 
     // vector key-value
     let mut ret = vec![];
@@ -1003,7 +1008,7 @@ pub async fn get_connections(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_connctions] >> block_hash: {:?}",
         block_hash
@@ -1057,7 +1062,7 @@ pub async fn get_channels(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_channels] >> block_hash: {:?}",
         block_hash
@@ -1110,7 +1115,7 @@ pub async fn get_commitment_packet_state(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_commitment_packet_state] >> block_hash: {:?}",
         block_hash
@@ -1175,7 +1180,7 @@ pub async fn get_packet_commitment(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_packet_commitment] >> block_hash: {:?}",
         block_hash
@@ -1215,7 +1220,7 @@ pub async fn get_acknowledge_packet_state(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_acknowledge_packet_state] >> block_hash: {:?}",
         block_hash
@@ -1276,7 +1281,7 @@ pub async fn get_client_connections(
 
     let block_header = block.next().await.unwrap().unwrap();
 
-    let block_hash = block_header.hash();
+    let block_hash: sp_core::H256 = block_header.hash();
     log::info!(
         "In call_ibc: [get_client_connections] >> block_hash: {:?}",
         block_hash
@@ -1308,8 +1313,7 @@ pub async fn get_connection_channels(
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     log::info!("in call_ibc: [get_connection_channels]");
 
-    let api = client
-        .clone()
+    let api = client.clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -1362,7 +1366,6 @@ pub async fn deliver(
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
     let api = client
-        .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let result = api
@@ -1393,7 +1396,6 @@ pub async fn get_mmr_leaf_and_mmr_proof(
     log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
     let api = client
-        .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     // need to use `to_json_value` to convert the params to json value
@@ -1418,7 +1420,6 @@ pub async fn get_block_header(
     block_hash: Option<sp_core::H256>,
 ) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
     let api = client
-        .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
@@ -1446,6 +1447,18 @@ pub async fn get_header_by_block_number(
 
     let header = convert_substrate_header_to_ibc_header(header);
     log::info!("convert header = {:?}", header);
+
+    Ok(header)
+}
+
+pub async fn get_block_header_by_block_number(client: Client<ibc_node::DefaultConfig>, block_number: u32)
+    -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>>
+{
+    let api = client.clone().to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let block_hash: sp_core::H256 = api.client.rpc().block_hash(Some(BlockNumber::from(block_number))).await?.unwrap();
+
+    let header = get_block_header(client, Some(block_hash)).await?;
 
     Ok(header)
 }
@@ -1480,11 +1493,13 @@ mod tests {
             .await?;
         let block_number = Some(BlockNumber::from(100));
         let header = get_header_by_block_number(client, block_number).await?;
+
         println!("convert header = {:?}", header);
 
         Ok(())
     }
 
+    // test api get_block_header_by_block_number
     #[tokio::test]
     async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
         let client = ClientBuilder::new()
@@ -1501,16 +1516,15 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_client_states_keys_key() -> Result<(), Box<dyn std::error::Error>> {
-        let api = ClientBuilder::new()
+    async fn test_get_block_header_by_block_number() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
 
-        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-        let storage_key = api.storage().fetch(&ibc, None).await?;
+        let header = get_block_header_by_block_number(client, 4).await?;
 
-        println!("test_get_client_states_keys_key = {:?}", storage_key);
+        println!("convert header = {:?}", header);
 
         Ok(())
     }

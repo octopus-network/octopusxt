@@ -189,6 +189,21 @@ dependencies = [
 [[package]]
 name = "beefy-light-client"
 version = "0.1.0"
+source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=dv-dev#f1831cea3214c0bf8e3ab6da45d99d21bedcef6e"
+dependencies = [
+ "beefy-merkle-tree",
+ "blake2-rfc",
+ "borsh",
+ "byteorder",
+ "ckb-merkle-mountain-range",
+ "hex",
+ "libsecp256k1 0.7.0",
+ "parity-scale-codec",
+]
+
+[[package]]
+name = "beefy-light-client"
+version = "0.1.0"
 source = "git+https://github.com/octopus-network/beefy-light-client.git#f3aa4c5e5cbbcc0237763b56aec504b84e20efcb"
 dependencies = [
  "beefy-merkle-tree",
@@ -220,7 +235,7 @@ dependencies = [
  "sp-application-crypto",
  "sp-core",
  "sp-runtime",
- "sp-std",
+ "sp-std 4.0.0-dev",
 ]
 
 [[package]]
@@ -257,7 +272,7 @@ version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c0940dc441f31689269e10ac70eb1002a3a1d3ad1390e030043662eb7fe4688b"
 dependencies = [
- "block-padding",
+ "block-padding 0.1.5",
  "byte-tools",
  "byteorder",
  "generic-array 0.12.4",
@@ -269,6 +284,7 @@ version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4152116fd6e9dadb291ae18fc1ec3575ed6d84c29642d97890f4b4a3417297e4"
 dependencies = [
+ "block-padding 0.2.1",
  "generic-array 0.14.4",
 ]
 
@@ -280,6 +296,12 @@ checksum = "fa79dedbb091f449f1f39e53edf88d5dbe95f895dae6135a8d7b881fb5af73f5"
 dependencies = [
  "byte-tools",
 ]
+
+[[package]]
+name = "block-padding"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8d696c370c750c948ada61c69a0ee2cbbb9c50b1019ddb86d9317157a99c2cae"
 
 [[package]]
 name = "borsh"
@@ -648,6 +670,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68b91989ae21441195d7d9b9993a2f9295c7e1a8c96255d8b729accddc124797"
 
 [[package]]
+name = "eyre"
+version = "0.6.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bc225d8f637923fe585089fcf03e705c222131232d2c1fb622e84ecf725d0eb8"
+dependencies = [
+ "indenter",
+ "once_cell",
+]
+
+[[package]]
 name = "fake-simd"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -671,6 +703,7 @@ version = "0.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c606d892c9de11507fa0dcffc116434f94e105d0bbdc4e405b61519464c49d7b"
 dependencies = [
+ "eyre",
  "paste",
 ]
 
@@ -725,7 +758,7 @@ dependencies = [
  "sp-runtime",
  "sp-staking",
  "sp-state-machine",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-tracing",
 ]
 
@@ -776,7 +809,7 @@ dependencies = [
  "sp-core",
  "sp-io",
  "sp-runtime",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-version",
 ]
 
@@ -1161,14 +1194,63 @@ dependencies = [
 ]
 
 [[package]]
+name = "ibc"
+version = "0.7.3"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#db7bae171791b9b8a00a7ee894bb31a75fcc3ef5"
+dependencies = [
+ "beefy-light-client 0.1.0 (git+https://github.com/octopus-network/beefy-light-client.git?branch=dv-dev)",
+ "beefy-merkle-tree",
+ "blake2-rfc",
+ "bytes",
+ "chrono",
+ "flex-error",
+ "hash-db",
+ "ibc-proto",
+ "ics23",
+ "informalsystems-prost",
+ "informalsystems-prost-types",
+ "parity-scale-codec",
+ "safe-regex",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sha2 0.9.8",
+ "sp-core",
+ "sp-runtime",
+ "sp-std 4.0.0-dev",
+ "sp-trie",
+ "subtle-encoding",
+ "tendermint",
+ "tendermint-proto",
+ "tracing",
+]
+
+[[package]]
 name = "ibc-proto"
 version = "0.11.0"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#db7bae171791b9b8a00a7ee894bb31a75fcc3ef5"
 dependencies = [
  "bytes",
  "informalsystems-prost",
  "informalsystems-prost-types",
  "informalsystems-tonic",
  "tendermint-proto",
+]
+
+[[package]]
+name = "ics23"
+version = "0.6.5"
+source = "git+https://github.com/informalsystems/ics23.git?rev=4461b673#4461b67382341af6bc6fab9c991ccc5d49a6e83e"
+dependencies = [
+ "anyhow",
+ "bytes",
+ "hex",
+ "informalsystems-prost",
+ "informalsystems-prost-types",
+ "ripemd160",
+ "sha2 0.9.8",
+ "sha3",
+ "sp-std 3.0.0",
 ]
 
 [[package]]
@@ -1227,6 +1309,12 @@ dependencies = [
  "quote",
  "syn",
 ]
+
+[[package]]
+name = "indenter"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ce23b50ad8242c51a442f3ff322d56b02f08852c77e4c0b4d3fd684abc89c683"
 
 [[package]]
 name = "indexmap"
@@ -1662,6 +1750,7 @@ dependencies = [
  "libsecp256k1-gen-genmult 0.3.0",
  "rand 0.8.4",
  "serde",
+ "sha2 0.9.8",
 ]
 
 [[package]]
@@ -1922,12 +2011,13 @@ dependencies = [
 name = "octopusxt"
 version = "0.1.0"
 dependencies = [
- "beefy-light-client",
+ "beefy-light-client 0.1.0 (git+https://github.com/octopus-network/beefy-light-client.git)",
  "beefy-merkle-tree",
  "beefy-primitives",
  "env_logger",
  "hex",
  "hex-literal",
+ "ibc",
  "ibc-proto",
  "informalsystems-prost-types",
  "jsonrpsee",
@@ -1978,7 +2068,7 @@ dependencies = [
  "sp-api",
  "sp-core",
  "sp-runtime",
- "sp-std",
+ "sp-std 4.0.0-dev",
 ]
 
 [[package]]
@@ -2397,6 +2487,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "ripemd160"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2eca4ecc81b7f313189bf73ce724400a07da2a6dac19588b03c8bd76a2dcc251"
+dependencies = [
+ "block-buffer 0.9.0",
+ "digest 0.9.0",
+ "opaque-debug 0.3.0",
+]
+
+[[package]]
 name = "rustc-demangle"
 version = "0.1.21"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2486,6 +2587,48 @@ name = "ryu"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3c9613b5a66ab9ba26415184cfc41156594925a9cf3a2057e57f31ff145f6568"
+
+[[package]]
+name = "safe-proc-macro2"
+version = "1.0.24"
+source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
+dependencies = [
+ "unicode-xid",
+]
+
+[[package]]
+name = "safe-quote"
+version = "1.0.9"
+source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
+dependencies = [
+ "safe-proc-macro2",
+]
+
+[[package]]
+name = "safe-regex"
+version = "0.2.4"
+source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
+dependencies = [
+ "safe-regex-macro",
+]
+
+[[package]]
+name = "safe-regex-compiler"
+version = "0.2.4"
+source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
+dependencies = [
+ "safe-proc-macro2",
+ "safe-quote",
+]
+
+[[package]]
+name = "safe-regex-macro"
+version = "0.2.3"
+source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
+dependencies = [
+ "safe-proc-macro2",
+ "safe-regex-compiler",
+]
 
 [[package]]
 name = "scale-info"
@@ -2646,6 +2789,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "serde_repr"
+version = "0.1.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "98d0516900518c29efa217c298fa1f4e6c6ffc85ae29fd7f4ee48f176e1a9ed5"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "sha-1"
 version = "0.9.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2680,6 +2834,18 @@ dependencies = [
  "cfg-if 1.0.0",
  "cpufeatures",
  "digest 0.9.0",
+ "opaque-debug 0.3.0",
+]
+
+[[package]]
+name = "sha3"
+version = "0.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f81199417d4e5de3f04b1e871023acea7389672c4135918f05aa9cbf2f2fa809"
+dependencies = [
+ "block-buffer 0.9.0",
+ "digest 0.9.0",
+ "keccak",
  "opaque-debug 0.3.0",
 ]
 
@@ -2747,7 +2913,7 @@ dependencies = [
  "sp-core",
  "sp-runtime",
  "sp-state-machine",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-version",
  "thiserror",
 ]
@@ -2774,7 +2940,7 @@ dependencies = [
  "serde",
  "sp-core",
  "sp-io",
- "sp-std",
+ "sp-std 4.0.0-dev",
 ]
 
 [[package]]
@@ -2788,7 +2954,7 @@ dependencies = [
  "scale-info",
  "serde",
  "sp-debug-derive",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "static_assertions",
 ]
 
@@ -2824,7 +2990,7 @@ dependencies = [
  "sp-inherents",
  "sp-runtime",
  "sp-state-machine",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-version",
  "thiserror",
 ]
@@ -2863,7 +3029,7 @@ dependencies = [
  "sp-debug-derive",
  "sp-externalities",
  "sp-runtime-interface",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-storage",
  "ss58-registry",
  "substrate-bip39",
@@ -2901,7 +3067,7 @@ source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.1
 dependencies = [
  "environmental",
  "parity-scale-codec",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-storage",
 ]
 
@@ -2915,7 +3081,7 @@ dependencies = [
  "parity-scale-codec",
  "sp-core",
  "sp-runtime",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "thiserror",
 ]
 
@@ -2935,7 +3101,7 @@ dependencies = [
  "sp-keystore",
  "sp-runtime-interface",
  "sp-state-machine",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-tracing",
  "sp-trie",
  "sp-wasm-interface",
@@ -2997,7 +3163,7 @@ dependencies = [
  "sp-arithmetic",
  "sp-core",
  "sp-io",
- "sp-std",
+ "sp-std 4.0.0-dev",
 ]
 
 [[package]]
@@ -3010,7 +3176,7 @@ dependencies = [
  "primitive-types",
  "sp-externalities",
  "sp-runtime-interface-proc-macro",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-storage",
  "sp-tracing",
  "sp-wasm-interface",
@@ -3037,7 +3203,7 @@ dependencies = [
  "parity-scale-codec",
  "scale-info",
  "sp-runtime",
- "sp-std",
+ "sp-std 4.0.0-dev",
 ]
 
 [[package]]
@@ -3055,13 +3221,19 @@ dependencies = [
  "sp-core",
  "sp-externalities",
  "sp-panic-handler",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-trie",
  "thiserror",
  "tracing",
  "trie-db",
  "trie-root",
 ]
+
+[[package]]
+name = "sp-std"
+version = "3.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "35391ea974fa5ee869cb094d5b437688fbf3d8127d64d1b9fed5822a1ed39b12"
 
 [[package]]
 name = "sp-std"
@@ -3078,7 +3250,7 @@ dependencies = [
  "ref-cast",
  "serde",
  "sp-debug-derive",
- "sp-std",
+ "sp-std 4.0.0-dev",
 ]
 
 [[package]]
@@ -3087,7 +3259,7 @@ version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.12#d76f39995315ec36980908e4b99709bd14927044"
 dependencies = [
  "parity-scale-codec",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "tracing",
  "tracing-core",
  "tracing-subscriber",
@@ -3103,7 +3275,7 @@ dependencies = [
  "parity-scale-codec",
  "scale-info",
  "sp-core",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "trie-db",
  "trie-root",
 ]
@@ -3119,7 +3291,7 @@ dependencies = [
  "scale-info",
  "serde",
  "sp-runtime",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "sp-version-proc-macro",
  "thiserror",
 ]
@@ -3142,7 +3314,7 @@ source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.1
 dependencies = [
  "impl-trait-for-tuples",
  "parity-scale-codec",
- "sp-std",
+ "sp-std 4.0.0-dev",
  "wasmi",
 ]
 
@@ -3319,6 +3491,34 @@ name = "tap"
 version = "1.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "55937e1799185b12863d447f42597ed69d9928686b8d88a1df17376a097d8369"
+
+[[package]]
+name = "tendermint"
+version = "0.22.0"
+source = "git+https://github.com/informalsystems/tendermint-rs?rev=4f6ef3d6#4f6ef3d67c80fda6df2b9108c4b4a527e110783a"
+dependencies = [
+ "async-trait",
+ "bytes",
+ "chrono",
+ "ed25519",
+ "ed25519-dalek",
+ "flex-error",
+ "futures 0.3.18",
+ "informalsystems-prost",
+ "informalsystems-prost-types",
+ "num-traits",
+ "once_cell",
+ "serde",
+ "serde_bytes",
+ "serde_json",
+ "serde_repr",
+ "sha2 0.9.8",
+ "signature",
+ "subtle",
+ "subtle-encoding",
+ "tendermint-proto",
+ "zeroize",
+]
 
 [[package]]
 name = "tendermint-proto"
@@ -3947,41 +4147,6 @@ dependencies = [
  "syn",
  "synstructure",
 ]
-
-[[patch.unused]]
-name = "ics23"
-version = "0.6.5"
-source = "git+https://github.com/informalsystems/ics23.git?rev=4461b673#4461b67382341af6bc6fab9c991ccc5d49a6e83e"
-
-[[patch.unused]]
-name = "safe-proc-macro2"
-version = "1.0.24"
-source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
-
-[[patch.unused]]
-name = "safe-quote"
-version = "1.0.9"
-source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
-
-[[patch.unused]]
-name = "safe-regex"
-version = "0.2.4"
-source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
-
-[[patch.unused]]
-name = "safe-regex-compiler"
-version = "0.2.4"
-source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
-
-[[patch.unused]]
-name = "safe-regex-macro"
-version = "0.2.3"
-source = "git+https://github.com/informalsystems/safe-regex.git?rev=842d31f5#842d31f5acdcd66dd60481632baaae511c29f0fd"
-
-[[patch.unused]]
-name = "tendermint"
-version = "0.22.0"
-source = "git+https://github.com/informalsystems/tendermint-rs?rev=4f6ef3d6#4f6ef3d67c80fda6df2b9108c4b4a527e110783a"
 
 [[patch.unused]]
 name = "tendermint-light-client"
