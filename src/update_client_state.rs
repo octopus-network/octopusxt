@@ -152,109 +152,109 @@ pub fn build_validator_merkle_proof(
     Ok(validator_merkle_proofs)
 }
 
-/// Update client state
-pub async fn update_client_state(
-    client: Client<DefaultConfig>,
-    // signer: &PairSigner<DefaultConfig, Pair>,
-    mmr_root: help::MmrRoot,
-) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [update_client_state]");
-    let signer = PairSigner::new(AccountKeyring::Bob.pair());
-    let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
-    // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
-    let mmr_root_bytes = <help::MmrRoot as Encode>::encode(&mmr_root);
-
-    let result = api
-        .tx()
-        .ibc()
-        .update_client_state(mmr_root_bytes)
-        .sign_and_submit(&signer)
-        .await?;
-
-    log::info!("update client state result: {:?}", result);
-
-    Ok(result)
-}
-
-/// Start update client state service.
-pub async fn start_update_clien_state(
-    src_client: Client<DefaultConfig>,
-    target_client: Client<DefaultConfig>,
-) -> Result<(), Box<dyn std::error::Error>> {
-    // env_logger::init();
-
-    // subscribe beefy justification for src chain
-    let api_a = src_client
-        .clone()
-        .to_runtime_api::<RuntimeApi<DefaultConfig>>();
-    let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
-    let mut sub = BeefySubscription::new(sub);
-
-    loop {
-        let raw = sub.next().await.unwrap();
-        // let target_raw = raw.clone();
-        let signed_commmitment: commitment::SignedCommitment =
-            <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw.0[..]).unwrap();
-        // let signed_commmitment = mmr::SignedCommitment::decode(&mut &raw.0[..]).unwrap();
-
-        let commitment::Commitment {
-            payload,
-            block_number,
-            validator_set_id,
-        } = signed_commmitment.commitment;
-        println!("signed commitment block_number : {}", block_number);
-        println!("signed commitment validator_set_id : {}", validator_set_id);
-        let payload = format!(
-            "0x{}",
-            subxt::sp_core::hexdisplay::HexDisplay::from(&payload)
-        );
-        println!("signed commitment payload : {:?}", payload);
-
-        let signatures: Vec<String> = signed_commmitment
-            .signatures.clone()
-            .into_iter()
-            .map(|signature| {
-                format!(
-                    "0x{}",
-                    subxt::sp_core::hexdisplay::HexDisplay::from(&signature.unwrap().0)
-                )
-            })
-            .collect();
-        println!("signature :  {:?}", signatures);
-
-        // get block hash
-        let api_a = src_client
-            .clone()
-            .to_runtime_api::<RuntimeApi<DefaultConfig>>();
-        let block_hash = api_a
-            .client
-            .rpc()
-            .block_hash(Some(BlockNumber::from(block_number)))
-            .await?;
-        //   get block header
-        let block_header = get_block_header(src_client.clone(), block_hash).await.unwrap();
-        println!("header = {:?}", block_header);
-
-        // build proof
-        let (validator_merkle_proofs, mmr_proof) =
-            build_proof(src_client.clone(), block_hash, block_number)
-                .await
-                .unwrap();
-
-        let mmr_root = help::MmrRoot {
-            block_header: block_header,
-            signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
-            validator_merkle_proofs: validator_merkle_proofs,
-            mmr_leaf: mmr_proof.mmr_leaf,
-            mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
-        };
-
-        // send data to substrate-ibc
-        let send_data = signed_commmitment.clone();
-        let result = update_client_state(target_client.clone(), mmr_root).await;
-        println!("update client state result: {:?}", result);
-    }
-}
+// /// Update client state
+// pub async fn update_client_state(
+//     client: Client<DefaultConfig>,
+//     // signer: &PairSigner<DefaultConfig, Pair>,
+//     mmr_root: help::MmrRoot,
+// ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
+//     log::info!("in call_ibc: [update_client_state]");
+//     let signer = PairSigner::new(AccountKeyring::Bob.pair());
+//     let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
+//     // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
+//     let mmr_root_bytes = <help::MmrRoot as Encode>::encode(&mmr_root);
+//
+//     let result = api
+//         .tx()
+//         .ibc()
+//         .update_client_state(mmr_root_bytes)
+//         .sign_and_submit(&signer)
+//         .await?;
+//
+//     log::info!("update client state result: {:?}", result);
+//
+//     Ok(result)
+// }
+//
+// /// Start update client state service.
+// pub async fn start_update_clien_state(
+//     src_client: Client<DefaultConfig>,
+//     target_client: Client<DefaultConfig>,
+// ) -> Result<(), Box<dyn std::error::Error>> {
+//     // env_logger::init();
+//
+//     // subscribe beefy justification for src chain
+//     let api_a = src_client
+//         .clone()
+//         .to_runtime_api::<RuntimeApi<DefaultConfig>>();
+//     let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
+//     let mut sub = BeefySubscription::new(sub);
+//
+//     loop {
+//         let raw = sub.next().await.unwrap();
+//         // let target_raw = raw.clone();
+//         let signed_commmitment: commitment::SignedCommitment =
+//             <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw.0[..]).unwrap();
+//         // let signed_commmitment = mmr::SignedCommitment::decode(&mut &raw.0[..]).unwrap();
+//
+//         let commitment::Commitment {
+//             payload,
+//             block_number,
+//             validator_set_id,
+//         } = signed_commmitment.commitment;
+//         println!("signed commitment block_number : {}", block_number);
+//         println!("signed commitment validator_set_id : {}", validator_set_id);
+//         let payload = format!(
+//             "0x{}",
+//             subxt::sp_core::hexdisplay::HexDisplay::from(&payload)
+//         );
+//         println!("signed commitment payload : {:?}", payload);
+//
+//         let signatures: Vec<String> = signed_commmitment
+//             .signatures.clone()
+//             .into_iter()
+//             .map(|signature| {
+//                 format!(
+//                     "0x{}",
+//                     subxt::sp_core::hexdisplay::HexDisplay::from(&signature.unwrap().0)
+//                 )
+//             })
+//             .collect();
+//         println!("signature :  {:?}", signatures);
+//
+//         // get block hash
+//         let api_a = src_client
+//             .clone()
+//             .to_runtime_api::<RuntimeApi<DefaultConfig>>();
+//         let block_hash = api_a
+//             .client
+//             .rpc()
+//             .block_hash(Some(BlockNumber::from(block_number)))
+//             .await?;
+//         //   get block header
+//         let block_header = get_block_header(src_client.clone(), block_hash).await.unwrap();
+//         println!("header = {:?}", block_header);
+//
+//         // build proof
+//         let (validator_merkle_proofs, mmr_proof) =
+//             build_proof(src_client.clone(), block_hash, block_number)
+//                 .await
+//                 .unwrap();
+//
+//         let mmr_root = help::MmrRoot {
+//             block_header: block_header,
+//             signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+//             validator_merkle_proofs: validator_merkle_proofs,
+//             mmr_leaf: mmr_proof.mmr_leaf,
+//             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
+//         };
+//
+//         // send data to substrate-ibc
+//         let send_data = signed_commmitment.clone();
+        // let result = update_client_state(target_client.clone(), mmr_root).await;
+        // println!("update client state result: {:?}", result);
+//     }
+// }
 
 #[cfg(test)]
 mod tests {
