@@ -46,24 +46,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // println!("client storage_key = {:?}", storage_key);
 
 
-    let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
-
-    #[derive(Debug, PartialEq, Serialize, Deserialize)]
-    #[serde(rename_all = "camelCase")]
-    pub struct ReadProof_ {
-        pub at: String,
-        pub proof: Vec<Bytes>,
-    }
-    let storage_proof: ReadProof_ = api
-        .rpc()
-        .client
-        .request("state_getReadProof", params)
-        .await.unwrap();
-
-    println!(
-        "In Substrate: [generate_storage_proof] >> storage_proof : {:?}",
-        storage_proof
-    );
+    // let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
+    //
+    // #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    // #[serde(rename_all = "camelCase")]
+    // pub struct ReadProof_ {
+    //     pub at: String,
+    //     pub proof: Vec<Bytes>,
+    // }
+    // let storage_proof: ReadProof_ = api
+    //     .rpc()
+    //     .client
+    //     .request("state_getReadProof", params)
+    //     .await.unwrap();
+    //
+    // println!(
+    //     "In Substrate: [generate_storage_proof] >> storage_proof : {:?}",
+    //     storage_proof
+    // );
 
 
     Ok(())
