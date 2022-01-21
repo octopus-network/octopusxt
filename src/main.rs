@@ -31,20 +31,49 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 
     let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-    fun_name(&api, ibc).await?;
+    fun_name(&api, &ibc).await?;
 
     let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
     let storage_key = api.storage().fetch(&ibc, None).await?;
-    println!("connection storage_key = {:?}", storage_key);
+    // println!("connection storage_key = {:?}", storage_key);
+    // println!("connection storage_key = {:?}", ibc);
+    // let ibc = crate::ibc_node::ibc::storage::Channels(vec![1,2,3], vec![1,2,3]);
+    // let storage_key = api.storage().fetch(&ibc, None).await?;
+
+    use serde::{Deserialize, Serialize};
+    use sp_core::{storage::StorageKey, Bytes};
+    use jsonrpsee::types::to_json_value;
+    // let params = &[to_json_value(vec![StorageKey(vec![1,2,3])]).unwrap(), to_json_value(block_hash).unwrap()];
+    let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(rename_all = "camelCase")]
+    pub struct ReadProof_ {
+        pub at: String,
+        pub proof: Vec<Bytes>,
+    }
+    let storage_proof: ReadProof_ = api
+        .rpc()
+        .client
+        .request("state_getReadProof", params)
+        .await.unwrap();
+    println!(
+        "In Substrate: [generate_storage_proof] >> storage_proof : {:?}",
+        storage_proof
+    );
+
 
     Ok(())
 }
 
 use subxt::storage::StorageEntry;
-async fn fun_name(api: &subxt::Client<ibc_node::DefaultConfig>, ibc: StorageEntry) 
-    -> Result<(), Box<dyn std::error::Error>>
+async fn fun_name<F: StorageEntry> 
+        (api: &subxt::Client<ibc_node::DefaultConfig>, ibc: &F) 
+    -> Result<(), Box<dyn std::error::Error>> 
+        where 
+            <F as StorageEntry>::Value: std::fmt::Debug
 {
-    let storage_key = api.storage().fetch(&ibc, None).await?;
+    let storage_key = api.storage().fetch(ibc, None).await.unwrap().unwrap();
     println!("client storage_key = {:?}", storage_key);
     Ok(())
 }
