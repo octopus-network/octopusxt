@@ -4662,14 +4662,6 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "deliver";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct UpdateClientState {
-                pub raw: ::std::vec::Vec<::core::primitive::u8>,
-            }
-            impl ::subxt::Call for UpdateClientState {
-                const PALLET: &'static str = "Ibc";
-                const FUNCTION: &'static str = "update_client_state";
-            }
             pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
                 client: &'a ::subxt::Client<T>,
             }
@@ -4686,13 +4678,6 @@ pub mod api {
                     tmp: ::core::primitive::u8,
                 ) -> ::subxt::SubmittableExtrinsic<T, Deliver> {
                     let call = Deliver { messages, tmp };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn update_client_state(
-                    &self,
-                    raw: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, UpdateClientState> {
-                    let call = UpdateClientState { raw };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -5828,7 +5813,7 @@ pub mod api {
                 pub mod misc {
                     use super::runtime_types;
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct WrapperOpaque<_0>(::core::primitive::u32, pub _0);
+                    pub struct WrapperOpaque<_0>(#[codec(compact)] ::core::primitive::u32, pub _0);
                 }
                 pub mod tokens {
                     use super::runtime_types;
@@ -5905,7 +5890,7 @@ pub mod api {
                 pub mod check_nonce {
                     use super::runtime_types;
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckNonce(pub ::core::primitive::u32);
+                    pub struct CheckNonce(#[codec(compact)] pub ::core::primitive::u32);
                 }
                 pub mod check_spec_version {
                     use super::runtime_types;
@@ -6973,10 +6958,6 @@ pub mod api {
                         messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                         tmp: ::core::primitive::u8,
                     },
-                    #[codec(index = 1)]
-                    update_client_state {
-                        raw: ::std::vec::Vec<::core::primitive::u8>,
-                    },
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
                 pub enum Error {}
@@ -7688,7 +7669,7 @@ pub mod api {
         pub mod pallet_transaction_payment {
             use super::runtime_types;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ChargeTransactionPayment(pub ::core::primitive::u128);
+            pub struct ChargeTransactionPayment(#[codec(compact)] pub ::core::primitive::u128);
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
             pub enum Releases {
                 #[codec(index = 0)]
@@ -8458,7 +8439,7 @@ pub mod api {
                     #[codec(index = 0)]
                     Id(_0),
                     #[codec(index = 1)]
-                    Index(_1),
+                    Index(#[codec(compact)] _1),
                     #[codec(index = 2)]
                     Raw(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 3)]
