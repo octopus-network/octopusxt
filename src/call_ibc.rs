@@ -13,15 +13,14 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use codec::{Decode, Encode};
 use core::str::FromStr;
-use prost_types::Any;
-use sp_keyring::AccountKeyring;
-use subxt::{Client, EventSubscription, PairSigner};
-use tendermint_proto::Protobuf;
-use tokio::time::sleep;
 use jsonrpsee::types::to_json_value;
 use log::log;
-use sp_core::storage::StorageKey;
-use subxt::ClientBuilder;
+use prost_types::Any;
+use sp_keyring::AccountKeyring;
+use subxt::{BeefySubscription, Client, EventSubscription, PairSigner, SignedCommitment};
+use subxt::BlockNumber;
+use tendermint_proto::Protobuf;
+use tokio::time::sleep;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -577,6 +576,19 @@ pub async fn subscribe_ibc_event(
     Ok(events)
 }
 
+/// Subscribe beefy justifiactions
+pub async fn subscribe_beefy(
+    client: Client<ibc_node::DefaultConfig>,
+) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
+    log::info!("In call_ibc: [subscribe_beefy_justifications]");
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let sub = api.client.rpc().subscribe_beefy_justifications().await?;
+    let mut sub = BeefySubscription::new(sub);
+    let raw = sub.next().await.unwrap();
+
+    Ok(raw)
+}
+
 /// get latest height used by subscribe_blocks
 pub async fn get_latest_height(
     client: Client<ibc_node::DefaultConfig>,
@@ -940,10 +952,7 @@ pub async fn get_clients(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash = block_header.hash();
-    log::info!(
-        "In call_ibc: [get_clients] >> block_hash: {:?}",
-        block_hash
-    );
+    log::info!("In call_ibc: [get_clients] >> block_hash: {:?}", block_hash);
 
     // vector key-value
     let mut ret = vec![];
@@ -1377,8 +1386,10 @@ pub async fn deliver(
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
-pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_node::DefaultConfig>,)
-    -> Result<(Vec<u8>, Vec<u8>),Box<dyn std::error::Error>> {
+pub async fn get_mmr_leaf_and_mmr_proof(
+    block_number: u64,
+    client: Client<ibc_node::DefaultConfig>,
+) -> Result<(Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
     log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
     let api = client
@@ -1392,7 +1403,8 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_no
         .client
         .rpc()
         .client
-        .request("mmr_generateProof", params).await?;
+        .request("mmr_generateProof", params)
+        .await?;
 
     log::info!("info generate_proof : {:?}", generate_proof);
 
@@ -1400,26 +1412,48 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_no
     Ok((generate_proof.leaf.0, generate_proof.proof.0))
 }
 
-pub async fn get_block_header(client: Client<ibc_node::DefaultConfig>, block_hash : Option<sp_core::H256>)
-    -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
-
+/// get header by block hash
+pub async fn get_block_header(
+    client: Client<ibc_node::DefaultConfig>,
+    block_hash: Option<sp_core::H256>,
+) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
     let api = client
         .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> = api.client.rpc().header(block_hash).await?.unwrap();
+    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
+        api.client.rpc().header(block_hash).await?.unwrap();
     log::info!("header = {:?}", header);
 
-    let header  = convert_substrate_header_to_ibc_header(header);
+    let header = convert_substrate_header_to_ibc_header(header);
+    log::info!("convert header = {:?}", header);
+
+    Ok(header)
+}
+
+/// get header by block number
+pub async fn get_header_by_block_number(
+    client: Client<ibc_node::DefaultConfig>,
+    block_number: Option<BlockNumber>,
+) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
+    let api = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let block_hash = api.client.rpc().block_hash(block_number).await?;
+    let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
+        api.client.rpc().header(block_hash).await?.unwrap();
+    log::info!("header = {:?}", header);
+
+    let header = convert_substrate_header_to_ibc_header(header);
     log::info!("convert header = {:?}", header);
 
     Ok(header)
 }
 
 /// convert substrate Header to Ibc Header
-pub fn convert_substrate_header_to_ibc_header(header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>)
-    -> ibc::ics10_grandpa::help::BlockHeader
-{
+pub fn convert_substrate_header_to_ibc_header(
+    header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
+) -> ibc::ics10_grandpa::help::BlockHeader {
     let digest = header.digest.logs.to_vec().encode();
     ibc::ics10_grandpa::help::BlockHeader {
         parent_hash: header.parent_hash.0.to_vec(),
@@ -1432,21 +1466,36 @@ pub fn convert_substrate_header_to_ibc_header(header: subxt::sp_runtime::generic
 
 #[cfg(test)]
 mod tests {
-    use crate::ibc_node;
     use super::*;
+    use crate::ibc_node;
     use subxt::ClientBuilder;
 
     // test API get_block_header
     // use `cargo test -- --captuer` can print content
     #[tokio::test]
-    async fn test_get_block_header()  -> Result<(), Box<dyn std::error::Error>>  {
+    async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
         let client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-
-        let header = get_block_header(client).await?;
+        let block_number = Some(BlockNumber::from(100));
+        let header = get_header_by_block_number(client, block_number).await?;
         println!("convert header = {:?}", header);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+        let block_number = 100;
+
+        let (leaf, leaf_proof) = get_mmr_leaf_and_mmr_proof(block_number, client).await?;
+
+        println!("leaf = {:?},leaf_proof = {:?}", leaf, leaf_proof);
 
         Ok(())
     }
@@ -1466,7 +1515,6 @@ mod tests {
         Ok(())
     }
 
-
     #[tokio::test]
     async fn test_get_key() -> Result<(), Box<dyn std::error::Error>> {
         use subxt::StorageEntry;
@@ -1478,7 +1526,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_client_states_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1495,7 +1542,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_consensus_states_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1512,7 +1558,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_connections_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1529,7 +1574,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_connections_keys_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1563,7 +1607,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_channels_keys_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1580,7 +1623,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_channels_connection_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1665,7 +1707,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_acknowledgements_keys_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1682,7 +1723,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_client_counter_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1697,10 +1737,8 @@ mod tests {
         Ok(())
     }
 
-
     #[tokio::test]
     async fn test_get_connection_counter_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1717,7 +1755,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_channel_counter_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1732,9 +1769,8 @@ mod tests {
         Ok(())
     }
 
-     #[tokio::test]
+    #[tokio::test]
     async fn test_get_connection_client_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1749,7 +1785,6 @@ mod tests {
 
         Ok(())
     }
-
 
     // #[tokio::test]
     // async fn test_get_packet_receipt_key() -> Result<(), Box<dyn std::error::Error>> {
@@ -1790,7 +1825,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_packet_commitment_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1805,7 +1839,6 @@ mod tests {
 
         Ok(())
     }
-
 
     // #[tokio::test]
     // async fn test_get_send_packet_event_key() -> Result<(), Box<dyn std::error::Error>> {
@@ -1845,7 +1878,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_latest_height_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1863,7 +1895,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_old_height_key() -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1878,26 +1909,4 @@ mod tests {
 
         Ok(())
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

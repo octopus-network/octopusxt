@@ -1,11 +1,11 @@
-use octopusxt::ibc_node;
-use std::{str::FromStr, collections::HashMap};
 use beefy_light_client::header::Digest;
 use beefy_light_client::Hash;
-use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
-use subxt::BlockNumber;
-use subxt::sp_core::Public;
 use octopusxt::call_ibc::{convert_substrate_header_to_ibc_header, get_block_header};
+use octopusxt::ibc_node;
+use std::{collections::HashMap, str::FromStr};
+use subxt::sp_core::Public;
+use subxt::BlockNumber;
+use subxt::{sp_arithmetic::traits::Signed, ClientBuilder, EventSubscription};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -22,8 +22,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let block_header = block.next().await.unwrap().unwrap();
     let block_hash = block_header.hash();
 
-
-
     let api = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<ibc_node::DefaultConfig>()
@@ -33,8 +31,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let storage_key = api.storage().fetch(&ibc, None).await?;
 
     println!("storage_key = {:?}", storage_key);
-
-
 
     // example 1
     // let mut iter = api
@@ -101,16 +97,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     );
     // }
 
-    // example mmr 
+    // example mmr
     // let root_hash = api.storage().mmr().root_hash(Some(block_hash)).await?;
     // println!("block_hash : {:?}", block_hash);
-    //
+
     // let number_of_leaves = api.storage().mmr().number_of_leaves(Some(block_hash)).await?;
     // println!("number_of_leaves : {:?}", number_of_leaves);
-    //
+
     // let nodes = api.storage().mmr().nodes(1, Some(block_hash)).await?;
     // println!("node : {:?}", nodes);
-    //
+
     // let mut mmr = api.storage().mmr().nodes_iter(Some(block_hash)).await?;
     // let mut counter = 0;
     // while let Some(mmr_item) = mmr.next().await? {
@@ -118,8 +114,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     // println!("mmr: {}", hex::encode(mmr_item.0));
     // }
     // println!("counter : {}", counter);
-    //
-    // let authorities = api.storage().beefy().authorities(Some(block_hash)).await?;
+
+    let api = ClientBuilder::new()
+        .set_url("ws://localhost:9944")
+        .build::<ibc_node::DefaultConfig>()
+        .await?;
+
+    let beefy_storage = ibc_node::beefy::storage::StorageApi::new(&api);
+    let authorities = beefy_storage.authorities(None).await?;
+    println!("authorities : {:?}", authorities);
+
+    let api = ClientBuilder::new()
+        .set_url("ws://localhost:9944")
+        .build::<ibc_node::DefaultConfig>()
+        .await?
+        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let authorities = api.storage().beefy().authorities(Some(block_hash)).await?;
+    println!("authorities : {:?}", authorities);
+    
     // println!("authorities length : {:?}", authorities.len());
     // for item in authorities.iter() {
     //     println!("authorities display: {}", item);
@@ -128,17 +141,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     let result =  format!("0x{}", subxt::sp_core::hexdisplay::HexDisplay::from(&  item.to_raw_vec()));
     //     println!("authorities name = {}", result);
     // }
-    //
-    // let result : Vec<String> = authorities
-    //     .into_iter()
-    //     .map(|val| format!("0x{}", subxt::sp_core::hexdisplay::HexDisplay::from(&  val.to_raw_vec())))
-    //     .collect();
-    // println!("result = {:?}", result);
-    
-    //
+
+    let result : Vec<String> = authorities
+        .into_iter()
+        .map(|val| format!("0x{}", subxt::sp_core::hexdisplay::HexDisplay::from(&  val.to_raw_vec())))
+        .collect();
+    println!("result = {:?}", result);
+
     // let validator_set_id = api.storage().beefy().validator_set_id(Some(block_hash)).await?;
     // println!("validator_set_id : {:?}", validator_set_id);
-    //
+
     // let next_authorities = api.storage().beefy().next_authorities(Some(block_hash)).await?;
     // println!("next_authorities: {:?}", next_authorities.len());
 
@@ -166,9 +178,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // println!("beefy_next_authorities id: {:?}", result.id);
     // println!("beefy_next_authorities len: {:?}", result.len);
     // println!("beefy_next_authorities root: {:?}", hex::encode(result.root));
-    
-
-
 
     // let block_hash = api.client.rpc().block_hash(None).await?;
     // println!("block_hash : {:?}", block_hash);
@@ -181,12 +190,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
     // println!("block : {:?}", block);
-
-
-
-
-
-
 
     Ok(())
 }
