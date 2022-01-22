@@ -24,8 +24,14 @@ ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "
 pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 sp-core = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 beefy-primitives = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
-beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "dv-dev", default-features = false }
+
+beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", default-features = false }
+#beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "dv-dev", default-features = false }
 #beefy-light-client = { path = "../beefy-light-client", default-features = false }
+
+serde = { version = "1.0.130", default-features = false }
+
+
 beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.12", features = ["keccak"], default-features = false }
 
 [dev-dependencies]

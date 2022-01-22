@@ -23,6 +23,12 @@ use subxt::{BeefySubscription, Client, EventSubscription, PairSigner, SignedComm
 
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
+use jsonrpsee::types::to_json_value;
+use log::log;
+use sp_core::storage::StorageKey;
+use subxt::ClientBuilder;
+use subxt::storage::{StorageEntry, StorageKeyPrefix};
+
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1483,6 +1489,14 @@ pub fn convert_substrate_header_to_ibc_header(
     }
 }
 
+pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey  {
+    let prefix = StorageKeyPrefix::new::<F>();
+    let key = store.key().final_key(prefix);
+    key
+}
+
+
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -1544,6 +1558,7 @@ mod tests {
         Ok(())
     }
 
+<<<<<<< HEAD
     #[tokio::test]
     async fn test_get_client_states_key() -> Result<(), Box<dyn std::error::Error>> {
         let api = ClientBuilder::new()
@@ -1930,3 +1945,13 @@ mod tests {
         Ok(())
     }
 }
+
+    // add unit test for get storage key
+    #[test]
+    fn test_get_storage_key() {
+        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
+        let result = get_storage_key(&ibc);
+        println!("key = {:?}", result);
+    }
+}
+

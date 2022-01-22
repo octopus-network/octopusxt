@@ -1,11 +1,15 @@
 use beefy_light_client::header::Digest;
 use beefy_light_client::Hash;
-use octopusxt::call_ibc::{convert_substrate_header_to_ibc_header, get_block_header};
-use octopusxt::ibc_node;
-use std::{collections::HashMap, str::FromStr};
-use subxt::sp_core::Public;
+use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
 use subxt::BlockNumber;
-use subxt::{sp_arithmetic::traits::Signed, ClientBuilder, EventSubscription};
+use subxt::sp_core::Public;
+use octopusxt::call_ibc::{convert_substrate_header_to_ibc_header, get_block_header, get_storage_key};
+use subxt::storage::{StorageEntry, StorageKeyPrefix};
+use serde::{Deserialize, Serialize};
+use sp_core::{storage::StorageKey, Bytes};
+use jsonrpsee::types::to_json_value;
+use subxt::StorageEntryKey;
+
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -27,38 +31,37 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build::<ibc_node::DefaultConfig>()
         .await?;
 
-    let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-    let storage_key = api.storage().fetch(&ibc, None).await?;
+    let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
+    let storage_key = get_storage_key(&storage_entry);
+    println!("key = {:?}", storage_key);
 
-    println!("storage_key = {:?}", storage_key);
+    // let map_key = match storage_entry {
+    //     StorageEntryKey::Map(map_key) => map_key,
+    //     StorageEntryKey::Plain => todo!()
+    // };
+    // let storage_key = map_key.iter().map( |val| StorageKey(val.value.clone())).collect::<Vec<StorageKey>>();
+    // println!("client storage_key = {:?}", storage_key);
 
-    // example 1
-    // let mut iter = api
-    //     .storage()
-    //     .system()
-    //     .account_iter(Some(block_hash))
-    //     .await?;
+
+    // let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
     //
-    // while let Some((key, account)) = iter.next().await? {
-    //     println!("{}: {}", hex::encode(key), account.data.free);
+    // #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    // #[serde(rename_all = "camelCase")]
+    // pub struct ReadProof_ {
+    //     pub at: String,
+    //     pub proof: Vec<Bytes>,
     // }
-
-    // example 2
-    // let data = api
-    //     .storage()
-    //     .ibc()
-    //     .channels(
-    //         "transfer".as_bytes().to_vec(),
-    //         "channel-0".as_bytes().to_vec(),
-    //         Some(block_hash)
-    //     )
-    //     .await?;
-
-    // let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
+    // let storage_proof: ReadProof_ = api
+    //     .rpc()
+    //     .client
+    //     .request("state_getReadProof", params)
+    //     .await.unwrap();
+    //
     // println!(
-    //     "In substrate: [get_channelend] >> channel_end: {:?}",
-    //     channel_end
+    //     "In Substrate: [generate_storage_proof] >> storage_proof : {:?}",
+    //     storage_proof
     // );
+
 
     // example 2, 2-ways
     // let port_id = ibc::ics24_host::identifier::PortId::from_str("transfer").unwrap();
@@ -190,6 +193,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
     // println!("block : {:?}", block);
+
+
+
+    Ok(())
+}
+
+
+async fn fun_name<F: StorageEntry>
+        (api: &subxt::Client<ibc_node::DefaultConfig>, ibc: &F)
+    -> Result<(), Box<dyn std::error::Error>>
+        where
+            <F as StorageEntry>::Value: std::fmt::Debug
+{
+    let storage_key = api.storage().fetch(ibc, None).await.unwrap().unwrap();
+    println!("client storage_key = {:?}", storage_key);
 
     Ok(())
 }

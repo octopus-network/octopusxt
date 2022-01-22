@@ -189,7 +189,7 @@ dependencies = [
 [[package]]
 name = "beefy-light-client"
 version = "0.1.0"
-source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=dv-dev#f1831cea3214c0bf8e3ab6da45d99d21bedcef6e"
+source = "git+https://github.com/octopus-network/beefy-light-client.git#1c1d9bf910c4333b72e5bba51b8b7ac7aac5072c"
 dependencies = [
  "beefy-merkle-tree",
  "blake2-rfc",
@@ -1181,7 +1181,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.7.3"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#db7bae171791b9b8a00a7ee894bb31a75fcc3ef5"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#c6dc8b0e34c85741b5bcd6e4908b743c1464137b"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1213,7 +1213,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.11.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#db7bae171791b9b8a00a7ee894bb31a75fcc3ef5"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#c6dc8b0e34c85741b5bcd6e4908b743c1464137b"
 dependencies = [
  "bytes",
  "informalsystems-prost",
@@ -2015,6 +2015,7 @@ dependencies = [
  "log",
  "pallet-mmr-rpc",
  "parity-scale-codec",
+ "serde",
  "sp-core",
  "sp-keyring",
  "subxt",
