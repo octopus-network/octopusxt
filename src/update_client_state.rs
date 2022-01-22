@@ -261,6 +261,7 @@ mod tests {
     use crate::{ibc_node, subscribe_beefy};
     use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256, MerkleProof};
     use hex_literal::hex;
+    use ibc::ics10_grandpa::help::Signature;
     use subxt::ClientBuilder;
 
     #[tokio::test]
@@ -484,7 +485,7 @@ mod tests {
         let encoded_mmr_proof = mmr::MmrLeafProof::encode(&mmr_leaf_proof);
 
         // covert the help validator proofs to beefy_light_client::ValidatorMerkleProof
-        let validator_proofs: [beefy_light_client::ValidatorMerkleProof] = validator_proofs
+        let validator_proofs: Vec<beefy_light_client::ValidatorMerkleProof> = validator_proofs
             .into_iter()
             .map(|validator_proof| beefy_light_client::ValidatorMerkleProof::from(validator_proof))
             .collect();
