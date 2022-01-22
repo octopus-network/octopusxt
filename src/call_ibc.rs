@@ -18,8 +18,8 @@ use jsonrpsee::types::to_json_value;
 use prost_types::Any;
 use sp_keyring::AccountKeyring;
 
-use subxt::{BeefySubscription, Client, EventSubscription, PairSigner, SignedCommitment};
 use subxt::BlockNumber;
+use subxt::{BeefySubscription, Client, EventSubscription, PairSigner, SignedCommitment};
 
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
@@ -954,10 +954,7 @@ pub async fn get_clients(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
-        "In call_ibc: [get_clients] >> block_hash: {:?}",
-        block_hash
-    );
+    log::info!("In call_ibc: [get_clients] >> block_hash: {:?}", block_hash);
 
     // vector key-value
     let mut ret = vec![];
@@ -1313,7 +1310,8 @@ pub async fn get_connection_channels(
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     log::info!("in call_ibc: [get_connection_channels]");
 
-    let api = client.clone()
+    let api = client
+        .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -1365,8 +1363,7 @@ pub async fn deliver(
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let result = api
         .tx()
@@ -1390,13 +1387,12 @@ pub async fn deliver(
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
 pub async fn get_mmr_leaf_and_mmr_proof(
-    block_number: u64,
     client: Client<ibc_node::DefaultConfig>,
+    block_number: u64,
 ) -> Result<(Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
     log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     // need to use `to_json_value` to convert the params to json value
     // need make sure mmr_generate_proof index is u64
@@ -1409,7 +1405,10 @@ pub async fn get_mmr_leaf_and_mmr_proof(
         .await?;
 
     log::info!("info generate_proof : {:?}", generate_proof);
-
+    println!(
+        "info generate_proof block hash : {:?}",
+        generate_proof.block_hash
+    );
     // return mmr_leaf, mmr_proof
     Ok((generate_proof.leaf.0, generate_proof.proof.0))
 }
@@ -1419,8 +1418,7 @@ pub async fn get_block_header(
     client: Client<ibc_node::DefaultConfig>,
     block_hash: Option<sp_core::H256>,
 ) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
@@ -1451,12 +1449,20 @@ pub async fn get_header_by_block_number(
     Ok(header)
 }
 
-pub async fn get_block_header_by_block_number(client: Client<ibc_node::DefaultConfig>, block_number: u32)
-    -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>>
-{
-    let api = client.clone().to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+pub async fn get_block_header_by_block_number(
+    client: Client<ibc_node::DefaultConfig>,
+    block_number: u32,
+) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
+    let api = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-    let block_hash: sp_core::H256 = api.client.rpc().block_hash(Some(BlockNumber::from(block_number))).await?.unwrap();
+    let block_hash: sp_core::H256 = api
+        .client
+        .rpc()
+        .block_hash(Some(BlockNumber::from(block_number)))
+        .await?
+        .unwrap();
 
     let header = get_block_header(client, Some(block_hash)).await?;
 
@@ -1508,7 +1514,7 @@ mod tests {
             .await?;
         let block_number = 100;
 
-        let (leaf, leaf_proof) = get_mmr_leaf_and_mmr_proof(block_number, client).await?;
+        let (leaf, leaf_proof) = get_mmr_leaf_and_mmr_proof(client, block_number).await?;
 
         println!("leaf = {:?},leaf_proof = {:?}", leaf, leaf_proof);
 
