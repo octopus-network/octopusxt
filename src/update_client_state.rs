@@ -93,6 +93,7 @@ pub async fn build_validator_merkle_proof(
                 leaf_index: proof.leaf_index,
                 leaf: proof.leaf,
             });
+
         println!("get validator merkle proof = {:?}", validator_merkle_proof);
         validator_merkle_proofs.push(validator_merkle_proof);
 
@@ -392,9 +393,12 @@ mod tests {
             .await?;
 
         // get signed commitment
-        let raw = subscribe_beefy(client.clone()).await.unwrap();
+        let raw_signed_commitment = subscribe_beefy(client.clone()).await.unwrap();
         let signed_commmitment: commitment::SignedCommitment =
-            <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw.0[..]).unwrap();
+            <commitment::SignedCommitment as codec::Decode>::decode(
+                &mut &raw_signed_commitment.clone().0[..],
+            )
+            .unwrap();
 
         let commitment::Commitment {
             payload,
@@ -475,12 +479,12 @@ mod tests {
         println!("light client: {:?}", lc);
 
         // encode data
-        let encoded_signed_commitment = commitment::SignedCommitment::encode(signed_commitment);
-        let encoded_mmr_leaf = mmr::MmrLeaf::encode(mmr_leaf);
-        let encoded_mmr_proof = mmr::MmrLeafProof::encode(mmr_leaf_proof);
+        let encoded_signed_commitment = commitment::SignedCommitment::encode(&signed_commitment);
+        let encoded_mmr_leaf = mmr::MmrLeaf::encode(&mmr_leaf);
+        let encoded_mmr_proof = mmr::MmrLeafProof::encode(&mmr_leaf_proof);
 
         // covert the help validator proofs to beefy_light_client::ValidatorMerkleProof
-        let validator_proofs = validator_proofs
+        let validator_proofs: [beefy_light_client::ValidatorMerkleProof] = validator_proofs
             .into_iter()
             .map(|validator_proof| beefy_light_client::ValidatorMerkleProof::from(validator_proof))
             .collect();

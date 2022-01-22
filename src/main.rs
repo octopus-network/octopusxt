@@ -1,15 +1,17 @@
 use beefy_light_client::header::Digest;
 use beefy_light_client::Hash;
-use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
-use subxt::BlockNumber;
-use subxt::sp_core::Public;
-use octopusxt::call_ibc::{convert_substrate_header_to_ibc_header, get_block_header, get_storage_key};
-use subxt::storage::{StorageEntry, StorageKeyPrefix};
+use jsonrpsee::types::to_json_value;
+use octopusxt::call_ibc::{
+    convert_substrate_header_to_ibc_header, get_block_header, get_storage_key,
+};
+use octopusxt::ibc_node;
 use serde::{Deserialize, Serialize};
 use sp_core::{storage::StorageKey, Bytes};
-use jsonrpsee::types::to_json_value;
+use subxt::sp_core::Public;
+use subxt::storage::{StorageEntry, StorageKeyPrefix};
+use subxt::BlockNumber;
 use subxt::StorageEntryKey;
-
+use subxt::{sp_arithmetic::traits::Signed, ClientBuilder, EventSubscription};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -42,7 +44,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let storage_key = map_key.iter().map( |val| StorageKey(val.value.clone())).collect::<Vec<StorageKey>>();
     // println!("client storage_key = {:?}", storage_key);
 
-
     // let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
     //
     // #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -61,7 +62,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     "In Substrate: [generate_storage_proof] >> storage_proof : {:?}",
     //     storage_proof
     // );
-
 
     // example 2, 2-ways
     // let port_id = ibc::ics24_host::identifier::PortId::from_str("transfer").unwrap();
@@ -135,7 +135,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let authorities = api.storage().beefy().authorities(Some(block_hash)).await?;
     println!("authorities : {:?}", authorities);
-    
+
     // println!("authorities length : {:?}", authorities.len());
     // for item in authorities.iter() {
     //     println!("authorities display: {}", item);
@@ -145,9 +145,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     //     println!("authorities name = {}", result);
     // }
 
-    let result : Vec<String> = authorities
+    let result: Vec<String> = authorities
         .into_iter()
-        .map(|val| format!("0x{}", subxt::sp_core::hexdisplay::HexDisplay::from(&  val.to_raw_vec())))
+        .map(|val| {
+            format!(
+                "0x{}",
+                subxt::sp_core::hexdisplay::HexDisplay::from(&val.to_raw_vec())
+            )
+        })
         .collect();
     println!("result = {:?}", result);
 
@@ -194,17 +199,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
     // println!("block : {:?}", block);
 
-
-
     Ok(())
 }
 
-
-async fn fun_name<F: StorageEntry>
-        (api: &subxt::Client<ibc_node::DefaultConfig>, ibc: &F)
-    -> Result<(), Box<dyn std::error::Error>>
-        where
-            <F as StorageEntry>::Value: std::fmt::Debug
+async fn fun_name<F: StorageEntry>(
+    api: &subxt::Client<ibc_node::DefaultConfig>,
+    ibc: &F,
+) -> Result<(), Box<dyn std::error::Error>>
+where
+    <F as StorageEntry>::Value: std::fmt::Debug,
 {
     let storage_key = api.storage().fetch(ibc, None).await.unwrap().unwrap();
     println!("client storage_key = {:?}", storage_key);
