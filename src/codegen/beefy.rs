@@ -4664,7 +4664,8 @@ pub mod api {
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
             pub struct UpdateClientState {
-                pub raw: ::std::vec::Vec<::core::primitive::u8>,
+                pub client_id: ::std::vec::Vec<::core::primitive::u8>,
+                pub mmr_root: ::std::vec::Vec<::core::primitive::u8>,
             }
             impl ::subxt::Call for UpdateClientState {
                 const PALLET: &'static str = "Ibc";
@@ -4690,9 +4691,13 @@ pub mod api {
                 }
                 pub fn update_client_state(
                     &self,
-                    raw: ::std::vec::Vec<::core::primitive::u8>,
+                    client_id: ::std::vec::Vec<::core::primitive::u8>,
+                    mmr_root: ::std::vec::Vec<::core::primitive::u8>,
                 ) -> ::subxt::SubmittableExtrinsic<T, UpdateClientState> {
-                    let call = UpdateClientState { raw };
+                    let call = UpdateClientState {
+                        client_id,
+                        mmr_root,
+                    };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -6975,7 +6980,8 @@ pub mod api {
                     },
                     #[codec(index = 1)]
                     update_client_state {
-                        raw: ::std::vec::Vec<::core::primitive::u8>,
+                        client_id: ::std::vec::Vec<::core::primitive::u8>,
+                        mmr_root: ::std::vec::Vec<::core::primitive::u8>,
                     },
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]

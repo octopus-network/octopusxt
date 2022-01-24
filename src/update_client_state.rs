@@ -1,4 +1,5 @@
 use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, mmr, validator_set, Error};
+use jsonrpsee::types::to_json_value;
 
 use crate::call_ibc::{get_block_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
@@ -101,24 +102,6 @@ pub async fn build_validator_proof(
 
         println!("get validator merkle proof = {:?}", validator_merkle_proof);
         validator_merkle_proofs.push(validator_merkle_proof);
-
-        // // then
-        // assert!(verify_proof::<Keccak256, _, _>(
-        //     &proof.root,
-        //     proof.proof.clone(),
-        //     eth_addresss.len(),
-        //     proof.leaf_index,
-        //     &proof.leaf.clone()
-        // ));
-
-        // // finally
-        // assert!(verify_proof::<Keccak256, _, _>(
-        //     &eth_addresss_merkle_root,
-        //     proof.proof.clone(),
-        //     eth_addresss.len(),
-        //     proof.leaf_index,
-        //     &proof.leaf.clone()
-        // ));
     }
 
     println!(
@@ -164,19 +147,19 @@ pub async fn build_mmr_proof(
 /// Update client state
 pub async fn send_and_update_client_state(
     client: Client<DefaultConfig>,
-    // signer: &PairSigner<DefaultConfig, Pair>,
+    client_id: Vec<u8>,
     mmr_root: help::MmrRoot,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     log::info!("in call_ibc: [update_client_state]");
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
     let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
     // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
-    let mmr_root_bytes = <help::MmrRoot as Encode>::encode(&mmr_root);
+    let encode_mmr_root = <help::MmrRoot as Encode>::encode(&mmr_root);
 
     let result = api
         .tx()
         .ibc()
-        .update_client_state(mmr_root_bytes)
+        .update_client_state(client_id, encode_mmr_root)
         .sign_and_submit(&signer)
         .await?;
 
@@ -191,6 +174,9 @@ pub async fn update_clien_state_service(
     target_client: Client<DefaultConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // env_logger::init();
+
+    // mock client id
+    let client_id = "10-grandpa-0".as_bytes();
 
     // subscribe beefy justification for src chain
     let api_a = src_client
@@ -261,7 +247,10 @@ pub async fn update_clien_state_service(
         println!("build mmr_root = {:?}", mmr_root);
 
         // send mmr root to substrate-ibc
-        let result = send_and_update_client_state(target_client.clone(), mmr_root).await;
+        let result =
+            send_and_update_client_state(target_client.clone(), client_id.to_vec(), mmr_root)
+                .await
+                .unwrap();
         println!("update client state result: {:?}", result);
     }
 }
@@ -434,20 +423,6 @@ mod tests {
             hex::encode(&light_client.validator_set.root)
         );
 
-        // init client state
-        // let epoch_number = 10;
-        // let chain_id = ChainId::new("10-grandpa-0".to_string(), epoch_number);
-        // let mut client_state = ClientState {
-        //     chain_id: chain_id.clone(),
-        //     block_number: u32::default(),
-        //     frozen_height: Height::default(),
-        //     block_header: BlockHeader::default(),
-        //     // latest_commitment: lc.latest_commitment.unwrap().into(),
-        //     latest_commitment: Commitment::default(),
-        //     validator_set: light_client.validator_set.clone().into(),
-        // };
-        // println!("init client_state: {:?}", client_state);
-
         // subscribe beefy justification
         let signed_commitment = subscribe_beefy(client.clone()).await.unwrap().0;
 
@@ -520,10 +495,7 @@ mod tests {
                 "InvalidNumberOfSignatures! expected: {}",
                 (light_client.validator_set.len / 2) as usize
             );
-            // return Err(Error::InvalidNumberOfSignatures {
-            //     expected: (self.validator_set.len / 2) as usize,
-            //     got: signatures_count,
-            // });
+
             return Ok(());
         }
 
@@ -611,20 +583,17 @@ mod tests {
 
         //generate the proof
         let target_height = block_number - 1;
-        // let (mmr_leaf, mmr_leaf_proof) =
-        //     get_mmr_leaf_and_mmr_proof(client.clone(), target_height as u64)
-        //         .await
-        //         .unwrap();
 
         let api = client
             .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-        let block_hash = api
+        let block_hash: sp_core::H256 = api
             .client
             .rpc()
             .block_hash(Some(BlockNumber::from(target_height)))
-            .await?;
+            .await?
+            .unwrap();
 
         println!(
             "block number : {} -> block hash : {:?}",
@@ -632,8 +601,11 @@ mod tests {
         );
         // need to use `to_json_value` to convert the params to json value
         // need make sure mmr_generate_proof index is u64
-        let params = &[to_json_value(target_height as u64)?, to_json_value(block_hash)?];
-        // let params = &[to_json_value(target_height as u64)?];
+        // let params = &[
+        //     to_json_value(target_height as u64)?,
+        //     to_json_value(block_hash)?,
+        // ];
+        let params = &[to_json_value(target_height as u64)?];
         let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
             .client
             .rpc()
@@ -641,11 +613,19 @@ mod tests {
             .request("mmr_generateProof", params)
             .await?;
 
-        println!(
-            "generate_proof block hash : {:?}",
-            generate_proof.block_hash
-        );
+        // let generate_proof = get_mmr_leaf_and_mmr_proof(
+        //     (block_number - 1) as u64,
+        //     Some(block_hash),
+        //     client.clone(),
+        // )
+        // .await?;
 
+        // println!(
+        //     "generate_proof block hash : {:?}",
+        //     generate_proof.block_hash
+        // );
+
+        // let mmr_leaf_proof = generate_proof.proof.0;
         let mmr_leaf_proof = generate_proof.proof.0;
         println!(
             "generated the mmr leaf proof = {:?}",
@@ -655,6 +635,7 @@ mod tests {
         let decode_mmr_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
         println!("decode the mmr leaf proof = {:#?}", decode_mmr_proof);
 
+        // let mmr_leaf = generate_proof.leaf.0;
         let mmr_leaf = generate_proof.leaf.0;
         println!(
             "generated the mmr leaf  = {:?}",
@@ -681,23 +662,27 @@ mod tests {
             HexDisplay::from(&mmr_leaf.parent_number_and_hash.1)
         );
 
-        let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof);
-        // if !result {
-        //     // return Err(Error::InvalidMmrLeafProof);
-        //     println!("mmr::verify_leaf_proof failure! ");
+        assert_eq!(
+            mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof),
+            Ok(true)
+        );
+        // let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof);
+        // // if !result {
+        // //     // return Err(Error::InvalidMmrLeafProof);
+        // //     println!("mmr::verify_leaf_proof failure! ");
+        // // }
+
+        // match result {
+        //     Ok(b) => {
+        //         if !b {
+        //             println!("mmr::verify_leaf_proof failure! ");
+        //         } else {
+        //             println!("mmr::verify_leaf_proof succees! ");
+        //         }
+        //     }
+
+        //     Err(e) => println!("mr::verify_leaf_proof error! : {:?}", e),
         // }
-
-        match result {
-            Ok(b) => {
-                if !b {
-                    println!("mmr::verify_leaf_proof failure! ");
-                } else {
-                    println!("mmr::verify_leaf_proof succees! ");
-                }
-            }
-
-            Err(e) => println!("mr::verify_leaf_proof error! : {:?}", e),
-        }
 
         Ok(())
     }
@@ -818,37 +803,14 @@ mod tests {
         )
         .is_ok());
 
+        println!("verify_commitment_signatures passed ! ");
+
         //get mmr proof
         let proof = build_mmr_proof(client.clone(), block_number).await?;
         let MmrProof {
             mmr_leaf,
             mmr_leaf_proof,
         } = proof.clone();
-        // Note: target_height = signed_commitment.commitment.block_number-1
-        // let target_height = block_number - 1;
-
-        // let (mmr_leaf, mmr_leaf_proof) =
-        //     get_mmr_leaf_and_mmr_proof(client.clone(), target_height as u64)
-        //         .await
-        //         .unwrap();
-        // // let mmr_leaf = mmr::MmrLeaf::decode(&mut &mmr_leaf[..]).unwrap();
-        // // let mmr_leaf_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
-        // println!("get mmr_leaf : {:?}", hex::encode(&mmr_leaf.clone()));
-        // println!(
-        //     "get mmr_leaf_proof : {:?}",
-        //     hex::encode(mmr_leaf_proof.clone())
-        // );
-
-        // let mmr_proof = MmrProof {
-        //     mmr_leaf: help::MmrLeaf::from(mmr_leaf),
-        //     mmr_leaf_proof: help::MmrLeafProof::from(mmr_leaf_proof),
-        // };
-        // println!("get mmr proof = {:?}", mmr_proof);
-
-        // let mmr_leaf = proof.mmr_leaf.into();
-        // let mmr_leaf_bytes = mmr::MmrLeaf::encode(&mmr_leaf);
-        // let mmr_leaf_proof = proof.mmr_leaf_proof.into();
-        // let mmr_leaf_proof_bytes = mmr::MmrLeafProof::encode(&mmr_leaf_proof);
 
         // mock verify mmr root
         let mmr_leaf_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
@@ -862,43 +824,42 @@ mod tests {
 
         // assert!(mmr::verify_leaf_proof(commitment.payload, mmr_leaf_hash, mmr_leaf_proof).is_ok());
 
-        let result =
-            mmr::verify_leaf_proof(commitment.payload, mmr_leaf_hash, mmr_leaf_proof).unwrap();
-        if !result {
-            // return Err(Error::InvalidMmrLeafProof);
-            println!("mmr::verify_leaf_proof failure! ");
-        } else {
-            println!("mmr::verify_leaf_proof succees! ");
+        let result = mmr::verify_leaf_proof(commitment.payload, mmr_leaf_hash, mmr_leaf_proof);
+
+        match result {
+            Ok(b) => {
+                if !b {
+                    println!("mmr::verify_leaf_proof failure! ");
+                } else {
+                    println!("mmr::verify_leaf_proof succees! ");
+                    // update the latest commitment, including mmr_root
+                    light_client.latest_commitment = Some(commitment);
+
+                    // update validator_set
+                    if mmr_leaf.beefy_next_authority_set.id > light_client.validator_set.id {
+                        println!(
+                            "mmr_leaf.beefy_next_authority_set.id = {}",
+                            mmr_leaf.beefy_next_authority_set.id
+                        );
+                        println!(
+                            "light_client.validator_set.id= {}",
+                            light_client.validator_set.id
+                        );
+                        light_client.validator_set = mmr_leaf.beefy_next_authority_set;
+                    }
+                    println!("the updated beefy light client is : {:?}", light_client);
+                    println!(
+                        "beefy light client validators set root = {}",
+                        hex::encode(&light_client.validator_set.root)
+                    );
+                }
+            }
+
+            Err(e) => println!("mr::verify_leaf_proof error! : {:?}", e),
         }
 
-        // match result {
-        //     Ok(_) => println!("mmr::verify_leaf_proof sucesse! "),
-        //     Err(e) => println!("mmr::verify_leaf_proof failure! : {:?}", e),
-        // }
-
-        // update the latest commitment, including mmr_root
-        light_client.latest_commitment = Some(commitment);
-
-        // update validator_set
-        if mmr_leaf.beefy_next_authority_set.id > light_client.validator_set.id {
-            println!(
-                "mmr_leaf.beefy_next_authority_set.id = {}",
-                mmr_leaf.beefy_next_authority_set.id
-            );
-            println!(
-                "light_client.validator_set.id= {}",
-                light_client.validator_set.id
-            );
-            light_client.validator_set = mmr_leaf.beefy_next_authority_set;
-        }
-        println!("the updated beefy light client is : {:?}", light_client);
-        println!(
-            "beefy light client validators set root = {}",
-            hex::encode(&light_client.validator_set.root)
-        );
-
         //
-        //
+        //----------------------------------new light_client-----------------------------------------
         //
         let public_keys2 = vec![
             "0x020a1091341fe5664bfa1782d5e04779689068c916b04cb365ec3153755684d9a1".to_string(), // Alice
@@ -913,14 +874,7 @@ mod tests {
 
         let signed_commitment2 =
             commitment::SignedCommitment::decode(&mut &signed_commitment_raw2.clone()[..]).unwrap();
-        // let signed_commitment = commitment::SignedCommitment::decode(&mut &signed_commitment[..])
-        //     .map_err(|_| Error::InvalidSignedCommitment)?;
 
-        // let commitment::Commitment {
-        //     payload,
-        //     block_number,
-        //     validator_set_id,
-        // } = signed_commitment2.commitment;
         println!(
             "signed commitment block_number : {}",
             signed_commitment2.commitment.block_number
@@ -949,6 +903,15 @@ mod tests {
             build_mmr_proof(client.clone(), signed_commitment2.commitment.block_number).await?;
 
         // let signed_commitment2_bytes = commitment::SignedCommitment::encode(&signed_commitment2);
+
+        // assert!(light_client2
+        //     .update_state(
+        //         &signed_commitment_raw2,
+        //         &validator_proofs2,
+        //         &proof2.mmr_leaf,
+        //         &proof2.mmr_leaf_proof,
+        //     )
+        //     .is_ok());
 
         let result2 = light_client2.update_state(
             &signed_commitment_raw2,
@@ -1010,8 +973,6 @@ mod tests {
         let api_a = client.clone().to_runtime_api::<RuntimeApi<DefaultConfig>>();
         let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
         let mut sub = BeefySubscription::new(sub);
-
-        // msg loop for handle the beefy SignedCommitment
 
         let raw_signed_commitment = sub.next().await.unwrap();
         // decode signed commitment
@@ -1137,29 +1098,33 @@ mod tests {
             &mmr_leaf_proof,
         );
         match result {
-            Ok(_) => println!("update the beefy light client sucesse! : {:?}", lc),
-            Err(e) => println!("update the beefy light client failure! : {:?}", e),
+            Ok(_) => {
+                println!("update the beefy light client sucesse! ");
+                println!("after update,the beefy light client is : {:?}", lc);
+
+                // 利用beefy_light_client中的状态更新ClientState
+                // let latest_commitment = lc.latest_commitment.unwrap();
+                let latest_commitment = signed_commitment.commitment;
+                client_state.block_number = latest_commitment.block_number;
+                client_state.latest_commitment = help::Commitment::from(latest_commitment);
+
+                // update validator_set
+                let mmr_leaf = mmr::MmrLeaf::decode(&mut &mmr_leaf[..]).unwrap();
+                if mmr_leaf.beefy_next_authority_set.id > lc.validator_set.id {
+                    lc.validator_set = mmr_leaf.beefy_next_authority_set;
+                }
+                client_state.validator_set = help::ValidatorSet::from(lc.validator_set.clone());
+                client_state.block_header = block_header;
+
+                // TODO: 保存链上
+                //ClientKeeper::store_client_state(client_state)
+                println!("the updated client state is : {:?}", client_state);
+            }
+            Err(e) => {
+                println!("update the beefy light client failure! : {:?}", e);
+                println!("the beefy light client state is : {:?}", lc);
+            }
         }
-
-        println!("after update,the beefy light client is : {:?}", lc);
-
-        // 利用beefy_light_client中的状态更新ClientState
-        // let latest_commitment = lc.latest_commitment.unwrap();
-        let latest_commitment = signed_commitment.commitment;
-        client_state.block_number = latest_commitment.block_number;
-        client_state.latest_commitment = help::Commitment::from(latest_commitment);
-
-        // update validator_set
-        let mmr_leaf = mmr::MmrLeaf::decode(&mut &mmr_leaf[..]).unwrap();
-        if mmr_leaf.beefy_next_authority_set.id > lc.validator_set.id {
-            lc.validator_set = mmr_leaf.beefy_next_authority_set;
-        }
-        client_state.validator_set = help::ValidatorSet::from(lc.validator_set.clone());
-        client_state.block_header = block_header;
-
-        // TODO: 保存链上
-        //ClientKeeper::store_client_state(client_state)
-        println!("the updated client state is : {:?}", client_state);
 
         Ok(())
     }
