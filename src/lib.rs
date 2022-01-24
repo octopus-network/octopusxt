@@ -3,12 +3,13 @@
 pub mod call_ibc;
 // TODO to deal with to the problem
 // pub mod update_client_state;
+pub mod update_client_state;
 pub use call_ibc::{
     deliver, get_acknowledge_packet_state, get_channel_end, get_channels, get_client_connections,
     get_client_consensus, get_client_state, get_clients, get_commitment_packet_state,
     get_connection_channels, get_connection_end, get_connections, get_consensus_state_with_height,
     get_latest_height, get_packet_commitment, get_packet_receipt, get_send_packet_event,
-    get_unreceipt_packet, subscribe_ibc_event,
+    get_unreceipt_packet, subscribe_beefy, subscribe_ibc_event,
 };
 
 use codec::{Decode, Encode};
