@@ -1374,7 +1374,7 @@ pub async fn deliver(
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
-pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_node::DefaultConfig>,)
+pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, block_hash: sp_core::H256, client: Client<ibc_node::DefaultConfig>,)
     -> Result<(Vec<u8>, Vec<u8>),Box<dyn std::error::Error>> {
     log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
@@ -1383,7 +1383,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, client: Client<ibc_no
 
     // need to use `to_json_value` to convert the params to json value
     // need make sure mmr_generate_proof index is u64
-    let params = &[to_json_value(block_number)?];
+    let params = &[to_json_value(block_number)?, to_json_value(block_hash)];
     let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
         .client
         .rpc()
