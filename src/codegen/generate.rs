@@ -4662,6 +4662,15 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "deliver";
             }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            pub struct UpdateClientState {
+                pub client_id: ::std::vec::Vec<::core::primitive::u8>,
+                pub mmr_root: ::std::vec::Vec<::core::primitive::u8>,
+            }
+            impl ::subxt::Call for UpdateClientState {
+                const PALLET: &'static str = "Ibc";
+                const FUNCTION: &'static str = "update_client_state";
+            }
             pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
                 client: &'a ::subxt::Client<T>,
             }
@@ -4678,6 +4687,17 @@ pub mod api {
                     tmp: ::core::primitive::u8,
                 ) -> ::subxt::SubmittableExtrinsic<T, Deliver> {
                     let call = Deliver { messages, tmp };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn update_client_state(
+                    &self,
+                    client_id: ::std::vec::Vec<::core::primitive::u8>,
+                    mmr_root: ::std::vec::Vec<::core::primitive::u8>,
+                ) -> ::subxt::SubmittableExtrinsic<T, UpdateClientState> {
+                    let call = UpdateClientState {
+                        client_id,
+                        mmr_root,
+                    };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -6957,6 +6977,11 @@ pub mod api {
                     deliver {
                         messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                         tmp: ::core::primitive::u8,
+                    },
+                    #[codec(index = 1)]
+                    update_client_state {
+                        client_id: ::std::vec::Vec<::core::primitive::u8>,
+                        mmr_root: ::std::vec::Vec<::core::primitive::u8>,
                     },
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
