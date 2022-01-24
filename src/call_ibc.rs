@@ -1374,7 +1374,7 @@ pub async fn deliver(
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
-pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, block_hash: sp_core::H256, client: Client<ibc_node::DefaultConfig>,)
+pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, block_hash: Option<sp_core::H256>, client: Client<ibc_node::DefaultConfig>,)
     -> Result<(Vec<u8>, Vec<u8>),Box<dyn std::error::Error>> {
     log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
@@ -1486,6 +1486,30 @@ mod tests {
         use subxt::StorageEntry;
         let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
         let result = ibc.key();
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let api = client.clone().to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+        let block_header = block.next().await.unwrap().unwrap();
+
+        let block_hash: sp_core::H256 = block_header.hash();
+
+        println!("block_hash = {:?}", block_hash);
+
+        let result = get_mmr_leaf_and_mmr_proof(23, Some(block_hash), client).await?;
+
+        println!("result = {:?}", result);
 
         Ok(())
     }
