@@ -2213,8 +2213,8 @@ pub mod api {
                 }
             }
             pub struct Observations(
-                runtime_types::pallet_octopus_appchain::ObservationType,
-                ::core::primitive::u32,
+                pub runtime_types::pallet_octopus_appchain::ObservationType,
+                pub ::core::primitive::u32,
             );
             impl ::subxt::StorageEntry for Observations {
                 const PALLET: &'static str = "OctopusAppchain";
@@ -2591,8 +2591,8 @@ pub mod api {
                 }
             }
             pub struct ErasStakers(
-                ::core::primitive::u32,
-                ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
             );
             impl ::subxt::StorageEntry for ErasStakers {
                 const PALLET: &'static str = "OctopusLpos";
@@ -3031,8 +3031,8 @@ pub mod api {
                 }
             }
             pub struct KeyOwner(
-                runtime_types::sp_core::crypto::KeyTypeId,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub runtime_types::sp_core::crypto::KeyTypeId,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for KeyOwner {
                 const PALLET: &'static str = "Session";
@@ -3229,7 +3229,7 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct ReceivedHeartbeats(::core::primitive::u32, ::core::primitive::u32);
+            pub struct ReceivedHeartbeats(pub ::core::primitive::u32, pub ::core::primitive::u32);
             impl ::subxt::StorageEntry for ReceivedHeartbeats {
                 const PALLET: &'static str = "ImOnline";
                 const STORAGE: &'static str = "ReceivedHeartbeats";
@@ -3244,8 +3244,8 @@ pub mod api {
                 }
             }
             pub struct AuthoredBlocks(
-                ::core::primitive::u32,
-                ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
             );
             impl ::subxt::StorageEntry for AuthoredBlocks {
                 const PALLET: &'static str = "ImOnline";
@@ -4154,8 +4154,8 @@ pub mod api {
                 }
             }
             pub struct Account(
-                ::core::primitive::u32,
-                ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
             );
             impl ::subxt::StorageEntry for Account {
                 const PALLET: &'static str = "Assets";
@@ -4176,9 +4176,9 @@ pub mod api {
                 }
             }
             pub struct Approvals(
-                ::core::primitive::u32,
-                ::subxt::sp_core::crypto::AccountId32,
-                ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::subxt::sp_core::crypto::AccountId32,
             );
             impl ::subxt::StorageEntry for Approvals {
                 const PALLET: &'static str = "Assets";
@@ -5005,8 +5005,8 @@ pub mod api {
                 }
             }
             pub struct Channels(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for Channels {
                 const PALLET: &'static str = "Ibc";
@@ -5053,8 +5053,8 @@ pub mod api {
                 }
             }
             pub struct NextSequenceSend(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for NextSequenceSend {
                 const PALLET: &'static str = "Ibc";
@@ -5074,8 +5074,8 @@ pub mod api {
                 }
             }
             pub struct NextSequenceRecv(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for NextSequenceRecv {
                 const PALLET: &'static str = "Ibc";
@@ -5095,8 +5095,8 @@ pub mod api {
                 }
             }
             pub struct NextSequenceAck(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for NextSequenceAck {
                 const PALLET: &'static str = "Ibc";
@@ -5116,9 +5116,9 @@ pub mod api {
                 }
             }
             pub struct Acknowledgements(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for Acknowledgements {
                 const PALLET: &'static str = "Ibc";
@@ -5196,9 +5196,9 @@ pub mod api {
                 }
             }
             pub struct PacketReceipt(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for PacketReceipt {
                 const PALLET: &'static str = "Ibc";
@@ -5212,9 +5212,9 @@ pub mod api {
                 }
             }
             pub struct PacketCommitment(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
             );
             impl ::subxt::StorageEntry for PacketCommitment {
                 const PALLET: &'static str = "Ibc";
@@ -5241,9 +5241,9 @@ pub mod api {
                 }
             }
             pub struct SendPacketEvent(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::core::primitive::u64,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::core::primitive::u64,
             );
             impl ::subxt::StorageEntry for SendPacketEvent {
                 const PALLET: &'static str = "Ibc";
@@ -5257,9 +5257,9 @@ pub mod api {
                 }
             }
             pub struct WriteAckPacketEvent(
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::std::vec::Vec<::core::primitive::u8>,
-                ::core::primitive::u64,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::core::primitive::u64,
             );
             impl ::subxt::StorageEntry for WriteAckPacketEvent {
                 const PALLET: &'static str = "Ibc";
@@ -5813,7 +5813,7 @@ pub mod api {
                 pub mod misc {
                     use super::runtime_types;
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct WrapperOpaque<_0>(#[codec(compact)] ::core::primitive::u32, pub _0);
+                    pub struct WrapperOpaque<_0>(::core::primitive::u32, pub _0);
                 }
                 pub mod tokens {
                     use super::runtime_types;
@@ -5890,7 +5890,7 @@ pub mod api {
                 pub mod check_nonce {
                     use super::runtime_types;
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckNonce(#[codec(compact)] pub ::core::primitive::u32);
+                    pub struct CheckNonce(pub ::core::primitive::u32);
                 }
                 pub mod check_spec_version {
                     use super::runtime_types;
@@ -7669,7 +7669,7 @@ pub mod api {
         pub mod pallet_transaction_payment {
             use super::runtime_types;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ChargeTransactionPayment(#[codec(compact)] pub ::core::primitive::u128);
+            pub struct ChargeTransactionPayment(pub ::core::primitive::u128);
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
             pub enum Releases {
                 #[codec(index = 0)]
@@ -8439,7 +8439,7 @@ pub mod api {
                     #[codec(index = 0)]
                     Id(_0),
                     #[codec(index = 1)]
-                    Index(#[codec(compact)] _1),
+                    Index(_1),
                     #[codec(index = 2)]
                     Raw(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 3)]

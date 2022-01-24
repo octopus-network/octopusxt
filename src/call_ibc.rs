@@ -19,9 +19,7 @@ use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
 use jsonrpsee::types::to_json_value;
-use log::log;
 use sp_core::storage::StorageKey;
-use subxt::ClientBuilder;
 use subxt::storage::{StorageEntry, StorageKeyPrefix};
 
 /// Subscribe ibc events
@@ -1495,8 +1493,59 @@ mod tests {
     // add unit test for get storage key
     #[test]
     fn test_get_storage_key() {
+
+        let _ibc = crate::ibc_node::ibc::storage::ClientStates(vec![1, 2, 3]);
+
         let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-        let result = get_storage_key(&ibc);
-        println!("key = {:?}", result);
+
+        // let result = get_storage_key(&ibc);
+        // println!("key = {:?}", result);
+
+        let _ibc = crate::ibc_node::ibc::storage::ConsensusStates(vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::Connections(vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::ConnectionsKeys;
+
+        let _ibc = crate::ibc_node::ibc::storage::Channels(vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::ChannelsKeys;
+
+        let _ibc = crate::ibc_node::ibc::storage::ChannelsConnection(vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::NextSequenceSend(vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::NextSequenceRecv(vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::NextSequenceAck(vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::Acknowledgements(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
+
+        let _ibc = crate::ibc_node::ibc::storage::Clients(vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::ClientCounter;
+
+        let _ibc = crate::ibc_node::ibc::storage::ConnectionCounter;
+
+        let _ibc = crate::ibc_node::ibc::storage::ChannelCounter;
+
+        let _ibc = crate::ibc_node::ibc::storage::ConnectionClient(vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::PacketReceipt(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::PacketCommitment(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+
+        let _ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
+
+        let _ibc = crate::ibc_node::ibc::storage::SendPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
+
+        let _ibc = crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
+
+        let _ibc = crate::ibc_node::ibc::storage::LatestHeight;
+
+        let _ibc = crate::ibc_node::ibc::storage::OldHeight;
+
     }
 }

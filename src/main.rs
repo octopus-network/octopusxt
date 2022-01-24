@@ -1,12 +1,7 @@
 use octopusxt::ibc_node;
-use std::{str::FromStr, collections::HashMap};
-use beefy_light_client::header::Digest;
-use beefy_light_client::Hash;
-use subxt::{ClientBuilder, EventSubscription, sp_arithmetic::traits::Signed};
-use subxt::BlockNumber;
-use subxt::sp_core::Public;
-use octopusxt::call_ibc::{convert_substrate_header_to_ibc_header, get_block_header, get_storage_key};
-use subxt::storage::{StorageEntry, StorageKeyPrefix};
+use subxt::ClientBuilder;
+use octopusxt::call_ibc::get_storage_key;
+use subxt::storage::StorageEntry;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -29,10 +24,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .build::<ibc_node::DefaultConfig>()
         .await?;
 
-    use serde::{Deserialize, Serialize};
-    use sp_core::{storage::StorageKey, Bytes};
-    use jsonrpsee::types::to_json_value;
-    use subxt::StorageEntryKey;
 
     let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
     let storage_key = get_storage_key(&storage_entry);

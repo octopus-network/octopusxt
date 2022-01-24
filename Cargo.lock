@@ -64,9 +64,9 @@ dependencies = [
 
 [[package]]
 name = "anyhow"
-version = "1.0.52"
+version = "1.0.53"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "84450d0b4a8bd1ba4144ce8ce718fbc5d071358b1e5384bace6536b3d1f2d5b3"
+checksum = "94a45b455c14666b85fc40a019e8ab9eb75e3a124e05494f5397122bc9eb06e0"
 
 [[package]]
 name = "arrayref"
@@ -1175,7 +1175,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.7.3"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#c6dc8b0e34c85741b5bcd6e4908b743c1464137b"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#b3ed46462e6d23954926174ce7131755f2c50d94"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1207,7 +1207,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.11.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#c6dc8b0e34c85741b5bcd6e4908b743c1464137b"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#b3ed46462e6d23954926174ce7131755f2c50d94"
 dependencies = [
  "bytes",
  "informalsystems-prost",
@@ -2296,9 +2296,9 @@ dependencies = [
 
 [[package]]
 name = "quote"
-version = "1.0.14"
+version = "1.0.15"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47aa80447ce4daf1717500037052af176af5d38cc3e571d9ec1c7353fc10c87d"
+checksum = "864d3e96a899863136fc6e99f3d7cae289dafe43bf2c5ac19b70df7210c0a145"
 dependencies = [
  "proc-macro2",
 ]
@@ -2734,9 +2734,9 @@ checksum = "568a8e6258aa33c13358f81fd834adb854c6f7c9468520910a9b1e8fac068012"
 
 [[package]]
 name = "serde"
-version = "1.0.134"
+version = "1.0.135"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "96b3c34c1690edf8174f5b289a336ab03f568a4460d8c6df75f2f3a692b3bc6a"
+checksum = "2cf9235533494ea2ddcdb794665461814781c53f19d87b76e571a1c35acbad2b"
 dependencies = [
  "serde_derive",
 ]
@@ -2752,9 +2752,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.134"
+version = "1.0.135"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "784ed1fbfa13fe191077537b0d70ec8ad1e903cfe04831da608aa36457cb653d"
+checksum = "8dcde03d87d4c973c04be249e7d8f0b35db1c848c487bd43032808e59dd8328d"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2763,9 +2763,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.75"
+version = "1.0.78"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c059c05b48c5c0067d4b4b2b4f0732dd65feb52daf7e0ea09cd87e7dadc1af79"
+checksum = "d23c1ba4cf0efd44be32017709280b32d1cea5c3f1275c3b6d9e8bc54f758085"
 dependencies = [
  "itoa 1.0.1",
  "ryu",
@@ -3386,7 +3386,7 @@ dependencies = [
 [[package]]
 name = "subxt"
 version = "0.15.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=octopus-v0.9.12#5de15a300b51d74f36d80bb43f4ce2bf93ac5c94"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=octopus-v0.9.12#ee371f738494c3d6b0dc82b349d41d50f231d0c5"
 dependencies = [
  "async-trait",
  "bitvec",
@@ -3416,7 +3416,7 @@ dependencies = [
 [[package]]
 name = "subxt-codegen"
 version = "0.2.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=octopus-v0.9.12#5de15a300b51d74f36d80bb43f4ce2bf93ac5c94"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=octopus-v0.9.12#ee371f738494c3d6b0dc82b349d41d50f231d0c5"
 dependencies = [
  "async-trait",
  "darling",
@@ -3434,7 +3434,7 @@ dependencies = [
 [[package]]
 name = "subxt-macro"
 version = "0.1.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=octopus-v0.9.12#5de15a300b51d74f36d80bb43f4ce2bf93ac5c94"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=octopus-v0.9.12#ee371f738494c3d6b0dc82b349d41d50f231d0c5"
 dependencies = [
  "async-trait",
  "darling",
@@ -3555,9 +3555,9 @@ dependencies = [
 
 [[package]]
 name = "thread_local"
-version = "1.1.3"
+version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8018d24e04c95ac8790716a5987d0fec4f8b27249ffa0f7d33f1369bdfb88cbd"
+checksum = "5516c27b78311c50bf42c071425c560ac799b11c30b31f87e3081965fe5e0180"
 dependencies = [
  "once_cell",
 ]
