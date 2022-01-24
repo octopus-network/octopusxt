@@ -576,6 +576,12 @@ pub async fn subscribe_ibc_event(
     Ok(events)
 }
 
+#[tokio::test]
+async fn test_subscribe_ibc_event()  -> Result<(), Box<dyn std::error::Error>> {
+    Ok(())
+}
+
+
 /// get latest height used by subscribe_blocks
 pub async fn get_latest_height(
     client: Client<ibc_node::DefaultConfig>,
@@ -599,6 +605,11 @@ pub async fn get_latest_height(
     };
     log::info!("In call_ibc: [get_latest_height] >> height: {:?}", height);
     Ok(height)
+}
+
+#[tokio::test]
+async fn test_get_latest_height()  -> Result<(), Box<dyn std::error::Error>> {
+    Ok(())
 }
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
