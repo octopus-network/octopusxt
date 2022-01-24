@@ -1,6 +1,7 @@
 // mod codegen;
 
 pub mod call_ibc;
+// pub mod update_client_state;
 pub use call_ibc::{
     deliver, get_acknowledge_packet_state, get_channel_end, get_channels, get_client_connections,
     get_client_consensus, get_client_state, get_clients, get_commitment_packet_state,
