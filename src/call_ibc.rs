@@ -1497,17 +1497,16 @@ mod tests {
             .build::<ibc_node::DefaultConfig>()
             .await?;
 
-        let api = client.clone().to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        let api = client.clone()
+            .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+        let block_number = 23;
 
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: sp_core::H256 = block_header.hash();
+        let block_hash: sp_core::H256 = api.client.rpc().block_hash(Some(BlockNumber::from(block_number))).await?.unwrap();
 
         println!("block_hash = {:?}", block_hash);
 
-        let result = get_mmr_leaf_and_mmr_proof(23, Some(block_hash), client).await?;
+        let result = get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client).await?;
 
         println!("result = {:?}", result);
 
