@@ -1383,7 +1383,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, block_hash: sp_core::
 
     // need to use `to_json_value` to convert the params to json value
     // need make sure mmr_generate_proof index is u64
-    let params = &[to_json_value(block_number)?, to_json_value(block_hash)];
+    let params = &[to_json_value(block_number)?, to_json_value(block_hash)?];
     let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
         .client
         .rpc()
