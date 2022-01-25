@@ -328,6 +328,48 @@ pub fn verify_commitment_signatures(
     Ok(())
 }
 
+pub async fn get_mmr_leaf_and_mmr_proof_1(
+    block_number: u32,
+    client: Client<DefaultConfig>,
+) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
+    log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
+
+    let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
+
+    //get block hash
+    let block_hash: sp_core::H256 = api
+        .client
+        .rpc()
+        .block_hash(Some(BlockNumber::from(block_number)))
+        .await?
+        .unwrap();
+    println!(
+        "block number : {} -> block hash : {:?}",
+        block_number, block_hash
+    );
+
+    // need to use `to_json_value` to convert the params to json value
+    // need make sure mmr_generate_proof index is u64
+    let params = &[
+        to_json_value(block_number as u64)?,
+        to_json_value(block_hash)?,
+    ];
+    let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
+        .client
+        .rpc()
+        .client
+        .request("mmr_generateProof", params)
+        .await?;
+
+    log::info!("info generate_proof : {:?}", generate_proof);
+    // return mmr_leaf, mmr_proof
+    Ok((
+        generate_proof.block_hash,
+        generate_proof.leaf.0,
+        generate_proof.proof.0,
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -343,6 +385,30 @@ mod tests {
     use jsonrpsee::types::to_json_value;
     use subxt::sp_core::hexdisplay::HexDisplay;
     use subxt::ClientBuilder;
+
+    #[tokio::test]
+    async fn test_subscribe_beefy_justification() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        // subscribe beefy justification
+        let signed_commitment_raw = subscribe_beefy(client.clone()).await.unwrap().0 .0;
+        println!(
+            "signed_commitment = {:?}",
+            HexDisplay::from(&signed_commitment_raw)
+        );
+        // decode signed_commitment
+        let signed_commitment =
+            commitment::SignedCommitment::decode(&mut &signed_commitment_raw.clone()[..]).unwrap();
+        println!("signed_commitment = {:?}", signed_commitment);
+
+        let commitment = signed_commitment.commitment;
+        println!("commitment : {:?}", commitment);
+
+        Ok(())
+    }
 
     #[tokio::test]
     async fn test_verify_validator_signature() -> Result<(), Box<dyn std::error::Error>> {
@@ -622,22 +688,21 @@ mod tests {
             .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-        //get block hash
-        let block_hash: sp_core::H256 = api
-            .client
-            .rpc()
-            .block_hash(Some(BlockNumber::from(target_height)))
-            .await?
-            .unwrap();
-        println!(
-            "block number : {} -> block hash : {:?}",
-            target_height, block_hash
-        );
+        // //get block hash
+        // let block_hash: sp_core::H256 = api
+        //     .client
+        //     .rpc()
+        //     .block_hash(Some(BlockNumber::from(target_height)))
+        //     .await?
+        //     .unwrap();
+        // println!(
+        //     "block number : {} -> block hash : {:?}",
+        //     target_height, block_hash
+        // );
 
         //get mmr leaf and proof
         let (block_hash, mmr_leaf, mmr_leaf_proof) =
-            get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client.clone())
-                .await?;
+            get_mmr_leaf_and_mmr_proof_1(target_height, client.clone()).await?;
         println!("generate_proof block hash : {:?}", block_hash);
 
         // println!(
