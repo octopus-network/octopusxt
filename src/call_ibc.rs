@@ -15,15 +15,15 @@ use codec::{Decode, Encode};
 use core::str::FromStr;
 use jsonrpsee::types::to_json_value;
 use prost_types::Any;
-use sp_keyring::AccountKeyring;
-use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
-use tokio::time::sleep;
 use sp_core::storage::StorageKey;
+use sp_keyring::AccountKeyring;
 use subxt::storage::{StorageEntry, StorageKeyPrefix};
-use subxt::ClientBuilder;
-use tendermint_proto::Protobuf;
-use subxt::SignedCommitment;
 use subxt::BeefySubscription;
+use subxt::ClientBuilder;
+use subxt::SignedCommitment;
+use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
+use tendermint_proto::Protobuf;
+use tokio::time::sleep;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -580,7 +580,7 @@ pub async fn subscribe_ibc_event(
 }
 
 #[tokio::test]
-async fn test_subscribe_ibc_event()  -> Result<(), Box<dyn std::error::Error>> {
+async fn test_subscribe_ibc_event() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
@@ -623,7 +623,7 @@ pub async fn get_latest_height(
 }
 
 #[tokio::test]
-async fn test_get_latest_height()  -> Result<(), Box<dyn std::error::Error>> {
+async fn test_get_latest_height() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
@@ -1397,8 +1397,11 @@ pub async fn deliver(
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
-pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, block_hash: Option<sp_core::H256>, client: Client<ibc_node::DefaultConfig>,)
-    -> Result<(Vec<u8>, Vec<u8>),Box<dyn std::error::Error>> {
+pub async fn get_mmr_leaf_and_mmr_proof(
+    block_number: u64,
+    block_hash: Option<sp_core::H256>,
+    client: Client<ibc_node::DefaultConfig>,
+) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
     log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
@@ -1415,7 +1418,11 @@ pub async fn get_mmr_leaf_and_mmr_proof(block_number: u64, block_hash: Option<sp
 
     log::info!("info generate_proof : {:?}", generate_proof);
     // return mmr_leaf, mmr_proof
-    Ok((generate_proof.leaf.0, generate_proof.proof.0))
+    Ok((
+        generate_proof.block_hash,
+        generate_proof.leaf.0,
+        generate_proof.proof.0,
+    ))
 }
 
 /// get header by block hash
@@ -1546,16 +1553,23 @@ mod tests {
             .build::<ibc_node::DefaultConfig>()
             .await?;
 
-        let api = client.clone()
+        let api = client
+            .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
         let block_number = 23;
 
-        let block_hash: sp_core::H256 = api.client.rpc().block_hash(Some(BlockNumber::from(block_number))).await?.unwrap();
+        let block_hash: sp_core::H256 = api
+            .client
+            .rpc()
+            .block_hash(Some(BlockNumber::from(block_number)))
+            .await?
+            .unwrap();
 
         println!("block_hash = {:?}", block_hash);
 
-        let result = get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client).await?;
+        let result =
+            get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client).await?;
 
         println!("result = {:?}", result);
 
@@ -1565,7 +1579,6 @@ mod tests {
     // add unit test for get storage key
     #[test]
     fn test_get_storage_key() {
-
         let _ibc = crate::ibc_node::ibc::storage::ClientStates(vec![1, 2, 3]);
 
         let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
@@ -1591,7 +1604,11 @@ mod tests {
 
         let _ibc = crate::ibc_node::ibc::storage::NextSequenceAck(vec![1, 2, 3], vec![1, 2, 3]);
 
-        let _ibc = crate::ibc_node::ibc::storage::Acknowledgements(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+        let _ibc = crate::ibc_node::ibc::storage::Acknowledgements(
+            vec![1, 2, 3],
+            vec![1, 2, 3],
+            vec![1, 2, 3],
+        );
 
         let _ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
 
@@ -1605,19 +1622,27 @@ mod tests {
 
         let _ibc = crate::ibc_node::ibc::storage::ConnectionClient(vec![1, 2, 3]);
 
-        let _ibc = crate::ibc_node::ibc::storage::PacketReceipt(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+        let _ibc = crate::ibc_node::ibc::storage::PacketReceipt(
+            vec![1, 2, 3],
+            vec![1, 2, 3],
+            vec![1, 2, 3],
+        );
 
-        let _ibc = crate::ibc_node::ibc::storage::PacketCommitment(vec![1, 2, 3], vec![1, 2, 3], vec![1, 2, 3]);
+        let _ibc = crate::ibc_node::ibc::storage::PacketCommitment(
+            vec![1, 2, 3],
+            vec![1, 2, 3],
+            vec![1, 2, 3],
+        );
 
         let _ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
 
         let _ibc = crate::ibc_node::ibc::storage::SendPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
 
-        let _ibc = crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
+        let _ibc =
+            crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
 
         let _ibc = crate::ibc_node::ibc::storage::LatestHeight;
 
         let _ibc = crate::ibc_node::ibc::storage::OldHeight;
-
     }
 }

@@ -121,16 +121,17 @@ pub async fn build_mmr_proof(
     // Note: target_height = signed_commitment.commitment.block_number-1
     let target_height = block_number - 1;
 
-    let (mmr_leaf, mmr_leaf_proof) = get_mmr_leaf_and_mmr_proof( target_height as u64, None, src_client)
-        .await
-        .unwrap();
+    let (_block_hash, mmr_leaf, mmr_leaf_proof) =
+        get_mmr_leaf_and_mmr_proof(target_height as u64, None, src_client)
+            .await
+            .unwrap();
     // let mmr_leaf = mmr::MmrLeaf::decode(&mut &mmr_leaf[..]).unwrap();
     // let mmr_leaf_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
-    println!("get mmr_leaf : {:?}", hex::encode(&mmr_leaf.clone()));
-    println!(
-        "get mmr_leaf_proof : {:?}",
-        hex::encode(mmr_leaf_proof.clone())
-    );
+    // println!("get mmr_leaf : {:?}", hex::encode(&mmr_leaf.clone()));
+    // println!(
+    //     "get mmr_leaf_proof : {:?}",
+    //     hex::encode(mmr_leaf_proof.clone())
+    // );
 
     // let mmr_proof = MmrProof {
     //     mmr_leaf: help::MmrLeaf::from(mmr_leaf),
@@ -532,145 +533,152 @@ mod tests {
 
         Ok(())
     }
-    // TODO fix
-    #[tokio::test]
-    #[ignore]
-    async fn verify_leaf_proof_works() -> Result<(), Box<dyn std::error::Error>> {
-        let root_hash = hex!("aa0b510cee4270257f6362a353262253de422f069826b5af4398377a4eee03f7");
 
+    #[tokio::test]
+    async fn verify_leaf_proof_works_1() -> Result<(), Box<dyn std::error::Error>> {
+        //static data test1
+        let root_hash = hex!("aa0b510cee4270257f6362a353262253de422f069826b5af4398377a4eee03f7");
         let leaf = hex!("c5010058000000e5ac4bf69913974aeb79779c77d6e22d40575a63d4bca9044b501b12916a6090010000000000000005000000304803fa5a91d9852caafe04b4b867a4ed27a07a5bee3d1507b4b187a68777a20000000000000000000000000000000000000000000000000000000000000000");
         let leaf: Vec<u8> = Decode::decode(&mut &leaf[..]).unwrap();
         let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*leaf).unwrap();
-        println!("decode the mmr leaf  = {:#?}", mmr_leaf);
+        println!("decode the mmr leaf1  = {:?}", mmr_leaf);
         let mmr_leaf_hash = Keccak256::hash(&leaf[..]);
         println!(
-            "the mmr leaf hash = {:?}",
+            "the mmr leaf hash1 = {:?}",
             format!("{}", HexDisplay::from(&mmr_leaf_hash))
         );
 
         let proof = hex!("580000000000000059000000000000000c638bedc14bfdb5cfb8eb7313f311859820948868afbaa340de2a467f4eec130cd789e49d14c7068ec08e0b5680c5e01b372d28802acaeba7b63a5e1482d5147c0e395b48e5a134164c4dac0b30fc8bfd56756329824e6c70c7325769c92c1ff8");
         let mmr_proof = mmr::MmrLeafProof::decode(&mut &proof[..]).unwrap();
-        println!("decode the mmr leaf proof = {:#?}", mmr_proof);
+        println!("decode the mmr leaf proof1 = {:?}", mmr_proof);
 
         assert_eq!(
             mmr::verify_leaf_proof(root_hash, mmr_leaf_hash, mmr_proof),
             Ok(true)
         );
 
-        //--------------------------------------------------------------------------------
+        //static data test2
+        let root_hash2 = hex!("2ba2c4447ae150e3a5a8520ec3c608dd0b9b4eb376528793e83c1ea6f4b24483");
+        let leaf2 = hex!("c50100f849000015eea9d2eafe76531afb06f5a89811cef72344113020d63a2e2ca6b40ae7fc77010000000000000001000000aeb47a269393297f4b0a3c9c9cfd00c7a4195255274cf39d83dabc2fcc9ff3d70000000000000000000000000000000000000000000000000000000000000000");
+        let leaf2: Vec<u8> = Decode::decode(&mut &leaf2[..]).unwrap();
+        let mmr_leaf2: mmr::MmrLeaf = Decode::decode(&mut &*leaf2).unwrap();
+        println!("decode the mmr leaf2  = {:?}", mmr_leaf2);
+        let mmr_leaf_hash2 = Keccak256::hash(&leaf2[..]);
+        println!(
+            "the mmr leaf hash2 = {:?}",
+            format!("{}", HexDisplay::from(&mmr_leaf_hash2))
+        );
+
+        let proof2 = hex!("f849000000000000fb4900000000000028c3ff6273bdbfc24b91c7420733d9f79fdfccad4fd6b144446768a8b22963f3dad38a399228289c12fab5049f9f0a559a6b50dd6bf180d9868c7dac9ae7d561b940494fb4e34e52408b518f404ae827c72e0d06a58ecfb07c0b333498899f3eb00eb071a8ed7953b0e77dbfd5e945484633cf26221fa08ccc4cc6357a0f887ff8a5340944057b523cd29b650579c967c71948eab9994229699bbdb4d584b6b1d469a0cdb488187d168665acfe89aaa5c353efa0cd463f3e03cbfedc57b0bc889529aad879f047a528faaef4c50c4b3116849d477f0fa4f256329e8ee6ff1c02310108a6c3461d5562137c56837e1309655019d0068df3481174aeff6bf23db2b3c8239323c1c1d93e37b1d05be4fb2fade9aef03aaacfe15fd7e8d573fede9160652af08375c9f65f67631c9afff278afc7f043856fcf3f42bc2de1f4973b71ea");
+        let mmr_proof2 = mmr::MmrLeafProof::decode(&mut &proof2[..]).unwrap();
+        println!("decode the mmr leaf proof2 = {:?}", mmr_proof2);
+
+        assert_eq!(
+            mmr::verify_leaf_proof(root_hash2, mmr_leaf_hash2, mmr_proof2),
+            Ok(true)
+        );
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn verify_leaf_proof_works_2() -> Result<(), Box<dyn std::error::Error>> {
         let client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
+
         // subscribe beefy justification
         let signed_commitment_raw = subscribe_beefy(client.clone()).await.unwrap().0 .0;
-
+        println!(
+            "signed_commitment = {:?}",
+            HexDisplay::from(&signed_commitment_raw)
+        );
+        // decode signed_commitment
         let signed_commitment =
             commitment::SignedCommitment::decode(&mut &signed_commitment_raw.clone()[..]).unwrap();
-        // let signed_commitment = commitment::SignedCommitment::decode(&mut &signed_commitment[..])
-        //     .map_err(|_| Error::InvalidSignedCommitment)?;
-
         println!("signed_commitment = {:?}", signed_commitment);
 
-        let mmr_root = signed_commitment.commitment.payload;
+        let commitment::Commitment {
+            payload,
+            block_number,
+            validator_set_id,
+        } = signed_commitment.commitment;
 
+        // get mmr root
+        let mmr_root = payload;
         println!(
-            "root_hash(signed commitment payload) : {:?}",
-            format!("{}", HexDisplay::from(&mmr_root))
+            "root_hash(signed commitment payload) : {:?}
+            signed commitment block_number : {}
+            signed commitment validator_set_id : {}",
+            format!("{}", HexDisplay::from(&mmr_root)),
+            block_number,
+            validator_set_id
         );
 
-        let block_number = signed_commitment.commitment.block_number;
-        println!("signed commitment block_number : {}", block_number);
-        let validator_set_id = signed_commitment.commitment.validator_set_id;
-        println!("signed commitment validator_set_id : {}", validator_set_id);
-
-        //generate the proof
+        // target height
         let target_height = block_number - 1;
-
         let api = client
             .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-
+        //get block hash
         let block_hash: sp_core::H256 = api
             .client
             .rpc()
             .block_hash(Some(BlockNumber::from(target_height)))
             .await?
             .unwrap();
-
         println!(
             "block number : {} -> block hash : {:?}",
             target_height, block_hash
         );
 
-        // need to use `to_json_value` to convert the params to json value
-        // need make sure mmr_generate_proof index is u64
-        // let params = &[
-        //     to_json_value(target_height as u64)?,
-        //     to_json_value(block_hash)?,
-        // ];
-        let params = &[to_json_value(target_height as u64)?];
-        let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
-            .client
-            .rpc()
-            .client
-            .request("mmr_generateProof", params)
-            .await?;
-
-        // let generate_proof = get_mmr_leaf_and_mmr_proof(
-        //     (block_number - 1) as u64,
-        //     Some(block_hash),
-        //     client.clone(),
-        // )
-        // .await?;
+        //get mmr leaf and proof
+        let (block_hash, mmr_leaf, mmr_leaf_proof) =
+            get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client.clone())
+                .await?;
+        println!("generate_proof block hash : {:?}", block_hash);
 
         // println!(
-        //     "generate_proof block hash : {:?}",
-        //     generate_proof.block_hash
+        //     "generated the mmr leaf proof = {:?}",
+        //     format!("{}", HexDisplay::from(&mmr_leaf_proof))
+        // );
+        // let decode_mmr_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
+        // println!("decode the mmr leaf proof = {:?}", decode_mmr_proof);
+        // println!(
+        //     "generated the mmr leaf  = {:?}",
+        //     format!("{}", HexDisplay::from(&mmr_leaf))
         // );
 
-        // let mmr_leaf_proof = generate_proof.proof.0;
-        let mmr_leaf_proof = generate_proof.proof.0;
-        println!(
-            "generated the mmr leaf proof = {:?}",
-            format!("{}", HexDisplay::from(&mmr_leaf_proof))
-        );
+        // let mmr_leaf_1: mmr::MmrLeaf = mmr::MmrLeaf::decode(&mut &mmr_leaf.clone()[..]).unwrap();
+        // println!("decode the mmr leaf  = {:?}", mmr_leaf_1);
 
-        let decode_mmr_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
-        println!("decode the mmr leaf proof = {:#?}", decode_mmr_proof);
+        // let mmr_leaf: Vec<u8> = Decode::decode(&mut &mmr_leaf[..]).unwrap();
+        // println!(
+        //     "decode the mmr leaf vec<u8> = {:?}",
+        //     format!("{}", HexDisplay::from(&mmr_leaf))
+        // );
 
-        // let mmr_leaf = generate_proof.leaf.0;
-        let mmr_leaf = generate_proof.leaf.0;
-        println!(
-            "generated the mmr leaf  = {:?}",
-            format!("{}", HexDisplay::from(&mmr_leaf))
-        );
+        // let mmr_leaf_hash = Keccak256::hash(&mmr_leaf[..]);
+        // println!(
+        //     "the mmr leaf hash = {:?}",
+        //     format!("{}", HexDisplay::from(&mmr_leaf_hash))
+        // );
 
-        let mmr_leaf: Vec<u8> = Decode::decode(&mut &mmr_leaf[..]).unwrap();
-        println!(
-            "decode the mmr leaf vec<u8> = {:?}",
-            format!("{}", HexDisplay::from(&mmr_leaf))
-        );
+        // let mmr_leaf_2: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
+        // println!("decode the mmr leaf  = {:?}", mmr_leaf_2);
+        // println!("parent_number  = {}", mmr_leaf_2.parent_number_and_hash.0);
+        // println!(
+        //     "parent_hash  = {:?}",
+        //     HexDisplay::from(&mmr_leaf_2.parent_number_and_hash.1)
+        // );
 
-        let mmr_leaf_hash = Keccak256::hash(&mmr_leaf[..]);
-        println!(
-            "the mmr leaf hash = {:?}",
-            format!("{}", HexDisplay::from(&mmr_leaf_hash))
-        );
+        // assert_eq!(
+        //     mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof),
+        //     Ok(true)
+        // );
 
-        let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
-        println!("decode the mmr leaf  = {:#?}", mmr_leaf);
-        println!("parent_number  = {}", mmr_leaf.parent_number_and_hash.0);
-        println!(
-            "parent_hash  = {:?}",
-            HexDisplay::from(&mmr_leaf.parent_number_and_hash.1)
-        );
-
-        assert_eq!(
-            mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof),
-            Ok(true)
-        );
         // let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof);
         // // if !result {
         // //     // return Err(Error::InvalidMmrLeafProof);
@@ -691,6 +699,7 @@ mod tests {
 
         Ok(())
     }
+
     #[tokio::test]
     async fn test_verify_mmr_root() -> Result<(), Box<dyn std::error::Error>> {
         // init beefy light client
@@ -1324,9 +1333,7 @@ mod tests {
         Ok(())
     }
 
-    // TODO 
     #[tokio::test]
-    #[ignore]
     async fn test_update_service() -> Result<(), Box<dyn std::error::Error>> {
         let src_client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
