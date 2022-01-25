@@ -617,7 +617,7 @@ mod tests {
         );
 
         // target height
-        let target_height = block_number - 1;
+        let target_height = block_number;
         let api = client
             .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
@@ -1334,6 +1334,7 @@ mod tests {
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_update_service() -> Result<(), Box<dyn std::error::Error>> {
         let src_client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
