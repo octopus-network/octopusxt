@@ -688,21 +688,22 @@ mod tests {
             .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-        // //get block hash
-        // let block_hash: sp_core::H256 = api
-        //     .client
-        //     .rpc()
-        //     .block_hash(Some(BlockNumber::from(target_height)))
-        //     .await?
-        //     .unwrap();
-        // println!(
-        //     "block number : {} -> block hash : {:?}",
-        //     target_height, block_hash
-        // );
+        //get block hash
+        let block_hash: sp_core::H256 = api
+            .client
+            .rpc()
+            .block_hash(Some(BlockNumber::from(target_height)))
+            .await?
+            .unwrap();
+        println!(
+            "block number : {} -> block hash : {:?}",
+            target_height, block_hash
+        );
 
         //get mmr leaf and proof
         let (block_hash, mmr_leaf, mmr_leaf_proof) =
-            get_mmr_leaf_and_mmr_proof_1(target_height, client.clone()).await?;
+            get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client.clone()).await?;
+        
         println!("generate_proof block hash : {:?}", block_hash);
 
         // println!(
