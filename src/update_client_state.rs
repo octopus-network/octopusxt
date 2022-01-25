@@ -703,7 +703,7 @@ mod tests {
         //get mmr leaf and proof
         let (block_hash, mmr_leaf, mmr_leaf_proof) =
             get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client.clone()).await?;
-        
+
         println!("generate_proof block hash : {:?}", block_hash);
 
         // println!(
