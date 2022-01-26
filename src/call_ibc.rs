@@ -1557,7 +1557,7 @@ mod tests {
             .clone()
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
-        let block_number = 22777;
+        let block_number = 22;
 
         let block_hash: sp_core::H256 = api
             .client
