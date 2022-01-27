@@ -4734,6 +4734,15 @@ pub mod api {
                 const EVENT: &'static str = "UpdateClient";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            pub struct UpdateClientState(
+                pub runtime_types::pallet_ibc::event::primitive::Height,
+                pub runtime_types::pallet_ibc::event::primitive::ClientState,
+            );
+            impl ::subxt::Event for UpdateClientState {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "UpdateClientState";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
             pub struct UpgradeClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
@@ -6929,6 +6938,15 @@ pub mod api {
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
                     pub struct ClientId(pub ::std::vec::Vec<::core::primitive::u8>);
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    pub struct ClientState {
+                        pub chain_id: ::std::vec::Vec<::core::primitive::u8>,
+                        pub block_number: ::core::primitive::u32,
+                        pub frozen_height: runtime_types::pallet_ibc::event::primitive::Height,
+                        pub block_header: ::std::vec::Vec<::core::primitive::u8>,
+                        pub latest_commitment: ::std::vec::Vec<::core::primitive::u8>,
+                        pub validator_set: ::std::vec::Vec<::core::primitive::u8>,
+                    }
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
                     pub enum ClientType {
                         #[codec(index = 0)]
                         Tendermint,
@@ -7005,20 +7023,25 @@ pub mod api {
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
                     #[codec(index = 3)]
+                    UpdateClientState(
+                        runtime_types::pallet_ibc::event::primitive::Height,
+                        runtime_types::pallet_ibc::event::primitive::ClientState,
+                    ),
+                    #[codec(index = 4)]
                     UpgradeClient(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
                         runtime_types::pallet_ibc::event::primitive::ClientType,
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
-                    #[codec(index = 4)]
+                    #[codec(index = 5)]
                     ClientMisbehaviour(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
                         runtime_types::pallet_ibc::event::primitive::ClientType,
                         runtime_types::pallet_ibc::event::primitive::Height,
                     ),
-                    #[codec(index = 5)]
+                    #[codec(index = 6)]
                     OpenInitConnection(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         ::core::option::Option<
@@ -7030,7 +7053,7 @@ pub mod api {
                         >,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
                     ),
-                    #[codec(index = 6)]
+                    #[codec(index = 7)]
                     OpenTryConnection(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         ::core::option::Option<
@@ -7042,7 +7065,7 @@ pub mod api {
                         >,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
                     ),
-                    #[codec(index = 7)]
+                    #[codec(index = 8)]
                     OpenAckConnection(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         ::core::option::Option<
@@ -7054,7 +7077,7 @@ pub mod api {
                         >,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
                     ),
-                    #[codec(index = 8)]
+                    #[codec(index = 9)]
                     OpenConfirmConnection(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         ::core::option::Option<
@@ -7066,7 +7089,7 @@ pub mod api {
                         >,
                         runtime_types::pallet_ibc::event::primitive::ClientId,
                     ),
-                    #[codec(index = 9)]
+                    #[codec(index = 10)]
                     OpenInitChannel(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7079,7 +7102,7 @@ pub mod api {
                             runtime_types::pallet_ibc::event::primitive::ChannelId,
                         >,
                     ),
-                    #[codec(index = 10)]
+                    #[codec(index = 11)]
                     OpenTryChannel(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7092,7 +7115,7 @@ pub mod api {
                             runtime_types::pallet_ibc::event::primitive::ChannelId,
                         >,
                     ),
-                    #[codec(index = 11)]
+                    #[codec(index = 12)]
                     OpenAckChannel(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7105,7 +7128,7 @@ pub mod api {
                             runtime_types::pallet_ibc::event::primitive::ChannelId,
                         >,
                     ),
-                    #[codec(index = 12)]
+                    #[codec(index = 13)]
                     OpenConfirmChannel(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7118,7 +7141,7 @@ pub mod api {
                             runtime_types::pallet_ibc::event::primitive::ChannelId,
                         >,
                     ),
-                    #[codec(index = 13)]
+                    #[codec(index = 14)]
                     CloseInitChannel(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7131,7 +7154,7 @@ pub mod api {
                             runtime_types::pallet_ibc::event::primitive::ChannelId,
                         >,
                     ),
-                    #[codec(index = 14)]
+                    #[codec(index = 15)]
                     CloseConfirmChannel(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7144,40 +7167,40 @@ pub mod api {
                             runtime_types::pallet_ibc::event::primitive::ChannelId,
                         >,
                     ),
-                    #[codec(index = 15)]
+                    #[codec(index = 16)]
                     SendPacket(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::Packet,
                     ),
-                    #[codec(index = 16)]
+                    #[codec(index = 17)]
                     ReceivePacket(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::Packet,
                     ),
-                    #[codec(index = 17)]
+                    #[codec(index = 18)]
                     WriteAcknowledgement(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::Packet,
                         ::std::vec::Vec<::core::primitive::u8>,
                     ),
-                    #[codec(index = 18)]
+                    #[codec(index = 19)]
                     AcknowledgePacket(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::Packet,
                     ),
-                    #[codec(index = 19)]
+                    #[codec(index = 20)]
                     TimeoutPacket(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::Packet,
                     ),
-                    #[codec(index = 20)]
+                    #[codec(index = 21)]
                     TimeoutOnClosePacket(
                         runtime_types::pallet_ibc::event::primitive::Height,
                         runtime_types::pallet_ibc::event::primitive::Packet,
                     ),
-                    #[codec(index = 21)]
-                    Empty(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 22)]
+                    Empty(::std::vec::Vec<::core::primitive::u8>),
+                    #[codec(index = 23)]
                     ChainError(::std::vec::Vec<::core::primitive::u8>),
                 }
             }

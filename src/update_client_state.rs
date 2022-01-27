@@ -1212,6 +1212,7 @@ signed commitment validator_set_id : {}",
     }
 
     #[tokio::test]
+    #[ignore]
     async fn mock_verify_and_update_statful() -> Result<(), Box<dyn std::error::Error>> {
         // init beefy light client
         // let public_keys = vec![
@@ -1428,6 +1429,7 @@ signed commitment validator_set_id : {}",
     }
 
     #[tokio::test]
+    #[ignore]
     async fn test_update_service() -> Result<(), Box<dyn std::error::Error>> {
         let src_client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
