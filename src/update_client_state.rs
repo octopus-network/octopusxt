@@ -1,10 +1,13 @@
 use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, mmr, validator_set, Error};
 use jsonrpsee::types::to_json_value;
+use sp_core::hexdisplay::HexDisplay;
 
 use crate::call_ibc::{get_block_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
 use codec::{Decode, Encode};
+use ibc::ics02_client::client_type::ClientType;
 use ibc::ics10_grandpa::help;
+use ibc::ics24_host::identifier::ClientId;
 use sp_keyring::AccountKeyring;
 use subxt::sp_core::Public;
 
@@ -147,7 +150,7 @@ pub async fn build_mmr_proof(
 /// send Update client state request
 pub async fn send_update_state_request(
     client: Client<DefaultConfig>,
-    client_id: Vec<u8>,
+    client_id: ClientId,
     mmr_root: help::MmrRoot,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     log::info!("in call_ibc: [update_client_state]");
@@ -156,11 +159,12 @@ pub async fn send_update_state_request(
     // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
 
     let encode_mmr_root = <help::MmrRoot as Encode>::encode(&mmr_root);
+    let encode_client_id = client_id.as_bytes().to_vec();
 
     let result = api
         .tx()
         .ibc()
-        .update_client_state(client_id, encode_mmr_root)
+        .update_client_state(encode_client_id, encode_mmr_root)
         .sign_and_submit(&signer)
         .await?;
 
@@ -175,9 +179,6 @@ pub async fn update_clien_state(
     target_client: Client<DefaultConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // env_logger::init();
-
-    // mock client id
-    let client_id = "10-grandpa-0".as_bytes();
 
     // subscribe beefy justification for src chain
     let api_a = src_client
@@ -202,25 +203,8 @@ pub async fn update_clien_state(
     } = signed_commmitment.commitment;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
-    let payload = format!(
-        "0x{}",
-        subxt::sp_core::hexdisplay::HexDisplay::from(&payload)
-    );
+    let payload = format!("{}", HexDisplay::from(&payload));
     println!("signed commitment payload : {:?}", payload);
-
-    // // get signatures
-    // let signatures: Vec<String> = signed_commmitment
-    //     .signatures
-    //     .clone()
-    //     .into_iter()
-    //     .map(|signature| {
-    //         format!(
-    //             "0x{}",
-    //             subxt::sp_core::hexdisplay::HexDisplay::from(&signature.unwrap().0)
-    //         )
-    //     })
-    //     .collect();
-    // println!("signature :  {:?}", signatures);
 
     // get block header by block number
     let block_header = get_block_header_by_block_number(src_client.clone(), block_number)
@@ -248,8 +232,12 @@ pub async fn update_clien_state(
     };
     println!("build mmr_root = {:?}", mmr_root);
 
+    // TODO: get client id from target chain,maybe query client id by rpc?
+    // mock client id
+    let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
+
     // send mmr root to substrate-ibc
-    let result = send_update_state_request(target_client.clone(), client_id.to_vec(), mmr_root)
+    let result = send_update_state_request(target_client.clone(), client_id, mmr_root)
         .await
         .unwrap();
 
@@ -264,9 +252,6 @@ pub async fn update_clien_state_service(
     target_client: Client<DefaultConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // env_logger::init();
-
-    // mock client id
-    let client_id = "10-grandpa-0".as_bytes();
 
     // subscribe beefy justification for src chain
     let api_a = src_client
@@ -290,22 +275,14 @@ pub async fn update_clien_state_service(
         } = signed_commmitment.commitment;
         println!("signed commitment block_number : {}", block_number);
         println!("signed commitment validator_set_id : {}", validator_set_id);
-        let payload = format!(
-            "0x{}",
-            subxt::sp_core::hexdisplay::HexDisplay::from(&payload)
-        );
+        let payload = format!("{}", HexDisplay::from(&payload));
         println!("signed commitment payload : {:?}", payload);
 
         let signatures: Vec<String> = signed_commmitment
             .signatures
             .clone()
             .into_iter()
-            .map(|signature| {
-                format!(
-                    "0x{}",
-                    subxt::sp_core::hexdisplay::HexDisplay::from(&signature.unwrap().0)
-                )
-            })
+            .map(|signature| format!("{}", HexDisplay::from(&signature.unwrap().0)))
             .collect();
         println!("signature :  {:?}", signatures);
 
@@ -336,8 +313,12 @@ pub async fn update_clien_state_service(
 
         println!("build mmr_root = {:?}", mmr_root);
 
+        // TODO: get client id from target chain
+        // mock client id
+        let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
+
         // send mmr root to substrate-ibc
-        let result = send_update_state_request(target_client.clone(), client_id.to_vec(), mmr_root)
+        let result = send_update_state_request(target_client.clone(), client_id, mmr_root)
             .await
             .unwrap();
 
@@ -417,12 +398,15 @@ pub fn verify_commitment_signatures(
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use super::*;
-    use crate::{ibc_node, subscribe_beefy};
+    use crate::{get_clients, ibc_node, subscribe_beefy};
     use beefy_light_client::{Error, LightClient};
     use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256, MerkleProof};
     use hex_literal::hex;
 
+    use ibc::ics02_client::client_state::AnyClientState;
     use ibc::ics02_client::height::Height;
     use ibc::ics10_grandpa::client_state::ClientState;
     use ibc::ics10_grandpa::help::{BlockHeader, Commitment, ValidatorSet};
@@ -430,6 +414,7 @@ mod tests {
 
     use subxt::sp_core::hexdisplay::HexDisplay;
     use subxt::ClientBuilder;
+    use tendermint_proto::Protobuf;
 
     #[tokio::test]
     async fn test_subscribe_beefy_justification() -> Result<(), Box<dyn std::error::Error>> {
@@ -759,7 +744,7 @@ signed commitment validator_set_id : {}",
 
         //get mmr leaf and proof
         // Note: target height=block_number - 1
-        let target_height = (block_number - 1) as u64;
+        let target_height = (block_number - 8) as u64;
         let (block_hash, mmr_leaf, mmr_leaf_proof) =
             get_mmr_leaf_and_mmr_proof(target_height, Some(block_hash), client.clone()).await?;
         println!("generate_proof block hash : {:?}", block_hash);
@@ -777,6 +762,7 @@ signed commitment validator_set_id : {}",
             "generated the mmr leaf  = {:?}",
             format!("{}", HexDisplay::from(&mmr_leaf))
         );
+
         let mmr_leaf_1: mmr::MmrLeaf = mmr::MmrLeaf::decode(&mut &mmr_leaf.clone()[..]).unwrap();
         println!("decode the mmr leaf  = {:?}", mmr_leaf_1);
 
@@ -1084,12 +1070,7 @@ signed commitment validator_set_id : {}",
             .signatures
             .clone()
             .into_iter()
-            .map(|signature| {
-                format!(
-                    "0x{}",
-                    subxt::sp_core::hexdisplay::HexDisplay::from(&signature.unwrap().0)
-                )
-            })
+            .map(|signature| format!("{}", HexDisplay::from(&signature.unwrap().0)))
             .collect();
         println!("signature :  {:?}", signatures);
 
@@ -1414,7 +1395,7 @@ signed commitment validator_set_id : {}",
     }
 
     #[tokio::test]
-    async fn test_update_client() -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_update_client_state() -> Result<(), Box<dyn std::error::Error>> {
         let src_client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1428,16 +1409,124 @@ signed commitment validator_set_id : {}",
     }
 
     #[tokio::test]
-    async fn test_update_service() -> Result<(), Box<dyn std::error::Error>> {
-        let src_client = ClientBuilder::new()
+    async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Error>> {
+        let chain_a = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        let target_client = ClientBuilder::new()
+        let chain_b = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        update_clien_state_service(src_client, target_client).await?;
+        update_clien_state_service(chain_a, chain_b).await?;
+        //TODO:利用两个tokio线程实现双向订阅
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_clients() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+        let clients = get_clients(client).await.unwrap();
+        println!("{:?}", clients);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_client_data() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+        let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+        let block_header = block.next().await.unwrap().unwrap();
+        let block_hash = block_header.hash();
+
+        // vector key-value
+        let mut ret = vec![];
+        // get client_state Keys
+        let client_states_keys: Vec<Vec<u8>> = api
+            .storage()
+            .ibc()
+            .client_states_keys(Some(block_hash))
+            .await?;
+        // assert!(!client_states_keys.is_empty());
+
+        // enumate every item get client_state value
+        for key in client_states_keys {
+            // get client_state value
+            let client_states_value: Vec<u8> = api
+                .storage()
+                .ibc()
+                .client_states(key.clone(), Some(block_hash))
+                .await?;
+            // assert!(!client_states_value.is_empty());
+            // store key-value
+            ret.push((key.clone(), client_states_value));
+        }
+
+        for (client_id, client_state) in ret.iter() {
+            let client_id_str = String::from_utf8(client_id.clone()).unwrap();
+            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+
+            let any_client_state = AnyClientState::decode_vec(&*client_state).unwrap();
+            // let client_state = ClientState::decode_vec(&*client_state).unwrap();
+            let client_state = match any_client_state {
+                AnyClientState::Grandpa(value) => value,
+                _ => unimplemented!(),
+            };
+
+            println!("client_id :  {:?}", client_id);
+            println!("client_state : {:?}", client_state);
+        }
+
+        //-----------------------------------------------
+        // get client type by client id
+        //-----------------------------------------------
+
+        // get client_state Keys
+        let client_states_keys: Vec<Vec<u8>> = api
+            .storage()
+            .ibc()
+            .client_states_keys(Some(block_hash))
+            .await?;
+        // assert!(!client_states_keys.is_empty());
+
+        // vector key-value
+        let mut ret = vec![];
+        //  every item get client type value
+        for key in client_states_keys {
+            // get client type value
+            let clients_store = ibc_node::ibc::storage::Clients(key.clone());
+            // let client_type = api.client.rpc().storage(&entry.key().into(), None);
+            let client_type = api
+                .client
+                .storage()
+                .fetch_or_default(&clients_store, Some(block_hash))
+                .await
+                .unwrap();
+
+            // assert!(!client_type.is_empty());
+            ret.push((key.clone(), client_type));
+        }
+
+        for (client_id, client_type) in ret.iter() {
+            let client_id_str = String::from_utf8(client_id.clone()).unwrap();
+            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+
+            let client_type_str = String::from_utf8(client_type.clone()).unwrap();
+            let client_type = ClientType::from_str(&client_type_str).unwrap();
+
+            println!("client_id :  {:?}", client_id);
+            println!("client_state : {:?}", client_type);
+        }
+
         Ok(())
     }
 }
