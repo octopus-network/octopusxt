@@ -24,6 +24,7 @@ use subxt::SignedCommitment;
 use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
+use beefy_merkle_tree::Hash;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1439,7 +1440,7 @@ pub async fn get_block_header(
     let header = convert_substrate_header_to_ibc_header(header);
     log::info!("convert header = {:?}", header);
 
-    Ok(header)
+    Ok(header.into())
 }
 
 /// get header by block number
@@ -1458,7 +1459,7 @@ pub async fn get_header_by_block_number(
     let header = convert_substrate_header_to_ibc_header(header);
     log::info!("convert header = {:?}", header);
 
-    Ok(header)
+    Ok(header.into())
 }
 
 pub async fn get_block_header_by_block_number(
@@ -1484,15 +1485,65 @@ pub async fn get_block_header_by_block_number(
 /// convert substrate Header to Ibc Header
 pub fn convert_substrate_header_to_ibc_header(
     header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
-) -> ibc::ics10_grandpa::help::BlockHeader {
+) -> beefy_light_client::header::Header {
 
-    ibc::ics10_grandpa::help::BlockHeader {
-        parent_hash: header.parent_hash.0.to_vec(),
-        block_number: header.number,
-        state_root: header.state_root.0.to_vec(),
-        extrinsics_root: header.extrinsics_root.0.to_vec(),
-        // TODO
-        digest: ibc::ics10_grandpa::help::Digest::default(),
+    beefy_light_client::header::Header {
+        parent_hash: Hash::from(header.parent_hash),
+        number: header.number,
+        state_root: Hash::from(header.state_root),
+        extrinsics_root: Hash::from(header.extrinsics_root),
+        digest: convert_substrate_digest_to_beefy_light_client_digest(header.digest),
+    }
+}
+
+fn convert_substrate_digest_to_beefy_light_client_digest(digest: sp_runtime::Digest<sp_core::H256>)
+ -> beefy_light_client::header::Digest {
+    beefy_light_client::header::Digest {
+        logs: digest.logs.into_iter().map(|value | convert_substrate_digest_item_to_beefy_light_client_digest_item(value)).collect(),
+    }
+}
+
+fn convert_substrate_digest_item_to_beefy_light_client_digest_item(digest_item: sp_runtime::DigestItem<sp_core::H256>)
+ -> beefy_light_client::header::DigestItem {
+    match digest_item {
+        sp_runtime::DigestItem::ChangesTrieRoot(value ) => {
+            beefy_light_client::header::DigestItem::ChangesTrieRoot(Hash::from(value))
+        },
+        sp_runtime::DigestItem::PreRuntime(consensus_engine_id, value) => {
+            beefy_light_client::header::DigestItem::PreRuntime(consensus_engine_id, value)
+        },
+        sp_runtime::DigestItem::Consensus(consensus_engine_id, value ) => {
+            beefy_light_client::header::DigestItem::Consensus(consensus_engine_id, value)
+        }
+        sp_runtime::DigestItem::Seal(consensus_engine_id, value ) => {
+            beefy_light_client::header::DigestItem::Seal(consensus_engine_id, value)
+        }
+        sp_runtime::DigestItem::ChangesTrieSignal(changes_trie_signal) => {
+            beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(changes_trie_signal))
+        }
+        sp_runtime::DigestItem::Other(value ) => {
+            beefy_light_client::header::DigestItem::Other(value)
+        }
+        sp_runtime::DigestItem::RuntimeEnvironmentUpdated => beefy_light_client::header::DigestItem::RuntimeEnvironmentUpdated,
+    }
+}
+
+fn convert_changes_trie_signal(value: sp_runtime::generic::ChangesTrieSignal) -> beefy_light_client::header::ChangesTrieSignal {
+    match value {
+        sp_runtime::generic::ChangesTrieSignal::NewConfiguration(value) => {
+            if value.is_some() {
+                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(convert_changes_trie_configuration(value.unwrap())))
+            } else {
+                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(None)
+            }
+        }
+    }
+}
+
+fn convert_changes_trie_configuration(value: sp_core::ChangesTrieConfiguration) -> beefy_light_client::header::ChangesTrieConfiguration {
+    beefy_light_client::header::ChangesTrieConfiguration {
+        digest_interval: value.digest_interval,
+        digest_levels: value.digest_levels
     }
 }
 
