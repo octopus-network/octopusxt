@@ -1193,6 +1193,7 @@ signed commitment validator_set_id : {}",
     }
 
     #[tokio::test]
+    #[ignore]
     async fn mock_verify_and_update_statful() -> Result<(), Box<dyn std::error::Error>> {
         // init beefy light client
         // let public_keys = vec![

@@ -1485,13 +1485,14 @@ pub async fn get_block_header_by_block_number(
 pub fn convert_substrate_header_to_ibc_header(
     header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
 ) -> ibc::ics10_grandpa::help::BlockHeader {
-    let digest = header.digest.logs.to_vec().encode();
+
     ibc::ics10_grandpa::help::BlockHeader {
         parent_hash: header.parent_hash.0.to_vec(),
         block_number: header.number,
         state_root: header.state_root.0.to_vec(),
         extrinsics_root: header.extrinsics_root.0.to_vec(),
-        digest,
+        // TODO
+        digest: ibc::ics10_grandpa::help::Digest::default(),
     }
 }
 
