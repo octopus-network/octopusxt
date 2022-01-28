@@ -174,7 +174,7 @@ pub async fn send_update_state_request(
 }
 
 /// update client state by cli for single.
-pub async fn update_clien_state(
+pub async fn update_client_state(
     src_client: Client<DefaultConfig>,
     target_client: Client<DefaultConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -247,7 +247,7 @@ pub async fn update_clien_state(
 }
 
 /// update client state service.
-pub async fn update_clien_state_service(
+pub async fn update_client_state_service(
     src_client: Client<DefaultConfig>,
     target_client: Client<DefaultConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -402,19 +402,21 @@ mod tests {
 
     use super::*;
     use crate::{get_clients, ibc_node, subscribe_beefy};
-    use beefy_light_client::{Error, LightClient};
-    use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256, MerkleProof};
+    use beefy_light_client;
+    use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
     use hex_literal::hex;
 
     use ibc::ics02_client::client_state::AnyClientState;
     use ibc::ics02_client::height::Height;
     use ibc::ics10_grandpa::client_state::ClientState;
-    use ibc::ics10_grandpa::help::{BlockHeader, Commitment, ValidatorSet};
+    use ibc::ics10_grandpa::help::{BlockHeader, Commitment};
     use ibc::ics24_host::identifier::ChainId;
 
+    use chrono::Local;
     use subxt::sp_core::hexdisplay::HexDisplay;
     use subxt::ClientBuilder;
     use tendermint_proto::Protobuf;
+    use tokio::{self, task, time};
 
     #[tokio::test]
     async fn test_subscribe_beefy_justification() -> Result<(), Box<dyn std::error::Error>> {
@@ -1397,20 +1399,6 @@ signed commitment validator_set_id : {}",
 
     #[tokio::test]
     async fn test_update_client_state() -> Result<(), Box<dyn std::error::Error>> {
-        let src_client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-        let target_client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-        update_clien_state(src_client, target_client).await?;
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Error>> {
         let chain_a = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1419,8 +1407,44 @@ signed commitment validator_set_id : {}",
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        update_clien_state_service(chain_a, chain_b).await?;
-        //TODO:利用两个tokio线程实现双向订阅
+        update_client_state(chain_a.clone(), chain_b.clone()).await?;
+        update_client_state(chain_b.clone(), chain_a.clone()).await?;
+
+        Ok(())
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Error>> {
+        //use two tokio task to update client state each other for chian a and chain b
+        let update_task1 = task::spawn(async {
+            let chain_a = ClientBuilder::new()
+                .set_url("ws://localhost:9944")
+                .build::<ibc_node::DefaultConfig>()
+                .await
+                .unwrap();
+            let chain_b = ClientBuilder::new()
+                .set_url("ws://localhost:9944")
+                .build::<ibc_node::DefaultConfig>()
+                .await
+                .unwrap();
+            let _ret = update_client_state_service(chain_a, chain_b).await;
+        });
+        update_task1.await?;
+
+        let update_task2 = task::spawn(async {
+            let chain_a = ClientBuilder::new()
+                .set_url("ws://localhost:9944")
+                .build::<ibc_node::DefaultConfig>()
+                .await
+                .unwrap();
+            let chain_b = ClientBuilder::new()
+                .set_url("ws://localhost:9944")
+                .build::<ibc_node::DefaultConfig>()
+                .await
+                .unwrap();
+            let _ret = update_client_state_service(chain_b, chain_a).await;
+        });
+        update_task2.await?;
 
         Ok(())
     }
@@ -1438,7 +1462,7 @@ signed commitment validator_set_id : {}",
     }
 
     #[tokio::test]
-    async fn test_get_client_data() -> Result<(), Box<dyn std::error::Error>> {
+    async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
         let client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
@@ -1527,6 +1551,42 @@ signed commitment validator_set_id : {}",
             println!("client_id :  {:?}", client_id);
             println!("client_state : {:?}", client_type);
         }
+
+        Ok(())
+    }
+
+    #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+    async fn test_tokio_task() -> Result<(), Box<dyn std::error::Error>> {
+        fn now() -> String {
+            Local::now().format("%F %T").to_string()
+        }
+
+        async fn task1() {
+            loop {
+                println!("doing task1: {}", now());
+                time::sleep(time::Duration::from_secs(2)).await;
+                println!("task1 done: {}", now());
+            }
+        }
+
+        async fn task2() {
+            loop {
+                println!("doing task2: {}", now());
+                time::sleep(time::Duration::from_secs(1)).await;
+                println!("task2 done: {}", now());
+            }
+        }
+
+        let task1 = task::spawn(async {
+            task1().await;
+        });
+
+        let task2 = task::spawn(async {
+            task2().await;
+        });
+
+        task1.await?;
+        task2.await?;
 
         Ok(())
     }
