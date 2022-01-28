@@ -1427,7 +1427,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 }
 
 /// get header by block hash
-pub async fn get_block_header(
+pub async fn get_header_by_block_hash(
     client: Client<ibc_node::DefaultConfig>,
     block_hash: Option<sp_core::H256>,
 ) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
@@ -1454,32 +1454,14 @@ pub async fn get_header_by_block_number(
     let block_hash = api.client.rpc().block_hash(block_number).await?;
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
+    println!("header before = {:?}", header);
     log::info!("header = {:?}", header);
 
     let header = convert_substrate_header_to_ibc_header(header);
+    println!("header after = {:?}", header);
     log::info!("convert header = {:?}", header);
 
     Ok(header.into())
-}
-
-pub async fn get_block_header_by_block_number(
-    client: Client<ibc_node::DefaultConfig>,
-    block_number: u32,
-) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
-
-    let block_hash: sp_core::H256 = api
-        .client
-        .rpc()
-        .block_hash(Some(BlockNumber::from(block_number)))
-        .await?
-        .unwrap();
-
-    let header = get_block_header(client, Some(block_hash)).await?;
-
-    Ok(header)
 }
 
 /// convert substrate Header to Ibc Header
@@ -1567,22 +1549,8 @@ mod tests {
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        let block_number = Some(BlockNumber::from(100));
+        let block_number = Some(BlockNumber::from(3));
         let header = get_header_by_block_number(client, block_number).await?;
-
-        println!("convert header = {:?}", header);
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_get_block_header_by_block_number() -> Result<(), Box<dyn std::error::Error>> {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-
-        let header = get_block_header_by_block_number(client, 4).await?;
 
         println!("convert header = {:?}", header);
 
