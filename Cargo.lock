@@ -1182,7 +1182,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.7.3"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#a7ef78fe1e72710cee868cc0a6ec47d897471576"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#2c5f5125789fc05a9c63d386cbef17798ceaaf13"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1216,7 +1216,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.11.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#a7ef78fe1e72710cee868cc0a6ec47d897471576"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#2c5f5125789fc05a9c63d386cbef17798ceaaf13"
 dependencies = [
  "bytes",
  "informalsystems-prost",
@@ -2023,6 +2023,7 @@ dependencies = [
  "serde",
  "sp-core",
  "sp-keyring",
+ "sp-runtime",
  "subxt",
  "tendermint-proto",
  "tokio",
@@ -3630,9 +3631,9 @@ checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
 
 [[package]]
 name = "tokio"
-version = "1.15.0"
+version = "1.16.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fbbf1c778ec206785635ce8ad57fe52b3009ae9e0c9f574a728f3049d3e55838"
+checksum = "95e99d373042c30406d317cfc5bfad7b5d604bdd31dab72cf8739abebaa64aee"
 dependencies = [
  "bytes",
  "libc",
@@ -4138,9 +4139,9 @@ checksum = "85e60b0d1b5f99db2556934e21937020776a5d31520bf169e851ac44e6420214"
 
 [[package]]
 name = "zeroize"
-version = "1.5.0"
+version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc222aec311c323c717f56060324f32b82da1ce1dd81d9a09aa6a9030bfe08db"
+checksum = "4062c749be08d90be727e9c5895371c3a0e49b90ba2b9592dc7afda95cc2b719"
 dependencies = [
  "zeroize_derive",
 ]

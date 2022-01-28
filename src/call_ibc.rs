@@ -24,6 +24,7 @@ use subxt::SignedCommitment;
 use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 use tokio::time::sleep;
+use beefy_merkle_tree::Hash;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -1426,7 +1427,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 }
 
 /// get header by block hash
-pub async fn get_block_header(
+pub async fn get_header_by_block_hash(
     client: Client<ibc_node::DefaultConfig>,
     block_hash: Option<sp_core::H256>,
 ) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
@@ -1439,7 +1440,7 @@ pub async fn get_block_header(
     let header = convert_substrate_header_to_ibc_header(header);
     log::info!("convert header = {:?}", header);
 
-    Ok(header)
+    Ok(header.into())
 }
 
 /// get header by block number
@@ -1453,46 +1454,78 @@ pub async fn get_header_by_block_number(
     let block_hash = api.client.rpc().block_hash(block_number).await?;
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
+    println!("header before = {:?}", header);
     log::info!("header = {:?}", header);
 
     let header = convert_substrate_header_to_ibc_header(header);
+    println!("header after = {:?}", header);
     log::info!("convert header = {:?}", header);
 
-    Ok(header)
-}
-
-pub async fn get_block_header_by_block_number(
-    client: Client<ibc_node::DefaultConfig>,
-    block_number: u32,
-) -> Result<ibc::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
-
-    let block_hash: sp_core::H256 = api
-        .client
-        .rpc()
-        .block_hash(Some(BlockNumber::from(block_number)))
-        .await?
-        .unwrap();
-
-    let header = get_block_header(client, Some(block_hash)).await?;
-
-    Ok(header)
+    Ok(header.into())
 }
 
 /// convert substrate Header to Ibc Header
 pub fn convert_substrate_header_to_ibc_header(
     header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
-) -> ibc::ics10_grandpa::help::BlockHeader {
+) -> beefy_light_client::header::Header {
 
-    ibc::ics10_grandpa::help::BlockHeader {
-        parent_hash: header.parent_hash.0.to_vec(),
-        block_number: header.number,
-        state_root: header.state_root.0.to_vec(),
-        extrinsics_root: header.extrinsics_root.0.to_vec(),
-        // TODO
-        digest: ibc::ics10_grandpa::help::Digest::default(),
+    beefy_light_client::header::Header {
+        parent_hash: Hash::from(header.parent_hash),
+        number: header.number,
+        state_root: Hash::from(header.state_root),
+        extrinsics_root: Hash::from(header.extrinsics_root),
+        digest: convert_substrate_digest_to_beefy_light_client_digest(header.digest),
+    }
+}
+
+fn convert_substrate_digest_to_beefy_light_client_digest(digest: sp_runtime::Digest<sp_core::H256>)
+ -> beefy_light_client::header::Digest {
+    beefy_light_client::header::Digest {
+        logs: digest.logs.into_iter().map(|value | convert_substrate_digest_item_to_beefy_light_client_digest_item(value)).collect(),
+    }
+}
+
+fn convert_substrate_digest_item_to_beefy_light_client_digest_item(digest_item: sp_runtime::DigestItem<sp_core::H256>)
+ -> beefy_light_client::header::DigestItem {
+    match digest_item {
+        sp_runtime::DigestItem::ChangesTrieRoot(value ) => {
+            beefy_light_client::header::DigestItem::ChangesTrieRoot(Hash::from(value))
+        },
+        sp_runtime::DigestItem::PreRuntime(consensus_engine_id, value) => {
+            beefy_light_client::header::DigestItem::PreRuntime(consensus_engine_id, value)
+        },
+        sp_runtime::DigestItem::Consensus(consensus_engine_id, value ) => {
+            beefy_light_client::header::DigestItem::Consensus(consensus_engine_id, value)
+        }
+        sp_runtime::DigestItem::Seal(consensus_engine_id, value ) => {
+            beefy_light_client::header::DigestItem::Seal(consensus_engine_id, value)
+        }
+        sp_runtime::DigestItem::ChangesTrieSignal(changes_trie_signal) => {
+            beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(changes_trie_signal))
+        }
+        sp_runtime::DigestItem::Other(value ) => {
+            beefy_light_client::header::DigestItem::Other(value)
+        }
+        sp_runtime::DigestItem::RuntimeEnvironmentUpdated => beefy_light_client::header::DigestItem::RuntimeEnvironmentUpdated,
+    }
+}
+
+fn convert_changes_trie_signal(value: sp_runtime::generic::ChangesTrieSignal) -> beefy_light_client::header::ChangesTrieSignal {
+    match value {
+        sp_runtime::generic::ChangesTrieSignal::NewConfiguration(value) => {
+            if value.is_some() {
+                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(convert_changes_trie_configuration(value.unwrap())))
+            } else {
+                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(None)
+            }
+        }
+    }
+}
+
+fn convert_changes_trie_configuration(value: sp_core::ChangesTrieConfiguration) -> beefy_light_client::header::ChangesTrieConfiguration {
+    beefy_light_client::header::ChangesTrieConfiguration {
+        digest_interval: value.digest_interval,
+        digest_levels: value.digest_levels
     }
 }
 
@@ -1516,22 +1549,8 @@ mod tests {
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        let block_number = Some(BlockNumber::from(100));
+        let block_number = Some(BlockNumber::from(3));
         let header = get_header_by_block_number(client, block_number).await?;
-
-        println!("convert header = {:?}", header);
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_get_block_header_by_block_number() -> Result<(), Box<dyn std::error::Error>> {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-
-        let header = get_block_header_by_block_number(client, 4).await?;
 
         println!("convert header = {:?}", header);
 

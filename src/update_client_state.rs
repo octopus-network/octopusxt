@@ -2,7 +2,7 @@ use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, mmr, validator_set
 use jsonrpsee::types::to_json_value;
 use sp_core::hexdisplay::HexDisplay;
 
-use crate::call_ibc::{get_block_header_by_block_number, get_mmr_leaf_and_mmr_proof};
+use crate::call_ibc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
 use codec::{Decode, Encode};
 use ibc::ics02_client::client_type::ClientType;
@@ -207,7 +207,7 @@ pub async fn update_client_state(
     println!("signed commitment payload : {:?}", payload);
 
     // get block header by block number
-    let block_header = get_block_header_by_block_number(src_client.clone(), block_number)
+    let block_header = get_header_by_block_number(src_client.clone(), Some(BlockNumber::from(block_number)))
         .await
         .unwrap();
     println!("header = {:?}", block_header);
@@ -287,7 +287,7 @@ pub async fn update_client_state_service(
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header = get_block_header_by_block_number(src_client.clone(), block_number)
+        let block_header = get_header_by_block_number(src_client.clone(), Some(BlockNumber::from(block_number)))
             .await
             .unwrap();
         println!("header = {:?}", block_header);
@@ -1077,7 +1077,7 @@ signed commitment validator_set_id : {}",
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header = get_block_header_by_block_number(client.clone(), block_number)
+        let block_header = get_header_by_block_number(client.clone(), Some(BlockNumber::from(block_number)))
             .await
             .unwrap();
         println!("header = {:?}", block_header);
@@ -1268,7 +1268,7 @@ signed commitment validator_set_id : {}",
             println!("signature :  {:?}", signatures);
 
             // get block header by block number
-            let block_header = get_block_header_by_block_number(client.clone(), block_number)
+            let block_header = get_header_by_block_number(client.clone(), Some(BlockNumber::from(block_number)))
                 .await
                 .unwrap();
             println!("header = {:?}", block_header);
