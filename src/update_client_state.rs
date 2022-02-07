@@ -1,6 +1,13 @@
+use std::str::FromStr;
+
+///
+/// update client state
+///
 use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, mmr, validator_set, Error};
+use ibc::ics02_client::client_state::AnyClientState;
 use jsonrpsee::types::to_json_value;
 use sp_core::hexdisplay::HexDisplay;
+use tendermint_proto::Protobuf;
 
 use crate::call_ibc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
@@ -16,6 +23,7 @@ use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
 use beefy_merkle_tree::Hash;
 use subxt::{BeefySubscription, BlockNumber, Client, PairSigner};
 
+/// mmr proof struct
 #[derive(Clone, Debug, Default)]
 pub struct MmrProof {
     mmr_leaf: Vec<u8>,
@@ -158,8 +166,14 @@ pub async fn send_update_state_request(
     let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
     // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
 
-    let encode_mmr_root = <help::MmrRoot as Encode>::encode(&mmr_root);
     let encode_client_id = client_id.as_bytes().to_vec();
+    let encode_mmr_root = <help::MmrRoot as Encode>::encode(&mmr_root);
+    println!("encode mmr root is {:?}", encode_mmr_root);
+
+    // // test
+    // let received_mmr_root = encode_mmr_root.clone();
+    // let decode_received_mmr_root = help::MmrRoot::decode(&mut &received_mmr_root[..]).unwrap();
+    // println!("decode mmr root is {:?}", decode_received_mmr_root);
 
     let result = api
         .tx()
@@ -187,11 +201,11 @@ pub async fn update_client_state(
     let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
 
-    let raw_signed_commitment = sub.next().await.unwrap();
+    let raw_signed_commitment = sub.next().await.unwrap().0;
     // decode signed commitment
     let signed_commmitment: commitment::SignedCommitment =
         <commitment::SignedCommitment as codec::Decode>::decode(
-            &mut &raw_signed_commitment.clone().0[..],
+            &mut &raw_signed_commitment.clone()[..],
         )
         .unwrap();
 
@@ -200,16 +214,17 @@ pub async fn update_client_state(
         payload,
         block_number,
         validator_set_id,
-    } = signed_commmitment.commitment;
+    } = signed_commmitment.clone().commitment;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
     let payload = format!("{}", HexDisplay::from(&payload));
     println!("signed commitment payload : {:?}", payload);
 
     // get block header by block number
-    let block_header = get_header_by_block_number(src_client.clone(), Some(BlockNumber::from(block_number)))
-        .await
-        .unwrap();
+    let block_header =
+        get_header_by_block_number(src_client.clone(), Some(BlockNumber::from(block_number)))
+            .await
+            .unwrap();
     println!("header = {:?}", block_header);
 
     // build validator proof
@@ -225,23 +240,33 @@ pub async fn update_client_state(
     // build mmr root
     let mmr_root = help::MmrRoot {
         block_header,
-        signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+        signed_commitment: help::SignedCommitment::from(signed_commmitment),
         validator_merkle_proofs: validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
     };
     println!("build mmr_root = {:?}", mmr_root);
 
-    // TODO: get client id from target chain,maybe query client id by rpc?
+    // get client id from target chain
     // mock client id
-    let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
-
-    // send mmr root to substrate-ibc
-    let result = send_update_state_request(target_client.clone(), client_id, mmr_root)
+    // let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
+    let client_ids = get_client_ids(target_client.clone(), ClientType::Grandpa)
         .await
         .unwrap();
+    for client_id in client_ids {
+        let result =
+            send_update_state_request(target_client.clone(), client_id, mmr_root.clone()).await;
 
-    println!("update client state result: {:?}", result);
+        match result {
+            Ok(r) => {
+                println!("update client state success and result is : {:?}", r);
+            }
+            Err(e) => {
+                println!("update client state client failure and error is : {:?}", e);
+            }
+        }
+    }
+    // send mmr root to substrate-ibc
 
     Ok(())
 }
@@ -262,17 +287,17 @@ pub async fn update_client_state_service(
 
     // msg loop for handle the beefy SignedCommitment
     loop {
-        let raw = sub.next().await.unwrap();
+        let raw = sub.next().await.unwrap().0;
         // let target_raw = raw.clone();
         let signed_commmitment: commitment::SignedCommitment =
-            <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw.0[..]).unwrap();
+            <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw[..]).unwrap();
         // let signed_commmitment = mmr::SignedCommitment::decode(&mut &raw.0[..]).unwrap();
 
         let commitment::Commitment {
             payload,
             block_number,
             validator_set_id,
-        } = signed_commmitment.commitment;
+        } = signed_commmitment.clone().commitment;
         println!("signed commitment block_number : {}", block_number);
         println!("signed commitment validator_set_id : {}", validator_set_id);
         let payload = format!("{}", HexDisplay::from(&payload));
@@ -287,9 +312,10 @@ pub async fn update_client_state_service(
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header = get_header_by_block_number(src_client.clone(), Some(BlockNumber::from(block_number)))
-            .await
-            .unwrap();
+        let block_header =
+            get_header_by_block_number(src_client.clone(), Some(BlockNumber::from(block_number)))
+                .await
+                .unwrap();
         println!("header = {:?}", block_header);
 
         // build validator proof
@@ -305,7 +331,7 @@ pub async fn update_client_state_service(
         // build mmr root
         let mmr_root = help::MmrRoot {
             block_header: block_header,
-            signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+            signed_commitment: help::SignedCommitment::from(signed_commmitment),
             validator_merkle_proofs: validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
@@ -313,16 +339,25 @@ pub async fn update_client_state_service(
 
         println!("build mmr_root = {:?}", mmr_root);
 
-        // TODO: get client id from target chain
+        // get client id from target chain
         // mock client id
-        let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
-
-        // send mmr root to substrate-ibc
-        let result = send_update_state_request(target_client.clone(), client_id, mmr_root)
+        // let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
+        let client_ids = get_client_ids(target_client.clone(), ClientType::Grandpa)
             .await
             .unwrap();
+        for client_id in client_ids {
+            let result =
+                send_update_state_request(target_client.clone(), client_id, mmr_root.clone()).await;
 
-        println!("update client state result: {:?}", result);
+            match result {
+                Ok(r) => {
+                    println!("update client state success and result is : {:?}", r);
+                }
+                Err(e) => {
+                    println!("update client state client failure and error is : {:?}", e);
+                }
+            }
+        }
     }
 }
 
@@ -396,6 +431,40 @@ pub fn verify_commitment_signatures(
     Ok(())
 }
 
+/// get client ids store in chain
+async fn get_client_ids(
+    client: Client<DefaultConfig>,
+    expect_client_type: ClientType,
+) -> Result<Vec<ClientId>, Box<dyn std::error::Error>> {
+    let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
+
+    // get client_state Keys
+    let client_states_keys: Vec<Vec<u8>> = api
+        .storage()
+        .ibc()
+        // .client_states_keys(Some(block_hash))
+        .client_states_keys(None)
+        .await?;
+    // assert!(!client_states_keys.is_empty());
+
+    let mut client_ids = vec![];
+    for key in client_states_keys {
+        // get client_state value
+        let client_states_value: Vec<u8> =
+            api.storage().ibc().client_states(key.clone(), None).await?;
+        // assert!(!client_states_value.is_empty());
+        let any_client_state = AnyClientState::decode_vec(&*client_states_value).unwrap();
+        let client_type = any_client_state.client_type();
+        if client_type == expect_client_type {
+            let client_id_str = String::from_utf8(key).unwrap();
+            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+            client_ids.push(client_id)
+        }
+    }
+
+    println!("client ids :  {:?}", client_ids);
+    Ok(client_ids)
+}
 #[cfg(test)]
 mod tests {
     use std::str::FromStr;
@@ -1077,9 +1146,10 @@ signed commitment validator_set_id : {}",
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header = get_header_by_block_number(client.clone(), Some(BlockNumber::from(block_number)))
-            .await
-            .unwrap();
+        let block_header =
+            get_header_by_block_number(client.clone(), Some(BlockNumber::from(block_number)))
+                .await
+                .unwrap();
         println!("header = {:?}", block_header);
 
         // build validator proof
@@ -1196,7 +1266,7 @@ signed commitment validator_set_id : {}",
 
     #[tokio::test]
     #[ignore]
-    async fn mock_verify_and_update_statful() -> Result<(), Box<dyn std::error::Error>> {
+    async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Error>> {
         // init beefy light client
         // let public_keys = vec![
         //     "0x020a1091341fe5664bfa1782d5e04779689068c916b04cb365ec3153755684d9a1".to_string(), // Alice
@@ -1268,9 +1338,10 @@ signed commitment validator_set_id : {}",
             println!("signature :  {:?}", signatures);
 
             // get block header by block number
-            let block_header = get_header_by_block_number(client.clone(), Some(BlockNumber::from(block_number)))
-                .await
-                .unwrap();
+            let block_header =
+                get_header_by_block_number(client.clone(), Some(BlockNumber::from(block_number)))
+                    .await
+                    .unwrap();
             println!("header = {:?}", block_header);
 
             // build validator proof
@@ -1431,20 +1502,20 @@ signed commitment validator_set_id : {}",
         });
         update_task1.await?;
 
-        let update_task2 = task::spawn(async {
-            let chain_a = ClientBuilder::new()
-                .set_url("ws://localhost:9944")
-                .build::<ibc_node::DefaultConfig>()
-                .await
-                .unwrap();
-            let chain_b = ClientBuilder::new()
-                .set_url("ws://localhost:9944")
-                .build::<ibc_node::DefaultConfig>()
-                .await
-                .unwrap();
-            let _ret = update_client_state_service(chain_b, chain_a).await;
-        });
-        update_task2.await?;
+        // let update_task2 = task::spawn(async {
+        //     let chain_a = ClientBuilder::new()
+        //         .set_url("ws://localhost:9944")
+        //         .build::<ibc_node::DefaultConfig>()
+        //         .await
+        //         .unwrap();
+        //     let chain_b = ClientBuilder::new()
+        //         .set_url("ws://localhost:9944")
+        //         .build::<ibc_node::DefaultConfig>()
+        //         .await
+        //         .unwrap();
+        //     let _ret = update_client_state_service(chain_b, chain_a).await;
+        // });
+        // update_task2.await?;
 
         Ok(())
     }
@@ -1467,7 +1538,9 @@ signed commitment validator_set_id : {}",
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        let api = client
+            .clone()
+            .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
         let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
         let block_header = block.next().await.unwrap().unwrap();
@@ -1501,6 +1574,7 @@ signed commitment validator_set_id : {}",
             let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
 
             let any_client_state = AnyClientState::decode_vec(&*client_state).unwrap();
+            let client_type = any_client_state.client_type();
             // let client_state = ClientState::decode_vec(&*client_state).unwrap();
             let client_state = match any_client_state {
                 AnyClientState::Grandpa(value) => value,
@@ -1508,49 +1582,13 @@ signed commitment validator_set_id : {}",
             };
 
             println!("client_id :  {:?}", client_id);
+            println!("client_type :  {:?}", client_type);
             println!("client_state : {:?}", client_state);
         }
 
-        //-----------------------------------------------
-        // get client type by client id
-        //-----------------------------------------------
-
-        // get client_state Keys
-        let client_states_keys: Vec<Vec<u8>> = api
-            .storage()
-            .ibc()
-            .client_states_keys(Some(block_hash))
-            .await?;
-        // assert!(!client_states_keys.is_empty());
-
-        // vector key-value
-        let mut ret = vec![];
-        //  every item get client type value
-        for key in client_states_keys {
-            // get client type value
-            let clients_store = ibc_node::ibc::storage::Clients(key.clone());
-            // let client_type = api.client.rpc().storage(&entry.key().into(), None);
-            let client_type = api
-                .client
-                .storage()
-                .fetch_or_default(&clients_store, Some(block_hash))
-                .await
-                .unwrap();
-
-            // assert!(!client_type.is_empty());
-            ret.push((key.clone(), client_type));
-        }
-
-        for (client_id, client_type) in ret.iter() {
-            let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
-
-            let client_type_str = String::from_utf8(client_type.clone()).unwrap();
-            let client_type = ClientType::from_str(&client_type_str).unwrap();
-
-            println!("client_id :  {:?}", client_id);
-            println!("client_state : {:?}", client_type);
-        }
+        // get client ids by client type
+        let client_ids = get_client_ids(client, ClientType::Grandpa).await.unwrap();
+        println!("client ids :  {:?}", client_ids);
 
         Ok(())
     }
@@ -1589,5 +1627,52 @@ signed commitment validator_set_id : {}",
         task2.await?;
 
         Ok(())
+    }
+
+    #[test]
+    fn test_mmr_root_codec() {
+        let ecode_mmr_root = vec![
+            128, 137, 94, 158, 21, 227, 31, 196, 155, 125, 200, 219, 109, 230, 157, 141, 158, 242,
+            66, 166, 214, 237, 83, 164, 149, 22, 189, 198, 166, 166, 36, 143, 126, 229, 47, 128,
+            180, 112, 7, 70, 66, 79, 66, 139, 27, 61, 16, 50, 23, 218, 119, 203, 43, 79, 143, 73,
+            24, 77, 91, 202, 3, 59, 64, 183, 185, 74, 95, 134, 128, 248, 28, 233, 27, 211, 42, 91,
+            18, 212, 162, 34, 199, 81, 201, 94, 106, 199, 94, 162, 226, 146, 149, 227, 79, 60, 85,
+            99, 244, 141, 163, 100, 172, 12, 1, 66, 65, 66, 69, 52, 2, 0, 0, 0, 0, 178, 241, 170,
+            32, 0, 0, 0, 0, 2, 66, 69, 69, 70, 132, 3, 164, 44, 63, 247, 20, 42, 25, 203, 74, 214,
+            168, 102, 56, 93, 8, 126, 2, 17, 82, 153, 94, 53, 167, 32, 163, 9, 220, 164, 64, 95,
+            187, 12, 3, 66, 65, 66, 69, 1, 1, 38, 248, 87, 199, 3, 117, 26, 156, 145, 2, 20, 79,
+            129, 207, 244, 163, 185, 212, 24, 131, 97, 64, 231, 107, 7, 16, 136, 115, 154, 31, 183,
+            95, 124, 16, 164, 169, 253, 94, 165, 168, 227, 9, 12, 161, 22, 9, 29, 234, 164, 164,
+            29, 91, 161, 205, 124, 30, 120, 76, 21, 110, 209, 228, 186, 132, 1, 249, 11, 0, 0, 128,
+            164, 44, 63, 247, 20, 42, 25, 203, 74, 214, 168, 102, 56, 93, 8, 126, 2, 17, 82, 153,
+            94, 53, 167, 32, 163, 9, 220, 164, 64, 95, 187, 12, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 1,
+            201, 155, 178, 232, 50, 15, 230, 111, 107, 26, 149, 12, 239, 111, 181, 207, 212, 201,
+            203, 191, 169, 25, 125, 245, 90, 234, 216, 200, 247, 129, 137, 183, 120, 5, 50, 130,
+            130, 245, 198, 12, 21, 160, 166, 212, 175, 250, 126, 253, 225, 79, 126, 10, 190, 203,
+            224, 18, 143, 5, 57, 136, 149, 13, 207, 210, 0, 4, 0, 1, 0, 0, 0, 0, 0, 0, 0, 80, 224,
+            76, 197, 94, 190, 225, 203, 206, 85, 47, 37, 14, 133, 197, 123, 112, 178, 226, 98, 91,
+            205, 1, 197, 1, 0, 248, 11, 0, 0, 137, 94, 158, 21, 227, 31, 196, 155, 125, 200, 219,
+            109, 230, 157, 141, 158, 242, 66, 166, 214, 237, 83, 164, 149, 22, 189, 198, 166, 166,
+            36, 143, 126, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 174, 180, 122, 38, 147, 147, 41, 127,
+            75, 10, 60, 156, 156, 253, 0, 199, 164, 25, 82, 85, 39, 76, 243, 157, 131, 218, 188,
+            47, 204, 159, 243, 215, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 69, 4, 248, 11, 0, 0, 0, 0, 0, 0, 249, 11, 0, 0, 0, 0,
+            0, 0, 32, 44, 196, 20, 81, 144, 115, 65, 140, 207, 100, 73, 95, 246, 160, 5, 126, 190,
+            47, 125, 211, 70, 154, 209, 11, 187, 3, 154, 253, 204, 98, 56, 249, 119, 116, 48, 180,
+            238, 93, 136, 3, 121, 143, 95, 143, 75, 238, 238, 51, 169, 155, 32, 117, 12, 190, 152,
+            193, 151, 91, 153, 213, 141, 198, 181, 192, 198, 155, 137, 180, 221, 37, 48, 237, 190,
+            67, 221, 64, 12, 64, 209, 98, 202, 110, 34, 15, 76, 52, 229, 130, 94, 175, 4, 191, 102,
+            111, 137, 33, 105, 28, 246, 231, 6, 228, 147, 79, 239, 2, 19, 135, 255, 169, 219, 156,
+            183, 117, 1, 23, 189, 42, 186, 114, 56, 71, 236, 19, 39, 252, 183, 5, 208, 188, 83, 8,
+            86, 82, 35, 99, 44, 204, 160, 72, 179, 176, 244, 51, 189, 171, 24, 191, 204, 115, 65,
+            198, 121, 110, 217, 243, 84, 246, 12, 88, 212, 108, 60, 243, 79, 239, 98, 127, 117, 96,
+            152, 247, 57, 118, 173, 160, 204, 239, 123, 138, 135, 84, 79, 177, 109, 111, 96, 69,
+            249, 46, 247, 209, 191, 94, 191, 20, 36, 105, 150, 24, 103, 222, 239, 40, 214, 162, 43,
+            219, 195, 46, 75, 11, 91, 205, 55, 144, 178, 39, 156, 50, 220, 89, 114, 235, 225, 201,
+            81, 230, 141, 78, 8, 198, 228, 26, 177, 200, 213, 81, 70, 120, 111, 222, 191, 22, 151,
+            36, 141, 176, 37, 234, 145, 70, 240, 203, 94, 51,
+        ];
+        let decode_received_mmr_root = help::MmrRoot::decode(&mut &ecode_mmr_root[..]).unwrap();
+        println!("decode mmr root is {:?}", decode_received_mmr_root);
     }
 }
