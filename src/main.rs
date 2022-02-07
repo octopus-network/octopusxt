@@ -1,5 +1,6 @@
 use octopusxt::ibc_node;
-use subxt::ClientBuilder;
+use sp_core::storage::StorageKey;
+use subxt::{ClientBuilder, StorageEntryKey};
 use octopusxt::call_ibc::get_storage_key;
 use subxt::storage::StorageEntry;
 
@@ -25,16 +26,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
 
 
-    let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
-    let storage_key = get_storage_key(&storage_entry);
-    println!("key = {:?}", storage_key);
+    let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec()).key();
+    // let storage_key = get_storage_key(&storage_entry);
+    // println!("key = {:?}", storage_key);
 
-    // let map_key = match storage_entry {
-    //     StorageEntryKey::Map(map_key) => map_key,
-    //     StorageEntryKey::Plain => todo!()
-    // };
-    // let storage_key = map_key.iter().map( |val| StorageKey(val.value.clone())).collect::<Vec<StorageKey>>();
-    // println!("client storage_key = {:?}", storage_key);
+    let map_key = match storage_entry {
+        StorageEntryKey::Map(map_key) => map_key,
+        StorageEntryKey::Plain => todo!()
+    };
+    let storage_key = map_key.iter().map( |val| StorageKey(val.value.clone())).collect::<Vec<StorageKey>>();
+    println!("client storage_key = {:?}", storage_key);
 
 
     // let params = &[to_json_value(storage_key).unwrap(), to_json_value(block_hash).unwrap()];
