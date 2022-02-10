@@ -161,7 +161,7 @@ pub async fn send_update_state_request(
     client_id: ClientId,
     mmr_root: help::MmrRoot,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [update_client_state]");
+    tracing::info!("in call_ibc: [update_client_state]");
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
     let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
     // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
@@ -182,7 +182,7 @@ pub async fn send_update_state_request(
         .sign_and_submit(&signer)
         .await?;
 
-    log::info!("update client state result: {:?}", result);
+    tracing::info!("update client state result: {:?}", result);
 
     Ok(result)
 }
@@ -1475,7 +1475,7 @@ signed commitment validator_set_id : {}",
             .build::<ibc_node::DefaultConfig>()
             .await?;
         let chain_b = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
+            .set_url("ws://localhost:8844")
             .build::<ibc_node::DefaultConfig>()
             .await?;
         update_client_state(chain_a.clone(), chain_b.clone()).await?;
@@ -1494,7 +1494,7 @@ signed commitment validator_set_id : {}",
                 .await
                 .unwrap();
             let chain_b = ClientBuilder::new()
-                .set_url("ws://localhost:9944")
+                .set_url("ws://localhost:8844")
                 .build::<ibc_node::DefaultConfig>()
                 .await
                 .unwrap();

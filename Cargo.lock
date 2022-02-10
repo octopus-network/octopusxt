@@ -2017,7 +2017,6 @@ dependencies = [
  "informalsystems-prost-types",
  "jsonrpsee",
  "libsecp256k1 0.7.0",
- "log",
  "pallet-mmr-rpc",
  "parity-scale-codec",
  "serde",
@@ -2027,6 +2026,7 @@ dependencies = [
  "subxt",
  "tendermint-proto",
  "tokio",
+ "tracing",
 ]
 
 [[package]]

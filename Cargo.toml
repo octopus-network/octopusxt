@@ -11,7 +11,7 @@ tokio = { version = "1.0", default-features = false, features = ["rt-multi-threa
 sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 codec = { package = "parity-scale-codec", version = "2", default-features = false, features = ["derive", "full", "bit-vec"] }
 env_logger = "0.8.3"
-log = { version = "0.4.0", default-features = false }
+tracing = { version = "0.1.28", default-features = false }
 hex = "0.4.3"
 jsonrpsee = { version = "0.5.1", features = ["macros", "ws-client", "http-client"] }
 prost-types = { package = "informalsystems-prost-types", version = "0.8.1", default-features = false }

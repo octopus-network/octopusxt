@@ -31,7 +31,7 @@ pub async fn subscribe_ibc_event(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IbcEvent>, Box<dyn std::error::Error>> {
     const COUNTER_SYSTEM_EVENT: i32 = 8;
-    log::info!("In call_ibc: [subscribe_events]");
+    tracing::info!("In call_ibc: [subscribe_events]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -51,14 +51,14 @@ pub async fn subscribe_ibc_event(
         }
         let raw_event = raw_event.unwrap();
         let variant = raw_event.variant;
-        log::info!("In substrate: [subscribe_events] >> variant: {:?}", variant);
+        tracing::info!("In substrate: [subscribe_events] >> variant: {:?}", variant);
         match variant.as_str() {
             "CreateClient" => {
                 let event = <ibc_node::ibc::events::CreateClient as codec::Decode>::decode(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> CreateClient Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> CreateClient Event");
 
                 let height = event.0;
                 let client_id = event.1;
@@ -81,7 +81,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> UpdateClient Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> UpdateClient Event");
 
                 let height = event.0;
                 let client_id = event.1;
@@ -107,7 +107,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
 
                 let height = event.0;
                 let client_id = event.1;
@@ -130,7 +130,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
 
                 let height = event.0;
                 let connection_id = event.1.map(|val| val.to_ibc_connection_id());
@@ -156,7 +156,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
 
                 let height = event.0;
                 let connection_id = event.1.map(|val| val.to_ibc_connection_id());
@@ -182,7 +182,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
 
                 let height = event.0;
                 let connection_id = event.1.map(|val| val.to_ibc_connection_id());
@@ -209,7 +209,7 @@ pub async fn subscribe_ibc_event(
                         &mut &raw_event.data[..],
                     )
                     .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenConfirmConnection Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenConfirmConnection Event");
 
                 let height = event.0;
                 let connection_id = event.1.map(|val| val.to_ibc_connection_id());
@@ -236,7 +236,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
 
                 let height = event.0;
                 let port_id = event.1;
@@ -264,7 +264,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
 
                 let height = event.0;
                 let port_id = event.1;
@@ -292,7 +292,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
 
                 let height = event.0;
                 let port_id = event.1;
@@ -320,7 +320,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
 
                 let height = event.0;
                 let port_id = event.1;
@@ -348,7 +348,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
 
                 let height = event.0;
                 let port_id = event.1;
@@ -377,7 +377,7 @@ pub async fn subscribe_ibc_event(
                 )
                 .unwrap();
 
-                log::info!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
+                tracing::info!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
 
                 let height = event.0;
                 let port_id = event.1;
@@ -405,7 +405,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [substrate_events] >> SendPacket Event");
+                tracing::info!("In call_ibc: [substrate_events] >> SendPacket Event");
 
                 let height = event.0;
                 let packet = event.1;
@@ -425,7 +425,7 @@ pub async fn subscribe_ibc_event(
                 )
                 .unwrap();
 
-                log::info!("In call_ibc: [substrate_events] >> ReceivePacket Event");
+                tracing::info!("In call_ibc: [substrate_events] >> ReceivePacket Event");
 
                 let height = event.0;
                 let packet = event.1;
@@ -445,7 +445,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [substrate_events] >> WriteAcknowledgement Event");
+                tracing::info!("In call_ibc: [substrate_events] >> WriteAcknowledgement Event");
 
                 let height = event.0;
                 let packet = event.1;
@@ -468,7 +468,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
+                tracing::info!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
 
                 let height = event.0;
                 let packet = event.1;
@@ -488,7 +488,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
+                tracing::info!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
 
                 let height = event.0;
                 let packet = event.1;
@@ -508,7 +508,7 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [substrate_events] >> TimeoutOnClosePacket Event");
+                tracing::info!("In call_ibc: [substrate_events] >> TimeoutOnClosePacket Event");
 
                 let height = event.0;
                 let packet = event.1;
@@ -529,7 +529,7 @@ pub async fn subscribe_ibc_event(
                 )
                 .unwrap();
 
-                log::info!("in call_ibc: [substrate_events] >> Empty Event");
+                tracing::info!("in call_ibc: [substrate_events] >> Empty Event");
 
                 let data = String::from_utf8(event.0).unwrap();
 
@@ -543,7 +543,7 @@ pub async fn subscribe_ibc_event(
                 )
                 .unwrap();
 
-                log::info!("in call_ibc: [substrate_events] >> ChainError Event");
+                tracing::info!("in call_ibc: [substrate_events] >> ChainError Event");
 
                 let data = String::from_utf8(event.0).unwrap();
 
@@ -556,16 +556,16 @@ pub async fn subscribe_ibc_event(
                     &mut &raw_event.data[..],
                 )
                 .unwrap();
-                log::info!("In call_ibc: [subscribe_events] >> ExtrinsicSuccess ");
+                tracing::info!("In call_ibc: [subscribe_events] >> ExtrinsicSuccess ");
 
                 if counter_system_event < COUNTER_SYSTEM_EVENT {
-                    log::info!(
+                    tracing::info!(
                         "In call_ibc: [subscribe_events] >> counter_system_event: {:?}",
                         counter_system_event
                     );
                     counter_system_event += 1;
                 } else {
-                    log::info!(
+                    tracing::info!(
                         "In call_ibc: [subscribe_events] >> counter_system_event: {:?}",
                         counter_system_event
                     );
@@ -589,7 +589,7 @@ async fn test_subscribe_ibc_event() -> Result<(), Box<dyn std::error::Error>> {
 pub async fn subscribe_beefy(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
-    log::info!("In call_ibc: [subscribe_beefy_justifications]");
+    tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
     let sub = api.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
@@ -602,7 +602,7 @@ pub async fn subscribe_beefy(
 pub async fn get_latest_height(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<u64, Box<dyn std::error::Error>> {
-    log::info!("In call_ibc: [get_latest_height]");
+    tracing::info!("In call_ibc: [get_latest_height]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -611,15 +611,15 @@ pub async fn get_latest_height(
     let height = match blocks.next().await {
         Ok(Some(header)) => header.number as u64,
         Ok(None) => {
-            log::info!("In call_ibc: [get_latest_height] >> None");
+            tracing::info!("In call_ibc: [get_latest_height] >> None");
             0
         }
         Err(err) => {
-            log::info!(" In call_ibc: [get_latest_height] >> error: {:?} ", err);
+            tracing::info!(" In call_ibc: [get_latest_height] >> error: {:?} ", err);
             0
         }
     };
-    log::info!("In call_ibc: [get_latest_height] >> height: {:?}", height);
+    tracing::info!("In call_ibc: [get_latest_height] >> height: {:?}", height);
     Ok(height)
 }
 
@@ -633,7 +633,7 @@ pub async fn get_connection_end(
     connection_identifier: &ConnectionId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<ConnectionEnd, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_connection_end]");
+    tracing::info!("in call_ibc: [get_connection_end]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -641,7 +641,7 @@ pub async fn get_connection_end(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc : [get_connection_end] >> block_hash: {:?}",
         block_hash
     );
@@ -665,8 +665,8 @@ pub async fn get_channel_end(
     channel_id: &ChannelId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<ChannelEnd, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_channel_end]");
-    log::info!(
+    tracing::info!("in call_ibc: [get_channel_end]");
+    tracing::info!(
         "in call_ibc: [get_channel_end] >> port_id: {:?}, channel_id: {:?}",
         port_id.clone(),
         channel_id.clone()
@@ -679,7 +679,7 @@ pub async fn get_channel_end(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_channelend] >> block_hash: {:?}",
         block_hash
     );
@@ -703,13 +703,13 @@ pub async fn get_channel_end(
     };
     assert!(!data.is_empty());
 
-    log::info!(
+    tracing::info!(
         "in call_ibc: [get_channel_end] >> data >> {:?}",
         data.clone()
     );
 
     let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
-    log::info!(
+    tracing::info!(
         "in call_ibc: [get_channel_end] >> channel_end >> {:?}",
         channel_end.clone()
     );
@@ -724,7 +724,7 @@ pub async fn get_packet_receipt(
     seq: &Sequence,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Receipt, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc : [get_packet_receipt]");
+    tracing::info!("in call_ibc : [get_packet_receipt]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -732,7 +732,7 @@ pub async fn get_packet_receipt(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc : [get_packet_receipt] >> block_hash: {:?}",
         block_hash
     );
@@ -766,7 +766,7 @@ pub async fn get_send_packet_event(
     seq: &Sequence,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Packet, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_send_packet_event]");
+    tracing::info!("in call_ibc: [get_send_packet_event]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -774,7 +774,7 @@ pub async fn get_send_packet_event(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_send_packet_event] >> block_hash: {:?}",
         block_hash
     );
@@ -800,7 +800,7 @@ pub async fn get_client_state(
     client_id: &ClientId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<AnyClientState, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc : [get_client_state]");
+    tracing::info!("in call_ibc : [get_client_state]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -816,10 +816,10 @@ pub async fn get_client_state(
         .await?;
     assert!(!data.is_empty());
 
-    log::info!("in call_ibc: [get_client_state]: client_state: {:?}", data);
+    tracing::info!("in call_ibc: [get_client_state]: client_state: {:?}", data);
 
     let client_state = AnyClientState::decode_vec(&*data).unwrap();
-    log::info!(
+    tracing::info!(
         "in call_ibc: [get_client_state]: any_client_state : {:?}",
         client_state
     );
@@ -834,7 +834,7 @@ pub async fn get_client_consensus(
     height: ICSHeight,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<AnyConsensusState, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_client_consensus]");
+    tracing::info!("in call_ibc: [get_client_consensus]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -844,7 +844,7 @@ pub async fn get_client_consensus(
 
     let block_hash: sp_core::H256 = block_header.hash();
 
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_client_consensus] >> block_hash: {:?}",
         block_hash
     );
@@ -873,7 +873,7 @@ pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_consensus_state_with_height]");
+    tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -882,7 +882,7 @@ pub async fn get_consensus_state_with_height(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_client_consensus] >> block_hash: {:?}",
         block_hash
     );
@@ -911,7 +911,7 @@ pub async fn get_unreceipt_packet(
     seqs: Vec<u64>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u64>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_receipt_packet]");
+    tracing::info!("in call_ibc: [get_receipt_packet]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -921,7 +921,7 @@ pub async fn get_unreceipt_packet(
 
     let block_hash: sp_core::H256 = block_header.hash();
 
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_receipt_packet] >> block_hash: {:?}",
         block_hash
     );
@@ -957,7 +957,7 @@ pub async fn get_unreceipt_packet(
 pub async fn get_clients(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_clients]");
+    tracing::info!("in call_ibc: [get_clients]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -966,7 +966,7 @@ pub async fn get_clients(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!("In call_ibc: [get_clients] >> block_hash: {:?}", block_hash);
+    tracing::info!("In call_ibc: [get_clients] >> block_hash: {:?}", block_hash);
 
     // vector key-value
     let mut ret = vec![];
@@ -1010,7 +1010,7 @@ pub async fn get_clients(
 pub async fn get_connections(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedConnectionEnd>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_connctions]");
+    tracing::info!("in call_ibc: [get_connctions]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -1018,7 +1018,7 @@ pub async fn get_connections(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_connctions] >> block_hash: {:?}",
         block_hash
     );
@@ -1063,7 +1063,7 @@ pub async fn get_connections(
 pub async fn get_channels(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_channels]");
+    tracing::info!("in call_ibc: [get_channels]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -1072,7 +1072,7 @@ pub async fn get_channels(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_channels] >> block_hash: {:?}",
         block_hash
     );
@@ -1116,7 +1116,7 @@ pub async fn get_channels(
 pub async fn get_commitment_packet_state(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_commitment_packet_state]");
+    tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -1125,7 +1125,7 @@ pub async fn get_commitment_packet_state(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_commitment_packet_state] >> block_hash: {:?}",
         block_hash
     );
@@ -1181,7 +1181,7 @@ pub async fn get_packet_commitment(
     seq: u64,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_packet_commitment]");
+    tracing::info!("in call_ibc: [get_packet_commitment]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -1190,7 +1190,7 @@ pub async fn get_packet_commitment(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_packet_commitment] >> block_hash: {:?}",
         block_hash
     );
@@ -1221,7 +1221,7 @@ pub async fn get_packet_commitment(
 pub async fn get_acknowledge_packet_state(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_acknowledge_packet_state]");
+    tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -1230,7 +1230,7 @@ pub async fn get_acknowledge_packet_state(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_acknowledge_packet_state] >> block_hash: {:?}",
         block_hash
     );
@@ -1283,7 +1283,7 @@ pub async fn get_client_connections(
     client_id: ClientId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<ConnectionId>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_client_connections]");
+    tracing::info!("in call_ibc: [get_client_connections]");
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
@@ -1291,7 +1291,7 @@ pub async fn get_client_connections(
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: sp_core::H256 = block_header.hash();
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_client_connections] >> block_hash: {:?}",
         block_hash
     );
@@ -1320,7 +1320,7 @@ pub async fn get_connection_channels(
     connection_id: ConnectionId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [get_connection_channels]");
+    tracing::info!("in call_ibc: [get_connection_channels]");
 
     let api = client
         .clone()
@@ -1332,7 +1332,7 @@ pub async fn get_connection_channels(
 
     let block_hash: sp_core::H256 = block_header.hash();
 
-    log::info!(
+    tracing::info!(
         "In call_ibc: [get_client_connections] >> block_hash: {:?}",
         block_hash
     );
@@ -1368,7 +1368,7 @@ pub async fn deliver(
     msg: Vec<Any>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
-    log::info!("in call_ibc: [deliver]");
+    tracing::info!("in call_ibc: [deliver]");
 
     let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> =
         msg.into_iter().map(|val| val.into()).collect();
@@ -1384,7 +1384,7 @@ pub async fn deliver(
         .sign_and_submit(&signer)
         .await?;
 
-    log::info!("deliver result: {:?}", result);
+    tracing::info!("deliver result: {:?}", result);
 
     Ok(result)
 }
@@ -1403,7 +1403,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
     block_hash: Option<sp_core::H256>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
-    log::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
+    tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -1417,7 +1417,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
         .request("mmr_generateProof", params)
         .await?;
 
-    log::info!("info generate_proof : {:?}", generate_proof);
+    tracing::info!("info generate_proof : {:?}", generate_proof);
     // return mmr_leaf, mmr_proof
     Ok((
         generate_proof.block_hash,
@@ -1435,10 +1435,10 @@ pub async fn get_header_by_block_hash(
 
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
-    log::info!("header = {:?}", header);
+    tracing::info!("header = {:?}", header);
 
     let header = convert_substrate_header_to_ibc_header(header);
-    log::info!("convert header = {:?}", header);
+    tracing::info!("convert header = {:?}", header);
 
     Ok(header.into())
 }
@@ -1455,11 +1455,11 @@ pub async fn get_header_by_block_number(
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
     println!("header before = {:?}", header);
-    log::info!("header = {:?}", header);
+    tracing::info!("header = {:?}", header);
 
     let header = convert_substrate_header_to_ibc_header(header);
     println!("header after = {:?}", header);
-    log::info!("convert header = {:?}", header);
+    tracing::info!("convert header = {:?}", header);
 
     Ok(header.into())
 }
