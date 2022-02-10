@@ -1500,22 +1500,23 @@ signed commitment validator_set_id : {}",
                 .unwrap();
             let _ret = update_client_state_service(chain_a, chain_b).await;
         });
-        update_task1.await?;
 
-        // let update_task2 = task::spawn(async {
-        //     let chain_a = ClientBuilder::new()
-        //         .set_url("ws://localhost:9944")
-        //         .build::<ibc_node::DefaultConfig>()
-        //         .await
-        //         .unwrap();
-        //     let chain_b = ClientBuilder::new()
-        //         .set_url("ws://localhost:9944")
-        //         .build::<ibc_node::DefaultConfig>()
-        //         .await
-        //         .unwrap();
-        //     let _ret = update_client_state_service(chain_b, chain_a).await;
-        // });
-        // update_task2.await?;
+        let update_task2 = task::spawn(async {
+            let chain_a = ClientBuilder::new()
+                .set_url("ws://localhost:9944")
+                .build::<ibc_node::DefaultConfig>()
+                .await
+                .unwrap();
+            let chain_b = ClientBuilder::new()
+                .set_url("ws://localhost:8844")
+                .build::<ibc_node::DefaultConfig>()
+                .await
+                .unwrap();
+            let _ret = update_client_state_service(chain_b, chain_a).await;
+        });
+
+        update_task1.await?;
+        update_task2.await?;
 
         Ok(())
     }
