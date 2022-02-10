@@ -470,7 +470,7 @@ mod tests {
     use std::str::FromStr;
 
     use super::*;
-    use crate::{get_clients, ibc_node, subscribe_beefy};
+    use crate::{get_client_state, get_clients, ibc_node, subscribe_beefy};
     use beefy_light_client;
     use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
     use hex_literal::hex;
@@ -482,6 +482,8 @@ mod tests {
     use ibc::ics24_host::identifier::ChainId;
 
     use chrono::Local;
+    // use ibc::ics24_host::Path::ClientType;
+    use ibc::ics02_client::client_type::ClientType;
     use subxt::sp_core::hexdisplay::HexDisplay;
     use subxt::ClientBuilder;
     use tendermint_proto::Protobuf;
@@ -1529,6 +1531,19 @@ signed commitment validator_set_id : {}",
             .await?;
         let clients = get_clients(client).await.unwrap();
         println!("{:?}", clients);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_client_state() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:8844")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+        let client_state = get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client).await.unwrap();
+
+        println!("{:?}", client_state);
 
         Ok(())
     }

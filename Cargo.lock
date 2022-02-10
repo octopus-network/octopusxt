@@ -140,9 +140,9 @@ dependencies = [
 
 [[package]]
 name = "autocfg"
-version = "1.0.1"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cdb031dd78e28731d87d56cc8ffef4a8f36ca26c38fe2de700543e627f8a464a"
+checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
 
 [[package]]
 name = "backtrace"
@@ -424,9 +424,9 @@ checksum = "6245d59a3e82a7fc217c5828a6692dbc6dfb63a0c8c90495621f7b9d79704a0e"
 
 [[package]]
 name = "core-foundation"
-version = "0.9.2"
+version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6888e10551bb93e424d8df1d07f1a8b4fceb0001a3a4b048bfc47554946f47b3"
+checksum = "194a7a9e6de53fa55116934067c844d9d749312f75c6f6d0980e8c252f8c2146"
 dependencies = [
  "core-foundation-sys",
  "libc",
@@ -1094,9 +1094,9 @@ dependencies = [
 
 [[package]]
 name = "httparse"
-version = "1.5.1"
+version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "acd94fdbe1d4ff688b67b04eee2e17bd50995534a61539e45adfefb45e5e5503"
+checksum = "9100414882e15fb7feccb4897e5f0ff0ff1ca7d1a86a23208ada4d7a18e6c6c4"
 
 [[package]]
 name = "httpdate"
@@ -1182,7 +1182,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.7.3"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#717caf450eaff9c3559b9da78cda96edc0a39b4a"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#49c946f9ae794449140801b9c5457792271f7f2b"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1216,7 +1216,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.11.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#717caf450eaff9c3559b9da78cda96edc0a39b4a"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/beefy#49c946f9ae794449140801b9c5457792271f7f2b"
 dependencies = [
  "bytes",
  "informalsystems-prost",

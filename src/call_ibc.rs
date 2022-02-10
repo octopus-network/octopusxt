@@ -854,6 +854,8 @@ pub async fn get_client_consensus(
         .ibc()
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
+    println!("call_ibc: [consensus_state] >> data >> {:?}", data);
+
     assert!(!data.is_empty());
 
     // get the height consensus_state
@@ -866,10 +868,18 @@ pub async fn get_client_consensus(
 
     println!("call_ibc: [consensus_state] >> consensus_state >> {:?}", consensus_state);
 
-    let consensus_state = AnyConsensusState::decode_vec(&*consensus_state).unwrap();
+    let consensus_state = if consensus_state.is_empty() {
+        AnyConsensusState::Grandpa(ibc::ics10_grandpa::consensus_state::ConsensusState::default())
+    } else {
+        AnyConsensusState::decode_vec(&*consensus_state).unwrap()
+    };
+
+    // let consensus_state = AnyConsensusState::decode_vec(&*consensus_state).unwrap();
 
     Ok(consensus_state)
 }
+
+
 
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
@@ -1539,6 +1549,8 @@ pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
 
 #[cfg(test)]
 mod tests {
+    use ibc::ics02_client::client_type::ClientType;
+    use ibc::ics02_client::height::Height;
     use super::*;
     use crate::ibc_node;
     use subxt::ClientBuilder;
@@ -1555,6 +1567,20 @@ mod tests {
         let header = get_header_by_block_number(client, block_number).await?;
 
         println!("convert header = {:?}", header);
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let result = get_client_consensus(&ClientId::new(ClientType::Grandpa, 0).unwrap(), Height::new(0, 320), client).await?;
+
+        println!("result = {:?}", result);
 
         Ok(())
     }
