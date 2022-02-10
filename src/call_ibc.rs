@@ -864,6 +864,8 @@ pub async fn get_client_consensus(
         }
     }
 
+    println!("call_ibc: [consensus_state] >> consensus_state >> {:?}", consensus_state);
+
     let consensus_state = AnyConsensusState::decode_vec(&*consensus_state).unwrap();
 
     Ok(consensus_state)
