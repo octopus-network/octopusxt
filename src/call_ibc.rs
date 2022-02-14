@@ -1186,7 +1186,7 @@ pub async fn get_commitment_packet_state(
     Ok(result)
 }
 
-/// get packet commitment by port_id, channel_id and sequence to verify if the ack has been received by the sending chain
+/// get packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
 pub async fn get_packet_commitment(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -1222,6 +1222,49 @@ pub async fn get_packet_commitment(
 
     if data.is_empty() {
         Err(Box::new(Ics04Error::packet_commitment_not_found(Sequence(
+            seq,
+        ))))
+    } else {
+        Ok(data)
+    }
+}
+
+/// get packet acknowlegement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
+pub async fn get_packet_ack(
+    port_id: &PortId,
+    channel_id: &ChannelId,
+    seq: u64,
+    client: Client<ibc_node::DefaultConfig>,
+) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    tracing::info!("in call_ibc: [get_packet_ack]");
+
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash: sp_core::H256 = block_header.hash();
+    tracing::info!(
+        "In call_ibc: [get_packet_ack] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let _seq = seq.encode();
+
+    let data = api
+        .storage()
+        .ibc()
+        .acknowledgements(
+            port_id.as_bytes().to_vec(),
+            channel_id.as_bytes().to_vec(),
+            _seq,
+            Some(block_hash),
+        )
+        .await?;
+
+    if data.is_empty() {
+        Err(Box::new(Ics04Error::packet_acknowledgement_not_found(Sequence(
             seq,
         ))))
     } else {
