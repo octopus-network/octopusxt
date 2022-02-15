@@ -1667,6 +1667,21 @@ mod tests {
         Ok(())
     }
 
+    #[tokio::test]
+    async fn test_get_packet_commitment() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let client_id = PortId::from_str("transfer").unwrap();
+        let channel_id = ChannelId::from_str("channel-0").unwrap();
+
+        let result = get_packet_commitment(&client_id, &channel_id, 1, client).await.unwrap();
+        println!("packet_commitment = {:?}",result);
+
+        Ok(())
+    }
     // add unit test for get storage key
     #[test]
     fn test_get_storage_key() {
