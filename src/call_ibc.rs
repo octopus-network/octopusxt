@@ -1,11 +1,9 @@
 use crate::ibc_node;
-use core::time::Duration;
 use ibc::events::IbcEvent;
 use ibc::ics02_client::client_consensus::AnyConsensusState;
 use ibc::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
 use ibc::ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd};
 use ibc::ics04_channel::channel::{ChannelEnd, IdentifiedChannelEnd};
-use ibc::ics04_channel::error::Error as Ics04Error;
 use ibc::ics04_channel::packet::{Packet, Receipt, Sequence};
 use ibc::ics24_host::identifier::{ChannelId, ClientId, ConnectionId, PortId};
 use ibc::Height as ICSHeight;
@@ -19,11 +17,9 @@ use sp_core::storage::StorageKey;
 use sp_keyring::AccountKeyring;
 use subxt::storage::{StorageEntry, StorageKeyPrefix};
 use subxt::BeefySubscription;
-use subxt::ClientBuilder;
 use subxt::SignedCommitment;
 use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
-// use tokio::time::sleep;
 use beefy_merkle_tree::Hash;
 
 /// Subscribe ibc events
@@ -148,7 +144,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "OpenTryConnection" => {
@@ -174,7 +169,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "OpenAckConnection" => {
@@ -200,7 +194,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "OpenConfirmConnection" => {
@@ -227,7 +220,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
 
@@ -256,7 +248,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_channel_id: counterparty_channel_id,
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "OpenTryChannel" => {
@@ -284,7 +275,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_channel_id: counterparty_channel_id,
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "OpenAckChannel" => {
@@ -312,7 +302,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_channel_id: counterparty_channel_id,
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "OpenConfirmChannel" => {
@@ -340,7 +329,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_channel_id: counterparty_channel_id,
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "CloseInitChannel" => {
@@ -368,7 +356,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_channel_id: counterparty_channel_id,
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "CloseConfirmChannel" => {
@@ -397,7 +384,6 @@ pub async fn subscribe_ibc_event(
                         counterparty_channel_id: counterparty_channel_id,
                     }),
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "SendPacket" => {
@@ -416,7 +402,6 @@ pub async fn subscribe_ibc_event(
                         packet: packet.to_ibc_packet(),
                     },
                 ));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "ReceivePacket" => {
@@ -437,7 +422,6 @@ pub async fn subscribe_ibc_event(
                     },
                 ));
 
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "WriteAcknowledgement" => {
@@ -460,7 +444,6 @@ pub async fn subscribe_ibc_event(
                     },
                 ));
 
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "AcknowledgePacket" => {
@@ -480,7 +463,6 @@ pub async fn subscribe_ibc_event(
                     },
                 ));
 
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "TimeoutPacket" => {
@@ -500,7 +482,6 @@ pub async fn subscribe_ibc_event(
                     },
                 ));
 
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "TimeoutOnClosePacket" => {
@@ -520,7 +501,6 @@ pub async fn subscribe_ibc_event(
                     },
                 ));
 
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "Empty" => {
@@ -534,7 +514,6 @@ pub async fn subscribe_ibc_event(
                 let data = String::from_utf8(event.0).unwrap();
 
                 events.push(IbcEvent::Empty(data));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "ChainError" => {
@@ -548,7 +527,6 @@ pub async fn subscribe_ibc_event(
                 let data = String::from_utf8(event.0).unwrap();
 
                 events.push(IbcEvent::Empty(data));
-                // sleep(Duration::from_secs(10)).await;
                 break;
             }
             "ExtrinsicSuccess" => {

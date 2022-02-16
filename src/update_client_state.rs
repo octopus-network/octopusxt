@@ -1,24 +1,19 @@
 use std::str::FromStr;
-
-///
-/// update client state
-///
-use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, mmr, validator_set, Error};
+use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, Error};
 use ibc::ics02_client::client_state::AnyClientState;
-use jsonrpsee::types::to_json_value;
 use sp_core::hexdisplay::HexDisplay;
 use tendermint_proto::Protobuf;
 
 use crate::call_ibc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
-use codec::{Decode, Encode};
+use codec::Encode;
 use ibc::ics02_client::client_type::ClientType;
 use ibc::ics10_grandpa::help;
 use ibc::ics24_host::identifier::ClientId;
 use sp_keyring::AccountKeyring;
 use subxt::sp_core::Public;
 
-use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
+use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
 use beefy_merkle_tree::Hash;
 use subxt::{BeefySubscription, BlockNumber, Client, PairSigner};

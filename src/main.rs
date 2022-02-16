@@ -1,15 +1,7 @@
-use std::str::FromStr;
-
-use ibc::ics02_client::client_state::AnyClientState;
-use ibc::ics02_client::client_type::ClientType;
-use ibc::ics10_grandpa::client_state::ClientState;
-use ibc::ics24_host::identifier::ClientId;
 use octopusxt::call_ibc::get_storage_key;
 use octopusxt::ibc_node;
 use subxt::sp_core::Public;
-use subxt::storage::StorageEntry;
 use subxt::ClientBuilder;
-use tendermint_proto::Protobuf;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -26,7 +18,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let block_header = block.next().await.unwrap().unwrap();
     let block_hash = block_header.hash();
 
-    let api = ClientBuilder::new()
+    let _api = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<ibc_node::DefaultConfig>()
         .await?;
@@ -202,15 +194,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn fun_name<F: StorageEntry>(
-    api: &subxt::Client<ibc_node::DefaultConfig>,
-    ibc: &F,
-) -> Result<(), Box<dyn std::error::Error>>
-where
-    <F as StorageEntry>::Value: std::fmt::Debug,
-{
-    let storage_key = api.storage().fetch(ibc, None).await.unwrap().unwrap();
-    println!("client storage_key = {:?}", storage_key);
-
-    Ok(())
-}
+// async fn fun_name<F: StorageEntry>(
+//     api: &subxt::Client<ibc_node::DefaultConfig>,
+//     ibc: &F,
+// ) -> Result<(), Box<dyn std::error::Error>>
+// where
+//     <F as StorageEntry>::Value: std::fmt::Debug,
+// {
+//     let storage_key = api.storage().fetch(ibc, None).await.unwrap().unwrap();
+//     println!("client storage_key = {:?}", storage_key);
+//
+//     Ok(())
+// }
