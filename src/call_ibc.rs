@@ -643,7 +643,7 @@ pub async fn get_connection_end(
         .connections(connection_identifier.as_bytes().to_vec(), Some(block_hash))
         .await?;
 
-    assert!(!data.is_empty());
+    // assert!(!data.is_empty());
 
     let connection_end = ConnectionEnd::decode_vec(&*data).unwrap();
 
@@ -692,7 +692,7 @@ pub async fn get_channel_end(
             continue;
         }
     };
-    assert!(!data.is_empty());
+    // assert!(!data.is_empty());
 
     tracing::info!(
         "in call_ibc: [get_channel_end] >> data >> {:?}",
@@ -740,7 +740,7 @@ pub async fn get_packet_receipt(
             Some(block_hash),
         )
         .await?;
-    assert!(!data.is_empty());
+    // assert!(!data.is_empty());
 
     let _data = String::from_utf8(data).unwrap();
     if _data.eq("Ok") {
@@ -780,7 +780,7 @@ pub async fn get_send_packet_event(
             Some(block_hash),
         )
         .await?;
-    assert!(!data.is_empty());
+    // assert!(!data.is_empty());
 
     let packet = Packet::decode_vec(&*data).unwrap();
     Ok(packet)
@@ -805,7 +805,7 @@ pub async fn get_client_state(
         .ibc()
         .client_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
-    assert!(!data.is_empty());
+    // assert!(!data.is_empty());
 
     tracing::info!("in call_ibc: [get_client_state]: client_state: {:?}", data);
 
@@ -847,7 +847,7 @@ pub async fn get_client_consensus(
         .await?;
     println!("call_ibc: [consensus_state] >> data >> {:?}", data);
 
-    assert!(!data.is_empty());
+    // assert!(!data.is_empty());
 
     // get the height consensus_state
     let mut consensus_state = vec![];
@@ -896,7 +896,7 @@ pub async fn get_consensus_state_with_height(
         .ibc()
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
-    assert!(!ret.is_empty());
+    // assert!(!ret.is_empty());
 
     let mut result = vec![];
     for (height, consensus_state) in ret.iter() {
@@ -980,7 +980,7 @@ pub async fn get_clients(
         .ibc()
         .client_states_keys(Some(block_hash))
         .await?;
-    assert!(!client_states_keys.is_empty());
+    // assert!(!client_states_keys.is_empty());
 
     // enumate every item get client_state value
     for key in client_states_keys {
@@ -990,7 +990,7 @@ pub async fn get_clients(
             .ibc()
             .client_states(key.clone(), Some(block_hash))
             .await?;
-        assert!(!client_states_value.is_empty());
+        // assert!(!client_states_value.is_empty());
         // store key-value
         ret.push((key.clone(), client_states_value));
     }
@@ -1034,7 +1034,7 @@ pub async fn get_connections(
         .ibc()
         .connections_keys(Some(block_hash))
         .await?;
-    assert!(!connection_keys.is_empty());
+    // assert!(!connection_keys.is_empty());
 
     for key in connection_keys {
         // get connectons value
@@ -1043,7 +1043,7 @@ pub async fn get_connections(
             .ibc()
             .connections(key.clone(), Some(block_hash))
             .await?;
-        assert!(!value.is_empty());
+        // assert!(!value.is_empty());
         // store key-value
         ret.push((key.clone(), value.clone()));
     }
@@ -1085,7 +1085,7 @@ pub async fn get_channels(
 
     let channels_keys: Vec<(Vec<u8>, Vec<u8>)> =
         api.storage().ibc().channels_keys(Some(block_hash)).await?;
-    assert!(!channels_keys.is_empty());
+    // assert!(!channels_keys.is_empty());
 
     for key in channels_keys {
         // get value
@@ -1094,7 +1094,7 @@ pub async fn get_channels(
             .ibc()
             .channels(key.0.clone(), key.1.clone(), Some(block_hash))
             .await?;
-        assert!(!value.is_empty());
+        // assert!(!value.is_empty());
         // store key-value
         ret.push((key.0.clone(), key.1.clone(), value));
     }
@@ -1139,7 +1139,7 @@ pub async fn get_commitment_packet_state(
         .ibc()
         .packet_commitment_keys(Some(block_hash))
         .await?;
-    assert!(!packet_commitments_keys.is_empty());
+    // assert!(!packet_commitments_keys.is_empty());
 
     for key in packet_commitments_keys {
         // get value
@@ -1153,7 +1153,7 @@ pub async fn get_commitment_packet_state(
                 Some(block_hash),
             )
             .await?;
-        assert!(!!value.is_empty());
+        // assert!(!!value.is_empty());
         // store key-value
         ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
     }
@@ -1288,7 +1288,7 @@ pub async fn get_acknowledge_packet_state(
         .ibc()
         .acknowledgements_keys(Some(block_hash))
         .await?;
-    assert!(!acknowledgements_keys.is_empty());
+    // assert!(!acknowledgements_keys.is_empty());
 
     for key in acknowledgements_keys {
         let value: Vec<u8> = api
@@ -1301,7 +1301,7 @@ pub async fn get_acknowledge_packet_state(
                 Some(block_hash),
             )
             .await?;
-        assert!(!value.is_empty());
+        // assert!(!value.is_empty());
         ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
     }
 
