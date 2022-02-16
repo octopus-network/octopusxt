@@ -637,13 +637,15 @@ pub async fn get_connection_end(
         block_hash
     );
 
-    let data = api
+    let data : Vec<u8> = api
         .storage()
         .ibc()
         .connections(connection_identifier.as_bytes().to_vec(), Some(block_hash))
         .await?;
 
-    // assert!(!data.is_empty());
+    if data.is_empty() {
+        return Err(Box::from(format!("get_connection_end is empty! by connection_identifier = ({})", connection_identifier)));
+    }
 
     let connection_end = ConnectionEnd::decode_vec(&*data).unwrap();
 
@@ -675,24 +677,19 @@ pub async fn get_channel_end(
         block_hash
     );
 
-    let data: Vec<u8> = loop {
-        let data: Vec<u8> = api
-            .storage()
-            .ibc()
-            .channels(
-                port_id.as_bytes().to_vec(),
-                channel_id.as_bytes().to_vec(),
-                Some(block_hash),
-            )
-            .await?;
+    let data: Vec<u8> = api
+        .storage()
+        .ibc()
+        .channels(
+            port_id.as_bytes().to_vec(),
+            channel_id.as_bytes().to_vec(),
+            Some(block_hash),
+        )
+        .await?;
 
-        if !data.is_empty() {
-            break data;
-        } else {
-            continue;
-        }
-    };
-    // assert!(!data.is_empty());
+    if data.is_empty() {
+        return Err(Box::from(format!("get_channel_end is empty by port_id = ({}), channel_id = ({})", port_id, channel_id)))
+    }
 
     tracing::info!(
         "in call_ibc: [get_channel_end] >> data >> {:?}",
@@ -730,7 +727,7 @@ pub async fn get_packet_receipt(
 
     let _seq = u64::from(*seq).encode();
 
-    let data = api
+    let data : Vec<u8> = api
         .storage()
         .ibc()
         .packet_receipt(
@@ -740,7 +737,10 @@ pub async fn get_packet_receipt(
             Some(block_hash),
         )
         .await?;
-    // assert!(!data.is_empty());
+
+    if data.is_empty() {
+        return Err(Box::from(format!("get_packet_receipt is empty! by port_id = ({}), channel_id = ({})", port_id, channel_id)));
+    }
 
     let _data = String::from_utf8(data).unwrap();
     if _data.eq("Ok") {
@@ -770,7 +770,7 @@ pub async fn get_send_packet_event(
         block_hash
     );
 
-    let data = api
+    let data : Vec<u8> = api
         .storage()
         .ibc()
         .send_packet_event(
@@ -780,7 +780,9 @@ pub async fn get_send_packet_event(
             Some(block_hash),
         )
         .await?;
-    // assert!(!data.is_empty());
+    if data.is_empty() {
+        return Err(Box::from(format!("get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})", port_id, channel_id, seq)))
+    }
 
     let packet = Packet::decode_vec(&*data).unwrap();
     Ok(packet)
@@ -805,7 +807,10 @@ pub async fn get_client_state(
         .ibc()
         .client_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
-    // assert!(!data.is_empty());
+
+    if data.is_empty() {
+        return Err(Box::from(format!("get_client_state is empty! by client_id = ({})", client_id)));
+    }
 
     tracing::info!("in call_ibc: [get_client_state]: client_state: {:?}", data);
 
@@ -840,14 +845,15 @@ pub async fn get_client_consensus(
         block_hash
     );
 
-    let data = api
+    let data: Vec<(Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
-    println!("call_ibc: [consensus_state] >> data >> {:?}", data);
-
-    // assert!(!data.is_empty());
+    if data.is_empty() {
+        return Err(Box::from(format!("get_client_consensus is empty! by client_id = ({}), height = ({})", client_id, height)));
+    }
+    tracing::info!("call_ibc: [consensus_state] >> data >> {:?}", data);
 
     // get the height consensus_state
     let mut consensus_state = vec![];
@@ -860,12 +866,11 @@ pub async fn get_client_consensus(
     println!("call_ibc: [consensus_state] >> consensus_state >> {:?}", consensus_state);
 
     let consensus_state = if consensus_state.is_empty() {
+        // TODO
         AnyConsensusState::Grandpa(ibc::ics10_grandpa::consensus_state::ConsensusState::default())
     } else {
         AnyConsensusState::decode_vec(&*consensus_state).unwrap()
     };
-
-    // let consensus_state = AnyConsensusState::decode_vec(&*consensus_state).unwrap();
 
     Ok(consensus_state)
 }
@@ -891,15 +896,18 @@ pub async fn get_consensus_state_with_height(
     );
 
     // vector<height, consensus_state>
-    let ret: Vec<(Vec<u8>, Vec<u8>)> = api
+    let data: Vec<(Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
-    // assert!(!ret.is_empty());
+
+    if data.is_empty() {
+        return Err(Box::from(format!("get_consensus_state_with_height is empty! by client_id = ({})", client_id)));
+    }
 
     let mut result = vec![];
-    for (height, consensus_state) in ret.iter() {
+    for (height, consensus_state) in data.iter() {
         let height = ICSHeight::decode_vec(&*height).unwrap();
         let consensus_state = AnyConsensusState::decode_vec(&*consensus_state).unwrap();
         result.push((height, consensus_state));
@@ -943,12 +951,12 @@ pub async fn get_unreceipt_packet(
         .collect::<Vec<_>>();
 
     for (port_id, channel_id, (seq_u8, seq)) in pair.into_iter() {
-        let ret: Vec<u8> = api
+        let data: Vec<u8> = api
             .storage()
             .ibc()
             .packet_receipt(port_id, channel_id, seq_u8, Some(block_hash.clone()))
             .await?;
-        if ret.is_empty() {
+        if data.is_empty() {
             result.push(seq);
         }
     }
@@ -980,7 +988,9 @@ pub async fn get_clients(
         .ibc()
         .client_states_keys(Some(block_hash))
         .await?;
-    // assert!(!client_states_keys.is_empty());
+    if client_states_keys.is_empty() {
+        return Err(Box::from(format!("get_clients: get empty client_states_keys")));
+    }
 
     // enumate every item get client_state value
     for key in client_states_keys {
@@ -990,7 +1000,6 @@ pub async fn get_clients(
             .ibc()
             .client_states(key.clone(), Some(block_hash))
             .await?;
-        // assert!(!client_states_value.is_empty());
         // store key-value
         ret.push((key.clone(), client_states_value));
     }
@@ -1034,7 +1043,10 @@ pub async fn get_connections(
         .ibc()
         .connections_keys(Some(block_hash))
         .await?;
-    // assert!(!connection_keys.is_empty());
+
+    if connection_keys.is_empty() {
+        return Err(Box::from(format!("get_connections: get empty connection_keys")));
+    }
 
     for key in connection_keys {
         // get connectons value
@@ -1043,7 +1055,7 @@ pub async fn get_connections(
             .ibc()
             .connections(key.clone(), Some(block_hash))
             .await?;
-        // assert!(!value.is_empty());
+
         // store key-value
         ret.push((key.clone(), value.clone()));
     }
@@ -1085,7 +1097,10 @@ pub async fn get_channels(
 
     let channels_keys: Vec<(Vec<u8>, Vec<u8>)> =
         api.storage().ibc().channels_keys(Some(block_hash)).await?;
-    // assert!(!channels_keys.is_empty());
+
+    if channels_keys.is_empty() {
+        return Err(Box::from(format!("get_channels: get empty channels_keys")));
+    }
 
     for key in channels_keys {
         // get value
@@ -1094,7 +1109,7 @@ pub async fn get_channels(
             .ibc()
             .channels(key.0.clone(), key.1.clone(), Some(block_hash))
             .await?;
-        // assert!(!value.is_empty());
+
         // store key-value
         ret.push((key.0.clone(), key.1.clone(), value));
     }
@@ -1134,12 +1149,16 @@ pub async fn get_commitment_packet_state(
     );
 
     let mut ret = vec![];
+
     let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
         .packet_commitment_keys(Some(block_hash))
         .await?;
-    // assert!(!packet_commitments_keys.is_empty());
+
+    if packet_commitments_keys.is_empty() {
+        return Err(Box::from(format!("get_commitment_packet_state: get empty packet_commitments_keys")));
+    }
 
     for key in packet_commitments_keys {
         // get value
@@ -1153,7 +1172,7 @@ pub async fn get_commitment_packet_state(
                 Some(block_hash),
             )
             .await?;
-        // assert!(!!value.is_empty());
+
         // store key-value
         ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
     }
@@ -1200,7 +1219,7 @@ pub async fn get_packet_commitment(
 
     let _seq = seq.encode();
 
-    let data = api
+    let data : Vec<u8> = api
         .storage()
         .ibc()
         .packet_commitment(
@@ -1212,9 +1231,7 @@ pub async fn get_packet_commitment(
         .await?;
 
     if data.is_empty() {
-        Err(Box::new(Ics04Error::packet_commitment_not_found(Sequence(
-            seq,
-        ))))
+       return Err(Box::from(format!("get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})", port_id, channel_id, seq)));
     } else {
         Ok(data)
     }
@@ -1243,7 +1260,7 @@ pub async fn get_packet_ack(
 
     let _seq = seq.encode();
 
-    let data = api
+    let data : Vec<u8> = api
         .storage()
         .ibc()
         .acknowledgements(
@@ -1255,9 +1272,7 @@ pub async fn get_packet_ack(
         .await?;
 
     if data.is_empty() {
-        Err(Box::new(Ics04Error::packet_acknowledgement_not_found(Sequence(
-            seq,
-        ))))
+        return Err(Box::from(format!("get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})", port_id, channel_id, seq)));
     } else {
         Ok(data)
     }
@@ -1288,7 +1303,9 @@ pub async fn get_acknowledge_packet_state(
         .ibc()
         .acknowledgements_keys(Some(block_hash))
         .await?;
-    // assert!(!acknowledgements_keys.is_empty());
+    if acknowledgements_keys.is_empty() {
+        return Err(Box::from(format!("get_acknowledge_packet_state empty!")));
+    }
 
     for key in acknowledgements_keys {
         let value: Vec<u8> = api
@@ -1301,7 +1318,7 @@ pub async fn get_acknowledge_packet_state(
                 Some(block_hash),
             )
             .await?;
-        // assert!(!value.is_empty());
+
         ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
     }
 
@@ -1348,8 +1365,9 @@ pub async fn get_client_connections(
         .ibc()
         .connection_client(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
+
     if connection_id.is_empty() {
-        return Ok(Vec::new());
+        return Err(Box::from(format!("get_client_connections is empty! by client_id = ({})", client_id)));
     }
 
     let mut result = vec![];
@@ -1389,6 +1407,10 @@ pub async fn get_connection_channels(
         .ibc()
         .channels_connection(connection_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
+
+    if channel_id_and_port_id.is_empty() {
+        return Err(Box::from(format!("get_connection_channels is empty! by connection_id = ({})", connection_id)));
+    }
 
     let mut result = vec![];
 
@@ -1575,11 +1597,11 @@ fn convert_changes_trie_configuration(value: sp_core::ChangesTrieConfiguration) 
     }
 }
 
-// pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
-//     let prefix = StorageKeyPrefix::new::<F>();
-//     let key = store.key().final_key(prefix);
-//     key
-// }
+pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
+    let prefix = StorageKeyPrefix::new::<F>();
+    let key = store.key().final_key(prefix);
+    key
+}
 
 #[cfg(test)]
 mod tests {
@@ -1677,69 +1699,53 @@ mod tests {
     #[test]
     fn test_get_storage_key() {
         let _ibc = crate::ibc_node::ibc::storage::ClientStates(vec![1, 2, 3]);
-
         let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-
-        // let result = get_storage_key(&ibc);
-        // println!("key = {:?}", result);
-
         let _ibc = crate::ibc_node::ibc::storage::ConsensusStates(vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::Connections(vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::ConnectionsKeys;
-
         let _ibc = crate::ibc_node::ibc::storage::Channels(vec![1, 2, 3], vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::ChannelsKeys;
-
         let _ibc = crate::ibc_node::ibc::storage::ChannelsConnection(vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::NextSequenceSend(vec![1, 2, 3], vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::NextSequenceRecv(vec![1, 2, 3], vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::NextSequenceAck(vec![1, 2, 3], vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::Acknowledgements(
             vec![1, 2, 3],
             vec![1, 2, 3],
             vec![1, 2, 3],
         );
-
         let _ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
-
         let _ibc = crate::ibc_node::ibc::storage::Clients(vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::ClientCounter;
-
         let _ibc = crate::ibc_node::ibc::storage::ConnectionCounter;
-
         let _ibc = crate::ibc_node::ibc::storage::ChannelCounter;
-
         let _ibc = crate::ibc_node::ibc::storage::ConnectionClient(vec![1, 2, 3]);
-
         let _ibc = crate::ibc_node::ibc::storage::PacketReceipt(
             vec![1, 2, 3],
             vec![1, 2, 3],
             vec![1, 2, 3],
         );
-
         let _ibc = crate::ibc_node::ibc::storage::PacketCommitment(
             vec![1, 2, 3],
             vec![1, 2, 3],
             vec![1, 2, 3],
         );
-
         let _ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
-
         let _ibc = crate::ibc_node::ibc::storage::SendPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
-
         let _ibc =
             crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
-
         let _ibc = crate::ibc_node::ibc::storage::LatestHeight;
-
         let _ibc = crate::ibc_node::ibc::storage::OldHeight;
+    }
+
+    #[tokio::test]
+    async fn test_get_latest_height() {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await.unwrap();
+
+        let height = get_latest_height(client).await.unwrap();
+        println!("height = {:?}", height);
     }
 }
