@@ -189,8 +189,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let block = api.client.rpc().block(Some(block_hash.unwrap())).await?;
     // println!("block : {:?}", block);
 
- 
-
     Ok(())
 }
 

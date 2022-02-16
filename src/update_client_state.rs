@@ -1,7 +1,7 @@
-use std::str::FromStr;
 use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, Error};
 use ibc::ics02_client::client_state::AnyClientState;
 use sp_core::hexdisplay::HexDisplay;
+use std::str::FromStr;
 use tendermint_proto::Protobuf;
 
 use crate::call_ibc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
@@ -1536,7 +1536,10 @@ signed commitment validator_set_id : {}",
             .set_url("ws://localhost:8844")
             .build::<ibc_node::DefaultConfig>()
             .await?;
-        let client_state = get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client).await.unwrap();
+        let client_state =
+            get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
+                .await
+                .unwrap();
 
         println!("{:?}", client_state);
 

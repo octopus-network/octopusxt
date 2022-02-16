@@ -9,6 +9,7 @@ use ibc::ics24_host::identifier::{ChannelId, ClientId, ConnectionId, PortId};
 use ibc::Height as ICSHeight;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 
+use beefy_merkle_tree::Hash;
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use jsonrpsee::types::to_json_value;
@@ -20,7 +21,6 @@ use subxt::BeefySubscription;
 use subxt::SignedCommitment;
 use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
-use beefy_merkle_tree::Hash;
 
 /// Subscribe ibc events
 pub async fn subscribe_ibc_event(
@@ -596,7 +596,6 @@ pub async fn get_latest_height(
     Ok(height)
 }
 
-
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
 pub async fn get_connection_end(
     connection_identifier: &ConnectionId,
@@ -615,14 +614,17 @@ pub async fn get_connection_end(
         block_hash
     );
 
-    let data : Vec<u8> = api
+    let data: Vec<u8> = api
         .storage()
         .ibc()
         .connections(connection_identifier.as_bytes().to_vec(), Some(block_hash))
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!("get_connection_end is empty! by connection_identifier = ({})", connection_identifier)));
+        return Err(Box::from(format!(
+            "get_connection_end is empty! by connection_identifier = ({})",
+            connection_identifier
+        )));
     }
 
     let connection_end = ConnectionEnd::decode_vec(&*data).unwrap();
@@ -666,7 +668,10 @@ pub async fn get_channel_end(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!("get_channel_end is empty by port_id = ({}), channel_id = ({})", port_id, channel_id)))
+        return Err(Box::from(format!(
+            "get_channel_end is empty by port_id = ({}), channel_id = ({})",
+            port_id, channel_id
+        )));
     }
 
     tracing::info!(
@@ -705,7 +710,7 @@ pub async fn get_packet_receipt(
 
     let _seq = u64::from(*seq).encode();
 
-    let data : Vec<u8> = api
+    let data: Vec<u8> = api
         .storage()
         .ibc()
         .packet_receipt(
@@ -717,7 +722,10 @@ pub async fn get_packet_receipt(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!("get_packet_receipt is empty! by port_id = ({}), channel_id = ({})", port_id, channel_id)));
+        return Err(Box::from(format!(
+            "get_packet_receipt is empty! by port_id = ({}), channel_id = ({})",
+            port_id, channel_id
+        )));
     }
 
     let _data = String::from_utf8(data).unwrap();
@@ -748,7 +756,7 @@ pub async fn get_send_packet_event(
         block_hash
     );
 
-    let data : Vec<u8> = api
+    let data: Vec<u8> = api
         .storage()
         .ibc()
         .send_packet_event(
@@ -759,7 +767,10 @@ pub async fn get_send_packet_event(
         )
         .await?;
     if data.is_empty() {
-        return Err(Box::from(format!("get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})", port_id, channel_id, seq)))
+        return Err(Box::from(format!(
+            "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id, channel_id, seq
+        )));
     }
 
     let packet = Packet::decode_vec(&*data).unwrap();
@@ -787,7 +798,10 @@ pub async fn get_client_state(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!("get_client_state is empty! by client_id = ({})", client_id)));
+        return Err(Box::from(format!(
+            "get_client_state is empty! by client_id = ({})",
+            client_id
+        )));
     }
 
     tracing::info!("in call_ibc: [get_client_state]: client_state: {:?}", data);
@@ -829,7 +843,10 @@ pub async fn get_client_consensus(
         .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
         .await?;
     if data.is_empty() {
-        return Err(Box::from(format!("get_client_consensus is empty! by client_id = ({}), height = ({})", client_id, height)));
+        return Err(Box::from(format!(
+            "get_client_consensus is empty! by client_id = ({}), height = ({})",
+            client_id, height
+        )));
     }
     tracing::info!("call_ibc: [consensus_state] >> data >> {:?}", data);
 
@@ -841,7 +858,10 @@ pub async fn get_client_consensus(
         }
     }
 
-    println!("call_ibc: [consensus_state] >> consensus_state >> {:?}", consensus_state);
+    println!(
+        "call_ibc: [consensus_state] >> consensus_state >> {:?}",
+        consensus_state
+    );
 
     let consensus_state = if consensus_state.is_empty() {
         // TODO
@@ -852,8 +872,6 @@ pub async fn get_client_consensus(
 
     Ok(consensus_state)
 }
-
-
 
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
@@ -881,7 +899,10 @@ pub async fn get_consensus_state_with_height(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!("get_consensus_state_with_height is empty! by client_id = ({})", client_id)));
+        return Err(Box::from(format!(
+            "get_consensus_state_with_height is empty! by client_id = ({})",
+            client_id
+        )));
     }
 
     let mut result = vec![];
@@ -967,7 +988,9 @@ pub async fn get_clients(
         .client_states_keys(Some(block_hash))
         .await?;
     if client_states_keys.is_empty() {
-        return Err(Box::from(format!("get_clients: get empty client_states_keys")));
+        return Err(Box::from(format!(
+            "get_clients: get empty client_states_keys"
+        )));
     }
 
     // enumate every item get client_state value
@@ -1023,7 +1046,9 @@ pub async fn get_connections(
         .await?;
 
     if connection_keys.is_empty() {
-        return Err(Box::from(format!("get_connections: get empty connection_keys")));
+        return Err(Box::from(format!(
+            "get_connections: get empty connection_keys"
+        )));
     }
 
     for key in connection_keys {
@@ -1135,7 +1160,9 @@ pub async fn get_commitment_packet_state(
         .await?;
 
     if packet_commitments_keys.is_empty() {
-        return Err(Box::from(format!("get_commitment_packet_state: get empty packet_commitments_keys")));
+        return Err(Box::from(format!(
+            "get_commitment_packet_state: get empty packet_commitments_keys"
+        )));
     }
 
     for key in packet_commitments_keys {
@@ -1197,7 +1224,7 @@ pub async fn get_packet_commitment(
 
     let _seq = seq.encode();
 
-    let data : Vec<u8> = api
+    let data: Vec<u8> = api
         .storage()
         .ibc()
         .packet_commitment(
@@ -1209,7 +1236,10 @@ pub async fn get_packet_commitment(
         .await?;
 
     if data.is_empty() {
-       return Err(Box::from(format!("get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})", port_id, channel_id, seq)));
+        return Err(Box::from(format!(
+            "get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id, channel_id, seq
+        )));
     } else {
         Ok(data)
     }
@@ -1238,7 +1268,7 @@ pub async fn get_packet_ack(
 
     let _seq = seq.encode();
 
-    let data : Vec<u8> = api
+    let data: Vec<u8> = api
         .storage()
         .ibc()
         .acknowledgements(
@@ -1250,7 +1280,10 @@ pub async fn get_packet_ack(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!("get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})", port_id, channel_id, seq)));
+        return Err(Box::from(format!(
+            "get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id, channel_id, seq
+        )));
     } else {
         Ok(data)
     }
@@ -1345,7 +1378,10 @@ pub async fn get_client_connections(
         .await?;
 
     if connection_id.is_empty() {
-        return Err(Box::from(format!("get_client_connections is empty! by client_id = ({})", client_id)));
+        return Err(Box::from(format!(
+            "get_client_connections is empty! by client_id = ({})",
+            client_id
+        )));
     }
 
     let mut result = vec![];
@@ -1387,7 +1423,10 @@ pub async fn get_connection_channels(
         .await?;
 
     if channel_id_and_port_id.is_empty() {
-        return Err(Box::from(format!("get_connection_channels is empty! by connection_id = ({})", connection_id)));
+        return Err(Box::from(format!(
+            "get_connection_channels is empty! by connection_id = ({})",
+            connection_id
+        )));
     }
 
     let mut result = vec![];
@@ -1514,7 +1553,6 @@ pub async fn get_header_by_block_number(
 pub fn convert_substrate_header_to_ibc_header(
     header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
 ) -> beefy_light_client::header::Header {
-
     beefy_light_client::header::Header {
         parent_hash: Hash::from(header.parent_hash),
         number: header.number,
@@ -1524,43 +1562,57 @@ pub fn convert_substrate_header_to_ibc_header(
     }
 }
 
-fn convert_substrate_digest_to_beefy_light_client_digest(digest: sp_runtime::Digest<sp_core::H256>)
- -> beefy_light_client::header::Digest {
+fn convert_substrate_digest_to_beefy_light_client_digest(
+    digest: sp_runtime::Digest<sp_core::H256>,
+) -> beefy_light_client::header::Digest {
     beefy_light_client::header::Digest {
-        logs: digest.logs.into_iter().map(|value | convert_substrate_digest_item_to_beefy_light_client_digest_item(value)).collect(),
+        logs: digest
+            .logs
+            .into_iter()
+            .map(|value| convert_substrate_digest_item_to_beefy_light_client_digest_item(value))
+            .collect(),
     }
 }
 
-fn convert_substrate_digest_item_to_beefy_light_client_digest_item(digest_item: sp_runtime::DigestItem<sp_core::H256>)
- -> beefy_light_client::header::DigestItem {
+fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
+    digest_item: sp_runtime::DigestItem<sp_core::H256>,
+) -> beefy_light_client::header::DigestItem {
     match digest_item {
-        sp_runtime::DigestItem::ChangesTrieRoot(value ) => {
+        sp_runtime::DigestItem::ChangesTrieRoot(value) => {
             beefy_light_client::header::DigestItem::ChangesTrieRoot(Hash::from(value))
-        },
+        }
         sp_runtime::DigestItem::PreRuntime(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::PreRuntime(consensus_engine_id, value)
-        },
-        sp_runtime::DigestItem::Consensus(consensus_engine_id, value ) => {
+        }
+        sp_runtime::DigestItem::Consensus(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::Consensus(consensus_engine_id, value)
         }
-        sp_runtime::DigestItem::Seal(consensus_engine_id, value ) => {
+        sp_runtime::DigestItem::Seal(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::Seal(consensus_engine_id, value)
         }
         sp_runtime::DigestItem::ChangesTrieSignal(changes_trie_signal) => {
-            beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(changes_trie_signal))
+            beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(
+                changes_trie_signal,
+            ))
         }
-        sp_runtime::DigestItem::Other(value ) => {
+        sp_runtime::DigestItem::Other(value) => {
             beefy_light_client::header::DigestItem::Other(value)
         }
-        sp_runtime::DigestItem::RuntimeEnvironmentUpdated => beefy_light_client::header::DigestItem::RuntimeEnvironmentUpdated,
+        sp_runtime::DigestItem::RuntimeEnvironmentUpdated => {
+            beefy_light_client::header::DigestItem::RuntimeEnvironmentUpdated
+        }
     }
 }
 
-fn convert_changes_trie_signal(value: sp_runtime::generic::ChangesTrieSignal) -> beefy_light_client::header::ChangesTrieSignal {
+fn convert_changes_trie_signal(
+    value: sp_runtime::generic::ChangesTrieSignal,
+) -> beefy_light_client::header::ChangesTrieSignal {
     match value {
         sp_runtime::generic::ChangesTrieSignal::NewConfiguration(value) => {
             if value.is_some() {
-                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(convert_changes_trie_configuration(value.unwrap())))
+                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(
+                    convert_changes_trie_configuration(value.unwrap()),
+                ))
             } else {
                 beefy_light_client::header::ChangesTrieSignal::NewConfiguration(None)
             }
@@ -1568,10 +1620,12 @@ fn convert_changes_trie_signal(value: sp_runtime::generic::ChangesTrieSignal) ->
     }
 }
 
-fn convert_changes_trie_configuration(value: sp_core::ChangesTrieConfiguration) -> beefy_light_client::header::ChangesTrieConfiguration {
+fn convert_changes_trie_configuration(
+    value: sp_core::ChangesTrieConfiguration,
+) -> beefy_light_client::header::ChangesTrieConfiguration {
     beefy_light_client::header::ChangesTrieConfiguration {
         digest_interval: value.digest_interval,
-        digest_levels: value.digest_levels
+        digest_levels: value.digest_levels,
     }
 }
 
@@ -1583,10 +1637,10 @@ pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
 
 #[cfg(test)]
 mod tests {
-    use ibc::ics02_client::client_type::ClientType;
-    use ibc::ics02_client::height::Height;
     use super::*;
     use crate::ibc_node;
+    use ibc::ics02_client::client_type::ClientType;
+    use ibc::ics02_client::height::Height;
     use subxt::ClientBuilder;
 
     // test API get_block_header
@@ -1612,7 +1666,12 @@ mod tests {
             .build::<ibc_node::DefaultConfig>()
             .await?;
 
-        let result = get_client_consensus(&ClientId::new(ClientType::Grandpa, 0).unwrap(), Height::new(0, 320), client).await?;
+        let result = get_client_consensus(
+            &ClientId::new(ClientType::Grandpa, 0).unwrap(),
+            Height::new(0, 320),
+            client,
+        )
+        .await?;
 
         println!("result = {:?}", result);
 
@@ -1668,8 +1727,10 @@ mod tests {
         let client_id = PortId::from_str("transfer").unwrap();
         let channel_id = ChannelId::from_str("channel-0").unwrap();
 
-        let result = get_packet_commitment(&client_id, &channel_id, 1, client).await.unwrap();
-        println!("packet_commitment = {:?}",result);
+        let result = get_packet_commitment(&client_id, &channel_id, 1, client)
+            .await
+            .unwrap();
+        println!("packet_commitment = {:?}", result);
 
         Ok(())
     }
@@ -1721,7 +1782,8 @@ mod tests {
         let client = ClientBuilder::new()
             .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
-            .await.unwrap();
+            .await
+            .unwrap();
 
         let height = get_latest_height(client).await.unwrap();
         println!("height = {:?}", height);
