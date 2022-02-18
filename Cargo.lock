@@ -1347,39 +1347,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "informalsystems-prost"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5620e41d3653c27671bee3e07822407365cae5d97f4a391a1c87cb2a4caf647b"
-dependencies = [
- "bytes",
- "informalsystems-prost-derive",
-]
-
-[[package]]
-name = "informalsystems-prost-derive"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3c6af6594ef5bc7f879ba098055e084bf3562077b6dc83fcc96b579cdd319eba"
-dependencies = [
- "anyhow",
- "itertools",
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "informalsystems-prost-types"
-version = "0.8.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "41b094d80f1836c54e192146a58ef1ef1803b1a50a055ab6303ec757e034431a"
-dependencies = [
- "bytes",
- "informalsystems-prost",
-]
-
-[[package]]
 name = "instant"
 version = "0.1.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2018,11 +1985,11 @@ dependencies = [
  "hex-literal",
  "ibc",
  "ibc-proto",
- "informalsystems-prost-types",
  "jsonrpsee",
  "libsecp256k1 0.7.0",
  "pallet-mmr-rpc",
  "parity-scale-codec",
+ "prost-types",
  "serde",
  "sp-core",
  "sp-keyring",
