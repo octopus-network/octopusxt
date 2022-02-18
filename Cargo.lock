@@ -1210,7 +1210,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.11.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/merge-upstream-ibc-rs#8102e1d4835ec4a1301e116903c29ab386e7a3bb"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/merge-upstream-ibc-rs#c0807aa06d3c1fae1cf247172336da5b995739a1"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1247,7 +1247,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.15.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/merge-upstream-ibc-rs#8102e1d4835ec4a1301e116903c29ab386e7a3bb"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/merge-upstream-ibc-rs#c0807aa06d3c1fae1cf247172336da5b995739a1"
 dependencies = [
  "bytes",
  "prost",

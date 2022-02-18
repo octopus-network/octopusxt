@@ -124,7 +124,7 @@ impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId {
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
     pub fn to_ibc_sequence(self) -> ibc::core::ics04_channel::packet::Sequence {
-        ibc::core::ics04_channel::packet::Sequence(self.0)
+        ibc::core::ics04_channel::packet::Sequence::from(self.0)
     }
 }
 
