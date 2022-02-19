@@ -466,8 +466,9 @@ mod tests {
 
     use super::*;
     use crate::{get_client_state, get_clients, ibc_node, subscribe_beefy};
-    use beefy_light_client;
+    use beefy_light_client::{self, mmr};
     use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
+    use codec::Decode;
     use hex_literal::hex;
 
     use ibc::ics02_client::client_state::AnyClientState;
