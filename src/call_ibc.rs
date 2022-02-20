@@ -1159,12 +1159,6 @@ pub async fn get_commitment_packet_state(
         .packet_commitment_keys(Some(block_hash))
         .await?;
 
-    if packet_commitments_keys.is_empty() {
-        return Err(Box::from(format!(
-            "get_commitment_packet_state: get empty packet_commitments_keys"
-        )));
-    }
-
     for key in packet_commitments_keys {
         // get value
         let value: Vec<u8> = api
@@ -1314,9 +1308,6 @@ pub async fn get_acknowledge_packet_state(
         .ibc()
         .acknowledgements_keys(Some(block_hash))
         .await?;
-    if acknowledgements_keys.is_empty() {
-        return Err(Box::from(format!("get_acknowledge_packet_state empty!")));
-    }
 
     for key in acknowledgements_keys {
         let value: Vec<u8> = api
