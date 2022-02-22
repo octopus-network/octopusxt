@@ -1,5 +1,5 @@
 use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, Error};
-use ibc::ics02_client::client_state::AnyClientState;
+use ibc::core::ics02_client::client_state::AnyClientState;
 use sp_core::hexdisplay::HexDisplay;
 use std::str::FromStr;
 use tendermint_proto::Protobuf;
@@ -7,9 +7,9 @@ use tendermint_proto::Protobuf;
 use crate::call_ibc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
 use codec::Encode;
-use ibc::ics02_client::client_type::ClientType;
-use ibc::ics10_grandpa::help;
-use ibc::ics24_host::identifier::ClientId;
+use ibc::core::ics02_client::client_type::ClientType;
+use ibc::clients::ics10_grandpa::help;
+use ibc::core::ics24_host::identifier::ClientId;
 use sp_keyring::AccountKeyring;
 use subxt::sp_core::Public;
 

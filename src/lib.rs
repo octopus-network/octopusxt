@@ -23,10 +23,10 @@ pub enum ClientType {
 }
 
 impl ClientType {
-    pub fn to_ibc_client_type(self) -> ibc::ics02_client::client_type::ClientType {
+    pub fn to_ibc_client_type(self) -> ibc::core::ics02_client::client_type::ClientType {
         match self {
-            ClientType::Tendermint => ibc::ics02_client::client_type::ClientType::Tendermint,
-            ClientType::Grandpa => ibc::ics02_client::client_type::ClientType::Grandpa,
+            ClientType::Tendermint => ibc::core::ics02_client::client_type::ClientType::Tendermint,
+            ClientType::Grandpa => ibc::core::ics02_client::client_type::ClientType::Grandpa,
         }
     }
 }
@@ -80,8 +80,8 @@ impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
 }
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Packet {
-    pub fn to_ibc_packet(self) -> ibc::ics04_channel::packet::Packet {
-        ibc::ics04_channel::packet::Packet {
+    pub fn to_ibc_packet(self) -> ibc::core::ics04_channel::packet::Packet {
+        ibc::core::ics04_channel::packet::Packet {
             sequence: self.sequence.to_ibc_sequence(),
             source_port: self.source_port.to_ibc_port_id(),
             source_channel: self.source_channel.to_ibc_channel_id(),
@@ -95,36 +95,36 @@ impl ibc_node::runtime_types::pallet_ibc::event::primitive::Packet {
 }
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId {
-    pub fn to_ibc_connection_id(self) -> ibc::ics24_host::identifier::ConnectionId {
+    pub fn to_ibc_connection_id(self) -> ibc::core::ics24_host::identifier::ConnectionId {
         let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::ConnectionId(value)
+        ibc::core::ics24_host::identifier::ConnectionId(value)
     }
 }
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId {
-    pub fn to_ibc_channel_id(self) -> ibc::ics24_host::identifier::ChannelId {
+    pub fn to_ibc_channel_id(self) -> ibc::core::ics24_host::identifier::ChannelId {
         let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::ChannelId(value)
+        ibc::core::ics24_host::identifier::ChannelId(value)
     }
 }
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::PortId {
-    pub fn to_ibc_port_id(self) -> ibc::ics24_host::identifier::PortId {
+    pub fn to_ibc_port_id(self) -> ibc::core::ics24_host::identifier::PortId {
         let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::PortId(value)
+        ibc::core::ics24_host::identifier::PortId(value)
     }
 }
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId {
-    pub fn to_ibc_client_id(self) -> ibc::ics24_host::identifier::ClientId {
+    pub fn to_ibc_client_id(self) -> ibc::core::ics24_host::identifier::ClientId {
         let value = String::from_utf8(self.0).unwrap();
-        ibc::ics24_host::identifier::ClientId(value)
+        ibc::core::ics24_host::identifier::ClientId(value)
     }
 }
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
-    pub fn to_ibc_sequence(self) -> ibc::ics04_channel::packet::Sequence {
-        ibc::ics04_channel::packet::Sequence(self.0)
+    pub fn to_ibc_sequence(self) -> ibc::core::ics04_channel::packet::Sequence {
+        ibc::core::ics04_channel::packet::Sequence::from(self.0)
     }
 }
 

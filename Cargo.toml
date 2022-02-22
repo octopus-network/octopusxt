@@ -14,17 +14,17 @@ env_logger = "0.8.3"
 tracing = { version = "0.1.28", default-features = false }
 hex = "0.4.3"
 jsonrpsee = { version = "0.5.1", features = ["macros", "ws-client", "http-client"] }
-prost-types = { package = "informalsystems-prost-types", version = "0.8.1", default-features = false }
-tendermint-proto = { version ="0.22.0", default-features = false }
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/beefy" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/beefy" }
+prost-types = { version = "0.9.0", default-features = false }
+serde = { version = "1.0.130", default-features = false }
+libsecp256k1 = { version = "0.7.0", features = ["static-context"], default-features = false }
+tendermint-proto = { version ="0.23.5", default-features = false }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/merge-upstream-ibc-rs" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/merge-upstream-ibc-rs" }
 pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 sp-core = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 sp-runtime = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
 beefy-primitives = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.12" }
-serde = { version = "1.0.130", default-features = false }
 beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.12", features = ["keccak"], default-features = false }
-libsecp256k1 = { version = "0.7.0", features = ["static-context"], default-features = false }
 beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", default-features = false }
 
 
@@ -33,16 +33,6 @@ hex-literal = "0.3"
 chrono = "0.4"
 
 [patch.crates-io]
-tendermint              = { git = "https://github.com/informalsystems/tendermint-rs", rev = "4f6ef3d6" }
-tendermint-rpc          = { git = "https://github.com/informalsystems/tendermint-rs", rev = "4f6ef3d6" }
-tendermint-proto        = { git = "https://github.com/informalsystems/tendermint-rs", rev = "4f6ef3d6" }
-tendermint-light-client = { git = "https://github.com/informalsystems/tendermint-rs", rev = "4f6ef3d6" }
-tendermint-testgen      = { git = "https://github.com/informalsystems/tendermint-rs", rev = "4f6ef3d6" }
-ics23                   = { git = "https://github.com/informalsystems/ics23.git", rev = "4461b673" }
-tonic = { package = "informalsystems-tonic", git = "https://github.com/informalsystems/tonic.git", rev = "99edfe23" }
-#tendermint= { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
-#tendermint-rpc          = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
-#tendermint-proto        = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
-#tendermint-light-client = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
-#tendermint-testgen      = { git = "https://github.com/informalsystems/tendermint-rs", branch = "soares/activate-no-std" }
-#ics23                   = { git = "https://github.com/informalsystems/ics23.git", branch = "master" }
+tendermint                        = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
+tendermint-proto                  = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
+tendermint-light-client-verifier  = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }

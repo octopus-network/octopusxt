@@ -1,6 +1,6 @@
 #[allow(dead_code, unused_imports, non_camel_case_types)]
 pub mod api {
-    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
     pub enum Event {
         #[codec(index = 0)]
         System(system::Event),
@@ -31,135 +31,158 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct FillBlock {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct fill_block {
                 pub ratio: runtime_types::sp_arithmetic::per_things::Perbill,
             }
-            impl ::subxt::Call for FillBlock {
+            impl ::subxt::Call for fill_block {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "fill_block";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Remark {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct remark {
                 pub remark: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for Remark {
+            impl ::subxt::Call for remark {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "remark";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetHeapPages {
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct set_heap_pages {
                 pub pages: ::core::primitive::u64,
             }
-            impl ::subxt::Call for SetHeapPages {
+            impl ::subxt::Call for set_heap_pages {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_heap_pages";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetCode {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_code {
                 pub code: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for SetCode {
+            impl ::subxt::Call for set_code {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_code";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetCodeWithoutChecks {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_code_without_checks {
                 pub code: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for SetCodeWithoutChecks {
+            impl ::subxt::Call for set_code_without_checks {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_code_without_checks";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetChangesTrieConfig {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_changes_trie_config {
                 pub changes_trie_config: ::core::option::Option<
                     runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
                 >,
             }
-            impl ::subxt::Call for SetChangesTrieConfig {
+            impl ::subxt::Call for set_changes_trie_config {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_changes_trie_config";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetStorage {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_storage {
                 pub items: ::std::vec::Vec<(
                     ::std::vec::Vec<::core::primitive::u8>,
                     ::std::vec::Vec<::core::primitive::u8>,
                 )>,
             }
-            impl ::subxt::Call for SetStorage {
+            impl ::subxt::Call for set_storage {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_storage";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct KillStorage {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct kill_storage {
                 pub keys: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
             }
-            impl ::subxt::Call for KillStorage {
+            impl ::subxt::Call for kill_storage {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "kill_storage";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct KillPrefix {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct kill_prefix {
                 pub prefix: ::std::vec::Vec<::core::primitive::u8>,
                 pub subkeys: ::core::primitive::u32,
             }
-            impl ::subxt::Call for KillPrefix {
+            impl ::subxt::Call for kill_prefix {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "kill_prefix";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct RemarkWithEvent {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct remark_with_event {
                 pub remark: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for RemarkWithEvent {
+            impl ::subxt::Call for remark_with_event {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "remark_with_event";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn fill_block(
                     &self,
                     ratio: runtime_types::sp_arithmetic::per_things::Perbill,
-                ) -> ::subxt::SubmittableExtrinsic<T, FillBlock> {
-                    let call = FillBlock { ratio };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, fill_block, DispatchError>
+                {
+                    let call = fill_block { ratio };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn remark(
                     &self,
                     remark: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, Remark> {
-                    let call = Remark { remark };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, remark, DispatchError>
+                {
+                    let call = remark { remark };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_heap_pages(
                     &self,
                     pages: ::core::primitive::u64,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetHeapPages> {
-                    let call = SetHeapPages { pages };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_heap_pages, DispatchError>
+                {
+                    let call = set_heap_pages { pages };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_code(
                     &self,
                     code: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetCode> {
-                    let call = SetCode { code };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_code, DispatchError>
+                {
+                    let call = set_code { code };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_code_without_checks(
                     &self,
                     code: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetCodeWithoutChecks> {
-                    let call = SetCodeWithoutChecks { code };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    A,
+                    set_code_without_checks,
+                    DispatchError,
+                > {
+                    let call = set_code_without_checks { code };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_changes_trie_config(
@@ -167,8 +190,15 @@ pub mod api {
                     changes_trie_config: ::core::option::Option<
                         runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetChangesTrieConfig> {
-                    let call = SetChangesTrieConfig {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    A,
+                    set_changes_trie_config,
+                    DispatchError,
+                > {
+                    let call = set_changes_trie_config {
                         changes_trie_config,
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -179,30 +209,34 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetStorage> {
-                    let call = SetStorage { items };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_storage, DispatchError>
+                {
+                    let call = set_storage { items };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn kill_storage(
                     &self,
                     keys: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                ) -> ::subxt::SubmittableExtrinsic<T, KillStorage> {
-                    let call = KillStorage { keys };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, kill_storage, DispatchError>
+                {
+                    let call = kill_storage { keys };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn kill_prefix(
                     &self,
                     prefix: ::std::vec::Vec<::core::primitive::u8>,
                     subkeys: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, KillPrefix> {
-                    let call = KillPrefix { prefix, subkeys };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, kill_prefix, DispatchError>
+                {
+                    let call = kill_prefix { prefix, subkeys };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn remark_with_event(
                     &self,
                     remark: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, RemarkWithEvent> {
-                    let call = RemarkWithEvent { remark };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, remark_with_event, DispatchError>
+                {
+                    let call = remark_with_event { remark };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -210,13 +244,13 @@ pub mod api {
         pub type Event = runtime_types::frame_system::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ExtrinsicSuccess(pub runtime_types::frame_support::weights::DispatchInfo);
             impl ::subxt::Event for ExtrinsicSuccess {
                 const PALLET: &'static str = "System";
                 const EVENT: &'static str = "ExtrinsicSuccess";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ExtrinsicFailed(
                 pub runtime_types::sp_runtime::DispatchError,
                 pub runtime_types::frame_support::weights::DispatchInfo,
@@ -225,25 +259,25 @@ pub mod api {
                 const PALLET: &'static str = "System";
                 const EVENT: &'static str = "ExtrinsicFailed";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct CodeUpdated {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct CodeUpdated;
             impl ::subxt::Event for CodeUpdated {
                 const PALLET: &'static str = "System";
                 const EVENT: &'static str = "CodeUpdated";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct NewAccount(pub ::subxt::sp_core::crypto::AccountId32);
             impl ::subxt::Event for NewAccount {
                 const PALLET: &'static str = "System";
                 const EVENT: &'static str = "NewAccount";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct KilledAccount(pub ::subxt::sp_core::crypto::AccountId32);
             impl ::subxt::Event for KilledAccount {
                 const PALLET: &'static str = "System";
                 const EVENT: &'static str = "KilledAccount";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Remarked(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::subxt::sp_core::H256,
@@ -437,7 +471,7 @@ pub mod api {
                         ::core::primitive::u32,
                         runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Account(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -445,7 +479,7 @@ pub mod api {
                 pub async fn account_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -454,7 +488,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ExtrinsicCount;
                     self.client.storage().fetch(&entry, hash).await
@@ -464,7 +498,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::frame_support::weights::PerDispatchClass<::core::primitive::u64>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = BlockWeight;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -474,7 +508,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = AllExtrinsicsLen;
                     self.client.storage().fetch(&entry, hash).await
@@ -483,7 +517,7 @@ pub mod api {
                     &self,
                     _0: ::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
                 {
                     let entry = BlockHash(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -491,7 +525,7 @@ pub mod api {
                 pub async fn block_hash_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, BlockHash>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, BlockHash>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -499,22 +533,26 @@ pub mod api {
                     &self,
                     _0: ::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = ExtrinsicData(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn extrinsic_data_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ExtrinsicData>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ExtrinsicData>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn number(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = Number;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -522,7 +560,7 @@ pub mod api {
                 pub async fn parent_hash(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
                 {
                     let entry = ParentHash;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -532,7 +570,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::sp_runtime::generic::digest::Digest<::subxt::sp_core::H256>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Digest;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -547,7 +585,7 @@ pub mod api {
                             ::subxt::sp_core::H256,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Events;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -555,7 +593,7 @@ pub mod api {
                 pub async fn event_count(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = EventCount;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -566,7 +604,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = EventTopics(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -574,7 +612,7 @@ pub mod api {
                 pub async fn event_topics_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, EventTopics>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, EventTopics>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -583,7 +621,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<runtime_types::frame_system::LastRuntimeUpgradeInfo>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = LastRuntimeUpgrade;
                     self.client.storage().fetch(&entry, hash).await
@@ -591,7 +629,7 @@ pub mod api {
                 pub async fn upgraded_to_u32_ref_count(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
                 {
                     let entry = UpgradedToU32RefCount;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -599,7 +637,7 @@ pub mod api {
                 pub async fn upgraded_to_triple_ref_count(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
                 {
                     let entry = UpgradedToTripleRefCount;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -609,10 +647,102 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<runtime_types::frame_system::Phase>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ExecutionPhase;
                     self.client.storage().fetch(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn block_weights(
+                    &self,
+                ) -> ::core::result::Result<
+                    runtime_types::frame_system::limits::BlockWeights,
+                    ::subxt::BasicError,
+                > {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 242u8, 5u8, 42u8, 1u8, 0u8, 0u8, 0u8, 0u8, 32u8, 74u8, 169u8,
+                            209u8, 1u8, 0u8, 0u8, 64u8, 89u8, 115u8, 7u8, 0u8, 0u8, 0u8, 0u8, 1u8,
+                            192u8, 110u8, 150u8, 166u8, 46u8, 1u8, 0u8, 0u8, 1u8, 0u8, 152u8,
+                            247u8, 62u8, 93u8, 1u8, 0u8, 0u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 64u8, 89u8, 115u8, 7u8, 0u8, 0u8, 0u8, 0u8, 1u8, 192u8,
+                            246u8, 232u8, 16u8, 163u8, 1u8, 0u8, 0u8, 1u8, 0u8, 32u8, 74u8, 169u8,
+                            209u8, 1u8, 0u8, 0u8, 1u8, 0u8, 136u8, 82u8, 106u8, 116u8, 0u8, 0u8,
+                            0u8, 64u8, 89u8, 115u8, 7u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn block_length(
+                    &self,
+                ) -> ::core::result::Result<
+                    runtime_types::frame_system::limits::BlockLength,
+                    ::subxt::BasicError,
+                > {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 0u8, 60u8, 0u8, 0u8, 0u8, 80u8, 0u8, 0u8, 0u8, 80u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn block_hash_count(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[96u8, 9u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn db_weight(
+                    &self,
+                ) -> ::core::result::Result<
+                    runtime_types::frame_support::weights::RuntimeDbWeight,
+                    ::subxt::BasicError,
+                > {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            64u8, 120u8, 125u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8, 225u8, 245u8, 5u8,
+                            0u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn version(
+                    &self,
+                ) -> ::core::result::Result<
+                    runtime_types::sp_version::RuntimeVersion,
+                    ::subxt::BasicError,
+                > {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            52u8, 110u8, 111u8, 100u8, 101u8, 45u8, 116u8, 101u8, 109u8, 112u8,
+                            108u8, 97u8, 116u8, 101u8, 52u8, 110u8, 111u8, 100u8, 101u8, 45u8,
+                            116u8, 101u8, 109u8, 112u8, 108u8, 97u8, 116u8, 101u8, 1u8, 0u8, 0u8,
+                            0u8, 100u8, 0u8, 0u8, 0u8, 1u8, 0u8, 0u8, 0u8, 48u8, 223u8, 106u8,
+                            203u8, 104u8, 153u8, 7u8, 96u8, 155u8, 3u8, 0u8, 0u8, 0u8, 55u8, 227u8,
+                            151u8, 252u8, 124u8, 145u8, 245u8, 228u8, 1u8, 0u8, 0u8, 0u8, 64u8,
+                            254u8, 58u8, 212u8, 1u8, 248u8, 149u8, 154u8, 5u8, 0u8, 0u8, 0u8,
+                            210u8, 188u8, 152u8, 151u8, 238u8, 208u8, 143u8, 21u8, 3u8, 0u8, 0u8,
+                            0u8, 247u8, 139u8, 39u8, 139u8, 229u8, 63u8, 69u8, 76u8, 2u8, 0u8, 0u8,
+                            0u8, 203u8, 202u8, 37u8, 227u8, 159u8, 20u8, 35u8, 135u8, 2u8, 0u8,
+                            0u8, 0u8, 171u8, 60u8, 5u8, 114u8, 41u8, 31u8, 235u8, 139u8, 1u8, 0u8,
+                            0u8, 0u8, 237u8, 153u8, 197u8, 172u8, 178u8, 94u8, 237u8, 245u8, 3u8,
+                            0u8, 0u8, 0u8, 188u8, 157u8, 137u8, 144u8, 79u8, 91u8, 146u8, 63u8,
+                            1u8, 0u8, 0u8, 0u8, 55u8, 200u8, 187u8, 19u8, 80u8, 169u8, 162u8,
+                            168u8, 1u8, 0u8, 0u8, 0u8, 145u8, 213u8, 223u8, 24u8, 176u8, 210u8,
+                            207u8, 88u8, 1u8, 0u8, 0u8, 0u8, 73u8, 234u8, 175u8, 27u8, 84u8, 138u8,
+                            12u8, 176u8, 1u8, 0u8, 0u8, 0u8, 1u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn ss58_prefix(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u16, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(&mut &[42u8, 0u8][..])?)
                 }
             }
         }
@@ -640,8 +770,10 @@ pub mod api {
                 pub async fn random_material(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::subxt::sp_core::H256>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::subxt::sp_core::H256>,
+                    ::subxt::BasicError,
+                > {
                     let entry = RandomMaterial;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -652,30 +784,38 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Set {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set {
                 #[codec(compact)]
                 pub now: ::core::primitive::u64,
             }
-            impl ::subxt::Call for Set {
+            impl ::subxt::Call for set {
                 const PALLET: &'static str = "Timestamp";
                 const FUNCTION: &'static str = "set";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn set(
                     &self,
                     now: ::core::primitive::u64,
-                ) -> ::subxt::SubmittableExtrinsic<T, Set> {
-                    let call = Set { now };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set, DispatchError>
+                {
+                    let call = set { now };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -710,7 +850,7 @@ pub mod api {
                 pub async fn now(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = Now;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -718,10 +858,24 @@ pub mod api {
                 pub async fn did_update(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
                 {
                     let entry = DidUpdate;
                     self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn minimum_period(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[220u8, 5u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -730,8 +884,9 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetUncles {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_uncles {
                 pub new_uncles: ::std::vec::Vec<
                     runtime_types::sp_runtime::generic::header::Header<
                         ::core::primitive::u32,
@@ -739,19 +894,25 @@ pub mod api {
                     >,
                 >,
             }
-            impl ::subxt::Call for SetUncles {
+            impl ::subxt::Call for set_uncles {
                 const PALLET: &'static str = "Authorship";
                 const FUNCTION: &'static str = "set_uncles";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn set_uncles(
                     &self,
@@ -761,8 +922,9 @@ pub mod api {
                             runtime_types::sp_runtime::traits::BlakeTwo256,
                         >,
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetUncles> {
-                    let call = SetUncles { new_uncles };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_uncles, DispatchError>
+                {
+                    let call = set_uncles { new_uncles };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -820,7 +982,7 @@ pub mod api {
                             ::subxt::sp_core::crypto::AccountId32,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Uncles;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -830,7 +992,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Author;
                     self.client.storage().fetch(&entry, hash).await
@@ -838,10 +1000,24 @@ pub mod api {
                 pub async fn did_set_uncles(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
                 {
                     let entry = DidSetUncles;
                     self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn uncle_generations(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[0u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -850,53 +1026,64 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ReportEquivocation {
-                pub equivocation_proof: runtime_types::sp_consensus_slots::EquivocationProof<
-                    runtime_types::sp_runtime::generic::header::Header<
-                        ::core::primitive::u32,
-                        runtime_types::sp_runtime::traits::BlakeTwo256,
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct report_equivocation {
+                pub equivocation_proof: ::std::boxed::Box<
+                    runtime_types::sp_consensus_slots::EquivocationProof<
+                        runtime_types::sp_runtime::generic::header::Header<
+                            ::core::primitive::u32,
+                            runtime_types::sp_runtime::traits::BlakeTwo256,
+                        >,
+                        runtime_types::sp_consensus_babe::app::Public,
                     >,
-                    runtime_types::sp_consensus_babe::app::Public,
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for ReportEquivocation {
+            impl ::subxt::Call for report_equivocation {
                 const PALLET: &'static str = "Babe";
                 const FUNCTION: &'static str = "report_equivocation";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ReportEquivocationUnsigned {
-                pub equivocation_proof: runtime_types::sp_consensus_slots::EquivocationProof<
-                    runtime_types::sp_runtime::generic::header::Header<
-                        ::core::primitive::u32,
-                        runtime_types::sp_runtime::traits::BlakeTwo256,
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct report_equivocation_unsigned {
+                pub equivocation_proof: ::std::boxed::Box<
+                    runtime_types::sp_consensus_slots::EquivocationProof<
+                        runtime_types::sp_runtime::generic::header::Header<
+                            ::core::primitive::u32,
+                            runtime_types::sp_runtime::traits::BlakeTwo256,
+                        >,
+                        runtime_types::sp_consensus_babe::app::Public,
                     >,
-                    runtime_types::sp_consensus_babe::app::Public,
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for ReportEquivocationUnsigned {
+            impl ::subxt::Call for report_equivocation_unsigned {
                 const PALLET: &'static str = "Babe";
                 const FUNCTION: &'static str = "report_equivocation_unsigned";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct PlanConfigChange {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct plan_config_change {
                 pub config: runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
             }
-            impl ::subxt::Call for PlanConfigChange {
+            impl ::subxt::Call for plan_config_change {
                 const PALLET: &'static str = "Babe";
                 const FUNCTION: &'static str = "plan_config_change";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn report_equivocation(
                     &self,
@@ -908,9 +1095,10 @@ pub mod api {
                         runtime_types::sp_consensus_babe::app::Public,
                     >,
                     key_owner_proof: runtime_types::sp_session::MembershipProof,
-                ) -> ::subxt::SubmittableExtrinsic<T, ReportEquivocation> {
-                    let call = ReportEquivocation {
-                        equivocation_proof,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, report_equivocation, DispatchError>
+                {
+                    let call = report_equivocation {
+                        equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -925,9 +1113,16 @@ pub mod api {
                         runtime_types::sp_consensus_babe::app::Public,
                     >,
                     key_owner_proof: runtime_types::sp_session::MembershipProof,
-                ) -> ::subxt::SubmittableExtrinsic<T, ReportEquivocationUnsigned> {
-                    let call = ReportEquivocationUnsigned {
-                        equivocation_proof,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    A,
+                    report_equivocation_unsigned,
+                    DispatchError,
+                > {
+                    let call = report_equivocation_unsigned {
+                        equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -935,8 +1130,9 @@ pub mod api {
                 pub fn plan_config_change(
                     &self,
                     config: runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
-                ) -> ::subxt::SubmittableExtrinsic<T, PlanConfigChange> {
-                    let call = PlanConfigChange { config };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, plan_config_change, DispatchError>
+                {
+                    let call = plan_config_change { config };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -1110,7 +1306,7 @@ pub mod api {
                 pub async fn epoch_index(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = EpochIndex;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1123,7 +1319,7 @@ pub mod api {
                         runtime_types::sp_consensus_babe::app::Public,
                         ::core::primitive::u64,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Authorities;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1131,23 +1327,27 @@ pub mod api {
                 pub async fn genesis_slot(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<runtime_types::sp_consensus_slots::Slot, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    runtime_types::sp_consensus_slots::Slot,
+                    ::subxt::BasicError,
+                > {
                     let entry = GenesisSlot;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn current_slot(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<runtime_types::sp_consensus_slots::Slot, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    runtime_types::sp_consensus_slots::Slot,
+                    ::subxt::BasicError,
+                > {
                     let entry = CurrentSlot;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn randomness(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<[::core::primitive::u8; 32usize], ::subxt::Error>
+                ) -> ::core::result::Result<[::core::primitive::u8; 32usize], ::subxt::BasicError>
                 {
                     let entry = Randomness;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1159,7 +1359,7 @@ pub mod api {
                     ::core::option::Option<
                         runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = PendingEpochConfigChange;
                     self.client.storage().fetch(&entry, hash).await
@@ -1167,7 +1367,7 @@ pub mod api {
                 pub async fn next_randomness(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<[::core::primitive::u8; 32usize], ::subxt::Error>
+                ) -> ::core::result::Result<[::core::primitive::u8; 32usize], ::subxt::BasicError>
                 {
                     let entry = NextRandomness;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1180,7 +1380,7 @@ pub mod api {
                         runtime_types::sp_consensus_babe::app::Public,
                         ::core::primitive::u64,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextAuthorities;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1188,7 +1388,7 @@ pub mod api {
                 pub async fn segment_index(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = SegmentIndex;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1201,7 +1401,7 @@ pub mod api {
                     runtime_types::frame_support::storage::bounded_vec::BoundedVec<
                         [::core::primitive::u8; 32usize],
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = UnderConstruction(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1211,7 +1411,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, UnderConstruction>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
@@ -1222,7 +1422,7 @@ pub mod api {
                     ::core::option::Option<
                         ::core::option::Option<[::core::primitive::u8; 32usize]>,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Initialized;
                     self.client.storage().fetch(&entry, hash).await
@@ -1232,7 +1432,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<[::core::primitive::u8; 32usize]>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = AuthorVrfRandomness;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1242,7 +1442,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     (::core::primitive::u32, ::core::primitive::u32),
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = EpochStart;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1250,7 +1450,7 @@ pub mod api {
                 pub async fn lateness(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = Lateness;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1262,7 +1462,7 @@ pub mod api {
                     ::core::option::Option<
                         runtime_types::sp_consensus_babe::BabeEpochConfiguration,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = EpochConfig;
                     self.client.storage().fetch(&entry, hash).await
@@ -1274,10 +1474,40 @@ pub mod api {
                     ::core::option::Option<
                         runtime_types::sp_consensus_babe::BabeEpochConfiguration,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextEpochConfig;
                     self.client.storage().fetch(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn epoch_duration(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[20u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn expected_block_time(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[184u8, 11u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn max_authorities(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[100u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -1286,48 +1516,59 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ReportEquivocation {
-                pub equivocation_proof: runtime_types::sp_finality_grandpa::EquivocationProof<
-                    ::subxt::sp_core::H256,
-                    ::core::primitive::u32,
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct report_equivocation {
+                pub equivocation_proof: ::std::boxed::Box<
+                    runtime_types::sp_finality_grandpa::EquivocationProof<
+                        ::subxt::sp_core::H256,
+                        ::core::primitive::u32,
+                    >,
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for ReportEquivocation {
+            impl ::subxt::Call for report_equivocation {
                 const PALLET: &'static str = "Grandpa";
                 const FUNCTION: &'static str = "report_equivocation";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ReportEquivocationUnsigned {
-                pub equivocation_proof: runtime_types::sp_finality_grandpa::EquivocationProof<
-                    ::subxt::sp_core::H256,
-                    ::core::primitive::u32,
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct report_equivocation_unsigned {
+                pub equivocation_proof: ::std::boxed::Box<
+                    runtime_types::sp_finality_grandpa::EquivocationProof<
+                        ::subxt::sp_core::H256,
+                        ::core::primitive::u32,
+                    >,
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for ReportEquivocationUnsigned {
+            impl ::subxt::Call for report_equivocation_unsigned {
                 const PALLET: &'static str = "Grandpa";
                 const FUNCTION: &'static str = "report_equivocation_unsigned";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct NoteStalled {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct note_stalled {
                 pub delay: ::core::primitive::u32,
                 pub best_finalized_block_number: ::core::primitive::u32,
             }
-            impl ::subxt::Call for NoteStalled {
+            impl ::subxt::Call for note_stalled {
                 const PALLET: &'static str = "Grandpa";
                 const FUNCTION: &'static str = "note_stalled";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn report_equivocation(
                     &self,
@@ -1336,9 +1577,10 @@ pub mod api {
                         ::core::primitive::u32,
                     >,
                     key_owner_proof: runtime_types::sp_session::MembershipProof,
-                ) -> ::subxt::SubmittableExtrinsic<T, ReportEquivocation> {
-                    let call = ReportEquivocation {
-                        equivocation_proof,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, report_equivocation, DispatchError>
+                {
+                    let call = report_equivocation {
+                        equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -1350,9 +1592,16 @@ pub mod api {
                         ::core::primitive::u32,
                     >,
                     key_owner_proof: runtime_types::sp_session::MembershipProof,
-                ) -> ::subxt::SubmittableExtrinsic<T, ReportEquivocationUnsigned> {
-                    let call = ReportEquivocationUnsigned {
-                        equivocation_proof,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    A,
+                    report_equivocation_unsigned,
+                    DispatchError,
+                > {
+                    let call = report_equivocation_unsigned {
+                        equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -1361,8 +1610,9 @@ pub mod api {
                     &self,
                     delay: ::core::primitive::u32,
                     best_finalized_block_number: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, NoteStalled> {
-                    let call = NoteStalled {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, note_stalled, DispatchError>
+                {
+                    let call = note_stalled {
                         delay,
                         best_finalized_block_number,
                     };
@@ -1373,7 +1623,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_grandpa::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct NewAuthorities(
                 pub  ::std::vec::Vec<(
                     runtime_types::sp_finality_grandpa::app::Public,
@@ -1384,14 +1634,14 @@ pub mod api {
                 const PALLET: &'static str = "Grandpa";
                 const EVENT: &'static str = "NewAuthorities";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Paused {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Paused;
             impl ::subxt::Event for Paused {
                 const PALLET: &'static str = "Grandpa";
                 const EVENT: &'static str = "Paused";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Resumed {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Resumed;
             impl ::subxt::Event for Resumed {
                 const PALLET: &'static str = "Grandpa";
                 const EVENT: &'static str = "Resumed";
@@ -1469,7 +1719,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::pallet_grandpa::StoredState<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = State;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1481,7 +1731,7 @@ pub mod api {
                     ::core::option::Option<
                         runtime_types::pallet_grandpa::StoredPendingChange<::core::primitive::u32>,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = PendingChange;
                     self.client.storage().fetch(&entry, hash).await
@@ -1491,7 +1741,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextForced;
                     self.client.storage().fetch(&entry, hash).await
@@ -1501,7 +1751,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Stalled;
                     self.client.storage().fetch(&entry, hash).await
@@ -1509,7 +1759,7 @@ pub mod api {
                 pub async fn current_set_id(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = CurrentSetId;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1520,7 +1770,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = SetIdSession(_0);
                     self.client.storage().fetch(&entry, hash).await
@@ -1528,9 +1778,25 @@ pub mod api {
                 pub async fn set_id_session_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, SetIdSession>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, SetIdSession>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn max_authorities(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[100u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -1539,19 +1805,20 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Transfer {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer {
                 pub dest:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 #[codec(compact)]
                 pub value: ::core::primitive::u128,
             }
-            impl ::subxt::Call for Transfer {
+            impl ::subxt::Call for transfer {
                 const PALLET: &'static str = "Balances";
                 const FUNCTION: &'static str = "transfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetBalance {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_balance {
                 pub who:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 #[codec(compact)]
@@ -1559,12 +1826,12 @@ pub mod api {
                 #[codec(compact)]
                 pub new_reserved: ::core::primitive::u128,
             }
-            impl ::subxt::Call for SetBalance {
+            impl ::subxt::Call for set_balance {
                 const PALLET: &'static str = "Balances";
                 const FUNCTION: &'static str = "set_balance";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceTransfer {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_transfer {
                 pub source:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 pub dest:
@@ -1572,50 +1839,56 @@ pub mod api {
                 #[codec(compact)]
                 pub value: ::core::primitive::u128,
             }
-            impl ::subxt::Call for ForceTransfer {
+            impl ::subxt::Call for force_transfer {
                 const PALLET: &'static str = "Balances";
                 const FUNCTION: &'static str = "force_transfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct TransferKeepAlive {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer_keep_alive {
                 pub dest:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 #[codec(compact)]
                 pub value: ::core::primitive::u128,
             }
-            impl ::subxt::Call for TransferKeepAlive {
+            impl ::subxt::Call for transfer_keep_alive {
                 const PALLET: &'static str = "Balances";
                 const FUNCTION: &'static str = "transfer_keep_alive";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct TransferAll {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer_all {
                 pub dest:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 pub keep_alive: ::core::primitive::bool,
             }
-            impl ::subxt::Call for TransferAll {
+            impl ::subxt::Call for transfer_all {
                 const PALLET: &'static str = "Balances";
                 const FUNCTION: &'static str = "transfer_all";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceUnreserve {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_unreserve {
                 pub who:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for ForceUnreserve {
+            impl ::subxt::Call for force_unreserve {
                 const PALLET: &'static str = "Balances";
                 const FUNCTION: &'static str = "force_unreserve";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn transfer(
                     &self,
@@ -1624,8 +1897,9 @@ pub mod api {
                         (),
                     >,
                     value: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, Transfer> {
-                    let call = Transfer { dest, value };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer, DispatchError>
+                {
+                    let call = transfer { dest, value };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_balance(
@@ -1636,8 +1910,9 @@ pub mod api {
                     >,
                     new_free: ::core::primitive::u128,
                     new_reserved: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetBalance> {
-                    let call = SetBalance {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_balance, DispatchError>
+                {
+                    let call = set_balance {
                         who,
                         new_free,
                         new_reserved,
@@ -1655,8 +1930,9 @@ pub mod api {
                         (),
                     >,
                     value: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceTransfer> {
-                    let call = ForceTransfer {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_transfer, DispatchError>
+                {
+                    let call = force_transfer {
                         source,
                         dest,
                         value,
@@ -1670,8 +1946,9 @@ pub mod api {
                         (),
                     >,
                     value: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, TransferKeepAlive> {
-                    let call = TransferKeepAlive { dest, value };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_keep_alive, DispatchError>
+                {
+                    let call = transfer_keep_alive { dest, value };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn transfer_all(
@@ -1681,8 +1958,9 @@ pub mod api {
                         (),
                     >,
                     keep_alive: ::core::primitive::bool,
-                ) -> ::subxt::SubmittableExtrinsic<T, TransferAll> {
-                    let call = TransferAll { dest, keep_alive };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_all, DispatchError>
+                {
+                    let call = transfer_all { dest, keep_alive };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn force_unreserve(
@@ -1692,8 +1970,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceUnreserve> {
-                    let call = ForceUnreserve { who, amount };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_unreserve, DispatchError>
+                {
+                    let call = force_unreserve { who, amount };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -1701,7 +1980,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_balances::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Endowed(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1710,7 +1989,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "Endowed";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct DustLost(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1719,7 +1998,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "DustLost";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Transfer(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -1729,7 +2008,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "Transfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct BalanceSet(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1739,7 +2018,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "BalanceSet";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Reserved(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1748,7 +2027,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "Reserved";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Unreserved(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1757,7 +2036,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "Unreserved";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ReserveRepatriated(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -1768,7 +2047,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "ReserveRepatriated";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Deposit(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1777,7 +2056,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "Deposit";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Withdraw(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1786,7 +2065,7 @@ pub mod api {
                 const PALLET: &'static str = "Balances";
                 const EVENT: &'static str = "Withdraw";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Slashed(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -1870,7 +2149,7 @@ pub mod api {
                 pub async fn total_issuance(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
                     let entry = TotalIssuance;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1881,7 +2160,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Account(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1889,7 +2168,7 @@ pub mod api {
                 pub async fn account_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -1901,7 +2180,7 @@ pub mod api {
                     runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
                         runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Locks(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1909,7 +2188,7 @@ pub mod api {
                 pub async fn locks_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Locks>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Locks>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -1924,7 +2203,7 @@ pub mod api {
                             ::core::primitive::u128,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Reserves(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1932,17 +2211,52 @@ pub mod api {
                 pub async fn reserves_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Reserves>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Reserves>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn storage_version(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<runtime_types::pallet_balances::Releases, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_balances::Releases,
+                    ::subxt::BasicError,
+                > {
                     let entry = StorageVersion;
                     self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn existential_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 128u8, 198u8, 164u8, 126u8, 141u8, 3u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn max_locks(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[50u8, 0u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn max_reserves(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[50u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -1981,7 +2295,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::sp_arithmetic::fixed_point::FixedU128,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextFeeMultiplier;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -1991,10 +2305,50 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::pallet_transaction_payment::Releases,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = StorageVersion;
                     self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn transaction_byte_fee(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 232u8, 118u8, 72u8, 23u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn operational_fee_multiplier(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u8, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(&mut &[5u8][..])?)
+                }
+                pub fn weight_to_fee(
+                    &self,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<
+                        runtime_types::frame_support::weights::WeightToFeeCoefficient<
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            4u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 1u8,
+                        ][..],
+                    )?)
                 }
             }
         }
@@ -2003,8 +2357,9 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SubmitObservations {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct submit_observations {
                 pub payload: runtime_types::pallet_octopus_appchain::ObservationsPayload<
                     runtime_types::sp_runtime::MultiSigner,
                     ::core::primitive::u32,
@@ -2012,61 +2367,67 @@ pub mod api {
                 >,
                 pub signature: runtime_types::sp_runtime::MultiSignature,
             }
-            impl ::subxt::Call for SubmitObservations {
+            impl ::subxt::Call for submit_observations {
                 const PALLET: &'static str = "OctopusAppchain";
                 const FUNCTION: &'static str = "submit_observations";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceSetPlannedValidators {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_set_planned_validators {
                 pub validators: ::std::vec::Vec<(
                     ::subxt::sp_core::crypto::AccountId32,
                     ::core::primitive::u128,
                 )>,
             }
-            impl ::subxt::Call for ForceSetPlannedValidators {
+            impl ::subxt::Call for force_set_planned_validators {
                 const PALLET: &'static str = "OctopusAppchain";
                 const FUNCTION: &'static str = "force_set_planned_validators";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Lock {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct lock {
                 pub receiver_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for Lock {
+            impl ::subxt::Call for lock {
                 const PALLET: &'static str = "OctopusAppchain";
                 const FUNCTION: &'static str = "lock";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct MintAsset {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct mint_asset {
                 pub asset_id: ::core::primitive::u32,
                 pub sender_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub receiver:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for MintAsset {
+            impl ::subxt::Call for mint_asset {
                 const PALLET: &'static str = "OctopusAppchain";
                 const FUNCTION: &'static str = "mint_asset";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct BurnAsset {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct burn_asset {
                 pub asset_id: ::core::primitive::u32,
                 pub receiver_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for BurnAsset {
+            impl ::subxt::Call for burn_asset {
                 const PALLET: &'static str = "OctopusAppchain";
                 const FUNCTION: &'static str = "burn_asset";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn submit_observations(
                     &self,
@@ -2076,8 +2437,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                     >,
                     signature: runtime_types::sp_runtime::MultiSignature,
-                ) -> ::subxt::SubmittableExtrinsic<T, SubmitObservations> {
-                    let call = SubmitObservations { payload, signature };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, submit_observations, DispatchError>
+                {
+                    let call = submit_observations { payload, signature };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn force_set_planned_validators(
@@ -2086,16 +2448,24 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         ::core::primitive::u128,
                     )>,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceSetPlannedValidators> {
-                    let call = ForceSetPlannedValidators { validators };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    A,
+                    force_set_planned_validators,
+                    DispatchError,
+                > {
+                    let call = force_set_planned_validators { validators };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn lock(
                     &self,
                     receiver_id: ::std::vec::Vec<::core::primitive::u8>,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, Lock> {
-                    let call = Lock {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, lock, DispatchError>
+                {
+                    let call = lock {
                         receiver_id,
                         amount,
                     };
@@ -2110,8 +2480,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, MintAsset> {
-                    let call = MintAsset {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, mint_asset, DispatchError>
+                {
+                    let call = mint_asset {
                         asset_id,
                         sender_id,
                         receiver,
@@ -2124,8 +2495,9 @@ pub mod api {
                     asset_id: ::core::primitive::u32,
                     receiver_id: ::std::vec::Vec<::core::primitive::u8>,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, BurnAsset> {
-                    let call = BurnAsset {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, burn_asset, DispatchError>
+                {
+                    let call = burn_asset {
                         asset_id,
                         receiver_id,
                         amount,
@@ -2137,7 +2509,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_octopus_appchain::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Locked(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::std::vec::Vec<::core::primitive::u8>,
@@ -2147,7 +2519,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusAppchain";
                 const EVENT: &'static str = "Locked";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Unlocked(
                 pub ::std::vec::Vec<::core::primitive::u8>,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -2157,7 +2529,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusAppchain";
                 const EVENT: &'static str = "Unlocked";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct AssetMinted(
                 pub ::core::primitive::u32,
                 pub ::std::vec::Vec<::core::primitive::u8>,
@@ -2168,7 +2540,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusAppchain";
                 const EVENT: &'static str = "AssetMinted";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct AssetBurned(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -2305,8 +2677,10 @@ pub mod api {
                 pub async fn anchor_contract(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = AnchorContract;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -2318,7 +2692,7 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         ::core::primitive::u128,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = PlannedValidators;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2326,7 +2700,7 @@ pub mod api {
                 pub async fn next_fact_sequence(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = NextFactSequence;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2342,7 +2716,7 @@ pub mod api {
                             ::subxt::sp_core::crypto::AccountId32,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Observations(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2350,8 +2724,10 @@ pub mod api {
                 pub async fn observations_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Observations>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Observations>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn observing(
@@ -2362,7 +2738,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Observing(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2370,7 +2746,7 @@ pub mod api {
                 pub async fn observing_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Observing>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Observing>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -2378,7 +2754,7 @@ pub mod api {
                     &self,
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = AssetIdByName(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2386,14 +2762,16 @@ pub mod api {
                 pub async fn asset_id_by_name_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, AssetIdByName>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, AssetIdByName>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn premined_amount(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
                     let entry = PreminedAmount;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2401,8 +2779,10 @@ pub mod api {
                 pub async fn pallet_account(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::crypto::AccountId32, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::subxt::BasicError,
+                > {
                     let entry = PalletAccount;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -2411,7 +2791,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextSubmitObsIndex;
                     self.client.storage().fetch(&entry, hash).await
@@ -2421,10 +2801,32 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = SubmitSequenceNumber;
                     self.client.storage().fetch(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn grace_period(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[10u8, 0u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn unsigned_priority(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[0u8, 0u8, 32u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -2433,33 +2835,41 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetHistoryDepth {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_history_depth {
                 #[codec(compact)]
                 pub new_history_depth: ::core::primitive::u32,
                 #[codec(compact)]
                 pub era_items_deleted: ::core::primitive::u32,
             }
-            impl ::subxt::Call for SetHistoryDepth {
+            impl ::subxt::Call for set_history_depth {
                 const PALLET: &'static str = "OctopusLpos";
                 const FUNCTION: &'static str = "set_history_depth";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn set_history_depth(
                     &self,
                     new_history_depth: ::core::primitive::u32,
                     era_items_deleted: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetHistoryDepth> {
-                    let call = SetHistoryDepth {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_history_depth, DispatchError>
+                {
+                    let call = set_history_depth {
                         new_history_depth,
                         era_items_deleted,
                     };
@@ -2470,13 +2880,13 @@ pub mod api {
         pub type Event = runtime_types::pallet_octopus_lpos::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct EraPayout(pub ::core::primitive::u32, pub ::core::primitive::u128);
             impl ::subxt::Event for EraPayout {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "EraPayout";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Reward(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -2485,7 +2895,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "Reward";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Slash(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -2494,19 +2904,24 @@ pub mod api {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "Slash";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct OldSlashingReportDiscarded(pub ::core::primitive::u32);
             impl ::subxt::Event for OldSlashingReportDiscarded {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "OldSlashingReportDiscarded";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct StakingElection {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct StakingElection;
             impl ::subxt::Event for StakingElection {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "StakingElection";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Bonded(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -2515,7 +2930,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "Bonded";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Unbonded(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -2524,7 +2939,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "Unbonded";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Withdrawn(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::core::primitive::u128,
@@ -2533,7 +2948,7 @@ pub mod api {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "Withdrawn";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Kicked(
                 pub ::subxt::sp_core::crypto::AccountId32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -2542,8 +2957,8 @@ pub mod api {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "Kicked";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct StakingElectionFailed {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct StakingElectionFailed;
             impl ::subxt::Event for StakingElectionFailed {
                 const PALLET: &'static str = "OctopusLpos";
                 const EVENT: &'static str = "StakingElectionFailed";
@@ -2689,7 +3104,7 @@ pub mod api {
                 pub async fn history_depth(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = HistoryDepth;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2699,7 +3114,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = CurrentEra;
                     self.client.storage().fetch(&entry, hash).await
@@ -2709,7 +3124,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<runtime_types::pallet_octopus_lpos::ActiveEraInfo>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ActiveEra;
                     self.client.storage().fetch(&entry, hash).await
@@ -2720,7 +3135,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ErasStartSessionIndex(_0);
                     self.client.storage().fetch(&entry, hash).await
@@ -2730,7 +3145,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, ErasStartSessionIndex>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
@@ -2739,7 +3154,7 @@ pub mod api {
                     _0: ::core::primitive::u32,
                     _1: ::subxt::sp_core::crypto::AccountId32,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
                     let entry = ErasStakers(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2747,7 +3162,7 @@ pub mod api {
                 pub async fn eras_stakers_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ErasStakers>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ErasStakers>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -2757,7 +3172,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u128>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ErasValidatorReward(_0);
                     self.client.storage().fetch(&entry, hash).await
@@ -2767,7 +3182,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, ErasValidatorReward>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
@@ -2779,7 +3194,7 @@ pub mod api {
                     runtime_types::pallet_octopus_lpos::EraRewardPoints<
                         ::subxt::sp_core::crypto::AccountId32,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ErasRewardPoints(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2787,15 +3202,17 @@ pub mod api {
                 pub async fn eras_reward_points_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ErasRewardPoints>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasRewardPoints>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn eras_total_stake(
                     &self,
                     _0: ::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
                     let entry = ErasTotalStake(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2803,8 +3220,10 @@ pub mod api {
                 pub async fn eras_total_stake_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ErasTotalStake>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasTotalStake>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn bonded_eras(
@@ -2812,7 +3231,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = BondedEras;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2820,7 +3239,7 @@ pub mod api {
                 pub async fn current_planned_session(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = CurrentPlannedSession;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2828,7 +3247,7 @@ pub mod api {
                 pub async fn era_payout(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
                     let entry = EraPayout;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2838,10 +3257,40 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::pallet_octopus_lpos::Releases,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = StorageVersion;
                     self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn sessions_per_era(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[6u8, 0u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn blocks_per_era(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[120u8, 0u8, 0u8, 0u8][..],
+                    )?)
+                }
+                pub fn bonding_duration(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[160u8, 2u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -2850,15 +3299,22 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
             }
         }
@@ -2899,7 +3355,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = MessageQueue;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2907,7 +3363,7 @@ pub mod api {
                 pub async fn nonce(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = Nonce;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -2919,41 +3375,52 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetKeys {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_keys {
                 pub keys: runtime_types::node_template_runtime::opaque::SessionKeys,
                 pub proof: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for SetKeys {
+            impl ::subxt::Call for set_keys {
                 const PALLET: &'static str = "Session";
                 const FUNCTION: &'static str = "set_keys";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct PurgeKeys {}
-            impl ::subxt::Call for PurgeKeys {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct purge_keys;
+            impl ::subxt::Call for purge_keys {
                 const PALLET: &'static str = "Session";
                 const FUNCTION: &'static str = "purge_keys";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn set_keys(
                     &self,
                     keys: runtime_types::node_template_runtime::opaque::SessionKeys,
                     proof: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetKeys> {
-                    let call = SetKeys { keys, proof };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_keys, DispatchError>
+                {
+                    let call = set_keys { keys, proof };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
-                pub fn purge_keys(&self) -> ::subxt::SubmittableExtrinsic<T, PurgeKeys> {
-                    let call = PurgeKeys {};
+                pub fn purge_keys(
+                    &self,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, purge_keys, DispatchError>
+                {
+                    let call = purge_keys {};
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -2961,7 +3428,12 @@ pub mod api {
         pub type Event = runtime_types::pallet_session::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct NewSession(pub ::core::primitive::u32);
             impl ::subxt::Event for NewSession {
                 const PALLET: &'static str = "Session";
@@ -3057,7 +3529,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Validators;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3065,7 +3537,7 @@ pub mod api {
                 pub async fn current_index(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = CurrentIndex;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3073,7 +3545,7 @@ pub mod api {
                 pub async fn queued_changed(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
                 {
                     let entry = QueuedChanged;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3086,7 +3558,7 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         runtime_types::node_template_runtime::opaque::SessionKeys,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = QueuedKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3094,8 +3566,10 @@ pub mod api {
                 pub async fn disabled_validators(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u32>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u32>,
+                    ::subxt::BasicError,
+                > {
                     let entry = DisabledValidators;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -3107,7 +3581,7 @@ pub mod api {
                     ::core::option::Option<
                         runtime_types::node_template_runtime::opaque::SessionKeys,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextKeys(_0);
                     self.client.storage().fetch(&entry, hash).await
@@ -3115,7 +3589,7 @@ pub mod api {
                 pub async fn next_keys_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, NextKeys>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, NextKeys>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -3126,7 +3600,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = KeyOwner(_0, _1);
                     self.client.storage().fetch(&entry, hash).await
@@ -3134,7 +3608,7 @@ pub mod api {
                 pub async fn key_owner_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, KeyOwner>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, KeyOwner>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -3145,31 +3619,39 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Heartbeat {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct heartbeat {
                 pub heartbeat: runtime_types::pallet_im_online::Heartbeat<::core::primitive::u32>,
                 pub signature: runtime_types::pallet_im_online::sr25519::app_sr25519::Signature,
             }
-            impl ::subxt::Call for Heartbeat {
+            impl ::subxt::Call for heartbeat {
                 const PALLET: &'static str = "ImOnline";
                 const FUNCTION: &'static str = "heartbeat";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn heartbeat(
                     &self,
                     heartbeat: runtime_types::pallet_im_online::Heartbeat<::core::primitive::u32>,
                     signature: runtime_types::pallet_im_online::sr25519::app_sr25519::Signature,
-                ) -> ::subxt::SubmittableExtrinsic<T, Heartbeat> {
-                    let call = Heartbeat {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, heartbeat, DispatchError>
+                {
+                    let call = heartbeat {
                         heartbeat,
                         signature,
                     };
@@ -3180,7 +3662,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_im_online::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct HeartbeatReceived(
                 pub runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
             );
@@ -3188,13 +3670,13 @@ pub mod api {
                 const PALLET: &'static str = "ImOnline";
                 const EVENT: &'static str = "HeartbeatReceived";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct AllGood {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AllGood;
             impl ::subxt::Event for AllGood {
                 const PALLET: &'static str = "ImOnline";
                 const EVENT: &'static str = "AllGood";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct SomeOffline(
                 pub  ::std::vec::Vec<(
                     ::subxt::sp_core::crypto::AccountId32,
@@ -3268,7 +3750,7 @@ pub mod api {
                 pub async fn heartbeat_after(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = HeartbeatAfter;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3280,7 +3762,7 @@ pub mod api {
                     runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
                         runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Keys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3296,7 +3778,7 @@ pub mod api {
                             runtime_types::pallet_im_online::BoundedOpaqueNetworkState,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ReceivedHeartbeats(_0, _1);
                     self.client.storage().fetch(&entry, hash).await
@@ -3306,7 +3788,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, ReceivedHeartbeats>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
@@ -3315,7 +3797,7 @@ pub mod api {
                     _0: ::core::primitive::u32,
                     _1: ::subxt::sp_core::crypto::AccountId32,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
                     let entry = AuthoredBlocks(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -3323,9 +3805,25 @@ pub mod api {
                 pub async fn authored_blocks_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, AuthoredBlocks>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, AuthoredBlocks>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn unsigned_priority(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[255u8, 255u8, 255u8, 255u8, 255u8, 255u8, 255u8, 255u8][..],
+                    )?)
                 }
             }
         }
@@ -3337,20 +3835,21 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Create {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct create {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub admin:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 pub min_balance: ::core::primitive::u128,
             }
-            impl ::subxt::Call for Create {
+            impl ::subxt::Call for create {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "create";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceCreate {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_create {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub owner:
@@ -3359,22 +3858,22 @@ pub mod api {
                 #[codec(compact)]
                 pub min_balance: ::core::primitive::u128,
             }
-            impl ::subxt::Call for ForceCreate {
+            impl ::subxt::Call for force_create {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "force_create";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Destroy {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct destroy {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub witness: runtime_types::pallet_assets::types::DestroyWitness,
             }
-            impl ::subxt::Call for Destroy {
+            impl ::subxt::Call for destroy {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "destroy";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Mint {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct mint {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub beneficiary:
@@ -3382,12 +3881,12 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for Mint {
+            impl ::subxt::Call for mint {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "mint";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Burn {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct burn {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub who:
@@ -3395,12 +3894,12 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for Burn {
+            impl ::subxt::Call for burn {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "burn";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Transfer {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub target:
@@ -3408,12 +3907,12 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for Transfer {
+            impl ::subxt::Call for transfer {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "transfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct TransferKeepAlive {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer_keep_alive {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub target:
@@ -3421,12 +3920,12 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for TransferKeepAlive {
+            impl ::subxt::Call for transfer_keep_alive {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "transfer_keep_alive";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceTransfer {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_transfer {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub source:
@@ -3436,63 +3935,63 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for ForceTransfer {
+            impl ::subxt::Call for force_transfer {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "force_transfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Freeze {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct freeze {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub who:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for Freeze {
+            impl ::subxt::Call for freeze {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "freeze";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Thaw {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct thaw {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub who:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for Thaw {
+            impl ::subxt::Call for thaw {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "thaw";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct FreezeAsset {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct freeze_asset {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
             }
-            impl ::subxt::Call for FreezeAsset {
+            impl ::subxt::Call for freeze_asset {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "freeze_asset";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ThawAsset {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct thaw_asset {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
             }
-            impl ::subxt::Call for ThawAsset {
+            impl ::subxt::Call for thaw_asset {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "thaw_asset";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct TransferOwnership {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer_ownership {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub owner:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for TransferOwnership {
+            impl ::subxt::Call for transfer_ownership {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "transfer_ownership";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetTeam {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_team {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub issuer:
@@ -3502,33 +4001,33 @@ pub mod api {
                 pub freezer:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for SetTeam {
+            impl ::subxt::Call for set_team {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "set_team";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetMetadata {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_metadata {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub name: ::std::vec::Vec<::core::primitive::u8>,
                 pub symbol: ::std::vec::Vec<::core::primitive::u8>,
                 pub decimals: ::core::primitive::u8,
             }
-            impl ::subxt::Call for SetMetadata {
+            impl ::subxt::Call for set_metadata {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "set_metadata";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ClearMetadata {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct clear_metadata {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
             }
-            impl ::subxt::Call for ClearMetadata {
+            impl ::subxt::Call for clear_metadata {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "clear_metadata";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceSetMetadata {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_set_metadata {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub name: ::std::vec::Vec<::core::primitive::u8>,
@@ -3536,21 +4035,21 @@ pub mod api {
                 pub decimals: ::core::primitive::u8,
                 pub is_frozen: ::core::primitive::bool,
             }
-            impl ::subxt::Call for ForceSetMetadata {
+            impl ::subxt::Call for force_set_metadata {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "force_set_metadata";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceClearMetadata {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_clear_metadata {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
             }
-            impl ::subxt::Call for ForceClearMetadata {
+            impl ::subxt::Call for force_clear_metadata {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "force_clear_metadata";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceAssetStatus {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_asset_status {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub owner:
@@ -3566,12 +4065,12 @@ pub mod api {
                 pub is_sufficient: ::core::primitive::bool,
                 pub is_frozen: ::core::primitive::bool,
             }
-            impl ::subxt::Call for ForceAssetStatus {
+            impl ::subxt::Call for force_asset_status {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "force_asset_status";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ApproveTransfer {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct approve_transfer {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub delegate:
@@ -3579,23 +4078,23 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for ApproveTransfer {
+            impl ::subxt::Call for approve_transfer {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "approve_transfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct CancelApproval {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct cancel_approval {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub delegate:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for CancelApproval {
+            impl ::subxt::Call for cancel_approval {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "cancel_approval";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ForceCancelApproval {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct force_cancel_approval {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub owner:
@@ -3603,12 +4102,12 @@ pub mod api {
                 pub delegate:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for ForceCancelApproval {
+            impl ::subxt::Call for force_cancel_approval {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "force_cancel_approval";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct TransferApproved {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct transfer_approved {
                 #[codec(compact)]
                 pub id: ::core::primitive::u32,
                 pub owner:
@@ -3618,19 +4117,25 @@ pub mod api {
                 #[codec(compact)]
                 pub amount: ::core::primitive::u128,
             }
-            impl ::subxt::Call for TransferApproved {
+            impl ::subxt::Call for transfer_approved {
                 const PALLET: &'static str = "Assets";
                 const FUNCTION: &'static str = "transfer_approved";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn create(
                     &self,
@@ -3640,8 +4145,9 @@ pub mod api {
                         (),
                     >,
                     min_balance: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, Create> {
-                    let call = Create {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, create, DispatchError>
+                {
+                    let call = create {
                         id,
                         admin,
                         min_balance,
@@ -3657,8 +4163,9 @@ pub mod api {
                     >,
                     is_sufficient: ::core::primitive::bool,
                     min_balance: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceCreate> {
-                    let call = ForceCreate {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_create, DispatchError>
+                {
+                    let call = force_create {
                         id,
                         owner,
                         is_sufficient,
@@ -3670,8 +4177,9 @@ pub mod api {
                     &self,
                     id: ::core::primitive::u32,
                     witness: runtime_types::pallet_assets::types::DestroyWitness,
-                ) -> ::subxt::SubmittableExtrinsic<T, Destroy> {
-                    let call = Destroy { id, witness };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, destroy, DispatchError>
+                {
+                    let call = destroy { id, witness };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn mint(
@@ -3682,8 +4190,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, Mint> {
-                    let call = Mint {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, mint, DispatchError>
+                {
+                    let call = mint {
                         id,
                         beneficiary,
                         amount,
@@ -3698,8 +4207,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, Burn> {
-                    let call = Burn { id, who, amount };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, burn, DispatchError>
+                {
+                    let call = burn { id, who, amount };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn transfer(
@@ -3710,8 +4220,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, Transfer> {
-                    let call = Transfer { id, target, amount };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer, DispatchError>
+                {
+                    let call = transfer { id, target, amount };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn transfer_keep_alive(
@@ -3722,8 +4233,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, TransferKeepAlive> {
-                    let call = TransferKeepAlive { id, target, amount };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_keep_alive, DispatchError>
+                {
+                    let call = transfer_keep_alive { id, target, amount };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn force_transfer(
@@ -3738,8 +4250,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceTransfer> {
-                    let call = ForceTransfer {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_transfer, DispatchError>
+                {
+                    let call = force_transfer {
                         id,
                         source,
                         dest,
@@ -3754,8 +4267,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, Freeze> {
-                    let call = Freeze { id, who };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, freeze, DispatchError>
+                {
+                    let call = freeze { id, who };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn thaw(
@@ -3765,22 +4279,25 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, Thaw> {
-                    let call = Thaw { id, who };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, thaw, DispatchError>
+                {
+                    let call = thaw { id, who };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn freeze_asset(
                     &self,
                     id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, FreezeAsset> {
-                    let call = FreezeAsset { id };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, freeze_asset, DispatchError>
+                {
+                    let call = freeze_asset { id };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn thaw_asset(
                     &self,
                     id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, ThawAsset> {
-                    let call = ThawAsset { id };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, thaw_asset, DispatchError>
+                {
+                    let call = thaw_asset { id };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn transfer_ownership(
@@ -3790,8 +4307,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, TransferOwnership> {
-                    let call = TransferOwnership { id, owner };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_ownership, DispatchError>
+                {
+                    let call = transfer_ownership { id, owner };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_team(
@@ -3809,8 +4327,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetTeam> {
-                    let call = SetTeam {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_team, DispatchError>
+                {
+                    let call = set_team {
                         id,
                         issuer,
                         admin,
@@ -3824,8 +4343,9 @@ pub mod api {
                     name: ::std::vec::Vec<::core::primitive::u8>,
                     symbol: ::std::vec::Vec<::core::primitive::u8>,
                     decimals: ::core::primitive::u8,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetMetadata> {
-                    let call = SetMetadata {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_metadata, DispatchError>
+                {
+                    let call = set_metadata {
                         id,
                         name,
                         symbol,
@@ -3836,8 +4356,9 @@ pub mod api {
                 pub fn clear_metadata(
                     &self,
                     id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, ClearMetadata> {
-                    let call = ClearMetadata { id };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, clear_metadata, DispatchError>
+                {
+                    let call = clear_metadata { id };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn force_set_metadata(
@@ -3847,8 +4368,9 @@ pub mod api {
                     symbol: ::std::vec::Vec<::core::primitive::u8>,
                     decimals: ::core::primitive::u8,
                     is_frozen: ::core::primitive::bool,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceSetMetadata> {
-                    let call = ForceSetMetadata {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_set_metadata, DispatchError>
+                {
+                    let call = force_set_metadata {
                         id,
                         name,
                         symbol,
@@ -3860,8 +4382,9 @@ pub mod api {
                 pub fn force_clear_metadata(
                     &self,
                     id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceClearMetadata> {
-                    let call = ForceClearMetadata { id };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_clear_metadata, DispatchError>
+                {
+                    let call = force_clear_metadata { id };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn force_asset_status(
@@ -3886,8 +4409,9 @@ pub mod api {
                     min_balance: ::core::primitive::u128,
                     is_sufficient: ::core::primitive::bool,
                     is_frozen: ::core::primitive::bool,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceAssetStatus> {
-                    let call = ForceAssetStatus {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_asset_status, DispatchError>
+                {
+                    let call = force_asset_status {
                         id,
                         owner,
                         issuer,
@@ -3907,8 +4431,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, ApproveTransfer> {
-                    let call = ApproveTransfer {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, approve_transfer, DispatchError>
+                {
+                    let call = approve_transfer {
                         id,
                         delegate,
                         amount,
@@ -3922,8 +4447,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, CancelApproval> {
-                    let call = CancelApproval { id, delegate };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, cancel_approval, DispatchError>
+                {
+                    let call = cancel_approval { id, delegate };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn force_cancel_approval(
@@ -3937,8 +4463,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, ForceCancelApproval> {
-                    let call = ForceCancelApproval {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_cancel_approval, DispatchError>
+                {
+                    let call = force_cancel_approval {
                         id,
                         owner,
                         delegate,
@@ -3957,8 +4484,9 @@ pub mod api {
                         (),
                     >,
                     amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<T, TransferApproved> {
-                    let call = TransferApproved {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_approved, DispatchError>
+                {
+                    let call = transfer_approved {
                         id,
                         owner,
                         destination,
@@ -3971,7 +4499,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_assets::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Created(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -3981,7 +4509,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Created";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Issued(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -3991,7 +4519,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Issued";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Transferred(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4002,7 +4530,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Transferred";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Burned(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4012,7 +4540,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Burned";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct TeamChanged(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4023,7 +4551,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "TeamChanged";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OwnerChanged(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4032,7 +4560,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "OwnerChanged";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Frozen(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4041,7 +4569,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Frozen";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Thawed(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4050,25 +4578,40 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Thawed";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct AssetFrozen(pub ::core::primitive::u32);
             impl ::subxt::Event for AssetFrozen {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "AssetFrozen";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct AssetThawed(pub ::core::primitive::u32);
             impl ::subxt::Event for AssetThawed {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "AssetThawed";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct Destroyed(pub ::core::primitive::u32);
             impl ::subxt::Event for Destroyed {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "Destroyed";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ForceCreated(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4077,7 +4620,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "ForceCreated";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct MetadataSet(
                 pub ::core::primitive::u32,
                 pub ::std::vec::Vec<::core::primitive::u8>,
@@ -4089,13 +4632,18 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "MetadataSet";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct MetadataCleared(pub ::core::primitive::u32);
             impl ::subxt::Event for MetadataCleared {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "MetadataCleared";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ApprovedTransfer(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4106,7 +4654,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "ApprovedTransfer";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ApprovalCancelled(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4116,7 +4664,7 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "ApprovalCancelled";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct TransferredApproved(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -4128,7 +4676,12 @@ pub mod api {
                 const PALLET: &'static str = "Assets";
                 const EVENT: &'static str = "TransferredApproved";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
             pub struct AssetStatusChanged(pub ::core::primitive::u32);
             impl ::subxt::Event for AssetStatusChanged {
                 const PALLET: &'static str = "Assets";
@@ -4240,7 +4793,7 @@ pub mod api {
                             ::core::primitive::u128,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Asset(_0);
                     self.client.storage().fetch(&entry, hash).await
@@ -4248,7 +4801,7 @@ pub mod api {
                 pub async fn asset_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -4259,7 +4812,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::pallet_assets::types::AssetBalance<::core::primitive::u128, ()>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Account(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4267,7 +4820,7 @@ pub mod api {
                 pub async fn account_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -4284,7 +4837,7 @@ pub mod api {
                             ::core::primitive::u128,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Approvals(_0, _1, _2);
                     self.client.storage().fetch(&entry, hash).await
@@ -4292,7 +4845,7 @@ pub mod api {
                 pub async fn approvals_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Approvals>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Approvals>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -4307,7 +4860,7 @@ pub mod api {
                             ::core::primitive::u8,
                         >,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Metadata(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4315,9 +4868,67 @@ pub mod api {
                 pub async fn metadata_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Metadata>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Metadata>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi;
+            impl ConstantsApi {
+                pub fn asset_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 0u8, 138u8, 93u8, 120u8, 69u8, 99u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn metadata_deposit_base(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 0u8, 193u8, 111u8, 242u8, 134u8, 35u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn metadata_deposit_per_byte(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 128u8, 198u8, 164u8, 126u8, 141u8, 3u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn approval_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[
+                            0u8, 128u8, 198u8, 164u8, 126u8, 141u8, 3u8, 0u8, 0u8, 0u8, 0u8, 0u8,
+                            0u8, 0u8, 0u8, 0u8,
+                        ][..],
+                    )?)
+                }
+                pub fn string_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    Ok(::subxt::codec::Decode::decode(
+                        &mut &[50u8, 0u8, 0u8, 0u8][..],
+                    )?)
                 }
             }
         }
@@ -4366,7 +4977,7 @@ pub mod api {
                 pub async fn root_hash(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
                 {
                     let entry = RootHash;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4374,7 +4985,7 @@ pub mod api {
                 pub async fn number_of_leaves(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = NumberOfLeaves;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4385,7 +4996,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::subxt::sp_core::H256>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Nodes(_0);
                     self.client.storage().fetch(&entry, hash).await
@@ -4393,7 +5004,7 @@ pub mod api {
                 pub async fn nodes_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Nodes>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Nodes>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -4443,7 +5054,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<runtime_types::beefy_primitives::crypto::Public>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Authorities;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4451,7 +5062,7 @@ pub mod api {
                 pub async fn validator_set_id(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = ValidatorSetId;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4461,7 +5072,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<runtime_types::beefy_primitives::crypto::Public>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = NextAuthorities;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4498,7 +5109,7 @@ pub mod api {
                     runtime_types::beefy_primitives::mmr::BeefyNextAuthoritySet<
                         ::subxt::sp_core::H256,
                     >,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = BeefyNextAuthorities;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -4510,65 +5121,79 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Sudo {
-                pub call: runtime_types::node_template_runtime::Call,
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct sudo {
+                pub call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
             }
-            impl ::subxt::Call for Sudo {
+            impl ::subxt::Call for sudo {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "sudo";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SudoUncheckedWeight {
-                pub call: runtime_types::node_template_runtime::Call,
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct sudo_unchecked_weight {
+                pub call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
                 pub weight: ::core::primitive::u64,
             }
-            impl ::subxt::Call for SudoUncheckedWeight {
+            impl ::subxt::Call for sudo_unchecked_weight {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "sudo_unchecked_weight";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SetKey {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct set_key {
                 pub new:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for SetKey {
+            impl ::subxt::Call for set_key {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "set_key";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct SudoAs {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct sudo_as {
                 pub who:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub call: runtime_types::node_template_runtime::Call,
+                pub call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
             }
-            impl ::subxt::Call for SudoAs {
+            impl ::subxt::Call for sudo_as {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "sudo_as";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn sudo(
                     &self,
                     call: runtime_types::node_template_runtime::Call,
-                ) -> ::subxt::SubmittableExtrinsic<T, Sudo> {
-                    let call = Sudo { call };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, sudo, DispatchError>
+                {
+                    let call = sudo {
+                        call: ::std::boxed::Box::new(call),
+                    };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn sudo_unchecked_weight(
                     &self,
                     call: runtime_types::node_template_runtime::Call,
                     weight: ::core::primitive::u64,
-                ) -> ::subxt::SubmittableExtrinsic<T, SudoUncheckedWeight> {
-                    let call = SudoUncheckedWeight { call, weight };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, sudo_unchecked_weight, DispatchError>
+                {
+                    let call = sudo_unchecked_weight {
+                        call: ::std::boxed::Box::new(call),
+                        weight,
+                    };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_key(
@@ -4577,8 +5202,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<T, SetKey> {
-                    let call = SetKey { new };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_key, DispatchError>
+                {
+                    let call = set_key { new };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn sudo_as(
@@ -4588,8 +5214,12 @@ pub mod api {
                         (),
                     >,
                     call: runtime_types::node_template_runtime::Call,
-                ) -> ::subxt::SubmittableExtrinsic<T, SudoAs> {
-                    let call = SudoAs { who, call };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, sudo_as, DispatchError>
+                {
+                    let call = sudo_as {
+                        who,
+                        call: ::std::boxed::Box::new(call),
+                    };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -4597,7 +5227,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_sudo::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Sudid(
                 pub ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
             );
@@ -4605,13 +5235,13 @@ pub mod api {
                 const PALLET: &'static str = "Sudo";
                 const EVENT: &'static str = "Sudid";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct KeyChanged(pub ::subxt::sp_core::crypto::AccountId32);
             impl ::subxt::Event for KeyChanged {
                 const PALLET: &'static str = "Sudo";
                 const EVENT: &'static str = "KeyChanged";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct SudoAsDone(
                 pub ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
             );
@@ -4641,8 +5271,10 @@ pub mod api {
                 pub async fn key(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::crypto::AccountId32, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::subxt::BasicError,
+                > {
                     let entry = Key;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -4653,48 +5285,57 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Deliver {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct deliver {
                 pub messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                 pub tmp: ::core::primitive::u8,
             }
-            impl ::subxt::Call for Deliver {
+            impl ::subxt::Call for deliver {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "deliver";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct UpdateClientState {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct update_client_state {
                 pub client_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub mmr_root: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for UpdateClientState {
+            impl ::subxt::Call for update_client_state {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "update_client_state";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn deliver(
                     &self,
                     messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                     tmp: ::core::primitive::u8,
-                ) -> ::subxt::SubmittableExtrinsic<T, Deliver> {
-                    let call = Deliver { messages, tmp };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, deliver, DispatchError>
+                {
+                    let call = deliver { messages, tmp };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn update_client_state(
                     &self,
                     client_id: ::std::vec::Vec<::core::primitive::u8>,
                     mmr_root: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<T, UpdateClientState> {
-                    let call = UpdateClientState {
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, update_client_state, DispatchError>
+                {
+                    let call = update_client_state {
                         client_id,
                         mmr_root,
                     };
@@ -4705,13 +5346,13 @@ pub mod api {
         pub type Event = runtime_types::pallet_ibc::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct NewBlock(pub runtime_types::pallet_ibc::event::primitive::Height);
             impl ::subxt::Event for NewBlock {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "NewBlock";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct CreateClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
@@ -4722,7 +5363,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "CreateClient";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct UpdateClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
@@ -4733,7 +5374,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "UpdateClient";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct UpdateClientState(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientState,
@@ -4742,7 +5383,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "UpdateClientState";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct UpgradeClient(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
@@ -4753,7 +5394,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "UpgradeClient";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ClientMisbehaviour(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::ClientId,
@@ -4764,7 +5405,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "ClientMisbehaviour";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenInitConnection(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub  ::core::option::Option<
@@ -4780,7 +5421,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenInitConnection";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenTryConnection(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub  ::core::option::Option<
@@ -4796,7 +5437,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenTryConnection";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenAckConnection(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub  ::core::option::Option<
@@ -4812,7 +5453,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenAckConnection";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenConfirmConnection(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub  ::core::option::Option<
@@ -4828,7 +5469,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenConfirmConnection";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenInitChannel(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::PortId,
@@ -4841,7 +5482,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenInitChannel";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenTryChannel(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::PortId,
@@ -4854,7 +5495,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenTryChannel";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenAckChannel(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::PortId,
@@ -4867,7 +5508,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenAckChannel";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpenConfirmChannel(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::PortId,
@@ -4880,7 +5521,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenConfirmChannel";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct CloseInitChannel(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::PortId,
@@ -4893,7 +5534,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "CloseInitChannel";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct CloseConfirmChannel(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::PortId,
@@ -4906,7 +5547,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "CloseConfirmChannel";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct SendPacket(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::Packet,
@@ -4915,7 +5556,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "SendPacket";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ReceivePacket(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::Packet,
@@ -4924,7 +5565,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "ReceivePacket";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct WriteAcknowledgement(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::Packet,
@@ -4934,7 +5575,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "WriteAcknowledgement";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct AcknowledgePacket(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::Packet,
@@ -4943,7 +5584,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "AcknowledgePacket";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct TimeoutPacket(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::Packet,
@@ -4952,7 +5593,7 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "TimeoutPacket";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct TimeoutOnClosePacket(
                 pub runtime_types::pallet_ibc::event::primitive::Height,
                 pub runtime_types::pallet_ibc::event::primitive::Packet,
@@ -4961,13 +5602,13 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "TimeoutOnClosePacket";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Empty(pub ::std::vec::Vec<::core::primitive::u8>);
             impl ::subxt::Event for Empty {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "Empty";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ChainError(pub ::std::vec::Vec<::core::primitive::u8>);
             impl ::subxt::Event for ChainError {
                 const PALLET: &'static str = "Ibc";
@@ -5380,16 +6021,20 @@ pub mod api {
                     &self,
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = ClientStates(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn client_states_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ClientStates>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ClientStates>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn client_states_keys(
@@ -5397,7 +6042,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ClientStatesKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5411,7 +6056,7 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ConsensusStates(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5419,23 +6064,27 @@ pub mod api {
                 pub async fn consensus_states_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ConsensusStates>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ConsensusStates>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn connections(
                     &self,
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = Connections(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn connections_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Connections>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Connections>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -5444,7 +6093,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ConnectionsKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5454,15 +6103,17 @@ pub mod api {
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = Channels(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn channels_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Channels>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Channels>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -5474,7 +6125,7 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ChannelsKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5488,7 +6139,7 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = ChannelsConnection(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5498,7 +6149,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, ChannelsConnection>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
@@ -5507,16 +6158,20 @@ pub mod api {
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = NextSequenceSend(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn next_sequence_send_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, NextSequenceSend>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, NextSequenceSend>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn next_sequence_recv(
@@ -5524,16 +6179,20 @@ pub mod api {
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = NextSequenceRecv(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn next_sequence_recv_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, NextSequenceRecv>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, NextSequenceRecv>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn next_sequence_ack(
@@ -5541,16 +6200,20 @@ pub mod api {
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = NextSequenceAck(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn next_sequence_ack_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, NextSequenceAck>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, NextSequenceAck>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn acknowledgements(
@@ -5559,16 +6222,20 @@ pub mod api {
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     _2: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = Acknowledgements(_0, _1, _2);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn acknowledgements_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Acknowledgements>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Acknowledgements>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn acknowledgements_keys(
@@ -5580,7 +6247,7 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = AcknowledgementsKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5589,22 +6256,24 @@ pub mod api {
                     &self,
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = Clients(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn clients_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Clients>, ::subxt::Error>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Clients>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn client_counter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = ClientCounter;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5612,7 +6281,7 @@ pub mod api {
                 pub async fn connection_counter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = ConnectionCounter;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5620,7 +6289,7 @@ pub mod api {
                 pub async fn channel_counter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = ChannelCounter;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5629,16 +6298,20 @@ pub mod api {
                     &self,
                     _0: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = ConnectionClient(_0);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn connection_client_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ConnectionClient>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ConnectionClient>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn packet_receipt(
@@ -5647,16 +6320,20 @@ pub mod api {
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     _2: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = PacketReceipt(_0, _1, _2);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn packet_receipt_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, PacketReceipt>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, PacketReceipt>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn packet_commitment(
@@ -5665,16 +6342,20 @@ pub mod api {
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     _2: ::std::vec::Vec<::core::primitive::u8>,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = PacketCommitment(_0, _1, _2);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn packet_commitment_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, PacketCommitment>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, PacketCommitment>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn packet_commitment_keys(
@@ -5686,7 +6367,7 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = PacketCommitmentKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5697,16 +6378,20 @@ pub mod api {
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     _2: ::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = SendPacketEvent(_0, _1, _2);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn send_packet_event_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, SendPacketEvent>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, SendPacketEvent>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn write_ack_packet_event(
@@ -5715,8 +6400,10 @@ pub mod api {
                     _1: ::std::vec::Vec<::core::primitive::u8>,
                     _2: ::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = WriteAckPacketEvent(_0, _1, _2);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -5725,22 +6412,24 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, WriteAckPacketEvent>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn latest_height(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::std::vec::Vec<::core::primitive::u8>, ::subxt::Error>
-                {
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
                     let entry = LatestHeight;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
                 pub async fn old_height(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::Error>
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
                     let entry = OldHeight;
                     self.client.storage().fetch_or_default(&entry, hash).await
@@ -5752,39 +6441,55 @@ pub mod api {
         use super::runtime_types;
         pub mod calls {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct DoSomething {
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct do_something {
                 pub something: ::core::primitive::u32,
             }
-            impl ::subxt::Call for DoSomething {
+            impl ::subxt::Call for do_something {
                 const PALLET: &'static str = "TemplateModule";
                 const FUNCTION: &'static str = "do_something";
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct CauseError {}
-            impl ::subxt::Call for CauseError {
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct cause_error;
+            impl ::subxt::Call for cause_error {
                 const PALLET: &'static str = "TemplateModule";
                 const FUNCTION: &'static str = "cause_error";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
                 client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<(X, A)>,
             }
-            impl<'a, T: ::subxt::Config> TransactionApi<'a, T>
+            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
             where
-                T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+                T: ::subxt::Config,
+                X: ::subxt::SignedExtra<T>,
+                A: ::subxt::AccountData,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
                 }
                 pub fn do_something(
                     &self,
                     something: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<T, DoSomething> {
-                    let call = DoSomething { something };
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, do_something, DispatchError>
+                {
+                    let call = do_something { something };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
-                pub fn cause_error(&self) -> ::subxt::SubmittableExtrinsic<T, CauseError> {
-                    let call = CauseError {};
+                pub fn cause_error(
+                    &self,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, cause_error, DispatchError>
+                {
+                    let call = cause_error {};
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -5792,7 +6497,7 @@ pub mod api {
         pub type Event = runtime_types::pallet_template::pallet::Event;
         pub mod events {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct SomethingStored(
                 pub ::core::primitive::u32,
                 pub ::subxt::sp_core::crypto::AccountId32,
@@ -5825,7 +6530,7 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::Error,
+                    ::subxt::BasicError,
                 > {
                     let entry = Something;
                     self.client.storage().fetch(&entry, hash).await
@@ -5839,12 +6544,12 @@ pub mod api {
             use super::runtime_types;
             pub mod crypto {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub runtime_types::sp_core::ecdsa::Public);
             }
             pub mod mmr {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct BeefyNextAuthoritySet<_0> {
                     pub id: ::core::primitive::u64,
                     pub len: ::core::primitive::u32,
@@ -5854,19 +6559,19 @@ pub mod api {
         }
         pub mod finality_grandpa {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Equivocation<_0, _1, _2> {
                 pub round_number: ::core::primitive::u64,
                 pub identity: _0,
                 pub first: (_1, _2),
                 pub second: (_1, _2),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Precommit<_0, _1> {
                 pub target_hash: _0,
                 pub target_number: _1,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Prevote<_0, _1> {
                 pub target_hash: _0,
                 pub target_number: _1,
@@ -5878,12 +6583,12 @@ pub mod api {
                 use super::runtime_types;
                 pub mod bounded_vec {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct BoundedVec<_0>(pub ::std::vec::Vec<_0>);
                 }
                 pub mod weak_bounded_vec {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct WeakBoundedVec<_0>(pub ::std::vec::Vec<_0>);
                 }
             }
@@ -5891,14 +6596,19 @@ pub mod api {
                 use super::runtime_types;
                 pub mod misc {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct WrapperOpaque<_0>(::core::primitive::u32, pub _0);
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                    pub struct WrapperOpaque<_0>(
+                        #[codec(compact)] pub ::core::primitive::u32,
+                        pub _0,
+                    );
                 }
                 pub mod tokens {
                     use super::runtime_types;
                     pub mod misc {
                         use super::runtime_types;
-                        #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                        #[derive(
+                            :: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug,
+                        )]
                         pub enum BalanceStatus {
                             #[codec(index = 0)]
                             Free,
@@ -5910,7 +6620,7 @@ pub mod api {
             }
             pub mod weights {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum DispatchClass {
                     #[codec(index = 0)]
                     Normal,
@@ -5919,31 +6629,31 @@ pub mod api {
                     #[codec(index = 2)]
                     Mandatory,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct DispatchInfo {
                     pub weight: ::core::primitive::u64,
                     pub class: runtime_types::frame_support::weights::DispatchClass,
                     pub pays_fee: runtime_types::frame_support::weights::Pays,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Pays {
                     #[codec(index = 0)]
                     Yes,
                     #[codec(index = 1)]
                     No,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct PerDispatchClass<_0> {
                     pub normal: _0,
                     pub operational: _0,
                     pub mandatory: _0,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct RuntimeDbWeight {
                     pub read: ::core::primitive::u64,
                     pub write: ::core::primitive::u64,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct WeightToFeeCoefficient<_0> {
                     pub coeff_integer: _0,
                     pub coeff_frac: runtime_types::sp_arithmetic::per_things::Perbill,
@@ -5958,44 +6668,44 @@ pub mod api {
                 use super::runtime_types;
                 pub mod check_genesis {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckGenesis {}
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                    pub struct CheckGenesis;
                 }
                 pub mod check_mortality {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct CheckMortality(pub runtime_types::sp_runtime::generic::era::Era);
                 }
                 pub mod check_nonce {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckNonce(pub ::core::primitive::u32);
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                    pub struct CheckNonce(#[codec(compact)] pub ::core::primitive::u32);
                 }
                 pub mod check_spec_version {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckSpecVersion {}
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                    pub struct CheckSpecVersion;
                 }
                 pub mod check_tx_version {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckTxVersion {}
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                    pub struct CheckTxVersion;
                 }
                 pub mod check_weight {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                    pub struct CheckWeight {}
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                    pub struct CheckWeight;
                 }
             }
             pub mod limits {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct BlockLength {
                     pub max: runtime_types::frame_support::weights::PerDispatchClass<
                         ::core::primitive::u32,
                     >,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct BlockWeights {
                     pub base_block: ::core::primitive::u64,
                     pub max_block: ::core::primitive::u64,
@@ -6003,7 +6713,7 @@ pub mod api {
                         runtime_types::frame_system::limits::WeightsPerClass,
                     >,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct WeightsPerClass {
                     pub base_extrinsic: ::core::primitive::u64,
                     pub max_extrinsic: ::core::option::Option<::core::primitive::u64>,
@@ -6013,7 +6723,7 @@ pub mod api {
             }
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     fill_block {
@@ -6060,7 +6770,7 @@ pub mod api {
                         remark: ::std::vec::Vec<::core::primitive::u8>,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     InvalidSpecName,
@@ -6073,7 +6783,7 @@ pub mod api {
                     #[codec(index = 4)]
                     NonZeroRefCount,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     ExtrinsicSuccess(runtime_types::frame_support::weights::DispatchInfo),
@@ -6095,7 +6805,7 @@ pub mod api {
                     ),
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct AccountInfo<_0, _1> {
                 pub nonce: _0,
                 pub consumers: _0,
@@ -6103,19 +6813,19 @@ pub mod api {
                 pub sufficients: _0,
                 pub data: _1,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct EventRecord<_0, _1> {
                 pub phase: runtime_types::frame_system::Phase,
                 pub event: _0,
                 pub topics: ::std::vec::Vec<_1>,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct LastRuntimeUpgradeInfo {
                 #[codec(compact)]
                 pub spec_version: ::core::primitive::u32,
                 pub spec_name: ::std::string::String,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Phase {
                 #[codec(index = 0)]
                 ApplyExtrinsic(::core::primitive::u32),
@@ -6129,7 +6839,7 @@ pub mod api {
             use super::runtime_types;
             pub mod opaque {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct SessionKeys {
                     pub babe: runtime_types::sp_consensus_babe::app::Public,
                     pub grandpa: runtime_types::sp_finality_grandpa::app::Public,
@@ -6138,7 +6848,7 @@ pub mod api {
                     pub octopus: runtime_types::pallet_octopus_appchain::crypto::Public,
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Call {
                 #[codec(index = 0)]
                 System(runtime_types::frame_system::pallet::Call),
@@ -6171,7 +6881,7 @@ pub mod api {
                 #[codec(index = 20)]
                 TemplateModule(runtime_types::pallet_template::pallet::Call),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Event {
                 #[codec(index = 0)]
                 System(runtime_types::frame_system::pallet::Event),
@@ -6198,14 +6908,14 @@ pub mod api {
                 #[codec(index = 20)]
                 TemplateModule(runtime_types::pallet_template::pallet::Event),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct Runtime {}
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Runtime;
         }
         pub mod pallet_assets {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     create {
@@ -6449,7 +7159,7 @@ pub mod api {
                         amount: ::core::primitive::u128,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     BalanceLow,
@@ -6476,7 +7186,7 @@ pub mod api {
                     #[codec(index = 11)]
                     WouldDie,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     Created(
@@ -6573,21 +7283,21 @@ pub mod api {
             }
             pub mod types {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Approval<_0, _1> {
                     pub amount: _0,
                     pub deposit: _0,
                     #[codec(skip)]
                     pub __subxt_unused_type_params: ::core::marker::PhantomData<_1>,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct AssetBalance<_0, _1> {
                     pub balance: _0,
                     pub is_frozen: ::core::primitive::bool,
                     pub sufficient: ::core::primitive::bool,
                     pub extra: _1,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct AssetDetails<_0, _1, _2> {
                     pub owner: _1,
                     pub issuer: _1,
@@ -6604,7 +7314,7 @@ pub mod api {
                     #[codec(skip)]
                     pub __subxt_unused_type_params: ::core::marker::PhantomData<_2>,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct AssetMetadata<_0, _1> {
                     pub deposit: _0,
                     pub name: _1,
@@ -6612,7 +7322,7 @@ pub mod api {
                     pub decimals: ::core::primitive::u8,
                     pub is_frozen: ::core::primitive::bool,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct DestroyWitness {
                     #[codec(compact)]
                     pub accounts: ::core::primitive::u32,
@@ -6627,7 +7337,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     set_uncles {
@@ -6639,7 +7349,7 @@ pub mod api {
                         >,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     InvalidUncleParent,
@@ -6657,7 +7367,7 @@ pub mod api {
                     OldUncle,
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum UncleEntryItem<_0, _1, _2> {
                 #[codec(index = 0)]
                 InclusionHeight(_0),
@@ -6669,7 +7379,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     report_equivocation {
@@ -6702,7 +7412,7 @@ pub mod api {
                         config: runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     InvalidEquivocationProof,
@@ -6717,7 +7427,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     transfer {
@@ -6778,7 +7488,7 @@ pub mod api {
                         amount: ::core::primitive::u128,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     VestingBalance,
@@ -6797,7 +7507,7 @@ pub mod api {
                     #[codec(index = 7)]
                     TooManyReserves,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     Endowed(
@@ -6855,20 +7565,20 @@ pub mod api {
                     ),
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct AccountData<_0> {
                 pub free: _0,
                 pub reserved: _0,
                 pub misc_frozen: _0,
                 pub fee_frozen: _0,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct BalanceLock<_0> {
                 pub id: [::core::primitive::u8; 8usize],
                 pub amount: _0,
                 pub reasons: runtime_types::pallet_balances::Reasons,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Reasons {
                 #[codec(index = 0)]
                 Fee,
@@ -6877,14 +7587,14 @@ pub mod api {
                 #[codec(index = 2)]
                 All,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Releases {
                 #[codec(index = 0)]
                 V1_0_0,
                 #[codec(index = 1)]
                 V2_0_0,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ReserveData<_0, _1> {
                 pub id: _0,
                 pub amount: _1,
@@ -6894,7 +7604,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     report_equivocation {
@@ -6922,7 +7632,7 @@ pub mod api {
                         best_finalized_block_number: ::core::primitive::u32,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     PauseFailed,
@@ -6939,7 +7649,7 @@ pub mod api {
                     #[codec(index = 6)]
                     DuplicateOffenceReport,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     NewAuthorities(
@@ -6954,7 +7664,7 @@ pub mod api {
                     Resumed,
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct StoredPendingChange<_0> {
                 pub scheduled_at: _0,
                 pub delay: _0,
@@ -6965,7 +7675,7 @@ pub mod api {
                     )>,
                 pub forced: ::core::option::Option<_0>,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum StoredState<_0> {
                 #[codec(index = 0)]
                 Live,
@@ -6983,11 +7693,11 @@ pub mod api {
                 use super::runtime_types;
                 pub mod primitive {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct ChannelId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct ClientId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct ClientState {
                         pub chain_id: ::std::vec::Vec<::core::primitive::u8>,
                         pub block_number: ::core::primitive::u32,
@@ -6996,21 +7706,21 @@ pub mod api {
                         pub latest_commitment: ::std::vec::Vec<::core::primitive::u8>,
                         pub validator_set: ::std::vec::Vec<::core::primitive::u8>,
                     }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub enum ClientType {
                         #[codec(index = 0)]
                         Tendermint,
                         #[codec(index = 1)]
                         Grandpa,
                     }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct ConnectionId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Height {
                         pub revision_number: ::core::primitive::u64,
                         pub revision_height: ::core::primitive::u64,
                     }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Packet {
                         pub sequence: runtime_types::pallet_ibc::event::primitive::Sequence,
                         pub source_port: runtime_types::pallet_ibc::event::primitive::PortId,
@@ -7023,15 +7733,16 @@ pub mod api {
                         pub timeout_timestamp:
                             runtime_types::pallet_ibc::event::primitive::Timestamp,
                     }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct PortId(pub ::std::vec::Vec<::core::primitive::u8>);
                     #[derive(
-                        :: subxt :: codec :: CompactAs,
                         :: subxt :: codec :: Encode,
                         :: subxt :: codec :: Decode,
+                        Debug,
+                        :: subxt :: codec :: CompactAs,
                     )]
                     pub struct Sequence(pub ::core::primitive::u64);
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Timestamp {
                         pub time: ::std::vec::Vec<::core::primitive::u8>,
                     }
@@ -7039,7 +7750,7 @@ pub mod api {
             }
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     deliver {
@@ -7052,14 +7763,14 @@ pub mod api {
                         mmr_root: ::std::vec::Vec<::core::primitive::u8>,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     NotLaststCommitment,
                     #[codec(index = 1)]
                     VerifyMmrRootFailure,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     NewBlock(runtime_types::pallet_ibc::event::primitive::Height),
@@ -7259,7 +7970,7 @@ pub mod api {
                     ChainError(::std::vec::Vec<::core::primitive::u8>),
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Any {
                 pub type_url: ::std::vec::Vec<::core::primitive::u8>,
                 pub value: ::std::vec::Vec<::core::primitive::u8>,
@@ -7269,7 +7980,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     heartbeat {
@@ -7278,14 +7989,14 @@ pub mod api {
                         signature: runtime_types::pallet_im_online::sr25519::app_sr25519::Signature,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     InvalidKey,
                     #[codec(index = 1)]
                     DuplicatedHeartbeat,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     HeartbeatReceived(
@@ -7306,13 +8017,13 @@ pub mod api {
                 use super::runtime_types;
                 pub mod app_sr25519 {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Public(pub runtime_types::sp_core::sr25519::Public);
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Signature(pub runtime_types::sp_core::sr25519::Signature);
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct BoundedOpaqueNetworkState {
                 pub peer_id:
                     runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
@@ -7325,7 +8036,7 @@ pub mod api {
                         >,
                     >,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Heartbeat<_0> {
                 pub block_number: _0,
                 pub network_state: runtime_types::sp_core::offchain::OpaqueNetworkState,
@@ -7338,12 +8049,12 @@ pub mod api {
             use super::runtime_types;
             pub mod crypto {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub runtime_types::sp_core::sr25519::Public);
             }
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     submit_observations {
@@ -7383,7 +8094,7 @@ pub mod api {
                         amount: ::core::primitive::u128,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     WrongSetId,
@@ -7398,7 +8109,7 @@ pub mod api {
                     #[codec(index = 5)]
                     InvalidActiveTotalStake,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     Locked(
@@ -7428,14 +8139,14 @@ pub mod api {
                     ),
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct BurnEvent<_0> {
                 pub index: ::core::primitive::u32,
                 pub sender_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub receiver: _0,
                 pub amount: ::core::primitive::u128,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct LockAssetEvent<_0> {
                 pub index: ::core::primitive::u32,
                 pub token_id: ::std::vec::Vec<::core::primitive::u8>,
@@ -7443,7 +8154,7 @@ pub mod api {
                 pub receiver: _0,
                 pub amount: ::core::primitive::u128,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Observation<_0> {
                 #[codec(index = 0)]
                 UpdateValidatorSet(runtime_types::pallet_octopus_appchain::ValidatorSet<_0>),
@@ -7452,7 +8163,7 @@ pub mod api {
                 #[codec(index = 2)]
                 Burn(runtime_types::pallet_octopus_appchain::BurnEvent<_0>),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum ObservationType {
                 #[codec(index = 0)]
                 UpdateValidatorSet,
@@ -7461,7 +8172,7 @@ pub mod api {
                 #[codec(index = 2)]
                 LockAsset,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ObservationsPayload<_0, _1, _2> {
                 pub public: _0,
                 pub block_number: _1,
@@ -7469,12 +8180,12 @@ pub mod api {
                 pub observations:
                     ::std::vec::Vec<runtime_types::pallet_octopus_appchain::Observation<_2>>,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Validator<_0> {
                 pub validator_id_in_appchain: _0,
                 pub total_stake: ::core::primitive::u128,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ValidatorSet<_0> {
                 pub era: ::core::primitive::u32,
                 pub validators:
@@ -7485,7 +8196,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     set_history_depth {
@@ -7495,7 +8206,7 @@ pub mod api {
                         era_items_deleted: ::core::primitive::u32,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     NotController,
@@ -7548,7 +8259,7 @@ pub mod api {
                     #[codec(index = 24)]
                     AmountOverflow,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     EraPayout(::core::primitive::u32, ::core::primitive::u128),
@@ -7590,17 +8301,17 @@ pub mod api {
                     StakingElectionFailed,
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ActiveEraInfo {
                 pub index: ::core::primitive::u32,
                 pub start: ::core::option::Option<::core::primitive::u64>,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct EraRewardPoints<_0> {
                 pub total: ::core::primitive::u32,
                 pub individual: ::std::collections::BTreeMap<_0, ::core::primitive::u32>,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Releases {
                 #[codec(index = 0)]
                 V1_0_0,
@@ -7610,7 +8321,7 @@ pub mod api {
             use super::runtime_types;
             pub mod types {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum PayloadType {
                     #[codec(index = 0)]
                     Lock,
@@ -7627,17 +8338,17 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {}
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     NonceOverflow,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {}
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Message {
                 pub nonce: ::core::primitive::u64,
                 pub payload_type: runtime_types::pallet_octopus_support::types::PayloadType,
@@ -7648,7 +8359,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     set_keys {
@@ -7658,7 +8369,7 @@ pub mod api {
                     #[codec(index = 1)]
                     purge_keys,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     InvalidProof,
@@ -7671,7 +8382,7 @@ pub mod api {
                     #[codec(index = 4)]
                     NoAccount,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     NewSession(::core::primitive::u32),
@@ -7682,7 +8393,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     sudo {
@@ -7709,12 +8420,12 @@ pub mod api {
                         call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
                     },
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     RequireSudo,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     Sudid(::core::result::Result<(), runtime_types::sp_runtime::DispatchError>),
@@ -7731,21 +8442,21 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     do_something { something: ::core::primitive::u32 },
                     #[codec(index = 1)]
                     cause_error,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
                     NoneValue,
                     #[codec(index = 1)]
                     StorageOverflow,
                 }
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
                     SomethingStored(
@@ -7759,7 +8470,7 @@ pub mod api {
             use super::runtime_types;
             pub mod pallet {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Call {
                     #[codec(index = 0)]
                     set {
@@ -7771,9 +8482,9 @@ pub mod api {
         }
         pub mod pallet_transaction_payment {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-            pub struct ChargeTransactionPayment(pub ::core::primitive::u128);
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ChargeTransactionPayment(#[codec(compact)] pub ::core::primitive::u128);
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Releases {
                 #[codec(index = 0)]
                 V1Ancient,
@@ -7783,7 +8494,7 @@ pub mod api {
         }
         pub mod primitive_types {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct H256(pub [::core::primitive::u8; 32usize]);
         }
         pub mod sp_arithmetic {
@@ -7791,18 +8502,20 @@ pub mod api {
             pub mod fixed_point {
                 use super::runtime_types;
                 #[derive(
-                    :: subxt :: codec :: CompactAs,
                     :: subxt :: codec :: Encode,
                     :: subxt :: codec :: Decode,
+                    Debug,
+                    :: subxt :: codec :: CompactAs,
                 )]
                 pub struct FixedU128(pub ::core::primitive::u128);
             }
             pub mod per_things {
                 use super::runtime_types;
                 #[derive(
-                    :: subxt :: codec :: CompactAs,
                     :: subxt :: codec :: Encode,
                     :: subxt :: codec :: Decode,
+                    Debug,
+                    :: subxt :: codec :: CompactAs,
                 )]
                 pub struct Perbill(pub ::core::primitive::u32);
             }
@@ -7811,12 +8524,12 @@ pub mod api {
             use super::runtime_types;
             pub mod app {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub runtime_types::sp_core::sr25519::Public);
             }
             pub mod digests {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum NextConfigDescriptor {
                     #[codec(index = 1)]
                     V1 {
@@ -7825,7 +8538,7 @@ pub mod api {
                     },
                 }
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum AllowedSlots {
                 #[codec(index = 0)]
                 PrimarySlots,
@@ -7834,7 +8547,7 @@ pub mod api {
                 #[codec(index = 2)]
                 PrimaryAndSecondaryVRFSlots,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct BabeEpochConfiguration {
                 pub c: (::core::primitive::u64, ::core::primitive::u64),
                 pub allowed_slots: runtime_types::sp_consensus_babe::AllowedSlots,
@@ -7842,7 +8555,7 @@ pub mod api {
         }
         pub mod sp_consensus_slots {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct EquivocationProof<_0, _1> {
                 pub offender: _1,
                 pub slot: runtime_types::sp_consensus_slots::Slot,
@@ -7850,9 +8563,10 @@ pub mod api {
                 pub second_header: _0,
             }
             #[derive(
-                :: subxt :: codec :: CompactAs,
                 :: subxt :: codec :: Encode,
                 :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
             )]
             pub struct Slot(pub ::core::primitive::u64);
         }
@@ -7860,7 +8574,7 @@ pub mod api {
             use super::runtime_types;
             pub mod changes_trie {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct ChangesTrieConfiguration {
                     pub digest_interval: ::core::primitive::u32,
                     pub digest_levels: ::core::primitive::u32,
@@ -7868,30 +8582,30 @@ pub mod api {
             }
             pub mod crypto {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct AccountId32(pub [::core::primitive::u8; 32usize]);
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct KeyTypeId(pub [::core::primitive::u8; 4usize]);
             }
             pub mod ecdsa {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub [::core::primitive::u8; 33usize]);
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Signature(pub [::core::primitive::u8; 65usize]);
             }
             pub mod ed25519 {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub [::core::primitive::u8; 32usize]);
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Signature(pub [::core::primitive::u8; 64usize]);
             }
             pub mod offchain {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct OpaqueMultiaddr(pub ::std::vec::Vec<::core::primitive::u8>);
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct OpaqueNetworkState {
                     pub peer_id: runtime_types::sp_core::OpaquePeerId,
                     pub external_addresses:
@@ -7900,24 +8614,24 @@ pub mod api {
             }
             pub mod sr25519 {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub [::core::primitive::u8; 32usize]);
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Signature(pub [::core::primitive::u8; 64usize]);
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct OpaquePeerId(pub ::std::vec::Vec<::core::primitive::u8>);
         }
         pub mod sp_finality_grandpa {
             use super::runtime_types;
             pub mod app {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Public(pub runtime_types::sp_core::ed25519::Public);
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub struct Signature(pub runtime_types::sp_core::ed25519::Signature);
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Equivocation<_0, _1> {
                 #[codec(index = 0)]
                 Prevote(
@@ -7936,7 +8650,7 @@ pub mod api {
                     >,
                 ),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct EquivocationProof<_0, _1> {
                 pub set_id: ::core::primitive::u64,
                 pub equivocation: runtime_types::sp_finality_grandpa::Equivocation<_0, _1>,
@@ -7948,7 +8662,7 @@ pub mod api {
                 use super::runtime_types;
                 pub mod digest {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub enum ChangesTrieSignal {
                         #[codec(index = 0)]
                         NewConfiguration(
@@ -7957,13 +8671,13 @@ pub mod api {
                             >,
                         ),
                     }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Digest<_0> {
                         pub logs: ::std::vec::Vec<
                             runtime_types::sp_runtime::generic::digest::DigestItem<_0>,
                         >,
                     }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub enum DigestItem<_0> {
                         #[codec(index = 2)]
                         ChangesTrieRoot(_0),
@@ -7994,7 +8708,7 @@ pub mod api {
                 }
                 pub mod era {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub enum Era {
                         #[codec(index = 0)]
                         Immortal,
@@ -8512,7 +9226,7 @@ pub mod api {
                 }
                 pub mod header {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct Header<_0, _1> {
                         pub parent_hash: ::subxt::sp_core::H256,
                         #[codec(compact)]
@@ -8528,21 +9242,21 @@ pub mod api {
                 }
                 pub mod unchecked_extrinsic {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                     pub struct UncheckedExtrinsic<_0, _1, _2, _3>(
-                        ::std::vec::Vec<::core::primitive::u8>,
+                        pub ::std::vec::Vec<::core::primitive::u8>,
                         #[codec(skip)] pub ::core::marker::PhantomData<(_0, _2, _1, _3)>,
                     );
                 }
             }
             pub mod multiaddress {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum MultiAddress<_0, _1> {
                     #[codec(index = 0)]
                     Id(_0),
                     #[codec(index = 1)]
-                    Index(_1),
+                    Index(#[codec(compact)] _1),
                     #[codec(index = 2)]
                     Raw(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 3)]
@@ -8553,10 +9267,10 @@ pub mod api {
             }
             pub mod traits {
                 use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
-                pub struct BlakeTwo256 {}
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub struct BlakeTwo256;
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum ArithmeticError {
                 #[codec(index = 0)]
                 Underflow,
@@ -8565,7 +9279,7 @@ pub mod api {
                 #[codec(index = 2)]
                 DivisionByZero,
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum DispatchError {
                 #[codec(index = 0)]
                 Other,
@@ -8587,7 +9301,7 @@ pub mod api {
                 #[codec(index = 7)]
                 Arithmetic(runtime_types::sp_runtime::ArithmeticError),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum MultiSignature {
                 #[codec(index = 0)]
                 Ed25519(runtime_types::sp_core::ed25519::Signature),
@@ -8596,7 +9310,7 @@ pub mod api {
                 #[codec(index = 2)]
                 Ecdsa(runtime_types::sp_core::ecdsa::Signature),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum MultiSigner {
                 #[codec(index = 0)]
                 Ed25519(runtime_types::sp_core::ed25519::Public),
@@ -8605,7 +9319,7 @@ pub mod api {
                 #[codec(index = 2)]
                 Ecdsa(runtime_types::sp_core::ecdsa::Public),
             }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum TokenError {
                 #[codec(index = 0)]
                 NoFunds,
@@ -8625,7 +9339,7 @@ pub mod api {
         }
         pub mod sp_session {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct MembershipProof {
                 pub session: ::core::primitive::u32,
                 pub trie_nodes: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
@@ -8634,7 +9348,7 @@ pub mod api {
         }
         pub mod sp_version {
             use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode)]
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct RuntimeVersion {
                 pub spec_name: ::std::string::String,
                 pub impl_name: ::std::string::String,
@@ -8647,73 +9361,116 @@ pub mod api {
             }
         }
     }
-    #[doc = r" Default configuration of common types for a target Substrate runtime."]
-    #[derive(Clone, Debug, Default, Eq, PartialEq)]
-    pub struct DefaultConfig;
-    impl ::subxt::Config for DefaultConfig {
-        type Index = u32;
-        type BlockNumber = u32;
-        type Hash = ::subxt::sp_core::H256;
-        type Hashing = ::subxt::sp_runtime::traits::BlakeTwo256;
-        type AccountId = ::subxt::sp_runtime::AccountId32;
-        type Address = ::subxt::sp_runtime::MultiAddress<Self::AccountId, u32>;
-        type Header = ::subxt::sp_runtime::generic::Header<
-            Self::BlockNumber,
-            ::subxt::sp_runtime::traits::BlakeTwo256,
-        >;
-        type Signature = ::subxt::sp_runtime::MultiSignature;
-        type Extrinsic = ::subxt::sp_runtime::OpaqueExtrinsic;
+    #[doc = r" The default error type returned when there is a runtime issue."]
+    pub type DispatchError = self::runtime_types::sp_runtime::DispatchError;
+    pub struct ErrorDetails {
+        pub pallet: &'static str,
+        pub error: &'static str,
+        pub docs: &'static str,
     }
-    impl ::subxt::ExtrinsicExtraData<DefaultConfig> for DefaultConfig {
-        type AccountData = AccountData;
-        type Extra = ::subxt::DefaultExtra<DefaultConfig>;
+    impl DispatchError {
+        pub fn details(&self) -> Option<ErrorDetails> {
+            if let Self::Module { index, error } = self {
+                match (index , error) { (0u8 , 0u8) => Some (ErrorDetails { pallet : "System" , error : "InvalidSpecName" , docs : "The name of specification does not match between the current runtime\nand the new runtime." }) , (0u8 , 1u8) => Some (ErrorDetails { pallet : "System" , error : "SpecVersionNeedsToIncrease" , docs : "The specification version is not allowed to decrease between the current runtime\nand the new runtime." }) , (0u8 , 2u8) => Some (ErrorDetails { pallet : "System" , error : "FailedToExtractRuntimeVersion" , docs : "Failed to extract the runtime version from the new runtime.\n\nEither calling `Core_version` or decoding `RuntimeVersion` failed." }) , (0u8 , 3u8) => Some (ErrorDetails { pallet : "System" , error : "NonDefaultComposite" , docs : "Suicide called when the account has non-default composite data." }) , (0u8 , 4u8) => Some (ErrorDetails { pallet : "System" , error : "NonZeroRefCount" , docs : "There is a non-zero reference count preventing the account from being purged." }) , (3u8 , 0u8) => Some (ErrorDetails { pallet : "Authorship" , error : "InvalidUncleParent" , docs : "The uncle parent not in the chain." }) , (3u8 , 1u8) => Some (ErrorDetails { pallet : "Authorship" , error : "UnclesAlreadySet" , docs : "Uncles already set in the block." }) , (3u8 , 2u8) => Some (ErrorDetails { pallet : "Authorship" , error : "TooManyUncles" , docs : "Too many uncles." }) , (3u8 , 3u8) => Some (ErrorDetails { pallet : "Authorship" , error : "GenesisUncle" , docs : "The uncle is genesis." }) , (3u8 , 4u8) => Some (ErrorDetails { pallet : "Authorship" , error : "TooHighUncle" , docs : "The uncle is too high in chain." }) , (3u8 , 5u8) => Some (ErrorDetails { pallet : "Authorship" , error : "UncleAlreadyIncluded" , docs : "The uncle is already included." }) , (3u8 , 6u8) => Some (ErrorDetails { pallet : "Authorship" , error : "OldUncle" , docs : "The uncle isn't recent enough to be included." }) , (4u8 , 0u8) => Some (ErrorDetails { pallet : "Babe" , error : "InvalidEquivocationProof" , docs : "An equivocation proof provided as part of an equivocation report is invalid." }) , (4u8 , 1u8) => Some (ErrorDetails { pallet : "Babe" , error : "InvalidKeyOwnershipProof" , docs : "A key ownership proof provided as part of an equivocation report is invalid." }) , (4u8 , 2u8) => Some (ErrorDetails { pallet : "Babe" , error : "DuplicateOffenceReport" , docs : "A given equivocation report is valid but already previously reported." }) , (5u8 , 0u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "PauseFailed" , docs : "Attempt to signal GRANDPA pause when the authority set isn't live\n(either paused or already pending pause)." }) , (5u8 , 1u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "ResumeFailed" , docs : "Attempt to signal GRANDPA resume when the authority set isn't paused\n(either live or already pending resume)." }) , (5u8 , 2u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "ChangePending" , docs : "Attempt to signal GRANDPA change with one already pending." }) , (5u8 , 3u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "TooSoon" , docs : "Cannot signal forced change so soon after last." }) , (5u8 , 4u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "InvalidKeyOwnershipProof" , docs : "A key ownership proof provided as part of an equivocation report is invalid." }) , (5u8 , 5u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "InvalidEquivocationProof" , docs : "An equivocation proof provided as part of an equivocation report is invalid." }) , (5u8 , 6u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "DuplicateOffenceReport" , docs : "A given equivocation report is valid but already previously reported." }) , (6u8 , 0u8) => Some (ErrorDetails { pallet : "Balances" , error : "VestingBalance" , docs : "Vesting balance too high to send value" }) , (6u8 , 1u8) => Some (ErrorDetails { pallet : "Balances" , error : "LiquidityRestrictions" , docs : "Account liquidity restrictions prevent withdrawal" }) , (6u8 , 2u8) => Some (ErrorDetails { pallet : "Balances" , error : "InsufficientBalance" , docs : "Balance too low to send value" }) , (6u8 , 3u8) => Some (ErrorDetails { pallet : "Balances" , error : "ExistentialDeposit" , docs : "Value too low to create account due to existential deposit" }) , (6u8 , 4u8) => Some (ErrorDetails { pallet : "Balances" , error : "KeepAlive" , docs : "Transfer/payment would kill account" }) , (6u8 , 5u8) => Some (ErrorDetails { pallet : "Balances" , error : "ExistingVestingSchedule" , docs : "A vesting schedule already exists for this account" }) , (6u8 , 6u8) => Some (ErrorDetails { pallet : "Balances" , error : "DeadAccount" , docs : "Beneficiary account must pre-exist" }) , (6u8 , 7u8) => Some (ErrorDetails { pallet : "Balances" , error : "TooManyReserves" , docs : "Number of named reserves exceed MaxReserves" }) , (8u8 , 0u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "WrongSetId" , docs : "The set id of new validator set was wrong." }) , (8u8 , 1u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "NotValidator" , docs : "Must be a validator." }) , (8u8 , 2u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "AmountOverflow" , docs : "Amount overflow." }) , (8u8 , 3u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "NextFactSequenceOverflow" , docs : "Next fact sequence overflow." }) , (8u8 , 4u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "WrongAssetId" , docs : "Wrong Asset Id." }) , (8u8 , 5u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "InvalidActiveTotalStake" , docs : "Invalid active total stake." }) , (9u8 , 0u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NotController" , docs : "Not a controller account." }) , (9u8 , 1u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NotStash" , docs : "Not a stash account." }) , (9u8 , 2u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AlreadyBonded" , docs : "Stash is already bonded." }) , (9u8 , 3u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AlreadyPaired" , docs : "Controller is already paired." }) , (9u8 , 4u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "EmptyTargets" , docs : "Targets cannot be empty." }) , (9u8 , 5u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "DuplicateIndex" , docs : "Duplicate index." }) , (9u8 , 6u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InvalidSlashIndex" , docs : "Slash record index out of bounds." }) , (9u8 , 7u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InsufficientBond" , docs : "Can not bond with value less than minimum required." }) , (9u8 , 8u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NoMoreChunks" , docs : "Can not schedule more unlock chunks." }) , (9u8 , 9u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NoUnlockChunk" , docs : "Can not rebond without unlocking chunks." }) , (9u8 , 10u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "FundedTarget" , docs : "Attempting to target a stash that still has funds." }) , (9u8 , 11u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InvalidEraToReward" , docs : "Invalid era to reward." }) , (9u8 , 12u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InvalidNumberOfNominations" , docs : "Invalid number of nominations." }) , (9u8 , 13u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NotSortedAndUnique" , docs : "Items are not sorted and unique." }) , (9u8 , 14u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AlreadyClaimed" , docs : "Rewards for this era have already been claimed for this validator." }) , (9u8 , 15u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "IncorrectHistoryDepth" , docs : "Incorrect previous history depth input provided." }) , (9u8 , 16u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "IncorrectSlashingSpans" , docs : "Incorrect number of slashing spans provided." }) , (9u8 , 17u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "BadState" , docs : "Internal state has become somehow corrupted and the operation cannot continue." }) , (9u8 , 18u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "TooManyTargets" , docs : "Too many nomination targets supplied." }) , (9u8 , 19u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "BadTarget" , docs : "A nomination target was supplied that was blocked or otherwise not a validator." }) , (9u8 , 20u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "CannotChillOther" , docs : "The user has enough bond and thus cannot be chilled forcefully by an external person." }) , (9u8 , 21u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "TooManyNominators" , docs : "There are too many nominators in the system. Governance needs to adjust the staking settings\nto keep things safe for the runtime." }) , (9u8 , 22u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "TooManyValidators" , docs : "There are too many validators in the system. Governance needs to adjust the staking settings\nto keep things safe for the runtime." }) , (9u8 , 23u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NoClaimedRewards" , docs : "There are not claimed rewards for this validator." }) , (9u8 , 24u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AmountOverflow" , docs : "Amount overflow." }) , (10u8 , 0u8) => Some (ErrorDetails { pallet : "OctopusUpwardMessages" , error : "NonceOverflow" , docs : "Nonce overflow." }) , (11u8 , 0u8) => Some (ErrorDetails { pallet : "Session" , error : "InvalidProof" , docs : "Invalid ownership proof." }) , (11u8 , 1u8) => Some (ErrorDetails { pallet : "Session" , error : "NoAssociatedValidatorId" , docs : "No associated validator ID for account." }) , (11u8 , 2u8) => Some (ErrorDetails { pallet : "Session" , error : "DuplicatedKey" , docs : "Registered duplicate key." }) , (11u8 , 3u8) => Some (ErrorDetails { pallet : "Session" , error : "NoKeys" , docs : "No keys are associated with this account." }) , (11u8 , 4u8) => Some (ErrorDetails { pallet : "Session" , error : "NoAccount" , docs : "Key setting account is not live, so it's impossible to associate keys." }) , (12u8 , 0u8) => Some (ErrorDetails { pallet : "ImOnline" , error : "InvalidKey" , docs : "Non existent public key." }) , (12u8 , 1u8) => Some (ErrorDetails { pallet : "ImOnline" , error : "DuplicatedHeartbeat" , docs : "Duplicated heartbeat." }) , (14u8 , 0u8) => Some (ErrorDetails { pallet : "Assets" , error : "BalanceLow" , docs : "Account balance must be greater than or equal to the transfer amount." }) , (14u8 , 1u8) => Some (ErrorDetails { pallet : "Assets" , error : "BalanceZero" , docs : "Balance should be non-zero." }) , (14u8 , 2u8) => Some (ErrorDetails { pallet : "Assets" , error : "NoPermission" , docs : "The signing account has no permission to do the operation." }) , (14u8 , 3u8) => Some (ErrorDetails { pallet : "Assets" , error : "Unknown" , docs : "The given asset ID is unknown." }) , (14u8 , 4u8) => Some (ErrorDetails { pallet : "Assets" , error : "Frozen" , docs : "The origin account is frozen." }) , (14u8 , 5u8) => Some (ErrorDetails { pallet : "Assets" , error : "InUse" , docs : "The asset ID is already taken." }) , (14u8 , 6u8) => Some (ErrorDetails { pallet : "Assets" , error : "BadWitness" , docs : "Invalid witness data given." }) , (14u8 , 7u8) => Some (ErrorDetails { pallet : "Assets" , error : "MinBalanceZero" , docs : "Minimum balance should be non-zero." }) , (14u8 , 8u8) => Some (ErrorDetails { pallet : "Assets" , error : "NoProvider" , docs : "No provider reference exists to allow a non-zero balance of a non-self-sufficient\nasset." }) , (14u8 , 9u8) => Some (ErrorDetails { pallet : "Assets" , error : "BadMetadata" , docs : "Invalid metadata given." }) , (14u8 , 10u8) => Some (ErrorDetails { pallet : "Assets" , error : "Unapproved" , docs : "No approval exists that would allow the transfer." }) , (14u8 , 11u8) => Some (ErrorDetails { pallet : "Assets" , error : "WouldDie" , docs : "The source account would not survive the transfer and it needs to stay alive." }) , (18u8 , 0u8) => Some (ErrorDetails { pallet : "Sudo" , error : "RequireSudo" , docs : "Sender must be the Sudo account" }) , (19u8 , 0u8) => Some (ErrorDetails { pallet : "Ibc" , error : "NotLaststCommitment" , docs : "receive mmr root block number less than client_state.latest_commitment.block_number !" }) , (19u8 , 1u8) => Some (ErrorDetails { pallet : "Ibc" , error : "VerifyMmrRootFailure" , docs : "verify mmr root failure\nupdate the beefy light client failure!" }) , (20u8 , 0u8) => Some (ErrorDetails { pallet : "TemplateModule" , error : "NoneValue" , docs : "Error names should be descriptive." }) , (20u8 , 1u8) => Some (ErrorDetails { pallet : "TemplateModule" , error : "StorageOverflow" , docs : "Errors should have helpful documentation associated with them." }) , _ => None }
+            } else {
+                None
+            }
+        }
     }
-    pub type AccountData = self::system::storage::Account;
-    impl ::subxt::AccountData<DefaultConfig> for AccountData {
-        fn nonce(
-            result: &<Self as ::subxt::StorageEntry>::Value,
-        ) -> <DefaultConfig as ::subxt::Config>::Index {
+    #[doc = r" The default storage entry from which to fetch an account nonce, required for"]
+    #[doc = r" constructing a transaction."]
+    pub enum DefaultAccountData {}
+    impl ::subxt::AccountData for DefaultAccountData {
+        type StorageEntry = self::system::storage::Account;
+        type AccountId = ::subxt::sp_core::crypto::AccountId32;
+        type Index = ::core::primitive::u32;
+        fn nonce(result: &<Self::StorageEntry as ::subxt::StorageEntry>::Value) -> Self::Index {
             result.nonce
         }
-        fn storage_entry(account_id: <DefaultConfig as ::subxt::Config>::AccountId) -> Self {
-            Self(account_id)
+        fn storage_entry(account_id: Self::AccountId) -> Self::StorageEntry {
+            self::system::storage::Account(account_id)
         }
     }
-    pub struct RuntimeApi<T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+    pub struct RuntimeApi<T: ::subxt::Config, X, A = DefaultAccountData> {
         pub client: ::subxt::Client<T>,
+        marker: ::core::marker::PhantomData<(X, A)>,
     }
-    impl<T> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T>
+    impl<T, X, A> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T, X, A>
     where
-        T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+        T: ::subxt::Config,
+        X: ::subxt::SignedExtra<T>,
+        A: ::subxt::AccountData,
     {
         fn from(client: ::subxt::Client<T>) -> Self {
-            Self { client }
+            Self {
+                client,
+                marker: ::core::marker::PhantomData,
+            }
         }
     }
-    impl<'a, T> RuntimeApi<T>
+    impl<'a, T, X, A> RuntimeApi<T, X, A>
     where
-        T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+        T: ::subxt::Config,
+        X: ::subxt::SignedExtra<T>,
+        A: ::subxt::AccountData,
     {
+        pub fn constants(&'a self) -> ConstantsApi {
+            ConstantsApi
+        }
         pub fn storage(&'a self) -> StorageApi<'a, T> {
             StorageApi {
                 client: &self.client,
             }
         }
-        pub fn tx(&'a self) -> TransactionApi<'a, T> {
+        pub fn tx(&'a self) -> TransactionApi<'a, T, X, A> {
             TransactionApi {
                 client: &self.client,
+                marker: ::core::marker::PhantomData,
             }
         }
     }
-    pub struct StorageApi<'a, T>
-    where
-        T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
-    {
+    pub struct ConstantsApi;
+    impl ConstantsApi {
+        pub fn system(&self) -> system::constants::ConstantsApi {
+            system::constants::ConstantsApi
+        }
+        pub fn timestamp(&self) -> timestamp::constants::ConstantsApi {
+            timestamp::constants::ConstantsApi
+        }
+        pub fn authorship(&self) -> authorship::constants::ConstantsApi {
+            authorship::constants::ConstantsApi
+        }
+        pub fn babe(&self) -> babe::constants::ConstantsApi {
+            babe::constants::ConstantsApi
+        }
+        pub fn grandpa(&self) -> grandpa::constants::ConstantsApi {
+            grandpa::constants::ConstantsApi
+        }
+        pub fn balances(&self) -> balances::constants::ConstantsApi {
+            balances::constants::ConstantsApi
+        }
+        pub fn transaction_payment(&self) -> transaction_payment::constants::ConstantsApi {
+            transaction_payment::constants::ConstantsApi
+        }
+        pub fn octopus_appchain(&self) -> octopus_appchain::constants::ConstantsApi {
+            octopus_appchain::constants::ConstantsApi
+        }
+        pub fn octopus_lpos(&self) -> octopus_lpos::constants::ConstantsApi {
+            octopus_lpos::constants::ConstantsApi
+        }
+        pub fn im_online(&self) -> im_online::constants::ConstantsApi {
+            im_online::constants::ConstantsApi
+        }
+        pub fn assets(&self) -> assets::constants::ConstantsApi {
+            assets::constants::ConstantsApi
+        }
+    }
+    pub struct StorageApi<'a, T: ::subxt::Config> {
         client: &'a ::subxt::Client<T>,
     }
     impl<'a, T> StorageApi<'a, T>
     where
-        T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+        T: ::subxt::Config,
     {
         pub fn system(&self) -> system::storage::StorageApi<'a, T> {
             system::storage::StorageApi::new(self.client)
@@ -8780,58 +9537,61 @@ pub mod api {
             template_module::storage::StorageApi::new(self.client)
         }
     }
-    pub struct TransactionApi<'a, T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>> {
+    pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
         client: &'a ::subxt::Client<T>,
+        marker: ::core::marker::PhantomData<(X, A)>,
     }
-    impl<'a, T> TransactionApi<'a, T>
+    impl<'a, T, X, A> TransactionApi<'a, T, X, A>
     where
-        T: ::subxt::Config + ::subxt::ExtrinsicExtraData<T>,
+        T: ::subxt::Config,
+        X: ::subxt::SignedExtra<T>,
+        A: ::subxt::AccountData,
     {
-        pub fn system(&self) -> system::calls::TransactionApi<'a, T> {
+        pub fn system(&self) -> system::calls::TransactionApi<'a, T, X, A> {
             system::calls::TransactionApi::new(self.client)
         }
-        pub fn timestamp(&self) -> timestamp::calls::TransactionApi<'a, T> {
+        pub fn timestamp(&self) -> timestamp::calls::TransactionApi<'a, T, X, A> {
             timestamp::calls::TransactionApi::new(self.client)
         }
-        pub fn authorship(&self) -> authorship::calls::TransactionApi<'a, T> {
+        pub fn authorship(&self) -> authorship::calls::TransactionApi<'a, T, X, A> {
             authorship::calls::TransactionApi::new(self.client)
         }
-        pub fn babe(&self) -> babe::calls::TransactionApi<'a, T> {
+        pub fn babe(&self) -> babe::calls::TransactionApi<'a, T, X, A> {
             babe::calls::TransactionApi::new(self.client)
         }
-        pub fn grandpa(&self) -> grandpa::calls::TransactionApi<'a, T> {
+        pub fn grandpa(&self) -> grandpa::calls::TransactionApi<'a, T, X, A> {
             grandpa::calls::TransactionApi::new(self.client)
         }
-        pub fn balances(&self) -> balances::calls::TransactionApi<'a, T> {
+        pub fn balances(&self) -> balances::calls::TransactionApi<'a, T, X, A> {
             balances::calls::TransactionApi::new(self.client)
         }
-        pub fn octopus_appchain(&self) -> octopus_appchain::calls::TransactionApi<'a, T> {
+        pub fn octopus_appchain(&self) -> octopus_appchain::calls::TransactionApi<'a, T, X, A> {
             octopus_appchain::calls::TransactionApi::new(self.client)
         }
-        pub fn octopus_lpos(&self) -> octopus_lpos::calls::TransactionApi<'a, T> {
+        pub fn octopus_lpos(&self) -> octopus_lpos::calls::TransactionApi<'a, T, X, A> {
             octopus_lpos::calls::TransactionApi::new(self.client)
         }
         pub fn octopus_upward_messages(
             &self,
-        ) -> octopus_upward_messages::calls::TransactionApi<'a, T> {
+        ) -> octopus_upward_messages::calls::TransactionApi<'a, T, X, A> {
             octopus_upward_messages::calls::TransactionApi::new(self.client)
         }
-        pub fn session(&self) -> session::calls::TransactionApi<'a, T> {
+        pub fn session(&self) -> session::calls::TransactionApi<'a, T, X, A> {
             session::calls::TransactionApi::new(self.client)
         }
-        pub fn im_online(&self) -> im_online::calls::TransactionApi<'a, T> {
+        pub fn im_online(&self) -> im_online::calls::TransactionApi<'a, T, X, A> {
             im_online::calls::TransactionApi::new(self.client)
         }
-        pub fn assets(&self) -> assets::calls::TransactionApi<'a, T> {
+        pub fn assets(&self) -> assets::calls::TransactionApi<'a, T, X, A> {
             assets::calls::TransactionApi::new(self.client)
         }
-        pub fn sudo(&self) -> sudo::calls::TransactionApi<'a, T> {
+        pub fn sudo(&self) -> sudo::calls::TransactionApi<'a, T, X, A> {
             sudo::calls::TransactionApi::new(self.client)
         }
-        pub fn ibc(&self) -> ibc::calls::TransactionApi<'a, T> {
+        pub fn ibc(&self) -> ibc::calls::TransactionApi<'a, T, X, A> {
             ibc::calls::TransactionApi::new(self.client)
         }
-        pub fn template_module(&self) -> template_module::calls::TransactionApi<'a, T> {
+        pub fn template_module(&self) -> template_module::calls::TransactionApi<'a, T, X, A> {
             template_module::calls::TransactionApi::new(self.client)
         }
     }
