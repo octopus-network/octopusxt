@@ -682,7 +682,7 @@ pub async fn get_channel_end(
 pub async fn get_packet_receipt(
     port_id: &PortId,
     channel_id: &ChannelId,
-    seq: &Sequence,
+    sequence: &Sequence,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Receipt, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
@@ -698,7 +698,7 @@ pub async fn get_packet_receipt(
         block_hash
     );
 
-    let _seq = u64::from(*seq).encode();
+    let _seq = u64::from(*sequence).encode();
 
     let data: Vec<u8> = api
         .storage()
@@ -727,10 +727,11 @@ pub async fn get_packet_receipt(
 }
 
 /// get send packet event by port_id, channel_id and sequence
+/// (port_id, channel_id, sequence), packet)
 pub async fn get_send_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
-    seq: &Sequence,
+    sequence: &Sequence,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Packet, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_send_packet_event]");
@@ -752,20 +753,64 @@ pub async fn get_send_packet_event(
         .send_packet_event(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            u64::from(*seq),
+            u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
     if data.is_empty() {
         return Err(Box::from(format!(
             "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, seq
+            port_id, channel_id, sequence
         )));
     }
 
     let packet = Packet::decode_vec(&*data).unwrap();
     Ok(packet)
 }
+
+// (port_id, channel_id, sequence), ackHash)
+pub async fn get_write_ack_packet_event(
+    port_id: &PortId,
+    channel_id: &ChannelId,
+    sequence: &Sequence,
+    client: Client<ibc_node::DefaultConfig>
+) -> Result<Vec<u8>, Box<dyn std::error::Error>>
+{
+    tracing::info!("in call_ibc: [get_write_ack_packet_event]");
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash: sp_core::H256 = block_header.hash();
+    tracing::info!(
+        "In call_ibc: [get_write_ack_packet_event] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let data: Vec<u8> = api
+        .storage()
+        .ibc()
+        .write_ack_packet_event(
+            port_id.as_bytes().to_vec(),
+            channel_id.as_bytes().to_vec(),
+            u64::from(*sequence),
+            Some(block_hash),
+        )
+        .await?;
+
+
+    if data.is_empty() {
+        return Err(Box::from(format!(
+            "get_write_ack_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id, channel_id, sequence
+        )));
+    }
+
+    Ok(data)
+}
+
 
 /// get client_state according by client_id, and read ClientStates StoraageMap
 pub async fn get_client_state(
@@ -908,7 +953,7 @@ pub async fn get_consensus_state_with_height(
 pub async fn get_unreceipt_packet(
     port_id: &PortId,
     channel_id: &ChannelId,
-    seqs: Vec<u64>,
+    sequences: Vec<u64>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u64>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_receipt_packet]");
@@ -928,25 +973,25 @@ pub async fn get_unreceipt_packet(
 
     let mut result = Vec::new();
 
-    let pair = seqs
+    let pair = sequences
         .into_iter()
-        .map(|seq| {
+        .map(|sequence| {
             (
                 port_id.clone().as_bytes().to_vec(),
                 channel_id.clone().as_bytes().to_vec(),
-                (seq.encode(), seq),
+                (sequence.encode(), sequence),
             )
         })
         .collect::<Vec<_>>();
 
-    for (port_id, channel_id, (seq_u8, seq)) in pair.into_iter() {
+    for (port_id, channel_id, (sequence_u8, sequence)) in pair.into_iter() {
         let data: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_receipt(port_id, channel_id, seq_u8, Some(block_hash.clone()))
+            .packet_receipt(port_id, channel_id, sequence_u8, Some(block_hash.clone()))
             .await?;
         if data.is_empty() {
-            result.push(seq);
+            result.push(sequence);
         }
     }
 
@@ -1168,15 +1213,15 @@ pub async fn get_commitment_packet_state(
 
     let mut result = vec![];
 
-    for (port_id, channel_id, seq, data) in ret.into_iter() {
+    for (port_id, channel_id, sequence, data) in ret.into_iter() {
         let port_id = String::from_utf8(port_id).unwrap();
         let channel_id = String::from_utf8(channel_id).unwrap();
-        let mut seq: &[u8] = &seq;
-        let seq = u64::decode(&mut seq).unwrap();
+        let mut sequence: &[u8] = &sequence;
+        let sequence = u64::decode(&mut sequence).unwrap();
         let packet_state = PacketState {
             port_id: port_id,
             channel_id: channel_id,
-            sequence: seq,
+            sequence: sequence,
             data,
         };
         result.push(packet_state);
@@ -1189,7 +1234,7 @@ pub async fn get_commitment_packet_state(
 pub async fn get_packet_commitment(
     port_id: &PortId,
     channel_id: &ChannelId,
-    seq: u64,
+    sequence: u64,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_commitment]");
@@ -1206,7 +1251,7 @@ pub async fn get_packet_commitment(
         block_hash
     );
 
-    let _seq = seq.encode();
+    let sequence_vec = sequence.encode();
 
     let data: Vec<u8> = api
         .storage()
@@ -1214,7 +1259,7 @@ pub async fn get_packet_commitment(
         .packet_commitment(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            _seq,
+            sequence_vec,
             Some(block_hash),
         )
         .await?;
@@ -1222,7 +1267,7 @@ pub async fn get_packet_commitment(
     if data.is_empty() {
         return Err(Box::from(format!(
             "get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, seq
+            port_id, channel_id, sequence
         )));
     } else {
         Ok(data)
@@ -1233,7 +1278,7 @@ pub async fn get_packet_commitment(
 pub async fn get_packet_ack(
     port_id: &PortId,
     channel_id: &ChannelId,
-    seq: u64,
+    sequence: u64,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_ack]");
@@ -1250,7 +1295,7 @@ pub async fn get_packet_ack(
         block_hash
     );
 
-    let _seq = seq.encode();
+    let sequence_vec = sequence.encode();
 
     let data: Vec<u8> = api
         .storage()
@@ -1258,7 +1303,7 @@ pub async fn get_packet_ack(
         .acknowledgements(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            _seq,
+            sequence_vec,
             Some(block_hash),
         )
         .await?;
@@ -1266,7 +1311,7 @@ pub async fn get_packet_ack(
     if data.is_empty() {
         return Err(Box::from(format!(
             "get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, seq
+            port_id, channel_id, sequence
         )));
     } else {
         Ok(data)
@@ -1316,15 +1361,15 @@ pub async fn get_acknowledge_packet_state(
 
     let mut result = vec![];
 
-    for (port_id, channel_id, seq, data) in ret.into_iter() {
+    for (port_id, channel_id, sequence, data) in ret.into_iter() {
         let port_id = String::from_utf8(port_id).unwrap();
         let channel_id = String::from_utf8(channel_id).unwrap();
-        let mut seq: &[u8] = &seq;
-        let seq = u64::decode(&mut seq).unwrap();
+        let mut sequence: &[u8] = &sequence;
+        let sequence = u64::decode(&mut sequence).unwrap();
         let packet_state = PacketState {
             port_id: port_id,
             channel_id: channel_id,
-            sequence: seq,
+            sequence: sequence,
             data,
         };
         result.push(packet_state);
@@ -1454,6 +1499,8 @@ pub async fn deliver(
 
     Ok(result)
 }
+
+
 
 /// # get_mmr_leaf_and_mmr_proof
 ///
