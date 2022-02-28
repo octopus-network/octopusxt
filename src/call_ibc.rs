@@ -1318,6 +1318,69 @@ pub async fn get_packet_ack(
     }
 }
 
+
+// get packet receipt by port_id, channel_id and sequence
+pub async fn get_next_sequence_recv
+(
+    port_id: &PortId,
+    channel_id: &ChannelId,
+    client: Client<ibc_node::DefaultConfig>
+) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    tracing::info!("in call_ibc: [get_next_sequence_recv]");
+
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash: sp_core::H256 = block_header.hash();
+    tracing::info!(
+        "In call_ibc: [get_next_sequence_recv] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let sequence_vec: Vec<u8> = api
+        .storage()
+        .ibc()
+        .next_sequence_recv(
+            port_id.as_bytes().to_vec(),
+            channel_id.as_bytes().to_vec(),
+            Some(block_hash),
+        )
+        .await?;
+
+    if sequence_vec.is_empty() {
+        return Err(Box::from(format!(
+            "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({})",
+            port_id, channel_id
+        )));
+    }
+
+    let mut seq : &[u8] = &sequence_vec;
+    let sequence = Sequence::from(u64::decode(&mut seq).unwrap());
+
+    let data: Vec<u8> = api
+        .storage()
+        .ibc()
+        .packet_commitment(
+            port_id.as_bytes().to_vec(),
+            channel_id.as_bytes().to_vec(),
+            sequence_vec,
+            Some(block_hash),
+        )
+        .await?;
+
+    if data.is_empty() {
+        return Err(Box::from(format!(
+            "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id, channel_id, sequence
+        )));
+    } else {
+        Ok(data)
+    }
+}
+
 /// get get_commitment_packet_state
 pub async fn get_acknowledge_packet_state(
     client: Client<ibc_node::DefaultConfig>,
