@@ -726,6 +726,49 @@ pub async fn get_packet_receipt(
     }
 }
 
+/// get packet receipt by port_id, channel_id and sequence
+pub async fn get_packet_receipt_vec(
+    port_id: &PortId,
+    channel_id: &ChannelId,
+    sequence: &Sequence,
+    client: Client<ibc_node::DefaultConfig>,
+) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+    tracing::info!("in call_ibc : [get_packet_receipt]");
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash: sp_core::H256 = block_header.hash();
+    tracing::info!(
+        "In call_ibc : [get_packet_receipt] >> block_hash: {:?}",
+        block_hash
+    );
+
+    let _seq = u64::from(*sequence).encode();
+
+    let data: Vec<u8> = api
+        .storage()
+        .ibc()
+        .packet_receipt(
+            port_id.as_bytes().to_vec(),
+            channel_id.as_bytes().to_vec(),
+            _seq,
+            Some(block_hash),
+        )
+        .await?;
+
+    if data.is_empty() {
+        return Err(Box::from(format!(
+            "get_packet_receipt is empty! by port_id = ({}), channel_id = ({})",
+            port_id, channel_id
+        )));
+    }
+
+    Ok(data)
+}
+
 /// get send packet event by port_id, channel_id and sequence
 /// (port_id, channel_id, sequence), packet)
 pub async fn get_send_packet_event(
