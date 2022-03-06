@@ -1773,8 +1773,8 @@ pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
 mod tests {
     use super::*;
     use crate::ibc_node;
-    use ibc::ics02_client::client_type::ClientType;
-    use ibc::ics02_client::height::Height;
+    use ibc::core::ics02_client::client_type::ClientType;
+    use ibc::core::ics02_client::height::Height;
     use subxt::ClientBuilder;
 
     // test API get_block_header

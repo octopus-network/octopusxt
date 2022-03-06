@@ -465,21 +465,22 @@ mod tests {
     use std::str::FromStr;
 
     use super::*;
-    use crate::{get_client_state, get_clients, ibc_node, subscribe_beefy};
+    use crate::{get_client_state, get_clients, ibc_node, subscribe_beefy, get_send_packet_event};
     use beefy_light_client::{self, mmr};
     use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
     use codec::Decode;
     use hex_literal::hex;
 
-    use ibc::ics02_client::client_state::AnyClientState;
-    use ibc::ics02_client::height::Height;
-    use ibc::ics10_grandpa::client_state::ClientState;
-    use ibc::ics10_grandpa::help::{BlockHeader, Commitment};
-    use ibc::ics24_host::identifier::ChainId;
+    use ibc::core::ics02_client::client_state::AnyClientState;
+    use ibc::core::ics02_client::height::Height;
+    use ibc::clients::ics10_grandpa::client_state::ClientState;
+    use ibc::clients::ics10_grandpa::help::{BlockHeader, Commitment};
+    use ibc::core::ics24_host::identifier::{ChainId, ChannelId, PortId};
 
     use chrono::Local;
     // use ibc::ics24_host::Path::ClientType;
-    use ibc::ics02_client::client_type::ClientType;
+    use ibc::core::ics02_client::client_type::ClientType;
+    use ibc::core::ics04_channel::packet::Sequence;
     use subxt::sp_core::hexdisplay::HexDisplay;
     use subxt::ClientBuilder;
     use tendermint_proto::Protobuf;
@@ -1194,7 +1195,7 @@ signed commitment validator_set_id : {}",
         let mut client_state = ClientState {
             chain_id: chain_id.clone(),
             block_number: u32::default(),
-            frozen_height: Height::default(),
+            frozen_height: Some(Height::default()),
             block_header: BlockHeader::default(),
             // latest_commitment: lc.latest_commitment.unwrap().into(),
             latest_commitment: Commitment::default(),
@@ -1285,7 +1286,7 @@ signed commitment validator_set_id : {}",
         let mut client_state = ClientState {
             chain_id: chain_id.clone(),
             block_number: u32::default(),
-            frozen_height: Height::default(),
+            frozen_height: Some(Height::default()),
             block_header: BlockHeader::default(),
             // latest_commitment: lc.latest_commitment.unwrap().into(),
             latest_commitment: Commitment::default(),
@@ -1689,5 +1690,26 @@ signed commitment validator_set_id : {}",
         ];
         let decode_received_mmr_root = help::MmrRoot::decode(&mut &ecode_mmr_root[..]).unwrap();
         println!("decode mmr root is {:?}", decode_received_mmr_root);
+    }
+
+    #[tokio::test]
+    async fn test_get_send_packet_event() -> Result<(), Box<dyn std::error::Error>> {
+        let client = ClientBuilder::new()
+            .set_url("ws://localhost:9944")
+            .build::<ibc_node::DefaultConfig>()
+            .await?;
+
+        let port_id = PortId::from_str("transfer").unwrap();
+        let channel_id = ChannelId::from_str("channel-0").unwrap();
+        let seq = Sequence::from(2);
+
+        let send_packet_event =
+            get_send_packet_event(&port_id, &channel_id, &seq, client)
+                .await
+                .unwrap();
+
+        println!("send_packet_event = {:?}", send_packet_event);
+
+        Ok(())
     }
 }
