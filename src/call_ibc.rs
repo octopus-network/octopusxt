@@ -1697,7 +1697,7 @@ pub fn convert_substrate_header_to_ibc_header(
 }
 
 fn convert_substrate_digest_to_beefy_light_client_digest(
-    digest: sp_runtime::Digest<sp_core::H256>,
+    digest: sp_runtime::Digest,
 ) -> beefy_light_client::header::Digest {
     beefy_light_client::header::Digest {
         logs: digest
@@ -1709,12 +1709,12 @@ fn convert_substrate_digest_to_beefy_light_client_digest(
 }
 
 fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
-    digest_item: sp_runtime::DigestItem<sp_core::H256>,
+    digest_item: sp_runtime::DigestItem,
 ) -> beefy_light_client::header::DigestItem {
     match digest_item {
-        sp_runtime::DigestItem::ChangesTrieRoot(value) => {
-            beefy_light_client::header::DigestItem::ChangesTrieRoot(Hash::from(value))
-        }
+        // sp_runtime::DigestItem::ChangesTrieRoot(value) => {
+        //     beefy_light_client::header::DigestItem::ChangesTrieRoot(Hash::from(value))
+        // }
         sp_runtime::DigestItem::PreRuntime(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::PreRuntime(consensus_engine_id, value)
         }
@@ -1724,11 +1724,11 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
         sp_runtime::DigestItem::Seal(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::Seal(consensus_engine_id, value)
         }
-        sp_runtime::DigestItem::ChangesTrieSignal(changes_trie_signal) => {
-            beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(
-                changes_trie_signal,
-            ))
-        }
+        // sp_runtime::DigestItem::ChangesTrieSignal(changes_trie_signal) => {
+        //     beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(
+        //         changes_trie_signal,
+        //     ))
+        // }
         sp_runtime::DigestItem::Other(value) => {
             beefy_light_client::header::DigestItem::Other(value)
         }
@@ -1739,10 +1739,10 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
 }
 
 fn convert_changes_trie_signal(
-    value: sp_runtime::generic::ChangesTrieSignal,
+    value: crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal
 ) -> beefy_light_client::header::ChangesTrieSignal {
     match value {
-        sp_runtime::generic::ChangesTrieSignal::NewConfiguration(value) => {
+        crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal::NewConfiguration(value) => {
             if value.is_some() {
                 beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(
                     convert_changes_trie_configuration(value.unwrap()),
@@ -1755,7 +1755,7 @@ fn convert_changes_trie_signal(
 }
 
 fn convert_changes_trie_configuration(
-    value: sp_core::ChangesTrieConfiguration,
+    value: crate::ibc_node::runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
 ) -> beefy_light_client::header::ChangesTrieConfiguration {
     beefy_light_client::header::ChangesTrieConfiguration {
         digest_interval: value.digest_interval,
