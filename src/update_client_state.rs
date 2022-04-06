@@ -7,8 +7,8 @@ use tendermint_proto::Protobuf;
 use crate::call_ibc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::{DefaultConfig, RuntimeApi};
 use codec::Encode;
-use ibc::core::ics02_client::client_type::ClientType;
 use ibc::clients::ics10_grandpa::help;
+use ibc::core::ics02_client::client_type::ClientType;
 use ibc::core::ics24_host::identifier::ClientId;
 use sp_keyring::AccountKeyring;
 use subxt::sp_core::Public;
@@ -465,16 +465,16 @@ mod tests {
     use std::str::FromStr;
 
     use super::*;
-    use crate::{get_client_state, get_clients, ibc_node, subscribe_beefy, get_send_packet_event};
+    use crate::{get_client_state, get_clients, get_send_packet_event, ibc_node, subscribe_beefy};
     use beefy_light_client::{self, mmr};
     use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
     use codec::Decode;
     use hex_literal::hex;
 
-    use ibc::core::ics02_client::client_state::AnyClientState;
-    use ibc::core::ics02_client::height::Height;
     use ibc::clients::ics10_grandpa::client_state::ClientState;
     use ibc::clients::ics10_grandpa::help::{BlockHeader, Commitment};
+    use ibc::core::ics02_client::client_state::AnyClientState;
+    use ibc::core::ics02_client::height::Height;
     use ibc::core::ics24_host::identifier::{ChainId, ChannelId, PortId};
 
     use chrono::Local;
@@ -1703,10 +1703,9 @@ signed commitment validator_set_id : {}",
         let channel_id = ChannelId::from_str("channel-0").unwrap();
         let seq = Sequence::from(2);
 
-        let send_packet_event =
-            get_send_packet_event(&port_id, &channel_id, &seq, client)
-                .await
-                .unwrap();
+        let send_packet_event = get_send_packet_event(&port_id, &channel_id, &seq, client)
+            .await
+            .unwrap();
 
         println!("send_packet_event = {:?}", send_packet_event);
 
