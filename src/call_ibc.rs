@@ -235,17 +235,15 @@ pub async fn subscribe_ibc_event(
                 let counterparty_port_id = event.4;
                 let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
 
-                use ibc::core::ics04_channel::events::Attributes;
                 events.push(IbcEvent::OpenInitChannel(
-                    ibc::core::ics04_channel::events::OpenInit::from(Attributes {
+                    ibc::core::ics04_channel::events::OpenInit {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
                         channel_id: channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
                         counterparty_channel_id: counterparty_channel_id,
-                    }),
-                ));
+                    }));
                 break;
             }
             "OpenTryChannel" => {
@@ -262,16 +260,15 @@ pub async fn subscribe_ibc_event(
                 let counterparty_port_id = event.4;
                 let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
 
-                use ibc::core::ics04_channel::events::Attributes;
                 events.push(IbcEvent::OpenTryChannel(
-                    ibc::core::ics04_channel::events::OpenTry::from(Attributes {
+                    ibc::core::ics04_channel::events::OpenTry {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
                         channel_id: channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
                         counterparty_channel_id: counterparty_channel_id,
-                    }),
+                    }
                 ));
                 break;
             }
@@ -289,16 +286,15 @@ pub async fn subscribe_ibc_event(
                 let counterparty_port_id = event.4;
                 let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
 
-                use ibc::core::ics04_channel::events::Attributes;
                 events.push(IbcEvent::OpenAckChannel(
-                    ibc::core::ics04_channel::events::OpenAck::from(Attributes {
+                    ibc::core::ics04_channel::events::OpenAck {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
                         channel_id: channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
                         counterparty_channel_id: counterparty_channel_id,
-                    }),
+                    }
                 ));
                 break;
             }
@@ -316,16 +312,15 @@ pub async fn subscribe_ibc_event(
                 let counterparty_port_id = event.4;
                 let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
 
-                use ibc::core::ics04_channel::events::Attributes;
                 events.push(IbcEvent::OpenConfirmChannel(
-                    ibc::core::ics04_channel::events::OpenConfirm::from(Attributes {
+                    ibc::core::ics04_channel::events::OpenConfirm {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
                         channel_id: channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
                         counterparty_channel_id: counterparty_channel_id,
-                    }),
+                    }
                 ));
                 break;
             }
@@ -343,16 +338,15 @@ pub async fn subscribe_ibc_event(
                 let counterparty_port_id = event.4;
                 let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
 
-                use ibc::core::ics04_channel::events::Attributes;
                 events.push(IbcEvent::CloseInitChannel(
-                    ibc::core::ics04_channel::events::CloseInit::from(Attributes {
+                    ibc::core::ics04_channel::events::CloseInit {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id,
+                        channel_id: channel_id.unwrap_or_default(),
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
                         counterparty_channel_id: counterparty_channel_id,
-                    }),
+                    }
                 ));
                 break;
             }
@@ -371,16 +365,15 @@ pub async fn subscribe_ibc_event(
                 let counterparty_port_id = event.4;
                 let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
 
-                use ibc::core::ics04_channel::events::Attributes;
                 events.push(IbcEvent::CloseConfirmChannel(
-                    ibc::core::ics04_channel::events::CloseConfirm::from(Attributes {
+                    ibc::core::ics04_channel::events::CloseConfirm {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
                         channel_id: channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
                         counterparty_channel_id: counterparty_channel_id,
-                    }),
+                    }
                 ));
                 break;
             }
