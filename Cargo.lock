@@ -1206,7 +1206,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.13.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#030a156b79c3964ec2d0f78a48013a4e25c1a504"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#42af1744c8107e11608bfa49dec984b5df2770c5"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1244,7 +1244,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.17.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#030a156b79c3964ec2d0f78a48013a4e25c1a504"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#42af1744c8107e11608bfa49dec984b5df2770c5"
 dependencies = [
  "base64",
  "bytes",
@@ -1674,9 +1674,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.121"
+version = "0.2.122"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "efaa7b300f3b5fe8eb6bf21ce3895e1751d9665086af2d64b42f19701015ff4f"
+checksum = "ec647867e2bf0772e28c8bcde4f0d19a9216916e890543b5a03ed8ef27b8f259"
 
 [[package]]
 name = "libsecp256k1"

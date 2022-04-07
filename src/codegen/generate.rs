@@ -1,25 +1,28 @@
 #[allow(dead_code, unused_imports, non_camel_case_types)]
 pub mod api {
+    use super::api as root_mod;
     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
     pub enum Event {
         #[codec(index = 0)]
         System(system::Event),
-        #[codec(index = 5)]
-        Grandpa(grandpa::Event),
-        #[codec(index = 6)]
+        #[codec(index = 4)]
         Balances(balances::Event),
-        #[codec(index = 8)]
+        #[codec(index = 6)]
         OctopusAppchain(octopus_appchain::Event),
-        #[codec(index = 9)]
+        #[codec(index = 7)]
         OctopusLpos(octopus_lpos::Event),
-        #[codec(index = 10)]
+        #[codec(index = 8)]
         OctopusUpwardMessages(octopus_upward_messages::Event),
-        #[codec(index = 11)]
+        #[codec(index = 9)]
+        OctopusAssets(octopus_assets::Event),
+        #[codec(index = 10)]
         Session(session::Event),
+        #[codec(index = 11)]
+        Grandpa(grandpa::Event),
         #[codec(index = 12)]
         ImOnline(im_online::Event),
-        #[codec(index = 14)]
-        Assets(assets::Event),
+        #[codec(index = 17)]
+        Uniques(uniques::Event),
         #[codec(index = 18)]
         Sudo(sudo::Event),
         #[codec(index = 19)]
@@ -28,23 +31,25 @@ pub mod api {
         TemplateModule(template_module::Event),
     }
     pub mod system {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct fill_block {
+            pub struct FillBlock {
                 pub ratio: runtime_types::sp_arithmetic::per_things::Perbill,
             }
-            impl ::subxt::Call for fill_block {
+            impl ::subxt::Call for FillBlock {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "fill_block";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct remark {
+            pub struct Remark {
                 pub remark: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for remark {
+            impl ::subxt::Call for Remark {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "remark";
             }
@@ -54,84 +59,73 @@ pub mod api {
                 Debug,
                 :: subxt :: codec :: CompactAs,
             )]
-            pub struct set_heap_pages {
+            pub struct SetHeapPages {
                 pub pages: ::core::primitive::u64,
             }
-            impl ::subxt::Call for set_heap_pages {
+            impl ::subxt::Call for SetHeapPages {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_heap_pages";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_code {
+            pub struct SetCode {
                 pub code: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for set_code {
+            impl ::subxt::Call for SetCode {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_code";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_code_without_checks {
+            pub struct SetCodeWithoutChecks {
                 pub code: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for set_code_without_checks {
+            impl ::subxt::Call for SetCodeWithoutChecks {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_code_without_checks";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_changes_trie_config {
-                pub changes_trie_config: ::core::option::Option<
-                    runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
-                >,
-            }
-            impl ::subxt::Call for set_changes_trie_config {
-                const PALLET: &'static str = "System";
-                const FUNCTION: &'static str = "set_changes_trie_config";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_storage {
+            pub struct SetStorage {
                 pub items: ::std::vec::Vec<(
                     ::std::vec::Vec<::core::primitive::u8>,
                     ::std::vec::Vec<::core::primitive::u8>,
                 )>,
             }
-            impl ::subxt::Call for set_storage {
+            impl ::subxt::Call for SetStorage {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "set_storage";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct kill_storage {
+            pub struct KillStorage {
                 pub keys: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
             }
-            impl ::subxt::Call for kill_storage {
+            impl ::subxt::Call for KillStorage {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "kill_storage";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct kill_prefix {
+            pub struct KillPrefix {
                 pub prefix: ::std::vec::Vec<::core::primitive::u8>,
                 pub subkeys: ::core::primitive::u32,
             }
-            impl ::subxt::Call for kill_prefix {
+            impl ::subxt::Call for KillPrefix {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "kill_prefix";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct remark_with_event {
+            pub struct RemarkWithEvent {
                 pub remark: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for remark_with_event {
+            impl ::subxt::Call for RemarkWithEvent {
                 const PALLET: &'static str = "System";
                 const FUNCTION: &'static str = "remark_with_event";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+                marker: ::core::marker::PhantomData<X>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -142,33 +136,45 @@ pub mod api {
                 pub fn fill_block(
                     &self,
                     ratio: runtime_types::sp_arithmetic::per_things::Perbill,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, fill_block, DispatchError>
-                {
-                    let call = fill_block { ratio };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    FillBlock,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = FillBlock { ratio };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn remark(
                     &self,
                     remark: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, remark, DispatchError>
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Remark, DispatchError, root_mod::Event>
                 {
-                    let call = remark { remark };
+                    let call = Remark { remark };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_heap_pages(
                     &self,
                     pages: ::core::primitive::u64,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_heap_pages, DispatchError>
-                {
-                    let call = set_heap_pages { pages };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetHeapPages,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetHeapPages { pages };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_code(
                     &self,
                     code: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_code, DispatchError>
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, SetCode, DispatchError, root_mod::Event>
                 {
-                    let call = set_code { code };
+                    let call = SetCode { code };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_code_without_checks(
@@ -178,29 +184,11 @@ pub mod api {
                     'a,
                     T,
                     X,
-                    A,
-                    set_code_without_checks,
+                    SetCodeWithoutChecks,
                     DispatchError,
+                    root_mod::Event,
                 > {
-                    let call = set_code_without_checks { code };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn set_changes_trie_config(
-                    &self,
-                    changes_trie_config: ::core::option::Option<
-                        runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<
-                    'a,
-                    T,
-                    X,
-                    A,
-                    set_changes_trie_config,
-                    DispatchError,
-                > {
-                    let call = set_changes_trie_config {
-                        changes_trie_config,
-                    };
+                    let call = SetCodeWithoutChecks { code };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn set_storage(
@@ -209,34 +197,58 @@ pub mod api {
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
                     )>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_storage, DispatchError>
-                {
-                    let call = set_storage { items };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetStorage,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetStorage { items };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn kill_storage(
                     &self,
                     keys: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, kill_storage, DispatchError>
-                {
-                    let call = kill_storage { keys };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    KillStorage,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = KillStorage { keys };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn kill_prefix(
                     &self,
                     prefix: ::std::vec::Vec<::core::primitive::u8>,
                     subkeys: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, kill_prefix, DispatchError>
-                {
-                    let call = kill_prefix { prefix, subkeys };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    KillPrefix,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = KillPrefix { prefix, subkeys };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn remark_with_event(
                     &self,
                     remark: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, remark_with_event, DispatchError>
-                {
-                    let call = remark_with_event { remark };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    RemarkWithEvent,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = RemarkWithEvent { remark };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -289,8 +301,8 @@ pub mod api {
         }
         pub mod storage {
             use super::runtime_types;
-            pub struct Account(pub ::subxt::sp_core::crypto::AccountId32);
-            impl ::subxt::StorageEntry for Account {
+            pub struct Account<'a>(pub &'a ::subxt::sp_core::crypto::AccountId32);
+            impl ::subxt::StorageEntry for Account<'_> {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "Account";
                 type Value = runtime_types::frame_system::AccountInfo<
@@ -332,8 +344,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct BlockHash(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for BlockHash {
+            pub struct BlockHash<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for BlockHash<'_> {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "BlockHash";
                 type Value = ::subxt::sp_core::H256;
@@ -344,8 +356,8 @@ pub mod api {
                     )])
                 }
             }
-            pub struct ExtrinsicData(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for ExtrinsicData {
+            pub struct ExtrinsicData<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for ExtrinsicData<'_> {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "ExtrinsicData";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -378,8 +390,7 @@ pub mod api {
             impl ::subxt::StorageEntry for Digest {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "Digest";
-                type Value =
-                    runtime_types::sp_runtime::generic::digest::Digest<::subxt::sp_core::H256>;
+                type Value = runtime_types::sp_runtime::generic::digest::Digest;
                 fn key(&self) -> ::subxt::StorageEntryKey {
                     ::subxt::StorageEntryKey::Plain
                 }
@@ -407,8 +418,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct EventTopics(pub ::subxt::sp_core::H256);
-            impl ::subxt::StorageEntry for EventTopics {
+            pub struct EventTopics<'a>(pub &'a ::subxt::sp_core::H256);
+            impl ::subxt::StorageEntry for EventTopics<'_> {
                 const PALLET: &'static str = "System";
                 const STORAGE: &'static str = "EventTopics";
                 type Value = ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>;
@@ -464,7 +475,7 @@ pub mod api {
                 }
                 pub async fn account(
                     &self,
-                    _0: ::subxt::sp_core::crypto::AccountId32,
+                    _0: &::subxt::sp_core::crypto::AccountId32,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::frame_system::AccountInfo<
@@ -479,7 +490,7 @@ pub mod api {
                 pub async fn account_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::BasicError>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -515,7 +526,7 @@ pub mod api {
                 }
                 pub async fn block_hash(
                     &self,
-                    _0: ::core::primitive::u32,
+                    _0: &::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
                 {
@@ -525,13 +536,15 @@ pub mod api {
                 pub async fn block_hash_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, BlockHash>, ::subxt::BasicError>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, BlockHash<'a>>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn extrinsic_data(
                     &self,
-                    _0: ::core::primitive::u32,
+                    _0: &::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -544,7 +557,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ExtrinsicData>,
+                    ::subxt::KeyIter<'a, T, ExtrinsicData<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -569,7 +582,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    runtime_types::sp_runtime::generic::digest::Digest<::subxt::sp_core::H256>,
+                    runtime_types::sp_runtime::generic::digest::Digest,
                     ::subxt::BasicError,
                 > {
                     let entry = Digest;
@@ -600,7 +613,7 @@ pub mod api {
                 }
                 pub async fn event_topics(
                     &self,
-                    _0: ::subxt::sp_core::H256,
+                    _0: &::subxt::sp_core::H256,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
@@ -612,8 +625,10 @@ pub mod api {
                 pub async fn event_topics_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, EventTopics>, ::subxt::BasicError>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, EventTopics<'a>>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn last_runtime_upgrade(
@@ -656,26 +671,23 @@ pub mod api {
         }
         pub mod constants {
             use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
                 pub fn block_weights(
                     &self,
                 ) -> ::core::result::Result<
                     runtime_types::frame_system::limits::BlockWeights,
                     ::subxt::BasicError,
                 > {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 242u8, 5u8, 42u8, 1u8, 0u8, 0u8, 0u8, 0u8, 32u8, 74u8, 169u8,
-                            209u8, 1u8, 0u8, 0u8, 64u8, 89u8, 115u8, 7u8, 0u8, 0u8, 0u8, 0u8, 1u8,
-                            192u8, 110u8, 150u8, 166u8, 46u8, 1u8, 0u8, 0u8, 1u8, 0u8, 152u8,
-                            247u8, 62u8, 93u8, 1u8, 0u8, 0u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 64u8, 89u8, 115u8, 7u8, 0u8, 0u8, 0u8, 0u8, 1u8, 192u8,
-                            246u8, 232u8, 16u8, 163u8, 1u8, 0u8, 0u8, 1u8, 0u8, 32u8, 74u8, 169u8,
-                            209u8, 1u8, 0u8, 0u8, 1u8, 0u8, 136u8, 82u8, 106u8, 116u8, 0u8, 0u8,
-                            0u8, 64u8, 89u8, 115u8, 7u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("System")?;
+                    let constant = pallet.constant("BlockWeights")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn block_length(
                     &self,
@@ -683,19 +695,19 @@ pub mod api {
                     runtime_types::frame_system::limits::BlockLength,
                     ::subxt::BasicError,
                 > {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 0u8, 60u8, 0u8, 0u8, 0u8, 80u8, 0u8, 0u8, 0u8, 80u8, 0u8,
-                        ][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("System")?;
+                    let constant = pallet.constant("BlockLength")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn block_hash_count(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[96u8, 9u8, 0u8, 0u8][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("System")?;
+                    let constant = pallet.constant("BlockHashCount")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn db_weight(
                     &self,
@@ -703,12 +715,10 @@ pub mod api {
                     runtime_types::frame_support::weights::RuntimeDbWeight,
                     ::subxt::BasicError,
                 > {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            64u8, 120u8, 125u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8, 225u8, 245u8, 5u8,
-                            0u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("System")?;
+                    let constant = pallet.constant("DbWeight")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn version(
                     &self,
@@ -716,319 +726,32 @@ pub mod api {
                     runtime_types::sp_version::RuntimeVersion,
                     ::subxt::BasicError,
                 > {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            52u8, 110u8, 111u8, 100u8, 101u8, 45u8, 116u8, 101u8, 109u8, 112u8,
-                            108u8, 97u8, 116u8, 101u8, 52u8, 110u8, 111u8, 100u8, 101u8, 45u8,
-                            116u8, 101u8, 109u8, 112u8, 108u8, 97u8, 116u8, 101u8, 1u8, 0u8, 0u8,
-                            0u8, 100u8, 0u8, 0u8, 0u8, 1u8, 0u8, 0u8, 0u8, 48u8, 223u8, 106u8,
-                            203u8, 104u8, 153u8, 7u8, 96u8, 155u8, 3u8, 0u8, 0u8, 0u8, 55u8, 227u8,
-                            151u8, 252u8, 124u8, 145u8, 245u8, 228u8, 1u8, 0u8, 0u8, 0u8, 64u8,
-                            254u8, 58u8, 212u8, 1u8, 248u8, 149u8, 154u8, 5u8, 0u8, 0u8, 0u8,
-                            210u8, 188u8, 152u8, 151u8, 238u8, 208u8, 143u8, 21u8, 3u8, 0u8, 0u8,
-                            0u8, 247u8, 139u8, 39u8, 139u8, 229u8, 63u8, 69u8, 76u8, 2u8, 0u8, 0u8,
-                            0u8, 203u8, 202u8, 37u8, 227u8, 159u8, 20u8, 35u8, 135u8, 2u8, 0u8,
-                            0u8, 0u8, 171u8, 60u8, 5u8, 114u8, 41u8, 31u8, 235u8, 139u8, 1u8, 0u8,
-                            0u8, 0u8, 237u8, 153u8, 197u8, 172u8, 178u8, 94u8, 237u8, 245u8, 3u8,
-                            0u8, 0u8, 0u8, 188u8, 157u8, 137u8, 144u8, 79u8, 91u8, 146u8, 63u8,
-                            1u8, 0u8, 0u8, 0u8, 55u8, 200u8, 187u8, 19u8, 80u8, 169u8, 162u8,
-                            168u8, 1u8, 0u8, 0u8, 0u8, 145u8, 213u8, 223u8, 24u8, 176u8, 210u8,
-                            207u8, 88u8, 1u8, 0u8, 0u8, 0u8, 73u8, 234u8, 175u8, 27u8, 84u8, 138u8,
-                            12u8, 176u8, 1u8, 0u8, 0u8, 0u8, 1u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("System")?;
+                    let constant = pallet.constant("Version")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn ss58_prefix(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u16, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(&mut &[42u8, 0u8][..])?)
-                }
-            }
-        }
-    }
-    pub mod randomness_collective_flip {
-        use super::runtime_types;
-        pub mod storage {
-            use super::runtime_types;
-            pub struct RandomMaterial;
-            impl ::subxt::StorageEntry for RandomMaterial {
-                const PALLET: &'static str = "RandomnessCollectiveFlip";
-                const STORAGE: &'static str = "RandomMaterial";
-                type Value = ::std::vec::Vec<::subxt::sp_core::H256>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn random_material(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::subxt::sp_core::H256>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = RandomMaterial;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-    }
-    pub mod timestamp {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set {
-                #[codec(compact)]
-                pub now: ::core::primitive::u64,
-            }
-            impl ::subxt::Call for set {
-                const PALLET: &'static str = "Timestamp";
-                const FUNCTION: &'static str = "set";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn set(
-                    &self,
-                    now: ::core::primitive::u64,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set, DispatchError>
-                {
-                    let call = set { now };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct Now;
-            impl ::subxt::StorageEntry for Now {
-                const PALLET: &'static str = "Timestamp";
-                const STORAGE: &'static str = "Now";
-                type Value = ::core::primitive::u64;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct DidUpdate;
-            impl ::subxt::StorageEntry for DidUpdate {
-                const PALLET: &'static str = "Timestamp";
-                const STORAGE: &'static str = "DidUpdate";
-                type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn now(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    let entry = Now;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn did_update(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    let entry = DidUpdate;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn minimum_period(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[220u8, 5u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-            }
-        }
-    }
-    pub mod authorship {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_uncles {
-                pub new_uncles: ::std::vec::Vec<
-                    runtime_types::sp_runtime::generic::header::Header<
-                        ::core::primitive::u32,
-                        runtime_types::sp_runtime::traits::BlakeTwo256,
-                    >,
-                >,
-            }
-            impl ::subxt::Call for set_uncles {
-                const PALLET: &'static str = "Authorship";
-                const FUNCTION: &'static str = "set_uncles";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn set_uncles(
-                    &self,
-                    new_uncles: ::std::vec::Vec<
-                        runtime_types::sp_runtime::generic::header::Header<
-                            ::core::primitive::u32,
-                            runtime_types::sp_runtime::traits::BlakeTwo256,
-                        >,
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_uncles, DispatchError>
-                {
-                    let call = set_uncles { new_uncles };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct Uncles;
-            impl ::subxt::StorageEntry for Uncles {
-                const PALLET: &'static str = "Authorship";
-                const STORAGE: &'static str = "Uncles";
-                type Value = ::std::vec::Vec<
-                    runtime_types::pallet_authorship::UncleEntryItem<
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::H256,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    >,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct Author;
-            impl ::subxt::StorageEntry for Author {
-                const PALLET: &'static str = "Authorship";
-                const STORAGE: &'static str = "Author";
-                type Value = ::subxt::sp_core::crypto::AccountId32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct DidSetUncles;
-            impl ::subxt::StorageEntry for DidSetUncles {
-                const PALLET: &'static str = "Authorship";
-                const STORAGE: &'static str = "DidSetUncles";
-                type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn uncles(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<
-                        runtime_types::pallet_authorship::UncleEntryItem<
-                            ::core::primitive::u32,
-                            ::subxt::sp_core::H256,
-                            ::subxt::sp_core::crypto::AccountId32,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Uncles;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn author(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Author;
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn did_set_uncles(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    let entry = DidSetUncles;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn uncle_generations(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[0u8, 0u8, 0u8, 0u8][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("System")?;
+                    let constant = pallet.constant("SS58Prefix")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
             }
         }
     }
     pub mod babe {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct report_equivocation {
+            pub struct ReportEquivocation {
                 pub equivocation_proof: ::std::boxed::Box<
                     runtime_types::sp_consensus_slots::EquivocationProof<
                         runtime_types::sp_runtime::generic::header::Header<
@@ -1040,12 +763,12 @@ pub mod api {
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for report_equivocation {
+            impl ::subxt::Call for ReportEquivocation {
                 const PALLET: &'static str = "Babe";
                 const FUNCTION: &'static str = "report_equivocation";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct report_equivocation_unsigned {
+            pub struct ReportEquivocationUnsigned {
                 pub equivocation_proof: ::std::boxed::Box<
                     runtime_types::sp_consensus_slots::EquivocationProof<
                         runtime_types::sp_runtime::generic::header::Header<
@@ -1057,27 +780,26 @@ pub mod api {
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for report_equivocation_unsigned {
+            impl ::subxt::Call for ReportEquivocationUnsigned {
                 const PALLET: &'static str = "Babe";
                 const FUNCTION: &'static str = "report_equivocation_unsigned";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct plan_config_change {
+            pub struct PlanConfigChange {
                 pub config: runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
             }
-            impl ::subxt::Call for plan_config_change {
+            impl ::subxt::Call for PlanConfigChange {
                 const PALLET: &'static str = "Babe";
                 const FUNCTION: &'static str = "plan_config_change";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+                marker: ::core::marker::PhantomData<X>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -1095,9 +817,15 @@ pub mod api {
                         runtime_types::sp_consensus_babe::app::Public,
                     >,
                     key_owner_proof: runtime_types::sp_session::MembershipProof,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, report_equivocation, DispatchError>
-                {
-                    let call = report_equivocation {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ReportEquivocation,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ReportEquivocation {
                         equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
@@ -1117,11 +845,11 @@ pub mod api {
                     'a,
                     T,
                     X,
-                    A,
-                    report_equivocation_unsigned,
+                    ReportEquivocationUnsigned,
                     DispatchError,
+                    root_mod::Event,
                 > {
-                    let call = report_equivocation_unsigned {
+                    let call = ReportEquivocationUnsigned {
                         equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
@@ -1130,9 +858,15 @@ pub mod api {
                 pub fn plan_config_change(
                     &self,
                     config: runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, plan_config_change, DispatchError>
-                {
-                    let call = plan_config_change { config };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    PlanConfigChange,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = PlanConfigChange { config };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -1228,8 +962,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct UnderConstruction(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for UnderConstruction {
+            pub struct UnderConstruction<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for UnderConstruction<'_> {
                 const PALLET: &'static str = "Babe";
                 const STORAGE: &'static str = "UnderConstruction";
                 type Value = runtime_types::frame_support::storage::bounded_vec::BoundedVec<
@@ -1395,7 +1129,7 @@ pub mod api {
                 }
                 pub async fn under_construction(
                     &self,
-                    _0: ::core::primitive::u32,
+                    _0: &::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     runtime_types::frame_support::storage::bounded_vec::BoundedVec<
@@ -1410,7 +1144,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, UnderConstruction>,
+                    ::subxt::KeyIter<'a, T, UnderConstruction<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -1483,42 +1217,3538 @@ pub mod api {
         }
         pub mod constants {
             use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
                 pub fn epoch_duration(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[20u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("Babe")?;
+                    let constant = pallet.constant("EpochDuration")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn expected_block_time(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[184u8, 11u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("Babe")?;
+                    let constant = pallet.constant("ExpectedBlockTime")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
                 pub fn max_authorities(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[100u8, 0u8, 0u8, 0u8][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("Babe")?;
+                    let constant = pallet.constant("MaxAuthorities")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod timestamp {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Set {
+                #[codec(compact)]
+                pub now: ::core::primitive::u64,
+            }
+            impl ::subxt::Call for Set {
+                const PALLET: &'static str = "Timestamp";
+                const FUNCTION: &'static str = "set";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn set(
+                    &self,
+                    now: ::core::primitive::u64,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Set, DispatchError, root_mod::Event>
+                {
+                    let call = Set { now };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct Now;
+            impl ::subxt::StorageEntry for Now {
+                const PALLET: &'static str = "Timestamp";
+                const STORAGE: &'static str = "Now";
+                type Value = ::core::primitive::u64;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct DidUpdate;
+            impl ::subxt::StorageEntry for DidUpdate {
+                const PALLET: &'static str = "Timestamp";
+                const STORAGE: &'static str = "DidUpdate";
+                type Value = ::core::primitive::bool;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn now(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    let entry = Now;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn did_update(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
+                {
+                    let entry = DidUpdate;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn minimum_period(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Timestamp")?;
+                    let constant = pallet.constant("MinimumPeriod")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod authorship {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetUncles {
+                pub new_uncles: ::std::vec::Vec<
+                    runtime_types::sp_runtime::generic::header::Header<
+                        ::core::primitive::u32,
+                        runtime_types::sp_runtime::traits::BlakeTwo256,
+                    >,
+                >,
+            }
+            impl ::subxt::Call for SetUncles {
+                const PALLET: &'static str = "Authorship";
+                const FUNCTION: &'static str = "set_uncles";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn set_uncles(
+                    &self,
+                    new_uncles: ::std::vec::Vec<
+                        runtime_types::sp_runtime::generic::header::Header<
+                            ::core::primitive::u32,
+                            runtime_types::sp_runtime::traits::BlakeTwo256,
+                        >,
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetUncles,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetUncles { new_uncles };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct Uncles;
+            impl ::subxt::StorageEntry for Uncles {
+                const PALLET: &'static str = "Authorship";
+                const STORAGE: &'static str = "Uncles";
+                type Value = ::std::vec::Vec<
+                    runtime_types::pallet_authorship::UncleEntryItem<
+                        ::core::primitive::u32,
+                        ::subxt::sp_core::H256,
+                        ::subxt::sp_core::crypto::AccountId32,
+                    >,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct Author;
+            impl ::subxt::StorageEntry for Author {
+                const PALLET: &'static str = "Authorship";
+                const STORAGE: &'static str = "Author";
+                type Value = ::subxt::sp_core::crypto::AccountId32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct DidSetUncles;
+            impl ::subxt::StorageEntry for DidSetUncles {
+                const PALLET: &'static str = "Authorship";
+                const STORAGE: &'static str = "DidSetUncles";
+                type Value = ::core::primitive::bool;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn uncles(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<
+                        runtime_types::pallet_authorship::UncleEntryItem<
+                            ::core::primitive::u32,
+                            ::subxt::sp_core::H256,
+                            ::subxt::sp_core::crypto::AccountId32,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Uncles;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn author(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Author;
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn did_set_uncles(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
+                {
+                    let entry = DidSetUncles;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn uncle_generations(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Authorship")?;
+                    let constant = pallet.constant("UncleGenerations")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod balances {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transfer {
+                pub dest:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub value: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for Transfer {
+                const PALLET: &'static str = "Balances";
+                const FUNCTION: &'static str = "transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetBalance {
+                pub who:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub new_free: ::core::primitive::u128,
+                #[codec(compact)]
+                pub new_reserved: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for SetBalance {
+                const PALLET: &'static str = "Balances";
+                const FUNCTION: &'static str = "set_balance";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceTransfer {
+                pub source:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub dest:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub value: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for ForceTransfer {
+                const PALLET: &'static str = "Balances";
+                const FUNCTION: &'static str = "force_transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferKeepAlive {
+                pub dest:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub value: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for TransferKeepAlive {
+                const PALLET: &'static str = "Balances";
+                const FUNCTION: &'static str = "transfer_keep_alive";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferAll {
+                pub dest:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub keep_alive: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for TransferAll {
+                const PALLET: &'static str = "Balances";
+                const FUNCTION: &'static str = "transfer_all";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceUnreserve {
+                pub who:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for ForceUnreserve {
+                const PALLET: &'static str = "Balances";
+                const FUNCTION: &'static str = "force_unreserve";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn transfer(
+                    &self,
+                    dest: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    value: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Transfer, DispatchError, root_mod::Event>
+                {
+                    let call = Transfer { dest, value };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_balance(
+                    &self,
+                    who: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    new_free: ::core::primitive::u128,
+                    new_reserved: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetBalance,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetBalance {
+                        who,
+                        new_free,
+                        new_reserved,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_transfer(
+                    &self,
+                    source: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    dest: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    value: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceTransfer,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceTransfer {
+                        source,
+                        dest,
+                        value,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer_keep_alive(
+                    &self,
+                    dest: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    value: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    TransferKeepAlive,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = TransferKeepAlive { dest, value };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer_all(
+                    &self,
+                    dest: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    keep_alive: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    TransferAll,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = TransferAll { dest, keep_alive };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_unreserve(
+                    &self,
+                    who: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceUnreserve,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceUnreserve { who, amount };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_balances::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Endowed {
+                pub account: ::subxt::sp_core::crypto::AccountId32,
+                pub free_balance: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Endowed {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Endowed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct DustLost {
+                pub account: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for DustLost {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "DustLost";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transfer {
+                pub from: ::subxt::sp_core::crypto::AccountId32,
+                pub to: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Transfer {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct BalanceSet {
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+                pub free: ::core::primitive::u128,
+                pub reserved: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for BalanceSet {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "BalanceSet";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Reserved {
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Reserved {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Reserved";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Unreserved {
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Unreserved {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Unreserved";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ReserveRepatriated {
+                pub from: ::subxt::sp_core::crypto::AccountId32,
+                pub to: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+                pub destination_status:
+                    runtime_types::frame_support::traits::tokens::misc::BalanceStatus,
+            }
+            impl ::subxt::Event for ReserveRepatriated {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "ReserveRepatriated";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Deposit {
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Deposit {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Deposit";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Withdraw {
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Withdraw {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Withdraw";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Slashed {
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Slashed {
+                const PALLET: &'static str = "Balances";
+                const EVENT: &'static str = "Slashed";
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct TotalIssuance;
+            impl ::subxt::StorageEntry for TotalIssuance {
+                const PALLET: &'static str = "Balances";
+                const STORAGE: &'static str = "TotalIssuance";
+                type Value = ::core::primitive::u128;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct Account<'a>(pub &'a ::subxt::sp_core::crypto::AccountId32);
+            impl ::subxt::StorageEntry for Account<'_> {
+                const PALLET: &'static str = "Balances";
+                const STORAGE: &'static str = "Account";
+                type Value = runtime_types::pallet_balances::AccountData<::core::primitive::u128>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct Locks<'a>(pub &'a ::subxt::sp_core::crypto::AccountId32);
+            impl ::subxt::StorageEntry for Locks<'_> {
+                const PALLET: &'static str = "Balances";
+                const STORAGE: &'static str = "Locks";
+                type Value =
+                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
+                        runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
+                    >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct Reserves<'a>(pub &'a ::subxt::sp_core::crypto::AccountId32);
+            impl ::subxt::StorageEntry for Reserves<'_> {
+                const PALLET: &'static str = "Balances";
+                const STORAGE: &'static str = "Reserves";
+                type Value = runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    runtime_types::pallet_balances::ReserveData<
+                        [::core::primitive::u8; 8usize],
+                        ::core::primitive::u128,
+                    >,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct StorageVersion;
+            impl ::subxt::StorageEntry for StorageVersion {
+                const PALLET: &'static str = "Balances";
+                const STORAGE: &'static str = "StorageVersion";
+                type Value = runtime_types::pallet_balances::Releases;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn total_issuance(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let entry = TotalIssuance;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn account(
+                    &self,
+                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Account(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn account_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn locks(
+                    &self,
+                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
+                        runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Locks(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn locks_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Locks<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn reserves(
+                    &self,
+                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        runtime_types::pallet_balances::ReserveData<
+                            [::core::primitive::u8; 8usize],
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Reserves(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn reserves_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Reserves<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn storage_version(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_balances::Releases,
+                    ::subxt::BasicError,
+                > {
+                    let entry = StorageVersion;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn existential_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Balances")?;
+                    let constant = pallet.constant("ExistentialDeposit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn max_locks(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Balances")?;
+                    let constant = pallet.constant("MaxLocks")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn max_reserves(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Balances")?;
+                    let constant = pallet.constant("MaxReserves")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod transaction_payment {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod storage {
+            use super::runtime_types;
+            pub struct NextFeeMultiplier;
+            impl ::subxt::StorageEntry for NextFeeMultiplier {
+                const PALLET: &'static str = "TransactionPayment";
+                const STORAGE: &'static str = "NextFeeMultiplier";
+                type Value = runtime_types::sp_arithmetic::fixed_point::FixedU128;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageVersion;
+            impl ::subxt::StorageEntry for StorageVersion {
+                const PALLET: &'static str = "TransactionPayment";
+                const STORAGE: &'static str = "StorageVersion";
+                type Value = runtime_types::pallet_transaction_payment::Releases;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn next_fee_multiplier(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::sp_arithmetic::fixed_point::FixedU128,
+                    ::subxt::BasicError,
+                > {
+                    let entry = NextFeeMultiplier;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn storage_version(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_transaction_payment::Releases,
+                    ::subxt::BasicError,
+                > {
+                    let entry = StorageVersion;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn transaction_byte_fee(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("TransactionPayment")?;
+                    let constant = pallet.constant("TransactionByteFee")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn operational_fee_multiplier(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u8, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("TransactionPayment")?;
+                    let constant = pallet.constant("OperationalFeeMultiplier")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn weight_to_fee(
+                    &self,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<
+                        runtime_types::frame_support::weights::WeightToFeeCoefficient<
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let pallet = self.client.metadata().pallet("TransactionPayment")?;
+                    let constant = pallet.constant("WeightToFee")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod octopus_appchain {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SubmitObservations {
+                pub payload: runtime_types::pallet_octopus_appchain::ObservationsPayload<
+                    runtime_types::sp_runtime::MultiSigner,
+                    ::core::primitive::u32,
+                    ::subxt::sp_core::crypto::AccountId32,
+                >,
+                pub signature: runtime_types::sp_runtime::MultiSignature,
+            }
+            impl ::subxt::Call for SubmitObservations {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "submit_observations";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceSetIsActivated {
+                pub is_activated: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for ForceSetIsActivated {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "force_set_is_activated";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct ForceSetNextSetId {
+                pub next_set_id: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ForceSetNextSetId {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "force_set_next_set_id";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceSetPlannedValidators {
+                pub validators: ::std::vec::Vec<(
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::core::primitive::u128,
+                )>,
+            }
+            impl ::subxt::Call for ForceSetPlannedValidators {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "force_set_planned_validators";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Lock {
+                pub receiver_id: ::std::vec::Vec<::core::primitive::u8>,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for Lock {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "lock";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct MintAsset {
+                pub asset_id: ::core::primitive::u32,
+                pub sender_id: ::std::vec::Vec<::core::primitive::u8>,
+                pub receiver:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for MintAsset {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "mint_asset";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct BurnAsset {
+                pub asset_id: ::core::primitive::u32,
+                pub receiver_id: ::std::vec::Vec<::core::primitive::u8>,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for BurnAsset {
+                const PALLET: &'static str = "OctopusAppchain";
+                const FUNCTION: &'static str = "burn_asset";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn submit_observations(
+                    &self,
+                    payload: runtime_types::pallet_octopus_appchain::ObservationsPayload<
+                        runtime_types::sp_runtime::MultiSigner,
+                        ::core::primitive::u32,
+                        ::subxt::sp_core::crypto::AccountId32,
+                    >,
+                    signature: runtime_types::sp_runtime::MultiSignature,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SubmitObservations,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SubmitObservations { payload, signature };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_set_is_activated(
+                    &self,
+                    is_activated: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceSetIsActivated,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceSetIsActivated { is_activated };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_set_next_set_id(
+                    &self,
+                    next_set_id: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceSetNextSetId,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceSetNextSetId { next_set_id };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_set_planned_validators(
+                    &self,
+                    validators: ::std::vec::Vec<(
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    )>,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceSetPlannedValidators,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceSetPlannedValidators { validators };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn lock(
+                    &self,
+                    receiver_id: ::std::vec::Vec<::core::primitive::u8>,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Lock, DispatchError, root_mod::Event>
+                {
+                    let call = Lock {
+                        receiver_id,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn mint_asset(
+                    &self,
+                    asset_id: ::core::primitive::u32,
+                    sender_id: ::std::vec::Vec<::core::primitive::u8>,
+                    receiver: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    MintAsset,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = MintAsset {
+                        asset_id,
+                        sender_id,
+                        receiver,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn burn_asset(
+                    &self,
+                    asset_id: ::core::primitive::u32,
+                    receiver_id: ::std::vec::Vec<::core::primitive::u8>,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    BurnAsset,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = BurnAsset {
+                        asset_id,
+                        receiver_id,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_octopus_appchain::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct NewPlannedValidators(
+                pub ::core::primitive::u32,
+                pub  ::std::vec::Vec<(
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::core::primitive::u128,
+                )>,
+            );
+            impl ::subxt::Event for NewPlannedValidators {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "NewPlannedValidators";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Locked(
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::core::primitive::u128,
+                pub ::core::primitive::u64,
+            );
+            impl ::subxt::Event for Locked {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "Locked";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Unlocked(
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for Unlocked {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "Unlocked";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct UnlockFailed(
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for UnlockFailed {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "UnlockFailed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AssetMinted(
+                pub ::core::primitive::u32,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for AssetMinted {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "AssetMinted";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AssetBurned(
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for AssetBurned {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "AssetBurned";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AssetMintFailed(
+                pub ::core::primitive::u32,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for AssetMintFailed {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "AssetMintFailed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AssetIdGetFailed(
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::std::vec::Vec<::core::primitive::u8>,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for AssetIdGetFailed {
+                const PALLET: &'static str = "OctopusAppchain";
+                const EVENT: &'static str = "AssetIdGetFailed";
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct AnchorContract;
+            impl ::subxt::StorageEntry for AnchorContract {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "AnchorContract";
+                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct AssetIdByName<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for AssetIdByName<'_> {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "AssetIdByName";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct IsActivated;
+            impl ::subxt::StorageEntry for IsActivated {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "IsActivated";
+                type Value = ::core::primitive::bool;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct NextSetId;
+            impl ::subxt::StorageEntry for NextSetId {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "NextSetId";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct PlannedValidators;
+            impl ::subxt::StorageEntry for PlannedValidators {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "PlannedValidators";
+                type Value = ::std::vec::Vec<(
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::core::primitive::u128,
+                )>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct NextNotificationId;
+            impl ::subxt::StorageEntry for NextNotificationId {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "NextNotificationId";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct Observations<'a>(
+                pub &'a runtime_types::pallet_octopus_appchain::ObservationType,
+                pub &'a ::core::primitive::u32,
+            );
+            impl ::subxt::StorageEntry for Observations<'_> {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "Observations";
+                type Value = ::std::vec::Vec<
+                    runtime_types::pallet_octopus_appchain::Observation<
+                        ::subxt::sp_core::crypto::AccountId32,
+                    >,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+                        ::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+                    ])
+                }
+            }
+            pub struct Observing<'a>(
+                pub  &'a runtime_types::pallet_octopus_appchain::Observation<
+                    ::subxt::sp_core::crypto::AccountId32,
+                >,
+            );
+            impl ::subxt::StorageEntry for Observing<'_> {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "Observing";
+                type Value = ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct PalletAccount;
+            impl ::subxt::StorageEntry for PalletAccount {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "PalletAccount";
+                type Value = ::subxt::sp_core::crypto::AccountId32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct NotificationHistory<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for NotificationHistory<'_> {
+                const PALLET: &'static str = "OctopusAppchain";
+                const STORAGE: &'static str = "NotificationHistory";
+                type Value = runtime_types::pallet_octopus_appchain::NotificationResult;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn anchor_contract(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = AnchorContract;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn asset_id_by_name(
+                    &self,
+                    _0: &[::core::primitive::u8],
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = AssetIdByName(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn asset_id_by_name_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, AssetIdByName<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn is_activated(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
+                {
+                    let entry = IsActivated;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn next_set_id(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = NextSetId;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn planned_validators(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<(
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    )>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = PlannedValidators;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn next_notification_id(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = NextNotificationId;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn observations(
+                    &self,
+                    _0: &runtime_types::pallet_octopus_appchain::ObservationType,
+                    _1: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<
+                        runtime_types::pallet_octopus_appchain::Observation<
+                            ::subxt::sp_core::crypto::AccountId32,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Observations(_0, _1);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn observations_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Observations<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn observing(
+                    &self,
+                    _0: &runtime_types::pallet_octopus_appchain::Observation<
+                        ::subxt::sp_core::crypto::AccountId32,
+                    >,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Observing(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn observing_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Observing<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn pallet_account(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::subxt::BasicError,
+                > {
+                    let entry = PalletAccount;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn notification_history(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_octopus_appchain::NotificationResult,
+                    ::subxt::BasicError,
+                > {
+                    let entry = NotificationHistory(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn notification_history_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, NotificationHistory<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn grace_period(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                    let constant = pallet.constant("GracePeriod")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn unsigned_priority(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                    let constant = pallet.constant("UnsignedPriority")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn request_event_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                    let constant = pallet.constant("RequestEventLimit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod octopus_lpos {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetHistoryDepth {
+                #[codec(compact)]
+                pub new_history_depth: ::core::primitive::u32,
+                #[codec(compact)]
+                pub era_items_deleted: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for SetHistoryDepth {
+                const PALLET: &'static str = "OctopusLpos";
+                const FUNCTION: &'static str = "set_history_depth";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct ForceSetEraPayout {
+                pub era_payout: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for ForceSetEraPayout {
+                const PALLET: &'static str = "OctopusLpos";
+                const FUNCTION: &'static str = "force_set_era_payout";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn set_history_depth(
+                    &self,
+                    new_history_depth: ::core::primitive::u32,
+                    era_items_deleted: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetHistoryDepth,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetHistoryDepth {
+                        new_history_depth,
+                        era_items_deleted,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_set_era_payout(
+                    &self,
+                    era_payout: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceSetEraPayout,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceSetEraPayout { era_payout };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_octopus_lpos::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct PlanNewEra(pub ::core::primitive::u32);
+            impl ::subxt::Event for PlanNewEra {
+                const PALLET: &'static str = "OctopusLpos";
+                const EVENT: &'static str = "PlanNewEra";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct PlanNewEraFailed;
+            impl ::subxt::Event for PlanNewEraFailed {
+                const PALLET: &'static str = "OctopusLpos";
+                const EVENT: &'static str = "PlanNewEraFailed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TriggerNewEra;
+            impl ::subxt::Event for TriggerNewEra {
+                const PALLET: &'static str = "OctopusLpos";
+                const EVENT: &'static str = "TriggerNewEra";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct EraPayout(
+                pub ::core::primitive::u32,
+                pub ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
+            );
+            impl ::subxt::Event for EraPayout {
+                const PALLET: &'static str = "OctopusLpos";
+                const EVENT: &'static str = "EraPayout";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct EraPayoutFailed(pub ::core::primitive::u32);
+            impl ::subxt::Event for EraPayoutFailed {
+                const PALLET: &'static str = "OctopusLpos";
+                const EVENT: &'static str = "EraPayoutFailed";
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct HistoryDepth;
+            impl ::subxt::StorageEntry for HistoryDepth {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "HistoryDepth";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct CurrentEra;
+            impl ::subxt::StorageEntry for CurrentEra {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "CurrentEra";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct ActiveEra;
+            impl ::subxt::StorageEntry for ActiveEra {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "ActiveEra";
+                type Value = runtime_types::pallet_octopus_lpos::ActiveEraInfo;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct ErasStartSessionIndex<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for ErasStartSessionIndex<'_> {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "ErasStartSessionIndex";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct ErasStakers<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::subxt::sp_core::crypto::AccountId32,
+            );
+            impl ::subxt::StorageEntry for ErasStakers<'_> {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "ErasStakers";
+                type Value = ::core::primitive::u128;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
+                        ::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
+                    ])
+                }
+            }
+            pub struct ErasValidatorReward<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for ErasValidatorReward<'_> {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "ErasValidatorReward";
+                type Value = ::core::primitive::u128;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct ErasRewardPoints<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for ErasRewardPoints<'_> {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "ErasRewardPoints";
+                type Value = runtime_types::pallet_octopus_lpos::EraRewardPoints<
+                    ::subxt::sp_core::crypto::AccountId32,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct ErasTotalStake<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for ErasTotalStake<'_> {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "ErasTotalStake";
+                type Value = ::core::primitive::u128;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct BondedEras;
+            impl ::subxt::StorageEntry for BondedEras {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "BondedEras";
+                type Value = ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct CurrentPlannedSession;
+            impl ::subxt::StorageEntry for CurrentPlannedSession {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "CurrentPlannedSession";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct EraPayout;
+            impl ::subxt::StorageEntry for EraPayout {
+                const PALLET: &'static str = "OctopusLpos";
+                const STORAGE: &'static str = "EraPayout";
+                type Value = ::core::primitive::u128;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn history_depth(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = HistoryDepth;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn current_era(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<::core::primitive::u32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = CurrentEra;
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn active_era(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<runtime_types::pallet_octopus_lpos::ActiveEraInfo>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ActiveEra;
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn eras_start_session_index(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<::core::primitive::u32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ErasStartSessionIndex(_0);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn eras_start_session_index_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasStartSessionIndex<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn eras_stakers(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    _1: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let entry = ErasStakers(_0, _1);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn eras_stakers_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasStakers<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn eras_validator_reward(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<::core::primitive::u128>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ErasValidatorReward(_0);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn eras_validator_reward_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasValidatorReward<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn eras_reward_points(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_octopus_lpos::EraRewardPoints<
+                        ::subxt::sp_core::crypto::AccountId32,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ErasRewardPoints(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn eras_reward_points_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasRewardPoints<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn eras_total_stake(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let entry = ErasTotalStake(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn eras_total_stake_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ErasTotalStake<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn bonded_eras(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = BondedEras;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn current_planned_session(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = CurrentPlannedSession;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn era_payout(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let entry = EraPayout;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn sessions_per_era(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusLpos")?;
+                    let constant = pallet.constant("SessionsPerEra")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn blocks_per_era(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusLpos")?;
+                    let constant = pallet.constant("BlocksPerEra")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn bonding_duration(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusLpos")?;
+                    let constant = pallet.constant("BondingDuration")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod octopus_upward_messages {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_octopus_upward_messages::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct MessageQueue;
+            impl ::subxt::StorageEntry for MessageQueue {
+                const PALLET: &'static str = "OctopusUpwardMessages";
+                const STORAGE: &'static str = "MessageQueue";
+                type Value =
+                    ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct Nonce;
+            impl ::subxt::StorageEntry for Nonce {
+                const PALLET: &'static str = "OctopusUpwardMessages";
+                const STORAGE: &'static str = "Nonce";
+                type Value = ::core::primitive::u64;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn message_queue(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = MessageQueue;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn nonce(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
+                    let entry = Nonce;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn upward_messages_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusUpwardMessages")?;
+                    let constant = pallet.constant("UpwardMessagesLimit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod octopus_assets {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Create {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub admin:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub min_balance: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for Create {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "create";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceCreate {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub is_sufficient: ::core::primitive::bool,
+                #[codec(compact)]
+                pub min_balance: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for ForceCreate {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "force_create";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Destroy {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub witness: runtime_types::pallet_assets::types::DestroyWitness,
+            }
+            impl ::subxt::Call for Destroy {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "destroy";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Mint {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub beneficiary:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for Mint {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "mint";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Burn {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub who:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for Burn {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "burn";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transfer {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub target:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for Transfer {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferKeepAlive {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub target:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for TransferKeepAlive {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "transfer_keep_alive";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceTransfer {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub source:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub dest:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for ForceTransfer {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "force_transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Freeze {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub who:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for Freeze {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "freeze";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Thaw {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub who:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for Thaw {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "thaw";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct FreezeAsset {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for FreezeAsset {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "freeze_asset";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ThawAsset {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ThawAsset {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "thaw_asset";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferOwnership {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for TransferOwnership {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "transfer_ownership";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetTeam {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub issuer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub admin:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub freezer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for SetTeam {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "set_team";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetMetadata {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub name: ::std::vec::Vec<::core::primitive::u8>,
+                pub symbol: ::std::vec::Vec<::core::primitive::u8>,
+                pub decimals: ::core::primitive::u8,
+            }
+            impl ::subxt::Call for SetMetadata {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "set_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ClearMetadata {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ClearMetadata {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "clear_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceSetMetadata {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub name: ::std::vec::Vec<::core::primitive::u8>,
+                pub symbol: ::std::vec::Vec<::core::primitive::u8>,
+                pub decimals: ::core::primitive::u8,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for ForceSetMetadata {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "force_set_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceClearMetadata {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ForceClearMetadata {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "force_clear_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceAssetStatus {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub issuer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub admin:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub freezer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub min_balance: ::core::primitive::u128,
+                pub is_sufficient: ::core::primitive::bool,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for ForceAssetStatus {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "force_asset_status";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ApproveTransfer {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub delegate:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for ApproveTransfer {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "approve_transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct CancelApproval {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub delegate:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for CancelApproval {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "cancel_approval";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceCancelApproval {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub delegate:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for ForceCancelApproval {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "force_cancel_approval";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferApproved {
+                #[codec(compact)]
+                pub id: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub destination:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                #[codec(compact)]
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Call for TransferApproved {
+                const PALLET: &'static str = "OctopusAssets";
+                const FUNCTION: &'static str = "transfer_approved";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn create(
+                    &self,
+                    id: ::core::primitive::u32,
+                    admin: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    min_balance: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>
+                {
+                    let call = Create {
+                        id,
+                        admin,
+                        min_balance,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_create(
+                    &self,
+                    id: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    is_sufficient: ::core::primitive::bool,
+                    min_balance: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceCreate,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceCreate {
+                        id,
+                        owner,
+                        is_sufficient,
+                        min_balance,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn destroy(
+                    &self,
+                    id: ::core::primitive::u32,
+                    witness: runtime_types::pallet_assets::types::DestroyWitness,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Destroy, DispatchError, root_mod::Event>
+                {
+                    let call = Destroy { id, witness };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn mint(
+                    &self,
+                    id: ::core::primitive::u32,
+                    beneficiary: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Mint, DispatchError, root_mod::Event>
+                {
+                    let call = Mint {
+                        id,
+                        beneficiary,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn burn(
+                    &self,
+                    id: ::core::primitive::u32,
+                    who: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Burn, DispatchError, root_mod::Event>
+                {
+                    let call = Burn { id, who, amount };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer(
+                    &self,
+                    id: ::core::primitive::u32,
+                    target: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Transfer, DispatchError, root_mod::Event>
+                {
+                    let call = Transfer { id, target, amount };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer_keep_alive(
+                    &self,
+                    id: ::core::primitive::u32,
+                    target: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    TransferKeepAlive,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = TransferKeepAlive { id, target, amount };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_transfer(
+                    &self,
+                    id: ::core::primitive::u32,
+                    source: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    dest: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceTransfer,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceTransfer {
+                        id,
+                        source,
+                        dest,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn freeze(
+                    &self,
+                    id: ::core::primitive::u32,
+                    who: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Freeze, DispatchError, root_mod::Event>
+                {
+                    let call = Freeze { id, who };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn thaw(
+                    &self,
+                    id: ::core::primitive::u32,
+                    who: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Thaw, DispatchError, root_mod::Event>
+                {
+                    let call = Thaw { id, who };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn freeze_asset(
+                    &self,
+                    id: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    FreezeAsset,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = FreezeAsset { id };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn thaw_asset(
+                    &self,
+                    id: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ThawAsset,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ThawAsset { id };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer_ownership(
+                    &self,
+                    id: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    TransferOwnership,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = TransferOwnership { id, owner };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_team(
+                    &self,
+                    id: ::core::primitive::u32,
+                    issuer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    admin: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    freezer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, SetTeam, DispatchError, root_mod::Event>
+                {
+                    let call = SetTeam {
+                        id,
+                        issuer,
+                        admin,
+                        freezer,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_metadata(
+                    &self,
+                    id: ::core::primitive::u32,
+                    name: ::std::vec::Vec<::core::primitive::u8>,
+                    symbol: ::std::vec::Vec<::core::primitive::u8>,
+                    decimals: ::core::primitive::u8,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetMetadata {
+                        id,
+                        name,
+                        symbol,
+                        decimals,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn clear_metadata(
+                    &self,
+                    id: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ClearMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ClearMetadata { id };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_set_metadata(
+                    &self,
+                    id: ::core::primitive::u32,
+                    name: ::std::vec::Vec<::core::primitive::u8>,
+                    symbol: ::std::vec::Vec<::core::primitive::u8>,
+                    decimals: ::core::primitive::u8,
+                    is_frozen: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceSetMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceSetMetadata {
+                        id,
+                        name,
+                        symbol,
+                        decimals,
+                        is_frozen,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_clear_metadata(
+                    &self,
+                    id: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceClearMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceClearMetadata { id };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_asset_status(
+                    &self,
+                    id: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    issuer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    admin: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    freezer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    min_balance: ::core::primitive::u128,
+                    is_sufficient: ::core::primitive::bool,
+                    is_frozen: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceAssetStatus,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceAssetStatus {
+                        id,
+                        owner,
+                        issuer,
+                        admin,
+                        freezer,
+                        min_balance,
+                        is_sufficient,
+                        is_frozen,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn approve_transfer(
+                    &self,
+                    id: ::core::primitive::u32,
+                    delegate: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ApproveTransfer,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ApproveTransfer {
+                        id,
+                        delegate,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn cancel_approval(
+                    &self,
+                    id: ::core::primitive::u32,
+                    delegate: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    CancelApproval,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = CancelApproval { id, delegate };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_cancel_approval(
+                    &self,
+                    id: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    delegate: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceCancelApproval,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceCancelApproval {
+                        id,
+                        owner,
+                        delegate,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer_approved(
+                    &self,
+                    id: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    destination: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    amount: ::core::primitive::u128,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    TransferApproved,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = TransferApproved {
+                        id,
+                        owner,
+                        destination,
+                        amount,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_assets::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Created {
+                pub asset_id: ::core::primitive::u32,
+                pub creator: ::subxt::sp_core::crypto::AccountId32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Created {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Created";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Issued {
+                pub asset_id: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+                pub total_supply: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Issued {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Issued";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transferred {
+                pub asset_id: ::core::primitive::u32,
+                pub from: ::subxt::sp_core::crypto::AccountId32,
+                pub to: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Transferred {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Transferred";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Burned {
+                pub asset_id: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+                pub balance: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for Burned {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Burned";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TeamChanged {
+                pub asset_id: ::core::primitive::u32,
+                pub issuer: ::subxt::sp_core::crypto::AccountId32,
+                pub admin: ::subxt::sp_core::crypto::AccountId32,
+                pub freezer: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for TeamChanged {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "TeamChanged";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct OwnerChanged {
+                pub asset_id: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for OwnerChanged {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "OwnerChanged";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Frozen {
+                pub asset_id: ::core::primitive::u32,
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Frozen {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Frozen";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Thawed {
+                pub asset_id: ::core::primitive::u32,
+                pub who: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Thawed {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Thawed";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct AssetFrozen {
+                pub asset_id: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for AssetFrozen {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "AssetFrozen";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct AssetThawed {
+                pub asset_id: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for AssetThawed {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "AssetThawed";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct Destroyed {
+                pub asset_id: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for Destroyed {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "Destroyed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceCreated {
+                pub asset_id: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for ForceCreated {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "ForceCreated";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct MetadataSet {
+                pub asset_id: ::core::primitive::u32,
+                pub name: ::std::vec::Vec<::core::primitive::u8>,
+                pub symbol: ::std::vec::Vec<::core::primitive::u8>,
+                pub decimals: ::core::primitive::u8,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Event for MetadataSet {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "MetadataSet";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct MetadataCleared {
+                pub asset_id: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for MetadataCleared {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "MetadataCleared";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ApprovedTransfer {
+                pub asset_id: ::core::primitive::u32,
+                pub source: ::subxt::sp_core::crypto::AccountId32,
+                pub delegate: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for ApprovedTransfer {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "ApprovedTransfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ApprovalCancelled {
+                pub asset_id: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+                pub delegate: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for ApprovalCancelled {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "ApprovalCancelled";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferredApproved {
+                pub asset_id: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+                pub delegate: ::subxt::sp_core::crypto::AccountId32,
+                pub destination: ::subxt::sp_core::crypto::AccountId32,
+                pub amount: ::core::primitive::u128,
+            }
+            impl ::subxt::Event for TransferredApproved {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "TransferredApproved";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct AssetStatusChanged {
+                pub asset_id: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for AssetStatusChanged {
+                const PALLET: &'static str = "OctopusAssets";
+                const EVENT: &'static str = "AssetStatusChanged";
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct Asset<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for Asset<'_> {
+                const PALLET: &'static str = "OctopusAssets";
+                const STORAGE: &'static str = "Asset";
+                type Value = runtime_types::pallet_assets::types::AssetDetails<
+                    ::core::primitive::u128,
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::core::primitive::u128,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct Account<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::subxt::sp_core::crypto::AccountId32,
+            );
+            impl ::subxt::StorageEntry for Account<'_> {
+                const PALLET: &'static str = "OctopusAssets";
+                const STORAGE: &'static str = "Account";
+                type Value =
+                    runtime_types::pallet_assets::types::AssetBalance<::core::primitive::u128, ()>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct Approvals<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::subxt::sp_core::crypto::AccountId32,
+                pub &'a ::subxt::sp_core::crypto::AccountId32,
+            );
+            impl ::subxt::StorageEntry for Approvals<'_> {
+                const PALLET: &'static str = "OctopusAssets";
+                const STORAGE: &'static str = "Approvals";
+                type Value = runtime_types::pallet_assets::types::Approval<
+                    ::core::primitive::u128,
+                    ::core::primitive::u128,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.2,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct Metadata<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for Metadata<'_> {
+                const PALLET: &'static str = "OctopusAssets";
+                const STORAGE: &'static str = "Metadata";
+                type Value = runtime_types::pallet_assets::types::AssetMetadata<
+                    ::core::primitive::u128,
+                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn asset(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::pallet_assets::types::AssetDetails<
+                            ::core::primitive::u128,
+                            ::subxt::sp_core::crypto::AccountId32,
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Asset(_0);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn asset_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn account(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    _1: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_assets::types::AssetBalance<::core::primitive::u128, ()>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Account(_0, _1);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn account_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn approvals(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    _1: &::subxt::sp_core::crypto::AccountId32,
+                    _2: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::pallet_assets::types::Approval<
+                            ::core::primitive::u128,
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Approvals(_0, _1, _2);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn approvals_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Approvals<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn metadata(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    runtime_types::pallet_assets::types::AssetMetadata<
+                        ::core::primitive::u128,
+                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Metadata(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn metadata_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Metadata<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn asset_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                    let constant = pallet.constant("AssetDeposit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn metadata_deposit_base(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                    let constant = pallet.constant("MetadataDepositBase")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn metadata_deposit_per_byte(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                    let constant = pallet.constant("MetadataDepositPerByte")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn approval_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                    let constant = pallet.constant("ApprovalDeposit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn string_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                    let constant = pallet.constant("StringLimit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod session {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetKeys {
+                pub keys: runtime_types::node_template_runtime::opaque::SessionKeys,
+                pub proof: ::std::vec::Vec<::core::primitive::u8>,
+            }
+            impl ::subxt::Call for SetKeys {
+                const PALLET: &'static str = "Session";
+                const FUNCTION: &'static str = "set_keys";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct PurgeKeys;
+            impl ::subxt::Call for PurgeKeys {
+                const PALLET: &'static str = "Session";
+                const FUNCTION: &'static str = "purge_keys";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn set_keys(
+                    &self,
+                    keys: runtime_types::node_template_runtime::opaque::SessionKeys,
+                    proof: ::std::vec::Vec<::core::primitive::u8>,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, SetKeys, DispatchError, root_mod::Event>
+                {
+                    let call = SetKeys { keys, proof };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn purge_keys(
+                    &self,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    PurgeKeys,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = PurgeKeys {};
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_session::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct NewSession {
+                pub session_index: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for NewSession {
+                const PALLET: &'static str = "Session";
+                const EVENT: &'static str = "NewSession";
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct Validators;
+            impl ::subxt::StorageEntry for Validators {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "Validators";
+                type Value = ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct CurrentIndex;
+            impl ::subxt::StorageEntry for CurrentIndex {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "CurrentIndex";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct QueuedChanged;
+            impl ::subxt::StorageEntry for QueuedChanged {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "QueuedChanged";
+                type Value = ::core::primitive::bool;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct QueuedKeys;
+            impl ::subxt::StorageEntry for QueuedKeys {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "QueuedKeys";
+                type Value = ::std::vec::Vec<(
+                    ::subxt::sp_core::crypto::AccountId32,
+                    runtime_types::node_template_runtime::opaque::SessionKeys,
+                )>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct DisabledValidators;
+            impl ::subxt::StorageEntry for DisabledValidators {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "DisabledValidators";
+                type Value = ::std::vec::Vec<::core::primitive::u32>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Plain
+                }
+            }
+            pub struct NextKeys<'a>(pub &'a ::subxt::sp_core::crypto::AccountId32);
+            impl ::subxt::StorageEntry for NextKeys<'_> {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "NextKeys";
+                type Value = runtime_types::node_template_runtime::opaque::SessionKeys;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct KeyOwner<'a>(
+                pub &'a runtime_types::sp_core::crypto::KeyTypeId,
+                pub &'a [::core::primitive::u8],
+            );
+            impl ::subxt::StorageEntry for KeyOwner<'_> {
+                const PALLET: &'static str = "Session";
+                const STORAGE: &'static str = "KeyOwner";
+                type Value = ::subxt::sp_core::crypto::AccountId32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &(&self.0, &self.1),
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn validators(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Validators;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn current_index(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = CurrentIndex;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn queued_changed(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
+                {
+                    let entry = QueuedChanged;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn queued_keys(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<(
+                        ::subxt::sp_core::crypto::AccountId32,
+                        runtime_types::node_template_runtime::opaque::SessionKeys,
+                    )>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = QueuedKeys;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn disabled_validators(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = DisabledValidators;
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn next_keys(
+                    &self,
+                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::node_template_runtime::opaque::SessionKeys,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = NextKeys(_0);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn next_keys_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, NextKeys<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn key_owner(
+                    &self,
+                    _0: &runtime_types::sp_core::crypto::KeyTypeId,
+                    _1: &[::core::primitive::u8],
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = KeyOwner(_0, _1);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn key_owner_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, KeyOwner<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
                 }
             }
         }
     }
     pub mod grandpa {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct report_equivocation {
+            pub struct ReportEquivocation {
                 pub equivocation_proof: ::std::boxed::Box<
                     runtime_types::sp_finality_grandpa::EquivocationProof<
                         ::subxt::sp_core::H256,
@@ -1527,12 +4757,12 @@ pub mod api {
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for report_equivocation {
+            impl ::subxt::Call for ReportEquivocation {
                 const PALLET: &'static str = "Grandpa";
                 const FUNCTION: &'static str = "report_equivocation";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct report_equivocation_unsigned {
+            pub struct ReportEquivocationUnsigned {
                 pub equivocation_proof: ::std::boxed::Box<
                     runtime_types::sp_finality_grandpa::EquivocationProof<
                         ::subxt::sp_core::H256,
@@ -1541,28 +4771,27 @@ pub mod api {
                 >,
                 pub key_owner_proof: runtime_types::sp_session::MembershipProof,
             }
-            impl ::subxt::Call for report_equivocation_unsigned {
+            impl ::subxt::Call for ReportEquivocationUnsigned {
                 const PALLET: &'static str = "Grandpa";
                 const FUNCTION: &'static str = "report_equivocation_unsigned";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct note_stalled {
+            pub struct NoteStalled {
                 pub delay: ::core::primitive::u32,
                 pub best_finalized_block_number: ::core::primitive::u32,
             }
-            impl ::subxt::Call for note_stalled {
+            impl ::subxt::Call for NoteStalled {
                 const PALLET: &'static str = "Grandpa";
                 const FUNCTION: &'static str = "note_stalled";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+                marker: ::core::marker::PhantomData<X>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -1577,9 +4806,15 @@ pub mod api {
                         ::core::primitive::u32,
                     >,
                     key_owner_proof: runtime_types::sp_session::MembershipProof,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, report_equivocation, DispatchError>
-                {
-                    let call = report_equivocation {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ReportEquivocation,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ReportEquivocation {
                         equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
@@ -1596,11 +4831,11 @@ pub mod api {
                     'a,
                     T,
                     X,
-                    A,
-                    report_equivocation_unsigned,
+                    ReportEquivocationUnsigned,
                     DispatchError,
+                    root_mod::Event,
                 > {
-                    let call = report_equivocation_unsigned {
+                    let call = ReportEquivocationUnsigned {
                         equivocation_proof: ::std::boxed::Box::new(equivocation_proof),
                         key_owner_proof,
                     };
@@ -1610,9 +4845,15 @@ pub mod api {
                     &self,
                     delay: ::core::primitive::u32,
                     best_finalized_block_number: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, note_stalled, DispatchError>
-                {
-                    let call = note_stalled {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    NoteStalled,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = NoteStalled {
                         delay,
                         best_finalized_block_number,
                     };
@@ -1624,12 +4865,12 @@ pub mod api {
         pub mod events {
             use super::runtime_types;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct NewAuthorities(
-                pub  ::std::vec::Vec<(
+            pub struct NewAuthorities {
+                pub authority_set: ::std::vec::Vec<(
                     runtime_types::sp_finality_grandpa::app::Public,
                     ::core::primitive::u64,
                 )>,
-            );
+            }
             impl ::subxt::Event for NewAuthorities {
                 const PALLET: &'static str = "Grandpa";
                 const EVENT: &'static str = "NewAuthorities";
@@ -1695,8 +4936,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct SetIdSession(pub ::core::primitive::u64);
-            impl ::subxt::StorageEntry for SetIdSession {
+            pub struct SetIdSession<'a>(pub &'a ::core::primitive::u64);
+            impl ::subxt::StorageEntry for SetIdSession<'_> {
                 const PALLET: &'static str = "Grandpa";
                 const STORAGE: &'static str = "SetIdSession";
                 type Value = ::core::primitive::u32;
@@ -1766,7 +5007,7 @@ pub mod api {
                 }
                 pub async fn set_id_session(
                     &self,
-                    _0: ::core::primitive::u64,
+                    _0: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::core::primitive::u32>,
@@ -1779,7 +5020,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, SetIdSession>,
+                    ::subxt::KeyIter<'a, T, SetIdSession<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -1788,1856 +5029,49 @@ pub mod api {
         }
         pub mod constants {
             use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
                 pub fn max_authorities(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[100u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-            }
-        }
-    }
-    pub mod balances {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer {
-                pub dest:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub value: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for transfer {
-                const PALLET: &'static str = "Balances";
-                const FUNCTION: &'static str = "transfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_balance {
-                pub who:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub new_free: ::core::primitive::u128,
-                #[codec(compact)]
-                pub new_reserved: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for set_balance {
-                const PALLET: &'static str = "Balances";
-                const FUNCTION: &'static str = "set_balance";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_transfer {
-                pub source:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub dest:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub value: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for force_transfer {
-                const PALLET: &'static str = "Balances";
-                const FUNCTION: &'static str = "force_transfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer_keep_alive {
-                pub dest:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub value: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for transfer_keep_alive {
-                const PALLET: &'static str = "Balances";
-                const FUNCTION: &'static str = "transfer_keep_alive";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer_all {
-                pub dest:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub keep_alive: ::core::primitive::bool,
-            }
-            impl ::subxt::Call for transfer_all {
-                const PALLET: &'static str = "Balances";
-                const FUNCTION: &'static str = "transfer_all";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_unreserve {
-                pub who:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for force_unreserve {
-                const PALLET: &'static str = "Balances";
-                const FUNCTION: &'static str = "force_unreserve";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn transfer(
-                    &self,
-                    dest: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    value: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer, DispatchError>
-                {
-                    let call = transfer { dest, value };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn set_balance(
-                    &self,
-                    who: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    new_free: ::core::primitive::u128,
-                    new_reserved: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_balance, DispatchError>
-                {
-                    let call = set_balance {
-                        who,
-                        new_free,
-                        new_reserved,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_transfer(
-                    &self,
-                    source: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    dest: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    value: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_transfer, DispatchError>
-                {
-                    let call = force_transfer {
-                        source,
-                        dest,
-                        value,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn transfer_keep_alive(
-                    &self,
-                    dest: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    value: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_keep_alive, DispatchError>
-                {
-                    let call = transfer_keep_alive { dest, value };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn transfer_all(
-                    &self,
-                    dest: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    keep_alive: ::core::primitive::bool,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_all, DispatchError>
-                {
-                    let call = transfer_all { dest, keep_alive };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_unreserve(
-                    &self,
-                    who: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_unreserve, DispatchError>
-                {
-                    let call = force_unreserve { who, amount };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub type Event = runtime_types::pallet_balances::pallet::Event;
-        pub mod events {
-            use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Endowed(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Endowed {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Endowed";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct DustLost(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for DustLost {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "DustLost";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Transfer(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Transfer {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Transfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct BalanceSet(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for BalanceSet {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "BalanceSet";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Reserved(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Reserved {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Reserved";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Unreserved(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Unreserved {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Unreserved";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct ReserveRepatriated(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-                pub runtime_types::frame_support::traits::tokens::misc::BalanceStatus,
-            );
-            impl ::subxt::Event for ReserveRepatriated {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "ReserveRepatriated";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Deposit(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Deposit {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Deposit";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Withdraw(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Withdraw {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Withdraw";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Slashed(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Slashed {
-                const PALLET: &'static str = "Balances";
-                const EVENT: &'static str = "Slashed";
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct TotalIssuance;
-            impl ::subxt::StorageEntry for TotalIssuance {
-                const PALLET: &'static str = "Balances";
-                const STORAGE: &'static str = "TotalIssuance";
-                type Value = ::core::primitive::u128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct Account(pub ::subxt::sp_core::crypto::AccountId32);
-            impl ::subxt::StorageEntry for Account {
-                const PALLET: &'static str = "Balances";
-                const STORAGE: &'static str = "Account";
-                type Value = runtime_types::pallet_balances::AccountData<::core::primitive::u128>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
-                }
-            }
-            pub struct Locks(pub ::subxt::sp_core::crypto::AccountId32);
-            impl ::subxt::StorageEntry for Locks {
-                const PALLET: &'static str = "Balances";
-                const STORAGE: &'static str = "Locks";
-                type Value =
-                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
-                        runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
-                    >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
-                }
-            }
-            pub struct Reserves(pub ::subxt::sp_core::crypto::AccountId32);
-            impl ::subxt::StorageEntry for Reserves {
-                const PALLET: &'static str = "Balances";
-                const STORAGE: &'static str = "Reserves";
-                type Value = runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                    runtime_types::pallet_balances::ReserveData<
-                        [::core::primitive::u8; 8usize],
-                        ::core::primitive::u128,
-                    >,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
-                }
-            }
-            pub struct StorageVersion;
-            impl ::subxt::StorageEntry for StorageVersion {
-                const PALLET: &'static str = "Balances";
-                const STORAGE: &'static str = "StorageVersion";
-                type Value = runtime_types::pallet_balances::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn total_issuance(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    let entry = TotalIssuance;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn account(
-                    &self,
-                    _0: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Account(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn account_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn locks(
-                    &self,
-                    _0: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
-                        runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Locks(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn locks_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Locks>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn reserves(
-                    &self,
-                    _0: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                        runtime_types::pallet_balances::ReserveData<
-                            [::core::primitive::u8; 8usize],
-                            ::core::primitive::u128,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Reserves(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn reserves_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Reserves>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn storage_version(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_balances::Releases,
-                    ::subxt::BasicError,
-                > {
-                    let entry = StorageVersion;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn existential_deposit(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 128u8, 198u8, 164u8, 126u8, 141u8, 3u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
-                }
-                pub fn max_locks(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[50u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-                pub fn max_reserves(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[50u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-            }
-        }
-    }
-    pub mod transaction_payment {
-        use super::runtime_types;
-        pub mod storage {
-            use super::runtime_types;
-            pub struct NextFeeMultiplier;
-            impl ::subxt::StorageEntry for NextFeeMultiplier {
-                const PALLET: &'static str = "TransactionPayment";
-                const STORAGE: &'static str = "NextFeeMultiplier";
-                type Value = runtime_types::sp_arithmetic::fixed_point::FixedU128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageVersion;
-            impl ::subxt::StorageEntry for StorageVersion {
-                const PALLET: &'static str = "TransactionPayment";
-                const STORAGE: &'static str = "StorageVersion";
-                type Value = runtime_types::pallet_transaction_payment::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn next_fee_multiplier(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::sp_arithmetic::fixed_point::FixedU128,
-                    ::subxt::BasicError,
-                > {
-                    let entry = NextFeeMultiplier;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn storage_version(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_transaction_payment::Releases,
-                    ::subxt::BasicError,
-                > {
-                    let entry = StorageVersion;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn transaction_byte_fee(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 232u8, 118u8, 72u8, 23u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
-                }
-                pub fn operational_fee_multiplier(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u8, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(&mut &[5u8][..])?)
-                }
-                pub fn weight_to_fee(
-                    &self,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<
-                        runtime_types::frame_support::weights::WeightToFeeCoefficient<
-                            ::core::primitive::u128,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            4u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 0u8, 1u8,
-                        ][..],
-                    )?)
-                }
-            }
-        }
-    }
-    pub mod octopus_appchain {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct submit_observations {
-                pub payload: runtime_types::pallet_octopus_appchain::ObservationsPayload<
-                    runtime_types::sp_runtime::MultiSigner,
-                    ::core::primitive::u32,
-                    ::subxt::sp_core::crypto::AccountId32,
-                >,
-                pub signature: runtime_types::sp_runtime::MultiSignature,
-            }
-            impl ::subxt::Call for submit_observations {
-                const PALLET: &'static str = "OctopusAppchain";
-                const FUNCTION: &'static str = "submit_observations";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_set_planned_validators {
-                pub validators: ::std::vec::Vec<(
-                    ::subxt::sp_core::crypto::AccountId32,
-                    ::core::primitive::u128,
-                )>,
-            }
-            impl ::subxt::Call for force_set_planned_validators {
-                const PALLET: &'static str = "OctopusAppchain";
-                const FUNCTION: &'static str = "force_set_planned_validators";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct lock {
-                pub receiver_id: ::std::vec::Vec<::core::primitive::u8>,
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for lock {
-                const PALLET: &'static str = "OctopusAppchain";
-                const FUNCTION: &'static str = "lock";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct mint_asset {
-                pub asset_id: ::core::primitive::u32,
-                pub sender_id: ::std::vec::Vec<::core::primitive::u8>,
-                pub receiver:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for mint_asset {
-                const PALLET: &'static str = "OctopusAppchain";
-                const FUNCTION: &'static str = "mint_asset";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct burn_asset {
-                pub asset_id: ::core::primitive::u32,
-                pub receiver_id: ::std::vec::Vec<::core::primitive::u8>,
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for burn_asset {
-                const PALLET: &'static str = "OctopusAppchain";
-                const FUNCTION: &'static str = "burn_asset";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn submit_observations(
-                    &self,
-                    payload: runtime_types::pallet_octopus_appchain::ObservationsPayload<
-                        runtime_types::sp_runtime::MultiSigner,
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    >,
-                    signature: runtime_types::sp_runtime::MultiSignature,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, submit_observations, DispatchError>
-                {
-                    let call = submit_observations { payload, signature };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_set_planned_validators(
-                    &self,
-                    validators: ::std::vec::Vec<(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    )>,
-                ) -> ::subxt::SubmittableExtrinsic<
-                    'a,
-                    T,
-                    X,
-                    A,
-                    force_set_planned_validators,
-                    DispatchError,
-                > {
-                    let call = force_set_planned_validators { validators };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn lock(
-                    &self,
-                    receiver_id: ::std::vec::Vec<::core::primitive::u8>,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, lock, DispatchError>
-                {
-                    let call = lock {
-                        receiver_id,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn mint_asset(
-                    &self,
-                    asset_id: ::core::primitive::u32,
-                    sender_id: ::std::vec::Vec<::core::primitive::u8>,
-                    receiver: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, mint_asset, DispatchError>
-                {
-                    let call = mint_asset {
-                        asset_id,
-                        sender_id,
-                        receiver,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn burn_asset(
-                    &self,
-                    asset_id: ::core::primitive::u32,
-                    receiver_id: ::std::vec::Vec<::core::primitive::u8>,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, burn_asset, DispatchError>
-                {
-                    let call = burn_asset {
-                        asset_id,
-                        receiver_id,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub type Event = runtime_types::pallet_octopus_appchain::pallet::Event;
-        pub mod events {
-            use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Locked(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Locked {
-                const PALLET: &'static str = "OctopusAppchain";
-                const EVENT: &'static str = "Locked";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Unlocked(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Unlocked {
-                const PALLET: &'static str = "OctopusAppchain";
-                const EVENT: &'static str = "Unlocked";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct AssetMinted(
-                pub ::core::primitive::u32,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for AssetMinted {
-                const PALLET: &'static str = "OctopusAppchain";
-                const EVENT: &'static str = "AssetMinted";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct AssetBurned(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for AssetBurned {
-                const PALLET: &'static str = "OctopusAppchain";
-                const EVENT: &'static str = "AssetBurned";
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct AnchorContract;
-            impl ::subxt::StorageEntry for AnchorContract {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "AnchorContract";
-                type Value = ::std::vec::Vec<::core::primitive::u8>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct PlannedValidators;
-            impl ::subxt::StorageEntry for PlannedValidators {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "PlannedValidators";
-                type Value = ::std::vec::Vec<(
-                    ::subxt::sp_core::crypto::AccountId32,
-                    ::core::primitive::u128,
-                )>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct NextFactSequence;
-            impl ::subxt::StorageEntry for NextFactSequence {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "NextFactSequence";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct Observations(
-                pub runtime_types::pallet_octopus_appchain::ObservationType,
-                pub ::core::primitive::u32,
-            );
-            impl ::subxt::StorageEntry for Observations {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "Observations";
-                type Value = ::std::vec::Vec<
-                    runtime_types::pallet_octopus_appchain::Observation<
-                        ::subxt::sp_core::crypto::AccountId32,
-                    >,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-                        ::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
-                    ])
-                }
-            }
-            pub struct Observing(
-                pub  runtime_types::pallet_octopus_appchain::Observation<
-                    ::subxt::sp_core::crypto::AccountId32,
-                >,
-            );
-            impl ::subxt::StorageEntry for Observing {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "Observing";
-                type Value = ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct AssetIdByName(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for AssetIdByName {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "AssetIdByName";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct PreminedAmount;
-            impl ::subxt::StorageEntry for PreminedAmount {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "PreminedAmount";
-                type Value = ::core::primitive::u128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct PalletAccount;
-            impl ::subxt::StorageEntry for PalletAccount {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "PalletAccount";
-                type Value = ::subxt::sp_core::crypto::AccountId32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct NextSubmitObsIndex;
-            impl ::subxt::StorageEntry for NextSubmitObsIndex {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "NextSubmitObsIndex";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct SubmitSequenceNumber;
-            impl ::subxt::StorageEntry for SubmitSequenceNumber {
-                const PALLET: &'static str = "OctopusAppchain";
-                const STORAGE: &'static str = "SubmitSequenceNumber";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn anchor_contract(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = AnchorContract;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn planned_validators(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = PlannedValidators;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn next_fact_sequence(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    let entry = NextFactSequence;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn observations(
-                    &self,
-                    _0: runtime_types::pallet_octopus_appchain::ObservationType,
-                    _1: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<
-                        runtime_types::pallet_octopus_appchain::Observation<
-                            ::subxt::sp_core::crypto::AccountId32,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Observations(_0, _1);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn observations_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Observations>,
-                    ::subxt::BasicError,
-                > {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn observing(
-                    &self,
-                    _0: runtime_types::pallet_octopus_appchain::Observation<
-                        ::subxt::sp_core::crypto::AccountId32,
-                    >,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Observing(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn observing_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Observing>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn asset_id_by_name(
-                    &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    let entry = AssetIdByName(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn asset_id_by_name_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, AssetIdByName>,
-                    ::subxt::BasicError,
-                > {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn premined_amount(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    let entry = PreminedAmount;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn pallet_account(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::sp_core::crypto::AccountId32,
-                    ::subxt::BasicError,
-                > {
-                    let entry = PalletAccount;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn next_submit_obs_index(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = NextSubmitObsIndex;
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn submit_sequence_number(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = SubmitSequenceNumber;
-                    self.client.storage().fetch(&entry, hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn grace_period(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[10u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-                pub fn unsigned_priority(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[0u8, 0u8, 32u8, 0u8, 0u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-            }
-        }
-    }
-    pub mod octopus_lpos {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_history_depth {
-                #[codec(compact)]
-                pub new_history_depth: ::core::primitive::u32,
-                #[codec(compact)]
-                pub era_items_deleted: ::core::primitive::u32,
-            }
-            impl ::subxt::Call for set_history_depth {
-                const PALLET: &'static str = "OctopusLpos";
-                const FUNCTION: &'static str = "set_history_depth";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn set_history_depth(
-                    &self,
-                    new_history_depth: ::core::primitive::u32,
-                    era_items_deleted: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_history_depth, DispatchError>
-                {
-                    let call = set_history_depth {
-                        new_history_depth,
-                        era_items_deleted,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub type Event = runtime_types::pallet_octopus_lpos::pallet::Event;
-        pub mod events {
-            use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct EraPayout(pub ::core::primitive::u32, pub ::core::primitive::u128);
-            impl ::subxt::Event for EraPayout {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "EraPayout";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Reward(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Reward {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "Reward";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Slash(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Slash {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "Slash";
-            }
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct OldSlashingReportDiscarded(pub ::core::primitive::u32);
-            impl ::subxt::Event for OldSlashingReportDiscarded {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "OldSlashingReportDiscarded";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct StakingElection;
-            impl ::subxt::Event for StakingElection {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "StakingElection";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Bonded(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Bonded {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "Bonded";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Unbonded(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Unbonded {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "Unbonded";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Withdrawn(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Withdrawn {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "Withdrawn";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Kicked(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for Kicked {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "Kicked";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct StakingElectionFailed;
-            impl ::subxt::Event for StakingElectionFailed {
-                const PALLET: &'static str = "OctopusLpos";
-                const EVENT: &'static str = "StakingElectionFailed";
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct HistoryDepth;
-            impl ::subxt::StorageEntry for HistoryDepth {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "HistoryDepth";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct CurrentEra;
-            impl ::subxt::StorageEntry for CurrentEra {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "CurrentEra";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct ActiveEra;
-            impl ::subxt::StorageEntry for ActiveEra {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "ActiveEra";
-                type Value = runtime_types::pallet_octopus_lpos::ActiveEraInfo;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct ErasStartSessionIndex(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for ErasStartSessionIndex {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "ErasStartSessionIndex";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct ErasStakers(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::StorageEntry for ErasStakers {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "ErasStakers";
-                type Value = ::core::primitive::u128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(&self.0, ::subxt::StorageHasher::Twox64Concat),
-                        ::subxt::StorageMapKey::new(&self.1, ::subxt::StorageHasher::Twox64Concat),
-                    ])
-                }
-            }
-            pub struct ErasValidatorReward(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for ErasValidatorReward {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "ErasValidatorReward";
-                type Value = ::core::primitive::u128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct ErasRewardPoints(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for ErasRewardPoints {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "ErasRewardPoints";
-                type Value = runtime_types::pallet_octopus_lpos::EraRewardPoints<
-                    ::subxt::sp_core::crypto::AccountId32,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct ErasTotalStake(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for ErasTotalStake {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "ErasTotalStake";
-                type Value = ::core::primitive::u128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct BondedEras;
-            impl ::subxt::StorageEntry for BondedEras {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "BondedEras";
-                type Value = ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct CurrentPlannedSession;
-            impl ::subxt::StorageEntry for CurrentPlannedSession {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "CurrentPlannedSession";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct EraPayout;
-            impl ::subxt::StorageEntry for EraPayout {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "EraPayout";
-                type Value = ::core::primitive::u128;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageVersion;
-            impl ::subxt::StorageEntry for StorageVersion {
-                const PALLET: &'static str = "OctopusLpos";
-                const STORAGE: &'static str = "StorageVersion";
-                type Value = runtime_types::pallet_octopus_lpos::Releases;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn history_depth(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    let entry = HistoryDepth;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn current_era(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = CurrentEra;
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn active_era(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<runtime_types::pallet_octopus_lpos::ActiveEraInfo>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = ActiveEra;
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn eras_start_session_index(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = ErasStartSessionIndex(_0);
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn eras_start_session_index_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasStartSessionIndex>,
-                    ::subxt::BasicError,
-                > {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn eras_stakers(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    _1: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    let entry = ErasStakers(_0, _1);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn eras_stakers_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, ErasStakers>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn eras_validator_reward(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u128>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = ErasValidatorReward(_0);
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn eras_validator_reward_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasValidatorReward>,
-                    ::subxt::BasicError,
-                > {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn eras_reward_points(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_octopus_lpos::EraRewardPoints<
-                        ::subxt::sp_core::crypto::AccountId32,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = ErasRewardPoints(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn eras_reward_points_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasRewardPoints>,
-                    ::subxt::BasicError,
-                > {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn eras_total_stake(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    let entry = ErasTotalStake(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn eras_total_stake_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasTotalStake>,
-                    ::subxt::BasicError,
-                > {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn bonded_eras(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = BondedEras;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn current_planned_session(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    let entry = CurrentPlannedSession;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn era_payout(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    let entry = EraPayout;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn storage_version(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_octopus_lpos::Releases,
-                    ::subxt::BasicError,
-                > {
-                    let entry = StorageVersion;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn sessions_per_era(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[6u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-                pub fn blocks_per_era(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[120u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-                pub fn bonding_duration(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[160u8, 2u8, 0u8, 0u8][..],
-                    )?)
-                }
-            }
-        }
-    }
-    pub mod octopus_upward_messages {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-            }
-        }
-        pub type Event = runtime_types::pallet_octopus_upward_messages::pallet::Event;
-        pub mod events {
-            use super::runtime_types;
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct MessageQueue;
-            impl ::subxt::StorageEntry for MessageQueue {
-                const PALLET: &'static str = "OctopusUpwardMessages";
-                const STORAGE: &'static str = "MessageQueue";
-                type Value =
-                    ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct Nonce;
-            impl ::subxt::StorageEntry for Nonce {
-                const PALLET: &'static str = "OctopusUpwardMessages";
-                const STORAGE: &'static str = "Nonce";
-                type Value = ::core::primitive::u64;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn message_queue(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = MessageQueue;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn nonce(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    let entry = Nonce;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-            }
-        }
-    }
-    pub mod session {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_keys {
-                pub keys: runtime_types::node_template_runtime::opaque::SessionKeys,
-                pub proof: ::std::vec::Vec<::core::primitive::u8>,
-            }
-            impl ::subxt::Call for set_keys {
-                const PALLET: &'static str = "Session";
-                const FUNCTION: &'static str = "set_keys";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct purge_keys;
-            impl ::subxt::Call for purge_keys {
-                const PALLET: &'static str = "Session";
-                const FUNCTION: &'static str = "purge_keys";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn set_keys(
-                    &self,
-                    keys: runtime_types::node_template_runtime::opaque::SessionKeys,
-                    proof: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_keys, DispatchError>
-                {
-                    let call = set_keys { keys, proof };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn purge_keys(
-                    &self,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, purge_keys, DispatchError>
-                {
-                    let call = purge_keys {};
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub type Event = runtime_types::pallet_session::pallet::Event;
-        pub mod events {
-            use super::runtime_types;
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct NewSession(pub ::core::primitive::u32);
-            impl ::subxt::Event for NewSession {
-                const PALLET: &'static str = "Session";
-                const EVENT: &'static str = "NewSession";
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct Validators;
-            impl ::subxt::StorageEntry for Validators {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "Validators";
-                type Value = ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct CurrentIndex;
-            impl ::subxt::StorageEntry for CurrentIndex {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "CurrentIndex";
-                type Value = ::core::primitive::u32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct QueuedChanged;
-            impl ::subxt::StorageEntry for QueuedChanged {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "QueuedChanged";
-                type Value = ::core::primitive::bool;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct QueuedKeys;
-            impl ::subxt::StorageEntry for QueuedKeys {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "QueuedKeys";
-                type Value = ::std::vec::Vec<(
-                    ::subxt::sp_core::crypto::AccountId32,
-                    runtime_types::node_template_runtime::opaque::SessionKeys,
-                )>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct DisabledValidators;
-            impl ::subxt::StorageEntry for DisabledValidators {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "DisabledValidators";
-                type Value = ::std::vec::Vec<::core::primitive::u32>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
-            pub struct NextKeys(pub ::subxt::sp_core::crypto::AccountId32);
-            impl ::subxt::StorageEntry for NextKeys {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "NextKeys";
-                type Value = runtime_types::node_template_runtime::opaque::SessionKeys;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct KeyOwner(
-                pub runtime_types::sp_core::crypto::KeyTypeId,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-            );
-            impl ::subxt::StorageEntry for KeyOwner {
-                const PALLET: &'static str = "Session";
-                const STORAGE: &'static str = "KeyOwner";
-                type Value = ::subxt::sp_core::crypto::AccountId32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Twox64Concat,
-                    )])
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn validators(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Validators;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn current_index(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    let entry = CurrentIndex;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn queued_changed(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    let entry = QueuedChanged;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn queued_keys(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        runtime_types::node_template_runtime::opaque::SessionKeys,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = QueuedKeys;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn disabled_validators(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = DisabledValidators;
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn next_keys(
-                    &self,
-                    _0: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::node_template_runtime::opaque::SessionKeys,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = NextKeys(_0);
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn next_keys_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, NextKeys>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn key_owner(
-                    &self,
-                    _0: runtime_types::sp_core::crypto::KeyTypeId,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = KeyOwner(_0, _1);
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn key_owner_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, KeyOwner>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
+                    let pallet = self.client.metadata().pallet("Grandpa")?;
+                    let constant = pallet.constant("MaxAuthorities")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
             }
         }
     }
     pub mod im_online {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct heartbeat {
+            pub struct Heartbeat {
                 pub heartbeat: runtime_types::pallet_im_online::Heartbeat<::core::primitive::u32>,
                 pub signature: runtime_types::pallet_im_online::sr25519::app_sr25519::Signature,
             }
-            impl ::subxt::Call for heartbeat {
+            impl ::subxt::Call for Heartbeat {
                 const PALLET: &'static str = "ImOnline";
                 const FUNCTION: &'static str = "heartbeat";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+                marker: ::core::marker::PhantomData<X>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -3649,9 +5083,15 @@ pub mod api {
                     &self,
                     heartbeat: runtime_types::pallet_im_online::Heartbeat<::core::primitive::u32>,
                     signature: runtime_types::pallet_im_online::sr25519::app_sr25519::Signature,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, heartbeat, DispatchError>
-                {
-                    let call = heartbeat {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    Heartbeat,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = Heartbeat {
                         heartbeat,
                         signature,
                     };
@@ -3663,9 +5103,9 @@ pub mod api {
         pub mod events {
             use super::runtime_types;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct HeartbeatReceived(
-                pub runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
-            );
+            pub struct HeartbeatReceived {
+                pub authority_id: runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
+            }
             impl ::subxt::Event for HeartbeatReceived {
                 const PALLET: &'static str = "ImOnline";
                 const EVENT: &'static str = "HeartbeatReceived";
@@ -3677,12 +5117,12 @@ pub mod api {
                 const EVENT: &'static str = "AllGood";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct SomeOffline(
-                pub  ::std::vec::Vec<(
+            pub struct SomeOffline {
+                pub offline: ::std::vec::Vec<(
                     ::subxt::sp_core::crypto::AccountId32,
                     ::core::primitive::u128,
                 )>,
-            );
+            }
             impl ::subxt::Event for SomeOffline {
                 const PALLET: &'static str = "ImOnline";
                 const EVENT: &'static str = "SomeOffline";
@@ -3711,8 +5151,11 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct ReceivedHeartbeats(pub ::core::primitive::u32, pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for ReceivedHeartbeats {
+            pub struct ReceivedHeartbeats<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::core::primitive::u32,
+            );
+            impl ::subxt::StorageEntry for ReceivedHeartbeats<'_> {
                 const PALLET: &'static str = "ImOnline";
                 const STORAGE: &'static str = "ReceivedHeartbeats";
                 type Value = runtime_types::frame_support::traits::misc::WrapperOpaque<
@@ -3725,11 +5168,11 @@ pub mod api {
                     ])
                 }
             }
-            pub struct AuthoredBlocks(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
+            pub struct AuthoredBlocks<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::subxt::sp_core::crypto::AccountId32,
             );
-            impl ::subxt::StorageEntry for AuthoredBlocks {
+            impl ::subxt::StorageEntry for AuthoredBlocks<'_> {
                 const PALLET: &'static str = "ImOnline";
                 const STORAGE: &'static str = "AuthoredBlocks";
                 type Value = ::core::primitive::u32;
@@ -3769,8 +5212,8 @@ pub mod api {
                 }
                 pub async fn received_heartbeats(
                     &self,
-                    _0: ::core::primitive::u32,
-                    _1: ::core::primitive::u32,
+                    _0: &::core::primitive::u32,
+                    _1: &::core::primitive::u32,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<
@@ -3787,15 +5230,15 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ReceivedHeartbeats>,
+                    ::subxt::KeyIter<'a, T, ReceivedHeartbeats<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn authored_blocks(
                     &self,
-                    _0: ::core::primitive::u32,
-                    _1: ::subxt::sp_core::crypto::AccountId32,
+                    _0: &::core::primitive::u32,
+                    _1: &::subxt::sp_core::crypto::AccountId32,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
@@ -3806,7 +5249,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, AuthoredBlocks>,
+                    ::subxt::KeyIter<'a, T, AuthoredBlocks<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -3815,1125 +5258,31 @@ pub mod api {
         }
         pub mod constants {
             use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
                 pub fn unsigned_priority(
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[255u8, 255u8, 255u8, 255u8, 255u8, 255u8, 255u8, 255u8][..],
-                    )?)
+                    let pallet = self.client.metadata().pallet("ImOnline")?;
+                    let constant = pallet.constant("UnsignedPriority")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
                 }
             }
         }
     }
     pub mod historical {
+        use super::root_mod;
         use super::runtime_types;
-    }
-    pub mod assets {
-        use super::runtime_types;
-        pub mod calls {
-            use super::runtime_types;
-            type DispatchError = runtime_types::sp_runtime::DispatchError;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct create {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub admin:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub min_balance: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for create {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "create";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_create {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub owner:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub is_sufficient: ::core::primitive::bool,
-                #[codec(compact)]
-                pub min_balance: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for force_create {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "force_create";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct destroy {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub witness: runtime_types::pallet_assets::types::DestroyWitness,
-            }
-            impl ::subxt::Call for destroy {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "destroy";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct mint {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub beneficiary:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for mint {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "mint";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct burn {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub who:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for burn {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "burn";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub target:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for transfer {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "transfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer_keep_alive {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub target:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for transfer_keep_alive {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "transfer_keep_alive";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_transfer {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub source:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub dest:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for force_transfer {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "force_transfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct freeze {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub who:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-            }
-            impl ::subxt::Call for freeze {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "freeze";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct thaw {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub who:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-            }
-            impl ::subxt::Call for thaw {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "thaw";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct freeze_asset {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-            }
-            impl ::subxt::Call for freeze_asset {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "freeze_asset";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct thaw_asset {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-            }
-            impl ::subxt::Call for thaw_asset {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "thaw_asset";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer_ownership {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub owner:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-            }
-            impl ::subxt::Call for transfer_ownership {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "transfer_ownership";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_team {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub issuer:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub admin:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub freezer:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-            }
-            impl ::subxt::Call for set_team {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "set_team";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_metadata {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub name: ::std::vec::Vec<::core::primitive::u8>,
-                pub symbol: ::std::vec::Vec<::core::primitive::u8>,
-                pub decimals: ::core::primitive::u8,
-            }
-            impl ::subxt::Call for set_metadata {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "set_metadata";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct clear_metadata {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-            }
-            impl ::subxt::Call for clear_metadata {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "clear_metadata";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_set_metadata {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub name: ::std::vec::Vec<::core::primitive::u8>,
-                pub symbol: ::std::vec::Vec<::core::primitive::u8>,
-                pub decimals: ::core::primitive::u8,
-                pub is_frozen: ::core::primitive::bool,
-            }
-            impl ::subxt::Call for force_set_metadata {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "force_set_metadata";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_clear_metadata {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-            }
-            impl ::subxt::Call for force_clear_metadata {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "force_clear_metadata";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_asset_status {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub owner:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub issuer:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub admin:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub freezer:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub min_balance: ::core::primitive::u128,
-                pub is_sufficient: ::core::primitive::bool,
-                pub is_frozen: ::core::primitive::bool,
-            }
-            impl ::subxt::Call for force_asset_status {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "force_asset_status";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct approve_transfer {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub delegate:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for approve_transfer {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "approve_transfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct cancel_approval {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub delegate:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-            }
-            impl ::subxt::Call for cancel_approval {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "cancel_approval";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct force_cancel_approval {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub owner:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub delegate:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-            }
-            impl ::subxt::Call for force_cancel_approval {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "force_cancel_approval";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct transfer_approved {
-                #[codec(compact)]
-                pub id: ::core::primitive::u32,
-                pub owner:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                pub destination:
-                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
-                #[codec(compact)]
-                pub amount: ::core::primitive::u128,
-            }
-            impl ::subxt::Call for transfer_approved {
-                const PALLET: &'static str = "Assets";
-                const FUNCTION: &'static str = "transfer_approved";
-            }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
-            }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
-            where
-                T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
-            {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self {
-                        client,
-                        marker: ::core::marker::PhantomData,
-                    }
-                }
-                pub fn create(
-                    &self,
-                    id: ::core::primitive::u32,
-                    admin: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    min_balance: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, create, DispatchError>
-                {
-                    let call = create {
-                        id,
-                        admin,
-                        min_balance,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_create(
-                    &self,
-                    id: ::core::primitive::u32,
-                    owner: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    is_sufficient: ::core::primitive::bool,
-                    min_balance: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_create, DispatchError>
-                {
-                    let call = force_create {
-                        id,
-                        owner,
-                        is_sufficient,
-                        min_balance,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn destroy(
-                    &self,
-                    id: ::core::primitive::u32,
-                    witness: runtime_types::pallet_assets::types::DestroyWitness,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, destroy, DispatchError>
-                {
-                    let call = destroy { id, witness };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn mint(
-                    &self,
-                    id: ::core::primitive::u32,
-                    beneficiary: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, mint, DispatchError>
-                {
-                    let call = mint {
-                        id,
-                        beneficiary,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn burn(
-                    &self,
-                    id: ::core::primitive::u32,
-                    who: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, burn, DispatchError>
-                {
-                    let call = burn { id, who, amount };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn transfer(
-                    &self,
-                    id: ::core::primitive::u32,
-                    target: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer, DispatchError>
-                {
-                    let call = transfer { id, target, amount };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn transfer_keep_alive(
-                    &self,
-                    id: ::core::primitive::u32,
-                    target: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_keep_alive, DispatchError>
-                {
-                    let call = transfer_keep_alive { id, target, amount };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_transfer(
-                    &self,
-                    id: ::core::primitive::u32,
-                    source: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    dest: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_transfer, DispatchError>
-                {
-                    let call = force_transfer {
-                        id,
-                        source,
-                        dest,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn freeze(
-                    &self,
-                    id: ::core::primitive::u32,
-                    who: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, freeze, DispatchError>
-                {
-                    let call = freeze { id, who };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn thaw(
-                    &self,
-                    id: ::core::primitive::u32,
-                    who: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, thaw, DispatchError>
-                {
-                    let call = thaw { id, who };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn freeze_asset(
-                    &self,
-                    id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, freeze_asset, DispatchError>
-                {
-                    let call = freeze_asset { id };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn thaw_asset(
-                    &self,
-                    id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, thaw_asset, DispatchError>
-                {
-                    let call = thaw_asset { id };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn transfer_ownership(
-                    &self,
-                    id: ::core::primitive::u32,
-                    owner: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_ownership, DispatchError>
-                {
-                    let call = transfer_ownership { id, owner };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn set_team(
-                    &self,
-                    id: ::core::primitive::u32,
-                    issuer: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    admin: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    freezer: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_team, DispatchError>
-                {
-                    let call = set_team {
-                        id,
-                        issuer,
-                        admin,
-                        freezer,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn set_metadata(
-                    &self,
-                    id: ::core::primitive::u32,
-                    name: ::std::vec::Vec<::core::primitive::u8>,
-                    symbol: ::std::vec::Vec<::core::primitive::u8>,
-                    decimals: ::core::primitive::u8,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_metadata, DispatchError>
-                {
-                    let call = set_metadata {
-                        id,
-                        name,
-                        symbol,
-                        decimals,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn clear_metadata(
-                    &self,
-                    id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, clear_metadata, DispatchError>
-                {
-                    let call = clear_metadata { id };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_set_metadata(
-                    &self,
-                    id: ::core::primitive::u32,
-                    name: ::std::vec::Vec<::core::primitive::u8>,
-                    symbol: ::std::vec::Vec<::core::primitive::u8>,
-                    decimals: ::core::primitive::u8,
-                    is_frozen: ::core::primitive::bool,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_set_metadata, DispatchError>
-                {
-                    let call = force_set_metadata {
-                        id,
-                        name,
-                        symbol,
-                        decimals,
-                        is_frozen,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_clear_metadata(
-                    &self,
-                    id: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_clear_metadata, DispatchError>
-                {
-                    let call = force_clear_metadata { id };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_asset_status(
-                    &self,
-                    id: ::core::primitive::u32,
-                    owner: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    issuer: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    admin: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    freezer: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    min_balance: ::core::primitive::u128,
-                    is_sufficient: ::core::primitive::bool,
-                    is_frozen: ::core::primitive::bool,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_asset_status, DispatchError>
-                {
-                    let call = force_asset_status {
-                        id,
-                        owner,
-                        issuer,
-                        admin,
-                        freezer,
-                        min_balance,
-                        is_sufficient,
-                        is_frozen,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn approve_transfer(
-                    &self,
-                    id: ::core::primitive::u32,
-                    delegate: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, approve_transfer, DispatchError>
-                {
-                    let call = approve_transfer {
-                        id,
-                        delegate,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn cancel_approval(
-                    &self,
-                    id: ::core::primitive::u32,
-                    delegate: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, cancel_approval, DispatchError>
-                {
-                    let call = cancel_approval { id, delegate };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn force_cancel_approval(
-                    &self,
-                    id: ::core::primitive::u32,
-                    owner: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    delegate: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, force_cancel_approval, DispatchError>
-                {
-                    let call = force_cancel_approval {
-                        id,
-                        owner,
-                        delegate,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-                pub fn transfer_approved(
-                    &self,
-                    id: ::core::primitive::u32,
-                    owner: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    destination: ::subxt::sp_runtime::MultiAddress<
-                        ::subxt::sp_core::crypto::AccountId32,
-                        (),
-                    >,
-                    amount: ::core::primitive::u128,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, transfer_approved, DispatchError>
-                {
-                    let call = transfer_approved {
-                        id,
-                        owner,
-                        destination,
-                        amount,
-                    };
-                    ::subxt::SubmittableExtrinsic::new(self.client, call)
-                }
-            }
-        }
-        pub type Event = runtime_types::pallet_assets::pallet::Event;
-        pub mod events {
-            use super::runtime_types;
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Created(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for Created {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Created";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Issued(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Issued {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Issued";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Transferred(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Transferred {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Transferred";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Burned(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for Burned {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Burned";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct TeamChanged(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for TeamChanged {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "TeamChanged";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct OwnerChanged(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for OwnerChanged {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "OwnerChanged";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Frozen(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for Frozen {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Frozen";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Thawed(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for Thawed {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Thawed";
-            }
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct AssetFrozen(pub ::core::primitive::u32);
-            impl ::subxt::Event for AssetFrozen {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "AssetFrozen";
-            }
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct AssetThawed(pub ::core::primitive::u32);
-            impl ::subxt::Event for AssetThawed {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "AssetThawed";
-            }
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct Destroyed(pub ::core::primitive::u32);
-            impl ::subxt::Event for Destroyed {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "Destroyed";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct ForceCreated(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for ForceCreated {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "ForceCreated";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct MetadataSet(
-                pub ::core::primitive::u32,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::core::primitive::u8,
-                pub ::core::primitive::bool,
-            );
-            impl ::subxt::Event for MetadataSet {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "MetadataSet";
-            }
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct MetadataCleared(pub ::core::primitive::u32);
-            impl ::subxt::Event for MetadataCleared {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "MetadataCleared";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct ApprovedTransfer(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for ApprovedTransfer {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "ApprovedTransfer";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct ApprovalCancelled(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::Event for ApprovalCancelled {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "ApprovalCancelled";
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct TransferredApproved(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for TransferredApproved {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "TransferredApproved";
-            }
-            #[derive(
-                :: subxt :: codec :: Encode,
-                :: subxt :: codec :: Decode,
-                Debug,
-                :: subxt :: codec :: CompactAs,
-            )]
-            pub struct AssetStatusChanged(pub ::core::primitive::u32);
-            impl ::subxt::Event for AssetStatusChanged {
-                const PALLET: &'static str = "Assets";
-                const EVENT: &'static str = "AssetStatusChanged";
-            }
-        }
-        pub mod storage {
-            use super::runtime_types;
-            pub struct Asset(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for Asset {
-                const PALLET: &'static str = "Assets";
-                const STORAGE: &'static str = "Asset";
-                type Value = runtime_types::pallet_assets::types::AssetDetails<
-                    ::core::primitive::u128,
-                    ::subxt::sp_core::crypto::AccountId32,
-                    ::core::primitive::u128,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
-                }
-            }
-            pub struct Account(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::StorageEntry for Account {
-                const PALLET: &'static str = "Assets";
-                const STORAGE: &'static str = "Account";
-                type Value =
-                    runtime_types::pallet_assets::types::AssetBalance<::core::primitive::u128, ()>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(
-                            &self.0,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                        ::subxt::StorageMapKey::new(
-                            &self.1,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                    ])
-                }
-            }
-            pub struct Approvals(
-                pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-            );
-            impl ::subxt::StorageEntry for Approvals {
-                const PALLET: &'static str = "Assets";
-                const STORAGE: &'static str = "Approvals";
-                type Value = runtime_types::pallet_assets::types::Approval<
-                    ::core::primitive::u128,
-                    ::core::primitive::u128,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(
-                            &self.0,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                        ::subxt::StorageMapKey::new(
-                            &self.1,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                        ::subxt::StorageMapKey::new(
-                            &self.2,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                    ])
-                }
-            }
-            pub struct Metadata(pub ::core::primitive::u32);
-            impl ::subxt::StorageEntry for Metadata {
-                const PALLET: &'static str = "Assets";
-                const STORAGE: &'static str = "Metadata";
-                type Value = runtime_types::pallet_assets::types::AssetMetadata<
-                    ::core::primitive::u128,
-                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                        ::core::primitive::u8,
-                    >,
-                >;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
-                }
-            }
-            pub struct StorageApi<'a, T: ::subxt::Config> {
-                client: &'a ::subxt::Client<T>,
-            }
-            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
-                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
-                    Self { client }
-                }
-                pub async fn asset(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_assets::types::AssetDetails<
-                            ::core::primitive::u128,
-                            ::subxt::sp_core::crypto::AccountId32,
-                            ::core::primitive::u128,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Asset(_0);
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn asset_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn account(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    _1: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_assets::types::AssetBalance<::core::primitive::u128, ()>,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Account(_0, _1);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn account_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn approvals(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    _1: ::subxt::sp_core::crypto::AccountId32,
-                    _2: ::subxt::sp_core::crypto::AccountId32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_assets::types::Approval<
-                            ::core::primitive::u128,
-                            ::core::primitive::u128,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Approvals(_0, _1, _2);
-                    self.client.storage().fetch(&entry, hash).await
-                }
-                pub async fn approvals_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Approvals>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-                pub async fn metadata(
-                    &self,
-                    _0: ::core::primitive::u32,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_assets::types::AssetMetadata<
-                        ::core::primitive::u128,
-                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                            ::core::primitive::u8,
-                        >,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    let entry = Metadata(_0);
-                    self.client.storage().fetch_or_default(&entry, hash).await
-                }
-                pub async fn metadata_iter(
-                    &self,
-                    hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Metadata>, ::subxt::BasicError>
-                {
-                    self.client.storage().iter(hash).await
-                }
-            }
-        }
-        pub mod constants {
-            use super::runtime_types;
-            pub struct ConstantsApi;
-            impl ConstantsApi {
-                pub fn asset_deposit(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 0u8, 138u8, 93u8, 120u8, 69u8, 99u8, 1u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
-                }
-                pub fn metadata_deposit_base(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 0u8, 193u8, 111u8, 242u8, 134u8, 35u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
-                }
-                pub fn metadata_deposit_per_byte(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 128u8, 198u8, 164u8, 126u8, 141u8, 3u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
-                }
-                pub fn approval_deposit(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[
-                            0u8, 128u8, 198u8, 164u8, 126u8, 141u8, 3u8, 0u8, 0u8, 0u8, 0u8, 0u8,
-                            0u8, 0u8, 0u8, 0u8,
-                        ][..],
-                    )?)
-                }
-                pub fn string_limit(
-                    &self,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    Ok(::subxt::codec::Decode::decode(
-                        &mut &[50u8, 0u8, 0u8, 0u8][..],
-                    )?)
-                }
-            }
-        }
     }
     pub mod mmr {
+        use super::root_mod;
         use super::runtime_types;
         pub mod storage {
             use super::runtime_types;
@@ -4955,8 +5304,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct Nodes(pub ::core::primitive::u64);
-            impl ::subxt::StorageEntry for Nodes {
+            pub struct Nodes<'a>(pub &'a ::core::primitive::u64);
+            impl ::subxt::StorageEntry for Nodes<'_> {
                 const PALLET: &'static str = "Mmr";
                 const STORAGE: &'static str = "Nodes";
                 type Value = ::subxt::sp_core::H256;
@@ -4992,7 +5341,7 @@ pub mod api {
                 }
                 pub async fn nodes(
                     &self,
-                    _0: ::core::primitive::u64,
+                    _0: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::core::option::Option<::subxt::sp_core::H256>,
@@ -5004,7 +5353,7 @@ pub mod api {
                 pub async fn nodes_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Nodes>, ::subxt::BasicError>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Nodes<'a>>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -5012,7 +5361,29 @@ pub mod api {
         }
     }
     pub mod beefy {
+        use super::root_mod;
         use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+            }
+        }
         pub mod storage {
             use super::runtime_types;
             pub struct Authorities;
@@ -5081,6 +5452,7 @@ pub mod api {
         }
     }
     pub mod mmr_leaf {
+        use super::root_mod;
         use super::runtime_types;
         pub mod storage {
             use super::runtime_types;
@@ -5117,56 +5489,1385 @@ pub mod api {
             }
         }
     }
-    pub mod sudo {
+    pub mod uniques {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct sudo {
+            pub struct Create {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub admin:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for Create {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "create";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceCreate {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub free_holding: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for ForceCreate {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "force_create";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Destroy {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub witness: runtime_types::pallet_uniques::types::DestroyWitness,
+            }
+            impl ::subxt::Call for Destroy {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "destroy";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Mint {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for Mint {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "mint";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Burn {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+                pub check_owner: ::core::option::Option<
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                >,
+            }
+            impl ::subxt::Call for Burn {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "burn";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transfer {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+                pub dest:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for Transfer {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Redeposit {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub instances: ::std::vec::Vec<::core::primitive::u32>,
+            }
+            impl ::subxt::Call for Redeposit {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "redeposit";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Freeze {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for Freeze {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "freeze";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Thaw {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for Thaw {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "thaw";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct FreezeClass {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for FreezeClass {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "freeze_class";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ThawClass {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ThawClass {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "thaw_class";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TransferOwnership {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for TransferOwnership {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "transfer_ownership";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetTeam {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub issuer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub admin:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub freezer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for SetTeam {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "set_team";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ApproveTransfer {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+                pub delegate:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+            }
+            impl ::subxt::Call for ApproveTransfer {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "approve_transfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct CancelApproval {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+                pub maybe_check_delegate: ::core::option::Option<
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                >,
+            }
+            impl ::subxt::Call for CancelApproval {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "cancel_approval";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceAssetStatus {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub owner:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub issuer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub admin:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub freezer:
+                    ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
+                pub free_holding: ::core::primitive::bool,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for ForceAssetStatus {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "force_asset_status";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetAttribute {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                pub key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+                pub value: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+            }
+            impl ::subxt::Call for SetAttribute {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "set_attribute";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ClearAttribute {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                pub key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+            }
+            impl ::subxt::Call for ClearAttribute {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "clear_attribute";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetMetadata {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+                pub data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for SetMetadata {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "set_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ClearMetadata {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                #[codec(compact)]
+                pub instance: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ClearMetadata {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "clear_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct SetClassMetadata {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+                pub data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Call for SetClassMetadata {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "set_class_metadata";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ClearClassMetadata {
+                #[codec(compact)]
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Call for ClearClassMetadata {
+                const PALLET: &'static str = "Uniques";
+                const FUNCTION: &'static str = "clear_class_metadata";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
+            where
+                T: ::subxt::Config,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
+            {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self {
+                        client,
+                        marker: ::core::marker::PhantomData,
+                    }
+                }
+                pub fn create(
+                    &self,
+                    class: ::core::primitive::u32,
+                    admin: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>
+                {
+                    let call = Create { class, admin };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_create(
+                    &self,
+                    class: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    free_holding: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceCreate,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceCreate {
+                        class,
+                        owner,
+                        free_holding,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn destroy(
+                    &self,
+                    class: ::core::primitive::u32,
+                    witness: runtime_types::pallet_uniques::types::DestroyWitness,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Destroy, DispatchError, root_mod::Event>
+                {
+                    let call = Destroy { class, witness };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn mint(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Mint, DispatchError, root_mod::Event>
+                {
+                    let call = Mint {
+                        class,
+                        instance,
+                        owner,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn burn(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                    check_owner: ::core::option::Option<
+                        ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Burn, DispatchError, root_mod::Event>
+                {
+                    let call = Burn {
+                        class,
+                        instance,
+                        check_owner,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                    dest: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Transfer, DispatchError, root_mod::Event>
+                {
+                    let call = Transfer {
+                        class,
+                        instance,
+                        dest,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn redeposit(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instances: ::std::vec::Vec<::core::primitive::u32>,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    Redeposit,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = Redeposit { class, instances };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn freeze(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Freeze, DispatchError, root_mod::Event>
+                {
+                    let call = Freeze { class, instance };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn thaw(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Thaw, DispatchError, root_mod::Event>
+                {
+                    let call = Thaw { class, instance };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn freeze_class(
+                    &self,
+                    class: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    FreezeClass,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = FreezeClass { class };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn thaw_class(
+                    &self,
+                    class: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ThawClass,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ThawClass { class };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer_ownership(
+                    &self,
+                    class: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    TransferOwnership,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = TransferOwnership { class, owner };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_team(
+                    &self,
+                    class: ::core::primitive::u32,
+                    issuer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    admin: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    freezer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, SetTeam, DispatchError, root_mod::Event>
+                {
+                    let call = SetTeam {
+                        class,
+                        issuer,
+                        admin,
+                        freezer,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn approve_transfer(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                    delegate: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ApproveTransfer,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ApproveTransfer {
+                        class,
+                        instance,
+                        delegate,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn cancel_approval(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                    maybe_check_delegate: ::core::option::Option<
+                        ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    CancelApproval,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = CancelApproval {
+                        class,
+                        instance,
+                        maybe_check_delegate,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn force_asset_status(
+                    &self,
+                    class: ::core::primitive::u32,
+                    owner: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    issuer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    admin: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    freezer: ::subxt::sp_runtime::MultiAddress<
+                        ::subxt::sp_core::crypto::AccountId32,
+                        (),
+                    >,
+                    free_holding: ::core::primitive::bool,
+                    is_frozen: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ForceAssetStatus,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ForceAssetStatus {
+                        class,
+                        owner,
+                        issuer,
+                        admin,
+                        freezer,
+                        free_holding,
+                        is_frozen,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_attribute(
+                    &self,
+                    class: ::core::primitive::u32,
+                    maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                    key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    value: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetAttribute,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetAttribute {
+                        class,
+                        maybe_instance,
+                        key,
+                        value,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn clear_attribute(
+                    &self,
+                    class: ::core::primitive::u32,
+                    maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                    key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ClearAttribute,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ClearAttribute {
+                        class,
+                        maybe_instance,
+                        key,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_metadata(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                    data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    is_frozen: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetMetadata {
+                        class,
+                        instance,
+                        data,
+                        is_frozen,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn clear_metadata(
+                    &self,
+                    class: ::core::primitive::u32,
+                    instance: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ClearMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ClearMetadata { class, instance };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn set_class_metadata(
+                    &self,
+                    class: ::core::primitive::u32,
+                    data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    is_frozen: ::core::primitive::bool,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SetClassMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SetClassMetadata {
+                        class,
+                        data,
+                        is_frozen,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn clear_class_metadata(
+                    &self,
+                    class: ::core::primitive::u32,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    ClearClassMetadata,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = ClearClassMetadata { class };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+            }
+        }
+        pub type Event = runtime_types::pallet_uniques::pallet::Event;
+        pub mod events {
+            use super::runtime_types;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Created {
+                pub class: ::core::primitive::u32,
+                pub creator: ::subxt::sp_core::crypto::AccountId32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Created {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Created";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ForceCreated {
+                pub class: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for ForceCreated {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ForceCreated";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct Destroyed {
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for Destroyed {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Destroyed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Issued {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Issued {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Issued";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transferred {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+                pub from: ::subxt::sp_core::crypto::AccountId32,
+                pub to: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Transferred {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Transferred";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Burned {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for Burned {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Burned";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Frozen {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for Frozen {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Frozen";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Thawed {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for Thawed {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Thawed";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct ClassFrozen {
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for ClassFrozen {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ClassFrozen";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct ClassThawed {
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for ClassThawed {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ClassThawed";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct OwnerChanged {
+                pub class: ::core::primitive::u32,
+                pub new_owner: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for OwnerChanged {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "OwnerChanged";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct TeamChanged {
+                pub class: ::core::primitive::u32,
+                pub issuer: ::subxt::sp_core::crypto::AccountId32,
+                pub admin: ::subxt::sp_core::crypto::AccountId32,
+                pub freezer: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for TeamChanged {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "TeamChanged";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ApprovedTransfer {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+                pub delegate: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for ApprovedTransfer {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ApprovedTransfer";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ApprovalCancelled {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+                pub owner: ::subxt::sp_core::crypto::AccountId32,
+                pub delegate: ::subxt::sp_core::crypto::AccountId32,
+            }
+            impl ::subxt::Event for ApprovalCancelled {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ApprovalCancelled";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct AssetStatusChanged {
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for AssetStatusChanged {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "AssetStatusChanged";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct ClassMetadataSet {
+                pub class: ::core::primitive::u32,
+                pub data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Event for ClassMetadataSet {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ClassMetadataSet";
+            }
+            #[derive(
+                :: subxt :: codec :: Encode,
+                :: subxt :: codec :: Decode,
+                Debug,
+                :: subxt :: codec :: CompactAs,
+            )]
+            pub struct ClassMetadataCleared {
+                pub class: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for ClassMetadataCleared {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "ClassMetadataCleared";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct MetadataSet {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+                pub data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+                pub is_frozen: ::core::primitive::bool,
+            }
+            impl ::subxt::Event for MetadataSet {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "MetadataSet";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct MetadataCleared {
+                pub class: ::core::primitive::u32,
+                pub instance: ::core::primitive::u32,
+            }
+            impl ::subxt::Event for MetadataCleared {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "MetadataCleared";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Redeposited {
+                pub class: ::core::primitive::u32,
+                pub successful_instances: ::std::vec::Vec<::core::primitive::u32>,
+            }
+            impl ::subxt::Event for Redeposited {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "Redeposited";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AttributeSet {
+                pub class: ::core::primitive::u32,
+                pub maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                pub key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+                pub value: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+            }
+            impl ::subxt::Event for AttributeSet {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "AttributeSet";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct AttributeCleared {
+                pub class: ::core::primitive::u32,
+                pub maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                pub key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+            }
+            impl ::subxt::Event for AttributeCleared {
+                const PALLET: &'static str = "Uniques";
+                const EVENT: &'static str = "AttributeCleared";
+            }
+        }
+        pub mod storage {
+            use super::runtime_types;
+            pub struct Class<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for Class<'_> {
+                const PALLET: &'static str = "Uniques";
+                const STORAGE: &'static str = "Class";
+                type Value = runtime_types::pallet_uniques::types::ClassDetails<
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::core::primitive::u128,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct Account<'a>(
+                pub &'a ::subxt::sp_core::crypto::AccountId32,
+                pub &'a ::core::primitive::u32,
+                pub &'a ::core::primitive::u32,
+            );
+            impl ::subxt::StorageEntry for Account<'_> {
+                const PALLET: &'static str = "Uniques";
+                const STORAGE: &'static str = "Account";
+                type Value = ();
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.2,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct Asset<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::core::primitive::u32,
+            );
+            impl ::subxt::StorageEntry for Asset<'_> {
+                const PALLET: &'static str = "Uniques";
+                const STORAGE: &'static str = "Asset";
+                type Value = runtime_types::pallet_uniques::types::InstanceDetails<
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::core::primitive::u128,
+                >;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct ClassMetadataOf<'a>(pub &'a ::core::primitive::u32);
+            impl ::subxt::StorageEntry for ClassMetadataOf<'_> {
+                const PALLET: &'static str = "Uniques";
+                const STORAGE: &'static str = "ClassMetadataOf";
+                type Value =
+                    runtime_types::pallet_uniques::types::ClassMetadata<::core::primitive::u128>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct InstanceMetadataOf<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::core::primitive::u32,
+            );
+            impl ::subxt::StorageEntry for InstanceMetadataOf<'_> {
+                const PALLET: &'static str = "Uniques";
+                const STORAGE: &'static str = "InstanceMetadataOf";
+                type Value =
+                    runtime_types::pallet_uniques::types::InstanceMetadata<::core::primitive::u128>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct Attribute<'a>(
+                pub &'a ::core::primitive::u32,
+                pub &'a ::core::option::Option<::core::primitive::u32>,
+                pub  &'a runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    ::core::primitive::u8,
+                >,
+            );
+            impl ::subxt::StorageEntry for Attribute<'_> {
+                const PALLET: &'static str = "Uniques";
+                const STORAGE: &'static str = "Attribute";
+                type Value = (
+                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    ::core::primitive::u128,
+                );
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.2,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct StorageApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> StorageApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub async fn class(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::pallet_uniques::types::ClassDetails<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Class(_0);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn class_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Class<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn account(
+                    &self,
+                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    _1: &::core::primitive::u32,
+                    _2: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::option::Option<()>, ::subxt::BasicError>
+                {
+                    let entry = Account(_0, _1, _2);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn account_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn asset(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    _1: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::pallet_uniques::types::InstanceDetails<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Asset(_0, _1);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn asset_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset<'a>>, ::subxt::BasicError>
+                {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn class_metadata_of(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::pallet_uniques::types::ClassMetadata<
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ClassMetadataOf(_0);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn class_metadata_of_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ClassMetadataOf<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn instance_metadata_of(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    _1: &::core::primitive::u32,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<
+                        runtime_types::pallet_uniques::types::InstanceMetadata<
+                            ::core::primitive::u128,
+                        >,
+                    >,
+                    ::subxt::BasicError,
+                > {
+                    let entry = InstanceMetadataOf(_0, _1);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn instance_metadata_of_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, InstanceMetadataOf<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn attribute(
+                    &self,
+                    _0: &::core::primitive::u32,
+                    _1: &::core::option::Option<::core::primitive::u32>,
+                    _2: &runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::core::option::Option<(
+                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        ::core::primitive::u128,
+                    )>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Attribute(_0, _1, _2);
+                    self.client.storage().fetch(&entry, hash).await
+                }
+                pub async fn attribute_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Attribute<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+            }
+        }
+        pub mod constants {
+            use super::runtime_types;
+            pub struct ConstantsApi<'a, T: ::subxt::Config> {
+                client: &'a ::subxt::Client<T>,
+            }
+            impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+                pub fn new(client: &'a ::subxt::Client<T>) -> Self {
+                    Self { client }
+                }
+                pub fn class_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("ClassDeposit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn instance_deposit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("InstanceDeposit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn metadata_deposit_base(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("MetadataDepositBase")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn attribute_deposit_base(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("AttributeDepositBase")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn deposit_per_byte(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("DepositPerByte")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn string_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("StringLimit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn key_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("KeyLimit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+                pub fn value_limit(
+                    &self,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let pallet = self.client.metadata().pallet("Uniques")?;
+                    let constant = pallet.constant("ValueLimit")?;
+                    let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
+                    Ok(value)
+                }
+            }
+        }
+    }
+    pub mod sudo {
+        use super::root_mod;
+        use super::runtime_types;
+        pub mod calls {
+            use super::root_mod;
+            use super::runtime_types;
+            type DispatchError = runtime_types::sp_runtime::DispatchError;
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Sudo {
                 pub call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
             }
-            impl ::subxt::Call for sudo {
+            impl ::subxt::Call for Sudo {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "sudo";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct sudo_unchecked_weight {
+            pub struct SudoUncheckedWeight {
                 pub call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
                 pub weight: ::core::primitive::u64,
             }
-            impl ::subxt::Call for sudo_unchecked_weight {
+            impl ::subxt::Call for SudoUncheckedWeight {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "sudo_unchecked_weight";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct set_key {
+            pub struct SetKey {
                 pub new:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
             }
-            impl ::subxt::Call for set_key {
+            impl ::subxt::Call for SetKey {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "set_key";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct sudo_as {
+            pub struct SudoAs {
                 pub who:
                     ::subxt::sp_runtime::MultiAddress<::subxt::sp_core::crypto::AccountId32, ()>,
                 pub call: ::std::boxed::Box<runtime_types::node_template_runtime::Call>,
             }
-            impl ::subxt::Call for sudo_as {
+            impl ::subxt::Call for SudoAs {
                 const PALLET: &'static str = "Sudo";
                 const FUNCTION: &'static str = "sudo_as";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+                marker: ::core::marker::PhantomData<X>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -5177,9 +6878,9 @@ pub mod api {
                 pub fn sudo(
                     &self,
                     call: runtime_types::node_template_runtime::Call,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, sudo, DispatchError>
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Sudo, DispatchError, root_mod::Event>
                 {
-                    let call = sudo {
+                    let call = Sudo {
                         call: ::std::boxed::Box::new(call),
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
@@ -5188,9 +6889,15 @@ pub mod api {
                     &self,
                     call: runtime_types::node_template_runtime::Call,
                     weight: ::core::primitive::u64,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, sudo_unchecked_weight, DispatchError>
-                {
-                    let call = sudo_unchecked_weight {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    SudoUncheckedWeight,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = SudoUncheckedWeight {
                         call: ::std::boxed::Box::new(call),
                         weight,
                     };
@@ -5202,9 +6909,9 @@ pub mod api {
                         ::subxt::sp_core::crypto::AccountId32,
                         (),
                     >,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, set_key, DispatchError>
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, SetKey, DispatchError, root_mod::Event>
                 {
-                    let call = set_key { new };
+                    let call = SetKey { new };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn sudo_as(
@@ -5214,9 +6921,9 @@ pub mod api {
                         (),
                     >,
                     call: runtime_types::node_template_runtime::Call,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, sudo_as, DispatchError>
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, SudoAs, DispatchError, root_mod::Event>
                 {
-                    let call = sudo_as {
+                    let call = SudoAs {
                         who,
                         call: ::std::boxed::Box::new(call),
                     };
@@ -5228,23 +6935,27 @@ pub mod api {
         pub mod events {
             use super::runtime_types;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct Sudid(
-                pub ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
-            );
+            pub struct Sudid {
+                pub sudo_result:
+                    ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
+            }
             impl ::subxt::Event for Sudid {
                 const PALLET: &'static str = "Sudo";
                 const EVENT: &'static str = "Sudid";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct KeyChanged(pub ::subxt::sp_core::crypto::AccountId32);
+            pub struct KeyChanged {
+                pub new_sudoer: ::subxt::sp_core::crypto::AccountId32,
+            }
             impl ::subxt::Event for KeyChanged {
                 const PALLET: &'static str = "Sudo";
                 const EVENT: &'static str = "KeyChanged";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct SudoAsDone(
-                pub ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
-            );
+            pub struct SudoAsDone {
+                pub sudo_result:
+                    ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
+            }
             impl ::subxt::Event for SudoAsDone {
                 const PALLET: &'static str = "Sudo";
                 const EVENT: &'static str = "SudoAsDone";
@@ -5282,37 +6993,52 @@ pub mod api {
         }
     }
     pub mod ibc {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct deliver {
-                pub messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
+            pub struct Deliver {
+                pub message: runtime_types::pallet_ibc::Any,
                 pub tmp: ::core::primitive::u8,
             }
-            impl ::subxt::Call for deliver {
+            impl ::subxt::Call for Deliver {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "deliver";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct update_client_state {
+            pub struct UpdateClientState {
                 pub client_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub mmr_root: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl ::subxt::Call for update_client_state {
+            impl ::subxt::Call for UpdateClientState {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "update_client_state";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
-                client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct Transfer {
+                pub source_port: ::std::vec::Vec<::core::primitive::u8>,
+                pub source_channel: ::std::vec::Vec<::core::primitive::u8>,
+                pub token: ::std::vec::Vec<::core::primitive::u8>,
+                pub amount: ::core::primitive::u32,
+                pub receiver: ::std::vec::Vec<::core::primitive::u8>,
+                pub timeout_height: ::core::primitive::u64,
+                pub timeout_timestamp: ::std::vec::Vec<::core::primitive::u8>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl ::subxt::Call for Transfer {
+                const PALLET: &'static str = "Ibc";
+                const FUNCTION: &'static str = "transfer";
+            }
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
+                client: &'a ::subxt::Client<T>,
+                marker: ::core::marker::PhantomData<X>,
+            }
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -5322,22 +7048,50 @@ pub mod api {
                 }
                 pub fn deliver(
                     &self,
-                    messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
+                    message: runtime_types::pallet_ibc::Any,
                     tmp: ::core::primitive::u8,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, deliver, DispatchError>
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Deliver, DispatchError, root_mod::Event>
                 {
-                    let call = deliver { messages, tmp };
+                    let call = Deliver { message, tmp };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn update_client_state(
                     &self,
                     client_id: ::std::vec::Vec<::core::primitive::u8>,
                     mmr_root: ::std::vec::Vec<::core::primitive::u8>,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, update_client_state, DispatchError>
-                {
-                    let call = update_client_state {
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    UpdateClientState,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = UpdateClientState {
                         client_id,
                         mmr_root,
+                    };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn transfer(
+                    &self,
+                    source_port: ::std::vec::Vec<::core::primitive::u8>,
+                    source_channel: ::std::vec::Vec<::core::primitive::u8>,
+                    token: ::std::vec::Vec<::core::primitive::u8>,
+                    amount: ::core::primitive::u32,
+                    receiver: ::std::vec::Vec<::core::primitive::u8>,
+                    timeout_height: ::core::primitive::u64,
+                    timeout_timestamp: ::std::vec::Vec<::core::primitive::u8>,
+                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Transfer, DispatchError, root_mod::Event>
+                {
+                    let call = Transfer {
+                        source_port,
+                        source_channel,
+                        token,
+                        amount,
+                        receiver,
+                        timeout_height,
+                        timeout_timestamp,
                     };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
@@ -5617,8 +7371,8 @@ pub mod api {
         }
         pub mod storage {
             use super::runtime_types;
-            pub struct ClientStates(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for ClientStates {
+            pub struct ClientStates<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for ClientStates<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "ClientStates";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5638,8 +7392,50 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct ConsensusStates(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for ConsensusStates {
+            pub struct ClientProcessedTimes<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+            );
+            impl ::subxt::StorageEntry for ClientProcessedTimes<'_> {
+                const PALLET: &'static str = "Ibc";
+                const STORAGE: &'static str = "ClientProcessedTimes";
+                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct ClientProcessedHeights<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+            );
+            impl ::subxt::StorageEntry for ClientProcessedHeights<'_> {
+                const PALLET: &'static str = "Ibc";
+                const STORAGE: &'static str = "ClientProcessedHeights";
+                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct ConsensusStates<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for ConsensusStates<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "ConsensusStates";
                 type Value = ::std::vec::Vec<(
@@ -5653,8 +7449,8 @@ pub mod api {
                     )])
                 }
             }
-            pub struct Connections(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for Connections {
+            pub struct Connections<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for Connections<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "Connections";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5674,11 +7470,11 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct Channels(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct Channels<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for Channels {
+            impl ::subxt::StorageEntry for Channels<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "Channels";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5707,8 +7503,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct ChannelsConnection(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for ChannelsConnection {
+            pub struct ChannelsConnection<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for ChannelsConnection<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "ChannelsConnection";
                 type Value = ::std::vec::Vec<(
@@ -5722,11 +7518,11 @@ pub mod api {
                     )])
                 }
             }
-            pub struct NextSequenceSend(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct NextSequenceSend<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for NextSequenceSend {
+            impl ::subxt::StorageEntry for NextSequenceSend<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "NextSequenceSend";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5743,11 +7539,11 @@ pub mod api {
                     ])
                 }
             }
-            pub struct NextSequenceRecv(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct NextSequenceRecv<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for NextSequenceRecv {
+            impl ::subxt::StorageEntry for NextSequenceRecv<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "NextSequenceRecv";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5764,11 +7560,11 @@ pub mod api {
                     ])
                 }
             }
-            pub struct NextSequenceAck(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct NextSequenceAck<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for NextSequenceAck {
+            impl ::subxt::StorageEntry for NextSequenceAck<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "NextSequenceAck";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5785,12 +7581,12 @@ pub mod api {
                     ])
                 }
             }
-            pub struct Acknowledgements(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct Acknowledgements<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for Acknowledgements {
+            impl ::subxt::StorageEntry for Acknowledgements<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "Acknowledgements";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5824,8 +7620,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct Clients(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for Clients {
+            pub struct Clients<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for Clients<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "Clients";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5863,8 +7659,8 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct ConnectionClient(pub ::std::vec::Vec<::core::primitive::u8>);
-            impl ::subxt::StorageEntry for ConnectionClient {
+            pub struct ConnectionClient<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for ConnectionClient<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "ConnectionClient";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5875,12 +7671,12 @@ pub mod api {
                     )])
                 }
             }
-            pub struct PacketReceipt(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct PacketReceipt<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for PacketReceipt {
+            impl ::subxt::StorageEntry for PacketReceipt<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "PacketReceipt";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5901,12 +7697,12 @@ pub mod api {
                     ])
                 }
             }
-            pub struct PacketCommitment(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
+            pub struct PacketCommitment<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
             );
-            impl ::subxt::StorageEntry for PacketCommitment {
+            impl ::subxt::StorageEntry for PacketCommitment<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "PacketCommitment";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5940,12 +7736,12 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct SendPacketEvent(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::core::primitive::u64,
+            pub struct SendPacketEvent<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+                pub &'a ::core::primitive::u64,
             );
-            impl ::subxt::StorageEntry for SendPacketEvent {
+            impl ::subxt::StorageEntry for SendPacketEvent<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "SendPacketEvent";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -5966,12 +7762,12 @@ pub mod api {
                     ])
                 }
             }
-            pub struct WriteAckPacketEvent(
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-                pub ::core::primitive::u64,
+            pub struct WriteAckPacketEvent<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+                pub &'a ::core::primitive::u64,
             );
-            impl ::subxt::StorageEntry for WriteAckPacketEvent {
+            impl ::subxt::StorageEntry for WriteAckPacketEvent<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "WriteAckPacketEvent";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
@@ -6010,6 +7806,39 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
+            pub struct Denomination<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for Denomination<'_> {
+                const PALLET: &'static str = "Ibc";
+                const STORAGE: &'static str = "Denomination";
+                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
+                }
+            }
+            pub struct EscrowAddresses<'a>(
+                pub &'a runtime_types::pallet_ibc::event::primitive::PortId,
+                pub &'a runtime_types::pallet_ibc::event::primitive::ChannelId,
+            );
+            impl ::subxt::StorageEntry for EscrowAddresses<'_> {
+                const PALLET: &'static str = "Ibc";
+                const STORAGE: &'static str = "EscrowAddresses";
+                type Value = ::subxt::sp_core::crypto::AccountId32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
             pub struct StorageApi<'a, T: ::subxt::Config> {
                 client: &'a ::subxt::Client<T>,
             }
@@ -6019,7 +7848,7 @@ pub mod api {
                 }
                 pub async fn client_states(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6032,7 +7861,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ClientStates>,
+                    ::subxt::KeyIter<'a, T, ClientStates<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -6047,9 +7876,51 @@ pub mod api {
                     let entry = ClientStatesKeys;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
+                pub async fn client_processed_times(
+                    &self,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ClientProcessedTimes(_0, _1);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn client_processed_times_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ClientProcessedTimes<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn client_processed_heights(
+                    &self,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = ClientProcessedHeights(_0, _1);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn client_processed_heights_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, ClientProcessedHeights<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
                 pub async fn consensus_states(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<(
@@ -6065,14 +7936,14 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ConsensusStates>,
+                    ::subxt::KeyIter<'a, T, ConsensusStates<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn connections(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6084,8 +7955,10 @@ pub mod api {
                 pub async fn connections_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Connections>, ::subxt::BasicError>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Connections<'a>>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn connections_keys(
@@ -6100,8 +7973,8 @@ pub mod api {
                 }
                 pub async fn channels(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6113,8 +7986,10 @@ pub mod api {
                 pub async fn channels_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Channels>, ::subxt::BasicError>
-                {
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Channels<'a>>,
+                    ::subxt::BasicError,
+                > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn channels_keys(
@@ -6132,7 +8007,7 @@ pub mod api {
                 }
                 pub async fn channels_connection(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<(
@@ -6148,15 +8023,15 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ChannelsConnection>,
+                    ::subxt::KeyIter<'a, T, ChannelsConnection<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn next_sequence_send(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6169,15 +8044,15 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextSequenceSend>,
+                    ::subxt::KeyIter<'a, T, NextSequenceSend<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn next_sequence_recv(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6190,15 +8065,15 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextSequenceRecv>,
+                    ::subxt::KeyIter<'a, T, NextSequenceRecv<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn next_sequence_ack(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6211,16 +8086,16 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextSequenceAck>,
+                    ::subxt::KeyIter<'a, T, NextSequenceAck<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn acknowledgements(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
-                    _2: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    _2: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6233,7 +8108,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Acknowledgements>,
+                    ::subxt::KeyIter<'a, T, Acknowledgements<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -6254,7 +8129,7 @@ pub mod api {
                 }
                 pub async fn clients(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6266,7 +8141,7 @@ pub mod api {
                 pub async fn clients_iter(
                     &self,
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Clients>, ::subxt::BasicError>
+                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Clients<'a>>, ::subxt::BasicError>
                 {
                     self.client.storage().iter(hash).await
                 }
@@ -6296,7 +8171,7 @@ pub mod api {
                 }
                 pub async fn connection_client(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6309,16 +8184,16 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ConnectionClient>,
+                    ::subxt::KeyIter<'a, T, ConnectionClient<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn packet_receipt(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
-                    _2: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    _2: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6331,16 +8206,16 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, PacketReceipt>,
+                    ::subxt::KeyIter<'a, T, PacketReceipt<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn packet_commitment(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
-                    _2: ::std::vec::Vec<::core::primitive::u8>,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    _2: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6353,7 +8228,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, PacketCommitment>,
+                    ::subxt::KeyIter<'a, T, PacketCommitment<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -6374,9 +8249,9 @@ pub mod api {
                 }
                 pub async fn send_packet_event(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
-                    _2: ::core::primitive::u64,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    _2: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6389,16 +8264,16 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, SendPacketEvent>,
+                    ::subxt::KeyIter<'a, T, SendPacketEvent<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
                 }
                 pub async fn write_ack_packet_event(
                     &self,
-                    _0: ::std::vec::Vec<::core::primitive::u8>,
-                    _1: ::std::vec::Vec<::core::primitive::u8>,
-                    _2: ::core::primitive::u64,
+                    _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
+                    _2: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -6411,7 +8286,7 @@ pub mod api {
                     &self,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, WriteAckPacketEvent>,
+                    ::subxt::KeyIter<'a, T, WriteAckPacketEvent<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -6434,12 +8309,55 @@ pub mod api {
                     let entry = OldHeight;
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
+                pub async fn denomination(
+                    &self,
+                    _0: &[::core::primitive::u8],
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::subxt::BasicError,
+                > {
+                    let entry = Denomination(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn denomination_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, Denomination<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn escrow_addresses(
+                    &self,
+                    _0: &runtime_types::pallet_ibc::event::primitive::PortId,
+                    _1: &runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::sp_core::crypto::AccountId32,
+                    ::subxt::BasicError,
+                > {
+                    let entry = EscrowAddresses(_0, _1);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn escrow_addresses_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, EscrowAddresses<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
             }
         }
     }
     pub mod template_module {
+        use super::root_mod;
         use super::runtime_types;
         pub mod calls {
+            use super::root_mod;
             use super::runtime_types;
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(
@@ -6448,28 +8366,27 @@ pub mod api {
                 Debug,
                 :: subxt :: codec :: CompactAs,
             )]
-            pub struct do_something {
+            pub struct DoSomething {
                 pub something: ::core::primitive::u32,
             }
-            impl ::subxt::Call for do_something {
+            impl ::subxt::Call for DoSomething {
                 const PALLET: &'static str = "TemplateModule";
                 const FUNCTION: &'static str = "do_something";
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub struct cause_error;
-            impl ::subxt::Call for cause_error {
+            pub struct CauseError;
+            impl ::subxt::Call for CauseError {
                 const PALLET: &'static str = "TemplateModule";
                 const FUNCTION: &'static str = "cause_error";
             }
-            pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+            pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
-                marker: ::core::marker::PhantomData<(X, A)>,
+                marker: ::core::marker::PhantomData<X>,
             }
-            impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+            impl<'a, T, X> TransactionApi<'a, T, X>
             where
                 T: ::subxt::Config,
-                X: ::subxt::SignedExtra<T>,
-                A: ::subxt::AccountData,
+                X: ::subxt::extrinsic::ExtrinsicParams<T>,
             {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self {
@@ -6480,16 +8397,28 @@ pub mod api {
                 pub fn do_something(
                     &self,
                     something: ::core::primitive::u32,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, do_something, DispatchError>
-                {
-                    let call = do_something { something };
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    DoSomething,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = DoSomething { something };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn cause_error(
                     &self,
-                ) -> ::subxt::SubmittableExtrinsic<'a, T, X, A, cause_error, DispatchError>
-                {
-                    let call = cause_error {};
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    CauseError,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = CauseError {};
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -6744,28 +8673,22 @@ pub mod api {
                         code: ::std::vec::Vec<::core::primitive::u8>,
                     },
                     #[codec(index = 5)]
-                    set_changes_trie_config {
-                        changes_trie_config: ::core::option::Option<
-                            runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
-                        >,
-                    },
-                    #[codec(index = 6)]
                     set_storage {
                         items: ::std::vec::Vec<(
                             ::std::vec::Vec<::core::primitive::u8>,
                             ::std::vec::Vec<::core::primitive::u8>,
                         )>,
                     },
-                    #[codec(index = 7)]
+                    #[codec(index = 6)]
                     kill_storage {
                         keys: ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
                     },
-                    #[codec(index = 8)]
+                    #[codec(index = 7)]
                     kill_prefix {
                         prefix: ::std::vec::Vec<::core::primitive::u8>,
                         subkeys: ::core::primitive::u32,
                     },
-                    #[codec(index = 9)]
+                    #[codec(index = 8)]
                     remark_with_event {
                         remark: ::std::vec::Vec<::core::primitive::u8>,
                     },
@@ -6782,6 +8705,8 @@ pub mod api {
                     NonDefaultComposite,
                     #[codec(index = 4)]
                     NonZeroRefCount,
+                    #[codec(index = 5)]
+                    CallFiltered,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
@@ -6852,28 +8777,32 @@ pub mod api {
             pub enum Call {
                 #[codec(index = 0)]
                 System(runtime_types::frame_system::pallet::Call),
+                #[codec(index = 1)]
+                Babe(runtime_types::pallet_babe::pallet::Call),
                 #[codec(index = 2)]
                 Timestamp(runtime_types::pallet_timestamp::pallet::Call),
                 #[codec(index = 3)]
                 Authorship(runtime_types::pallet_authorship::pallet::Call),
                 #[codec(index = 4)]
-                Babe(runtime_types::pallet_babe::pallet::Call),
-                #[codec(index = 5)]
-                Grandpa(runtime_types::pallet_grandpa::pallet::Call),
-                #[codec(index = 6)]
                 Balances(runtime_types::pallet_balances::pallet::Call),
-                #[codec(index = 8)]
+                #[codec(index = 6)]
                 OctopusAppchain(runtime_types::pallet_octopus_appchain::pallet::Call),
-                #[codec(index = 9)]
+                #[codec(index = 7)]
                 OctopusLpos(runtime_types::pallet_octopus_lpos::pallet::Call),
-                #[codec(index = 10)]
+                #[codec(index = 8)]
                 OctopusUpwardMessages(runtime_types::pallet_octopus_upward_messages::pallet::Call),
-                #[codec(index = 11)]
+                #[codec(index = 9)]
+                OctopusAssets(runtime_types::pallet_assets::pallet::Call),
+                #[codec(index = 10)]
                 Session(runtime_types::pallet_session::pallet::Call),
+                #[codec(index = 11)]
+                Grandpa(runtime_types::pallet_grandpa::pallet::Call),
                 #[codec(index = 12)]
                 ImOnline(runtime_types::pallet_im_online::pallet::Call),
-                #[codec(index = 14)]
-                Assets(runtime_types::pallet_assets::pallet::Call),
+                #[codec(index = 15)]
+                Beefy(runtime_types::pallet_beefy::pallet::Call),
+                #[codec(index = 17)]
+                Uniques(runtime_types::pallet_uniques::pallet::Call),
                 #[codec(index = 18)]
                 Sudo(runtime_types::pallet_sudo::pallet::Call),
                 #[codec(index = 19)]
@@ -6885,22 +8814,24 @@ pub mod api {
             pub enum Event {
                 #[codec(index = 0)]
                 System(runtime_types::frame_system::pallet::Event),
-                #[codec(index = 5)]
-                Grandpa(runtime_types::pallet_grandpa::pallet::Event),
-                #[codec(index = 6)]
+                #[codec(index = 4)]
                 Balances(runtime_types::pallet_balances::pallet::Event),
-                #[codec(index = 8)]
+                #[codec(index = 6)]
                 OctopusAppchain(runtime_types::pallet_octopus_appchain::pallet::Event),
-                #[codec(index = 9)]
+                #[codec(index = 7)]
                 OctopusLpos(runtime_types::pallet_octopus_lpos::pallet::Event),
-                #[codec(index = 10)]
+                #[codec(index = 8)]
                 OctopusUpwardMessages(runtime_types::pallet_octopus_upward_messages::pallet::Event),
-                #[codec(index = 11)]
+                #[codec(index = 9)]
+                OctopusAssets(runtime_types::pallet_assets::pallet::Event),
+                #[codec(index = 10)]
                 Session(runtime_types::pallet_session::pallet::Event),
+                #[codec(index = 11)]
+                Grandpa(runtime_types::pallet_grandpa::pallet::Event),
                 #[codec(index = 12)]
                 ImOnline(runtime_types::pallet_im_online::pallet::Event),
-                #[codec(index = 14)]
-                Assets(runtime_types::pallet_assets::pallet::Event),
+                #[codec(index = 17)]
+                Uniques(runtime_types::pallet_uniques::pallet::Event),
                 #[codec(index = 18)]
                 Sudo(runtime_types::pallet_sudo::pallet::Event),
                 #[codec(index = 19)]
@@ -7189,96 +9120,96 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    Created(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    Created {
+                        asset_id: ::core::primitive::u32,
+                        creator: ::subxt::sp_core::crypto::AccountId32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 1)]
-                    Issued(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Issued {
+                        asset_id: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                        total_supply: ::core::primitive::u128,
+                    },
                     #[codec(index = 2)]
-                    Transferred(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Transferred {
+                        asset_id: ::core::primitive::u32,
+                        from: ::subxt::sp_core::crypto::AccountId32,
+                        to: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 3)]
-                    Burned(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Burned {
+                        asset_id: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                        balance: ::core::primitive::u128,
+                    },
                     #[codec(index = 4)]
-                    TeamChanged(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    TeamChanged {
+                        asset_id: ::core::primitive::u32,
+                        issuer: ::subxt::sp_core::crypto::AccountId32,
+                        admin: ::subxt::sp_core::crypto::AccountId32,
+                        freezer: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 5)]
-                    OwnerChanged(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    OwnerChanged {
+                        asset_id: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 6)]
-                    Frozen(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    Frozen {
+                        asset_id: ::core::primitive::u32,
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 7)]
-                    Thawed(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    Thawed {
+                        asset_id: ::core::primitive::u32,
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 8)]
-                    AssetFrozen(::core::primitive::u32),
+                    AssetFrozen { asset_id: ::core::primitive::u32 },
                     #[codec(index = 9)]
-                    AssetThawed(::core::primitive::u32),
+                    AssetThawed { asset_id: ::core::primitive::u32 },
                     #[codec(index = 10)]
-                    Destroyed(::core::primitive::u32),
+                    Destroyed { asset_id: ::core::primitive::u32 },
                     #[codec(index = 11)]
-                    ForceCreated(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    ForceCreated {
+                        asset_id: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 12)]
-                    MetadataSet(
-                        ::core::primitive::u32,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::core::primitive::u8,
-                        ::core::primitive::bool,
-                    ),
+                    MetadataSet {
+                        asset_id: ::core::primitive::u32,
+                        name: ::std::vec::Vec<::core::primitive::u8>,
+                        symbol: ::std::vec::Vec<::core::primitive::u8>,
+                        decimals: ::core::primitive::u8,
+                        is_frozen: ::core::primitive::bool,
+                    },
                     #[codec(index = 13)]
-                    MetadataCleared(::core::primitive::u32),
+                    MetadataCleared { asset_id: ::core::primitive::u32 },
                     #[codec(index = 14)]
-                    ApprovedTransfer(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    ApprovedTransfer {
+                        asset_id: ::core::primitive::u32,
+                        source: ::subxt::sp_core::crypto::AccountId32,
+                        delegate: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 15)]
-                    ApprovalCancelled(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
+                    ApprovalCancelled {
+                        asset_id: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                        delegate: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 16)]
-                    TransferredApproved(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    TransferredApproved {
+                        asset_id: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                        delegate: ::subxt::sp_core::crypto::AccountId32,
+                        destination: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 17)]
-                    AssetStatusChanged(::core::primitive::u32),
+                    AssetStatusChanged { asset_id: ::core::primitive::u32 },
                 }
             }
             pub mod types {
@@ -7510,59 +9441,60 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    Endowed(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Endowed {
+                        account: ::subxt::sp_core::crypto::AccountId32,
+                        free_balance: ::core::primitive::u128,
+                    },
                     #[codec(index = 1)]
-                    DustLost(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    DustLost {
+                        account: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 2)]
-                    Transfer(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Transfer {
+                        from: ::subxt::sp_core::crypto::AccountId32,
+                        to: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 3)]
-                    BalanceSet(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                        ::core::primitive::u128,
-                    ),
+                    BalanceSet {
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                        free: ::core::primitive::u128,
+                        reserved: ::core::primitive::u128,
+                    },
                     #[codec(index = 4)]
-                    Reserved(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Reserved {
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 5)]
-                    Unreserved(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Unreserved {
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 6)]
-                    ReserveRepatriated(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                        runtime_types::frame_support::traits::tokens::misc::BalanceStatus,
-                    ),
+                    ReserveRepatriated {
+                        from: ::subxt::sp_core::crypto::AccountId32,
+                        to: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                        destination_status:
+                            runtime_types::frame_support::traits::tokens::misc::BalanceStatus,
+                    },
                     #[codec(index = 7)]
-                    Deposit(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Deposit {
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 8)]
-                    Withdraw(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Withdraw {
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                     #[codec(index = 9)]
-                    Slashed(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    Slashed {
+                        who: ::subxt::sp_core::crypto::AccountId32,
+                        amount: ::core::primitive::u128,
+                    },
                 }
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
@@ -7598,6 +9530,14 @@ pub mod api {
             pub struct ReserveData<_0, _1> {
                 pub id: _0,
                 pub amount: _1,
+            }
+        }
+        pub mod pallet_beefy {
+            use super::runtime_types;
+            pub mod pallet {
+                use super::runtime_types;
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub enum Call {}
             }
         }
         pub mod pallet_grandpa {
@@ -7652,12 +9592,12 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    NewAuthorities(
-                        ::std::vec::Vec<(
+                    NewAuthorities {
+                        authority_set: ::std::vec::Vec<(
                             runtime_types::sp_finality_grandpa::app::Public,
                             ::core::primitive::u64,
                         )>,
-                    ),
+                    },
                     #[codec(index = 1)]
                     Paused,
                     #[codec(index = 2)]
@@ -7701,7 +9641,9 @@ pub mod api {
                     pub struct ClientState {
                         pub chain_id: ::std::vec::Vec<::core::primitive::u8>,
                         pub block_number: ::core::primitive::u32,
-                        pub frozen_height: runtime_types::pallet_ibc::event::primitive::Height,
+                        pub frozen_height: ::core::option::Option<
+                            runtime_types::pallet_ibc::event::primitive::Height,
+                        >,
                         pub block_header: ::std::vec::Vec<::core::primitive::u8>,
                         pub latest_commitment: ::std::vec::Vec<::core::primitive::u8>,
                         pub validator_set: ::std::vec::Vec<::core::primitive::u8>,
@@ -7754,7 +9696,7 @@ pub mod api {
                 pub enum Call {
                     #[codec(index = 0)]
                     deliver {
-                        messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
+                        message: runtime_types::pallet_ibc::Any,
                         tmp: ::core::primitive::u8,
                     },
                     #[codec(index = 1)]
@@ -7762,13 +9704,25 @@ pub mod api {
                         client_id: ::std::vec::Vec<::core::primitive::u8>,
                         mmr_root: ::std::vec::Vec<::core::primitive::u8>,
                     },
+                    #[codec(index = 2)]
+                    transfer {
+                        source_port: ::std::vec::Vec<::core::primitive::u8>,
+                        source_channel: ::std::vec::Vec<::core::primitive::u8>,
+                        token: ::std::vec::Vec<::core::primitive::u8>,
+                        amount: ::core::primitive::u32,
+                        receiver: ::std::vec::Vec<::core::primitive::u8>,
+                        timeout_height: ::core::primitive::u64,
+                        timeout_timestamp: ::std::vec::Vec<::core::primitive::u8>,
+                    },
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
                     #[codec(index = 0)]
-                    NotLaststCommitment,
+                    UpdateBeefyLightClientFailure,
                     #[codec(index = 1)]
-                    VerifyMmrRootFailure,
+                    ReceiveMmrRootBlockNumberLessThanClientStateLatestCommitmentBlockNumber,
+                    #[codec(index = 2)]
+                    ClientIdNotFound,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
@@ -7999,18 +9953,18 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    HeartbeatReceived(
-                        runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
-                    ),
+                    HeartbeatReceived {
+                        authority_id: runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
+                    },
                     #[codec(index = 1)]
                     AllGood,
                     #[codec(index = 2)]
-                    SomeOffline(
-                        ::std::vec::Vec<(
+                    SomeOffline {
+                        offline: ::std::vec::Vec<(
                             ::subxt::sp_core::crypto::AccountId32,
                             ::core::primitive::u128,
                         )>,
-                    ),
+                    },
                 }
             }
             pub mod sr25519 {
@@ -8066,18 +10020,24 @@ pub mod api {
                         signature: runtime_types::sp_runtime::MultiSignature,
                     },
                     #[codec(index = 1)]
+                    force_set_is_activated {
+                        is_activated: ::core::primitive::bool,
+                    },
+                    #[codec(index = 2)]
+                    force_set_next_set_id { next_set_id: ::core::primitive::u32 },
+                    #[codec(index = 3)]
                     force_set_planned_validators {
                         validators: ::std::vec::Vec<(
                             ::subxt::sp_core::crypto::AccountId32,
                             ::core::primitive::u128,
                         )>,
                     },
-                    #[codec(index = 2)]
+                    #[codec(index = 4)]
                     lock {
                         receiver_id: ::std::vec::Vec<::core::primitive::u8>,
                         amount: ::core::primitive::u128,
                     },
-                    #[codec(index = 3)]
+                    #[codec(index = 5)]
                     mint_asset {
                         asset_id: ::core::primitive::u32,
                         sender_id: ::std::vec::Vec<::core::primitive::u8>,
@@ -8087,7 +10047,7 @@ pub mod api {
                         >,
                         amount: ::core::primitive::u128,
                     },
-                    #[codec(index = 4)]
+                    #[codec(index = 6)]
                     burn_asset {
                         asset_id: ::core::primitive::u32,
                         receiver_id: ::std::vec::Vec<::core::primitive::u8>,
@@ -8099,42 +10059,83 @@ pub mod api {
                     #[codec(index = 0)]
                     WrongSetId,
                     #[codec(index = 1)]
-                    NotValidator,
+                    InvalidNotificationId,
                     #[codec(index = 2)]
-                    AmountOverflow,
+                    NotValidator,
                     #[codec(index = 3)]
-                    NextFactSequenceOverflow,
+                    AmountOverflow,
                     #[codec(index = 4)]
-                    WrongAssetId,
+                    NextNotificationIdOverflow,
                     #[codec(index = 5)]
+                    WrongAssetId,
+                    #[codec(index = 6)]
                     InvalidActiveTotalStake,
+                    #[codec(index = 7)]
+                    NotActivated,
+                    #[codec(index = 8)]
+                    InvalidReceiverId,
+                    #[codec(index = 9)]
+                    InvalidTokenId,
+                    #[codec(index = 10)]
+                    NextSetIdOverflow,
+                    #[codec(index = 11)]
+                    ObservationsExceededLimit,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
+                    NewPlannedValidators(
+                        ::core::primitive::u32,
+                        ::std::vec::Vec<(
+                            ::subxt::sp_core::crypto::AccountId32,
+                            ::core::primitive::u128,
+                        )>,
+                    ),
+                    #[codec(index = 1)]
                     Locked(
                         ::subxt::sp_core::crypto::AccountId32,
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::core::primitive::u128,
+                        ::core::primitive::u64,
                     ),
-                    #[codec(index = 1)]
+                    #[codec(index = 2)]
                     Unlocked(
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::subxt::sp_core::crypto::AccountId32,
                         ::core::primitive::u128,
                     ),
-                    #[codec(index = 2)]
+                    #[codec(index = 3)]
+                    UnlockFailed(
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 4)]
                     AssetMinted(
                         ::core::primitive::u32,
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::subxt::sp_core::crypto::AccountId32,
                         ::core::primitive::u128,
                     ),
-                    #[codec(index = 3)]
+                    #[codec(index = 5)]
                     AssetBurned(
                         ::core::primitive::u32,
                         ::subxt::sp_core::crypto::AccountId32,
                         ::std::vec::Vec<::core::primitive::u8>,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 6)]
+                    AssetMintFailed(
+                        ::core::primitive::u32,
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 7)]
+                    AssetIdGetFailed(
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::sp_core::crypto::AccountId32,
                         ::core::primitive::u128,
                     ),
                 }
@@ -8153,6 +10154,17 @@ pub mod api {
                 pub sender_id: ::std::vec::Vec<::core::primitive::u8>,
                 pub receiver: _0,
                 pub amount: ::core::primitive::u128,
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub enum NotificationResult {
+                #[codec(index = 0)]
+                Success,
+                #[codec(index = 1)]
+                UnlockFailed,
+                #[codec(index = 2)]
+                AssetMintFailed,
+                #[codec(index = 3)]
+                AssetGetFailed,
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub enum Observation<_0> {
@@ -8176,7 +10188,6 @@ pub mod api {
             pub struct ObservationsPayload<_0, _1, _2> {
                 pub public: _0,
                 pub block_number: _1,
-                pub next_fact_sequence: _1,
                 pub observations:
                     ::std::vec::Vec<runtime_types::pallet_octopus_appchain::Observation<_2>>,
             }
@@ -8187,7 +10198,7 @@ pub mod api {
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ValidatorSet<_0> {
-                pub era: ::core::primitive::u32,
+                pub set_id: ::core::primitive::u32,
                 pub validators:
                     ::std::vec::Vec<runtime_types::pallet_octopus_appchain::Validator<_0>>,
             }
@@ -8205,6 +10216,8 @@ pub mod api {
                         #[codec(compact)]
                         era_items_deleted: ::core::primitive::u32,
                     },
+                    #[codec(index = 1)]
+                    force_set_era_payout { era_payout: ::core::primitive::u128 },
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
@@ -8262,59 +10275,30 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    EraPayout(::core::primitive::u32, ::core::primitive::u128),
+                    PlanNewEra(::core::primitive::u32),
                     #[codec(index = 1)]
-                    Reward(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    PlanNewEraFailed,
                     #[codec(index = 2)]
-                    Slash(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    TriggerNewEra,
                     #[codec(index = 3)]
-                    OldSlashingReportDiscarded(::core::primitive::u32),
+                    EraPayout(
+                        ::core::primitive::u32,
+                        ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
+                    ),
                     #[codec(index = 4)]
-                    StakingElection,
-                    #[codec(index = 5)]
-                    Bonded(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
-                    #[codec(index = 6)]
-                    Unbonded(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
-                    #[codec(index = 7)]
-                    Withdrawn(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
-                    #[codec(index = 8)]
-                    Kicked(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                    ),
-                    #[codec(index = 9)]
-                    StakingElectionFailed,
+                    EraPayoutFailed(::core::primitive::u32),
                 }
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct ActiveEraInfo {
                 pub index: ::core::primitive::u32,
+                pub set_id: ::core::primitive::u32,
                 pub start: ::core::option::Option<::core::primitive::u64>,
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct EraRewardPoints<_0> {
                 pub total: ::core::primitive::u32,
-                pub individual: ::std::collections::BTreeMap<_0, ::core::primitive::u32>,
-            }
-            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-            pub enum Releases {
-                #[codec(index = 0)]
-                V1_0_0,
+                pub individual: ::subxt::KeyedVec<_0, ::core::primitive::u32>,
             }
         }
         pub mod pallet_octopus_support {
@@ -8344,6 +10328,8 @@ pub mod api {
                 pub enum Error {
                     #[codec(index = 0)]
                     NonceOverflow,
+                    #[codec(index = 1)]
+                    QueueSizeLimitReached,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {}
@@ -8385,7 +10371,9 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    NewSession(::core::primitive::u32),
+                    NewSession {
+                        session_index: ::core::primitive::u32,
+                    },
                 }
             }
         }
@@ -8428,13 +10416,19 @@ pub mod api {
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
                     #[codec(index = 0)]
-                    Sudid(::core::result::Result<(), runtime_types::sp_runtime::DispatchError>),
+                    Sudid {
+                        sudo_result:
+                            ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
+                    },
                     #[codec(index = 1)]
-                    KeyChanged(::subxt::sp_core::crypto::AccountId32),
+                    KeyChanged {
+                        new_sudoer: ::subxt::sp_core::crypto::AccountId32,
+                    },
                     #[codec(index = 2)]
-                    SudoAsDone(
-                        ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
-                    ),
+                    SudoAsDone {
+                        sudo_result:
+                            ::core::result::Result<(), runtime_types::sp_runtime::DispatchError>,
+                    },
                 }
             }
         }
@@ -8490,6 +10484,427 @@ pub mod api {
                 V1Ancient,
                 #[codec(index = 1)]
                 V2,
+            }
+        }
+        pub mod pallet_uniques {
+            use super::runtime_types;
+            pub mod pallet {
+                use super::runtime_types;
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub enum Call {
+                    #[codec(index = 0)]
+                    create {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        admin: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    },
+                    #[codec(index = 1)]
+                    force_create {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        owner: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        free_holding: ::core::primitive::bool,
+                    },
+                    #[codec(index = 2)]
+                    destroy {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        witness: runtime_types::pallet_uniques::types::DestroyWitness,
+                    },
+                    #[codec(index = 3)]
+                    mint {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                        owner: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    },
+                    #[codec(index = 4)]
+                    burn {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                        check_owner: ::core::option::Option<
+                            ::subxt::sp_runtime::MultiAddress<
+                                ::subxt::sp_core::crypto::AccountId32,
+                                (),
+                            >,
+                        >,
+                    },
+                    #[codec(index = 5)]
+                    transfer {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                        dest: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    },
+                    #[codec(index = 6)]
+                    redeposit {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        instances: ::std::vec::Vec<::core::primitive::u32>,
+                    },
+                    #[codec(index = 7)]
+                    freeze {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                    },
+                    #[codec(index = 8)]
+                    thaw {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                    },
+                    #[codec(index = 9)]
+                    freeze_class {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                    },
+                    #[codec(index = 10)]
+                    thaw_class {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                    },
+                    #[codec(index = 11)]
+                    transfer_ownership {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        owner: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    },
+                    #[codec(index = 12)]
+                    set_team {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        issuer: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        admin: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        freezer: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    },
+                    #[codec(index = 13)]
+                    approve_transfer {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                        delegate: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                    },
+                    #[codec(index = 14)]
+                    cancel_approval {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                        maybe_check_delegate: ::core::option::Option<
+                            ::subxt::sp_runtime::MultiAddress<
+                                ::subxt::sp_core::crypto::AccountId32,
+                                (),
+                            >,
+                        >,
+                    },
+                    #[codec(index = 15)]
+                    force_asset_status {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        owner: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        issuer: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        admin: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        freezer: ::subxt::sp_runtime::MultiAddress<
+                            ::subxt::sp_core::crypto::AccountId32,
+                            (),
+                        >,
+                        free_holding: ::core::primitive::bool,
+                        is_frozen: ::core::primitive::bool,
+                    },
+                    #[codec(index = 16)]
+                    set_attribute {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                        key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        value: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                    },
+                    #[codec(index = 17)]
+                    clear_attribute {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                        key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                    },
+                    #[codec(index = 18)]
+                    set_metadata {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                        data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        is_frozen: ::core::primitive::bool,
+                    },
+                    #[codec(index = 19)]
+                    clear_metadata {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        #[codec(compact)]
+                        instance: ::core::primitive::u32,
+                    },
+                    #[codec(index = 20)]
+                    set_class_metadata {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                        data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        is_frozen: ::core::primitive::bool,
+                    },
+                    #[codec(index = 21)]
+                    clear_class_metadata {
+                        #[codec(compact)]
+                        class: ::core::primitive::u32,
+                    },
+                }
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub enum Error {
+                    #[codec(index = 0)]
+                    NoPermission,
+                    #[codec(index = 1)]
+                    Unknown,
+                    #[codec(index = 2)]
+                    AlreadyExists,
+                    #[codec(index = 3)]
+                    WrongOwner,
+                    #[codec(index = 4)]
+                    BadWitness,
+                    #[codec(index = 5)]
+                    InUse,
+                    #[codec(index = 6)]
+                    Frozen,
+                    #[codec(index = 7)]
+                    WrongDelegate,
+                    #[codec(index = 8)]
+                    NoDelegate,
+                    #[codec(index = 9)]
+                    Unapproved,
+                }
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub enum Event {
+                    #[codec(index = 0)]
+                    Created {
+                        class: ::core::primitive::u32,
+                        creator: ::subxt::sp_core::crypto::AccountId32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 1)]
+                    ForceCreated {
+                        class: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 2)]
+                    Destroyed { class: ::core::primitive::u32 },
+                    #[codec(index = 3)]
+                    Issued {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 4)]
+                    Transferred {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                        from: ::subxt::sp_core::crypto::AccountId32,
+                        to: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 5)]
+                    Burned {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 6)]
+                    Frozen {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                    },
+                    #[codec(index = 7)]
+                    Thawed {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                    },
+                    #[codec(index = 8)]
+                    ClassFrozen { class: ::core::primitive::u32 },
+                    #[codec(index = 9)]
+                    ClassThawed { class: ::core::primitive::u32 },
+                    #[codec(index = 10)]
+                    OwnerChanged {
+                        class: ::core::primitive::u32,
+                        new_owner: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 11)]
+                    TeamChanged {
+                        class: ::core::primitive::u32,
+                        issuer: ::subxt::sp_core::crypto::AccountId32,
+                        admin: ::subxt::sp_core::crypto::AccountId32,
+                        freezer: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 12)]
+                    ApprovedTransfer {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                        delegate: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 13)]
+                    ApprovalCancelled {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                        owner: ::subxt::sp_core::crypto::AccountId32,
+                        delegate: ::subxt::sp_core::crypto::AccountId32,
+                    },
+                    #[codec(index = 14)]
+                    AssetStatusChanged { class: ::core::primitive::u32 },
+                    #[codec(index = 15)]
+                    ClassMetadataSet {
+                        class: ::core::primitive::u32,
+                        data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        is_frozen: ::core::primitive::bool,
+                    },
+                    #[codec(index = 16)]
+                    ClassMetadataCleared { class: ::core::primitive::u32 },
+                    #[codec(index = 17)]
+                    MetadataSet {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                        data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        is_frozen: ::core::primitive::bool,
+                    },
+                    #[codec(index = 18)]
+                    MetadataCleared {
+                        class: ::core::primitive::u32,
+                        instance: ::core::primitive::u32,
+                    },
+                    #[codec(index = 19)]
+                    Redeposited {
+                        class: ::core::primitive::u32,
+                        successful_instances: ::std::vec::Vec<::core::primitive::u32>,
+                    },
+                    #[codec(index = 20)]
+                    AttributeSet {
+                        class: ::core::primitive::u32,
+                        maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                        key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                        value: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                    },
+                    #[codec(index = 21)]
+                    AttributeCleared {
+                        class: ::core::primitive::u32,
+                        maybe_instance: ::core::option::Option<::core::primitive::u32>,
+                        key: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::core::primitive::u8,
+                        >,
+                    },
+                }
+            }
+            pub mod types {
+                use super::runtime_types;
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub struct ClassDetails<_0, _1> {
+                    pub owner: _0,
+                    pub issuer: _0,
+                    pub admin: _0,
+                    pub freezer: _0,
+                    pub total_deposit: _1,
+                    pub free_holding: ::core::primitive::bool,
+                    pub instances: ::core::primitive::u32,
+                    pub instance_metadatas: ::core::primitive::u32,
+                    pub attributes: ::core::primitive::u32,
+                    pub is_frozen: ::core::primitive::bool,
+                }
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub struct ClassMetadata<_0> {
+                    pub deposit: _0,
+                    pub data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    pub is_frozen: ::core::primitive::bool,
+                }
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub struct DestroyWitness {
+                    #[codec(compact)]
+                    pub instances: ::core::primitive::u32,
+                    #[codec(compact)]
+                    pub instance_metadatas: ::core::primitive::u32,
+                    #[codec(compact)]
+                    pub attributes: ::core::primitive::u32,
+                }
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub struct InstanceDetails<_0, _1> {
+                    pub owner: _0,
+                    pub approved: ::core::option::Option<_0>,
+                    pub is_frozen: ::core::primitive::bool,
+                    pub deposit: _1,
+                }
+                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+                pub struct InstanceMetadata<_0> {
+                    pub deposit: _0,
+                    pub data: runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                        ::core::primitive::u8,
+                    >,
+                    pub is_frozen: ::core::primitive::bool,
+                }
             }
         }
         pub mod primitive_types {
@@ -8572,14 +10987,6 @@ pub mod api {
         }
         pub mod sp_core {
             use super::runtime_types;
-            pub mod changes_trie {
-                use super::runtime_types;
-                #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-                pub struct ChangesTrieConfiguration {
-                    pub digest_interval: ::core::primitive::u32,
-                    pub digest_levels: ::core::primitive::u32,
-                }
-            }
             pub mod crypto {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
@@ -8663,24 +11070,12 @@ pub mod api {
                 pub mod digest {
                     use super::runtime_types;
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-                    pub enum ChangesTrieSignal {
-                        #[codec(index = 0)]
-                        NewConfiguration(
-                            ::core::option::Option<
-                                runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
-                            >,
-                        ),
+                    pub struct Digest {
+                        pub logs:
+                            ::std::vec::Vec<runtime_types::sp_runtime::generic::digest::DigestItem>,
                     }
                     #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-                    pub struct Digest<_0> {
-                        pub logs: ::std::vec::Vec<
-                            runtime_types::sp_runtime::generic::digest::DigestItem<_0>,
-                        >,
-                    }
-                    #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
-                    pub enum DigestItem<_0> {
-                        #[codec(index = 2)]
-                        ChangesTrieRoot(_0),
+                    pub enum DigestItem {
                         #[codec(index = 6)]
                         PreRuntime(
                             [::core::primitive::u8; 4usize],
@@ -8695,10 +11090,6 @@ pub mod api {
                         Seal(
                             [::core::primitive::u8; 4usize],
                             ::std::vec::Vec<::core::primitive::u8>,
-                        ),
-                        #[codec(index = 7)]
-                        ChangesTrieSignal(
-                            runtime_types::sp_runtime::generic::digest::ChangesTrieSignal,
                         ),
                         #[codec(index = 0)]
                         Other(::std::vec::Vec<::core::primitive::u8>),
@@ -9233,9 +11624,7 @@ pub mod api {
                         pub number: _0,
                         pub state_root: ::subxt::sp_core::H256,
                         pub extrinsics_root: ::subxt::sp_core::H256,
-                        pub digest: runtime_types::sp_runtime::generic::digest::Digest<
-                            ::subxt::sp_core::H256,
-                        >,
+                        pub digest: runtime_types::sp_runtime::generic::digest::Digest,
                         #[codec(skip)]
                         pub __subxt_unused_type_params: ::core::marker::PhantomData<_1>,
                     }
@@ -9362,44 +11751,27 @@ pub mod api {
         }
     }
     #[doc = r" The default error type returned when there is a runtime issue."]
-    pub type DispatchError = self::runtime_types::sp_runtime::DispatchError;
-    pub struct ErrorDetails {
-        pub pallet: &'static str,
-        pub error: &'static str,
-        pub docs: &'static str,
-    }
-    impl DispatchError {
-        pub fn details(&self) -> Option<ErrorDetails> {
-            if let Self::Module { index, error } = self {
-                match (index , error) { (0u8 , 0u8) => Some (ErrorDetails { pallet : "System" , error : "InvalidSpecName" , docs : "The name of specification does not match between the current runtime\nand the new runtime." }) , (0u8 , 1u8) => Some (ErrorDetails { pallet : "System" , error : "SpecVersionNeedsToIncrease" , docs : "The specification version is not allowed to decrease between the current runtime\nand the new runtime." }) , (0u8 , 2u8) => Some (ErrorDetails { pallet : "System" , error : "FailedToExtractRuntimeVersion" , docs : "Failed to extract the runtime version from the new runtime.\n\nEither calling `Core_version` or decoding `RuntimeVersion` failed." }) , (0u8 , 3u8) => Some (ErrorDetails { pallet : "System" , error : "NonDefaultComposite" , docs : "Suicide called when the account has non-default composite data." }) , (0u8 , 4u8) => Some (ErrorDetails { pallet : "System" , error : "NonZeroRefCount" , docs : "There is a non-zero reference count preventing the account from being purged." }) , (3u8 , 0u8) => Some (ErrorDetails { pallet : "Authorship" , error : "InvalidUncleParent" , docs : "The uncle parent not in the chain." }) , (3u8 , 1u8) => Some (ErrorDetails { pallet : "Authorship" , error : "UnclesAlreadySet" , docs : "Uncles already set in the block." }) , (3u8 , 2u8) => Some (ErrorDetails { pallet : "Authorship" , error : "TooManyUncles" , docs : "Too many uncles." }) , (3u8 , 3u8) => Some (ErrorDetails { pallet : "Authorship" , error : "GenesisUncle" , docs : "The uncle is genesis." }) , (3u8 , 4u8) => Some (ErrorDetails { pallet : "Authorship" , error : "TooHighUncle" , docs : "The uncle is too high in chain." }) , (3u8 , 5u8) => Some (ErrorDetails { pallet : "Authorship" , error : "UncleAlreadyIncluded" , docs : "The uncle is already included." }) , (3u8 , 6u8) => Some (ErrorDetails { pallet : "Authorship" , error : "OldUncle" , docs : "The uncle isn't recent enough to be included." }) , (4u8 , 0u8) => Some (ErrorDetails { pallet : "Babe" , error : "InvalidEquivocationProof" , docs : "An equivocation proof provided as part of an equivocation report is invalid." }) , (4u8 , 1u8) => Some (ErrorDetails { pallet : "Babe" , error : "InvalidKeyOwnershipProof" , docs : "A key ownership proof provided as part of an equivocation report is invalid." }) , (4u8 , 2u8) => Some (ErrorDetails { pallet : "Babe" , error : "DuplicateOffenceReport" , docs : "A given equivocation report is valid but already previously reported." }) , (5u8 , 0u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "PauseFailed" , docs : "Attempt to signal GRANDPA pause when the authority set isn't live\n(either paused or already pending pause)." }) , (5u8 , 1u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "ResumeFailed" , docs : "Attempt to signal GRANDPA resume when the authority set isn't paused\n(either live or already pending resume)." }) , (5u8 , 2u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "ChangePending" , docs : "Attempt to signal GRANDPA change with one already pending." }) , (5u8 , 3u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "TooSoon" , docs : "Cannot signal forced change so soon after last." }) , (5u8 , 4u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "InvalidKeyOwnershipProof" , docs : "A key ownership proof provided as part of an equivocation report is invalid." }) , (5u8 , 5u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "InvalidEquivocationProof" , docs : "An equivocation proof provided as part of an equivocation report is invalid." }) , (5u8 , 6u8) => Some (ErrorDetails { pallet : "Grandpa" , error : "DuplicateOffenceReport" , docs : "A given equivocation report is valid but already previously reported." }) , (6u8 , 0u8) => Some (ErrorDetails { pallet : "Balances" , error : "VestingBalance" , docs : "Vesting balance too high to send value" }) , (6u8 , 1u8) => Some (ErrorDetails { pallet : "Balances" , error : "LiquidityRestrictions" , docs : "Account liquidity restrictions prevent withdrawal" }) , (6u8 , 2u8) => Some (ErrorDetails { pallet : "Balances" , error : "InsufficientBalance" , docs : "Balance too low to send value" }) , (6u8 , 3u8) => Some (ErrorDetails { pallet : "Balances" , error : "ExistentialDeposit" , docs : "Value too low to create account due to existential deposit" }) , (6u8 , 4u8) => Some (ErrorDetails { pallet : "Balances" , error : "KeepAlive" , docs : "Transfer/payment would kill account" }) , (6u8 , 5u8) => Some (ErrorDetails { pallet : "Balances" , error : "ExistingVestingSchedule" , docs : "A vesting schedule already exists for this account" }) , (6u8 , 6u8) => Some (ErrorDetails { pallet : "Balances" , error : "DeadAccount" , docs : "Beneficiary account must pre-exist" }) , (6u8 , 7u8) => Some (ErrorDetails { pallet : "Balances" , error : "TooManyReserves" , docs : "Number of named reserves exceed MaxReserves" }) , (8u8 , 0u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "WrongSetId" , docs : "The set id of new validator set was wrong." }) , (8u8 , 1u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "NotValidator" , docs : "Must be a validator." }) , (8u8 , 2u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "AmountOverflow" , docs : "Amount overflow." }) , (8u8 , 3u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "NextFactSequenceOverflow" , docs : "Next fact sequence overflow." }) , (8u8 , 4u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "WrongAssetId" , docs : "Wrong Asset Id." }) , (8u8 , 5u8) => Some (ErrorDetails { pallet : "OctopusAppchain" , error : "InvalidActiveTotalStake" , docs : "Invalid active total stake." }) , (9u8 , 0u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NotController" , docs : "Not a controller account." }) , (9u8 , 1u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NotStash" , docs : "Not a stash account." }) , (9u8 , 2u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AlreadyBonded" , docs : "Stash is already bonded." }) , (9u8 , 3u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AlreadyPaired" , docs : "Controller is already paired." }) , (9u8 , 4u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "EmptyTargets" , docs : "Targets cannot be empty." }) , (9u8 , 5u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "DuplicateIndex" , docs : "Duplicate index." }) , (9u8 , 6u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InvalidSlashIndex" , docs : "Slash record index out of bounds." }) , (9u8 , 7u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InsufficientBond" , docs : "Can not bond with value less than minimum required." }) , (9u8 , 8u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NoMoreChunks" , docs : "Can not schedule more unlock chunks." }) , (9u8 , 9u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NoUnlockChunk" , docs : "Can not rebond without unlocking chunks." }) , (9u8 , 10u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "FundedTarget" , docs : "Attempting to target a stash that still has funds." }) , (9u8 , 11u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InvalidEraToReward" , docs : "Invalid era to reward." }) , (9u8 , 12u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "InvalidNumberOfNominations" , docs : "Invalid number of nominations." }) , (9u8 , 13u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NotSortedAndUnique" , docs : "Items are not sorted and unique." }) , (9u8 , 14u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AlreadyClaimed" , docs : "Rewards for this era have already been claimed for this validator." }) , (9u8 , 15u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "IncorrectHistoryDepth" , docs : "Incorrect previous history depth input provided." }) , (9u8 , 16u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "IncorrectSlashingSpans" , docs : "Incorrect number of slashing spans provided." }) , (9u8 , 17u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "BadState" , docs : "Internal state has become somehow corrupted and the operation cannot continue." }) , (9u8 , 18u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "TooManyTargets" , docs : "Too many nomination targets supplied." }) , (9u8 , 19u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "BadTarget" , docs : "A nomination target was supplied that was blocked or otherwise not a validator." }) , (9u8 , 20u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "CannotChillOther" , docs : "The user has enough bond and thus cannot be chilled forcefully by an external person." }) , (9u8 , 21u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "TooManyNominators" , docs : "There are too many nominators in the system. Governance needs to adjust the staking settings\nto keep things safe for the runtime." }) , (9u8 , 22u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "TooManyValidators" , docs : "There are too many validators in the system. Governance needs to adjust the staking settings\nto keep things safe for the runtime." }) , (9u8 , 23u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "NoClaimedRewards" , docs : "There are not claimed rewards for this validator." }) , (9u8 , 24u8) => Some (ErrorDetails { pallet : "OctopusLpos" , error : "AmountOverflow" , docs : "Amount overflow." }) , (10u8 , 0u8) => Some (ErrorDetails { pallet : "OctopusUpwardMessages" , error : "NonceOverflow" , docs : "Nonce overflow." }) , (11u8 , 0u8) => Some (ErrorDetails { pallet : "Session" , error : "InvalidProof" , docs : "Invalid ownership proof." }) , (11u8 , 1u8) => Some (ErrorDetails { pallet : "Session" , error : "NoAssociatedValidatorId" , docs : "No associated validator ID for account." }) , (11u8 , 2u8) => Some (ErrorDetails { pallet : "Session" , error : "DuplicatedKey" , docs : "Registered duplicate key." }) , (11u8 , 3u8) => Some (ErrorDetails { pallet : "Session" , error : "NoKeys" , docs : "No keys are associated with this account." }) , (11u8 , 4u8) => Some (ErrorDetails { pallet : "Session" , error : "NoAccount" , docs : "Key setting account is not live, so it's impossible to associate keys." }) , (12u8 , 0u8) => Some (ErrorDetails { pallet : "ImOnline" , error : "InvalidKey" , docs : "Non existent public key." }) , (12u8 , 1u8) => Some (ErrorDetails { pallet : "ImOnline" , error : "DuplicatedHeartbeat" , docs : "Duplicated heartbeat." }) , (14u8 , 0u8) => Some (ErrorDetails { pallet : "Assets" , error : "BalanceLow" , docs : "Account balance must be greater than or equal to the transfer amount." }) , (14u8 , 1u8) => Some (ErrorDetails { pallet : "Assets" , error : "BalanceZero" , docs : "Balance should be non-zero." }) , (14u8 , 2u8) => Some (ErrorDetails { pallet : "Assets" , error : "NoPermission" , docs : "The signing account has no permission to do the operation." }) , (14u8 , 3u8) => Some (ErrorDetails { pallet : "Assets" , error : "Unknown" , docs : "The given asset ID is unknown." }) , (14u8 , 4u8) => Some (ErrorDetails { pallet : "Assets" , error : "Frozen" , docs : "The origin account is frozen." }) , (14u8 , 5u8) => Some (ErrorDetails { pallet : "Assets" , error : "InUse" , docs : "The asset ID is already taken." }) , (14u8 , 6u8) => Some (ErrorDetails { pallet : "Assets" , error : "BadWitness" , docs : "Invalid witness data given." }) , (14u8 , 7u8) => Some (ErrorDetails { pallet : "Assets" , error : "MinBalanceZero" , docs : "Minimum balance should be non-zero." }) , (14u8 , 8u8) => Some (ErrorDetails { pallet : "Assets" , error : "NoProvider" , docs : "No provider reference exists to allow a non-zero balance of a non-self-sufficient\nasset." }) , (14u8 , 9u8) => Some (ErrorDetails { pallet : "Assets" , error : "BadMetadata" , docs : "Invalid metadata given." }) , (14u8 , 10u8) => Some (ErrorDetails { pallet : "Assets" , error : "Unapproved" , docs : "No approval exists that would allow the transfer." }) , (14u8 , 11u8) => Some (ErrorDetails { pallet : "Assets" , error : "WouldDie" , docs : "The source account would not survive the transfer and it needs to stay alive." }) , (18u8 , 0u8) => Some (ErrorDetails { pallet : "Sudo" , error : "RequireSudo" , docs : "Sender must be the Sudo account" }) , (19u8 , 0u8) => Some (ErrorDetails { pallet : "Ibc" , error : "NotLaststCommitment" , docs : "receive mmr root block number less than client_state.latest_commitment.block_number !" }) , (19u8 , 1u8) => Some (ErrorDetails { pallet : "Ibc" , error : "VerifyMmrRootFailure" , docs : "verify mmr root failure\nupdate the beefy light client failure!" }) , (20u8 , 0u8) => Some (ErrorDetails { pallet : "TemplateModule" , error : "NoneValue" , docs : "Error names should be descriptive." }) , (20u8 , 1u8) => Some (ErrorDetails { pallet : "TemplateModule" , error : "StorageOverflow" , docs : "Errors should have helpful documentation associated with them." }) , _ => None }
+    pub type DispatchError = runtime_types::sp_runtime::DispatchError;
+    impl ::subxt::HasModuleError for runtime_types::sp_runtime::DispatchError {
+        fn module_error_data(&self) -> Option<::subxt::ModuleErrorData> {
+            if let &Self::Module { index, error } = self {
+                Some(::subxt::ModuleErrorData {
+                    pallet_index: index,
+                    error: [error, 0, 0, 0],
+                })
             } else {
                 None
             }
         }
     }
-    #[doc = r" The default storage entry from which to fetch an account nonce, required for"]
-    #[doc = r" constructing a transaction."]
-    pub enum DefaultAccountData {}
-    impl ::subxt::AccountData for DefaultAccountData {
-        type StorageEntry = self::system::storage::Account;
-        type AccountId = ::subxt::sp_core::crypto::AccountId32;
-        type Index = ::core::primitive::u32;
-        fn nonce(result: &<Self::StorageEntry as ::subxt::StorageEntry>::Value) -> Self::Index {
-            result.nonce
-        }
-        fn storage_entry(account_id: Self::AccountId) -> Self::StorageEntry {
-            self::system::storage::Account(account_id)
-        }
-    }
-    pub struct RuntimeApi<T: ::subxt::Config, X, A = DefaultAccountData> {
+    pub struct RuntimeApi<T: ::subxt::Config, X> {
         pub client: ::subxt::Client<T>,
-        marker: ::core::marker::PhantomData<(X, A)>,
+        marker: ::core::marker::PhantomData<X>,
     }
-    impl<T, X, A> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T, X, A>
+    impl<T, X> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T, X>
     where
         T: ::subxt::Config,
-        X: ::subxt::SignedExtra<T>,
-        A: ::subxt::AccountData,
+        X: ::subxt::extrinsic::ExtrinsicParams<T>,
     {
         fn from(client: ::subxt::Client<T>) -> Self {
             Self {
@@ -9408,61 +11780,109 @@ pub mod api {
             }
         }
     }
-    impl<'a, T, X, A> RuntimeApi<T, X, A>
+    impl<'a, T, X> RuntimeApi<T, X>
     where
         T: ::subxt::Config,
-        X: ::subxt::SignedExtra<T>,
-        A: ::subxt::AccountData,
+        X: ::subxt::extrinsic::ExtrinsicParams<T>,
     {
-        pub fn constants(&'a self) -> ConstantsApi {
-            ConstantsApi
+        pub fn constants(&'a self) -> ConstantsApi<'a, T> {
+            ConstantsApi {
+                client: &self.client,
+            }
         }
         pub fn storage(&'a self) -> StorageApi<'a, T> {
             StorageApi {
                 client: &self.client,
             }
         }
-        pub fn tx(&'a self) -> TransactionApi<'a, T, X, A> {
+        pub fn tx(&'a self) -> TransactionApi<'a, T, X> {
             TransactionApi {
                 client: &self.client,
                 marker: ::core::marker::PhantomData,
             }
         }
+        pub fn events(&'a self) -> EventsApi<'a, T> {
+            EventsApi {
+                client: &self.client,
+            }
+        }
     }
-    pub struct ConstantsApi;
-    impl ConstantsApi {
-        pub fn system(&self) -> system::constants::ConstantsApi {
-            system::constants::ConstantsApi
+    pub struct EventsApi<'a, T: ::subxt::Config> {
+        client: &'a ::subxt::Client<T>,
+    }
+    impl<'a, T: ::subxt::Config> EventsApi<'a, T> {
+        pub async fn at(
+            &self,
+            block_hash: T::Hash,
+        ) -> Result<::subxt::events::Events<'a, T, Event>, ::subxt::BasicError> {
+            ::subxt::events::at::<T, Event>(self.client, block_hash).await
         }
-        pub fn timestamp(&self) -> timestamp::constants::ConstantsApi {
-            timestamp::constants::ConstantsApi
+        pub async fn subscribe(
+            &self,
+        ) -> Result<
+            ::subxt::events::EventSubscription<'a, ::subxt::events::EventSub<T::Header>, T, Event>,
+            ::subxt::BasicError,
+        > {
+            ::subxt::events::subscribe::<T, Event>(self.client).await
         }
-        pub fn authorship(&self) -> authorship::constants::ConstantsApi {
-            authorship::constants::ConstantsApi
+        pub async fn subscribe_finalized(
+            &self,
+        ) -> Result<
+            ::subxt::events::EventSubscription<
+                'a,
+                ::subxt::events::FinalizedEventSub<'a, T::Header>,
+                T,
+                Event,
+            >,
+            ::subxt::BasicError,
+        > {
+            ::subxt::events::subscribe_finalized::<T, Event>(self.client).await
         }
-        pub fn babe(&self) -> babe::constants::ConstantsApi {
-            babe::constants::ConstantsApi
+    }
+    pub struct ConstantsApi<'a, T: ::subxt::Config> {
+        client: &'a ::subxt::Client<T>,
+    }
+    impl<'a, T: ::subxt::Config> ConstantsApi<'a, T> {
+        pub fn system(&self) -> system::constants::ConstantsApi<'a, T> {
+            system::constants::ConstantsApi::new(self.client)
         }
-        pub fn grandpa(&self) -> grandpa::constants::ConstantsApi {
-            grandpa::constants::ConstantsApi
+        pub fn babe(&self) -> babe::constants::ConstantsApi<'a, T> {
+            babe::constants::ConstantsApi::new(self.client)
         }
-        pub fn balances(&self) -> balances::constants::ConstantsApi {
-            balances::constants::ConstantsApi
+        pub fn timestamp(&self) -> timestamp::constants::ConstantsApi<'a, T> {
+            timestamp::constants::ConstantsApi::new(self.client)
         }
-        pub fn transaction_payment(&self) -> transaction_payment::constants::ConstantsApi {
-            transaction_payment::constants::ConstantsApi
+        pub fn authorship(&self) -> authorship::constants::ConstantsApi<'a, T> {
+            authorship::constants::ConstantsApi::new(self.client)
         }
-        pub fn octopus_appchain(&self) -> octopus_appchain::constants::ConstantsApi {
-            octopus_appchain::constants::ConstantsApi
+        pub fn balances(&self) -> balances::constants::ConstantsApi<'a, T> {
+            balances::constants::ConstantsApi::new(self.client)
         }
-        pub fn octopus_lpos(&self) -> octopus_lpos::constants::ConstantsApi {
-            octopus_lpos::constants::ConstantsApi
+        pub fn transaction_payment(&self) -> transaction_payment::constants::ConstantsApi<'a, T> {
+            transaction_payment::constants::ConstantsApi::new(self.client)
         }
-        pub fn im_online(&self) -> im_online::constants::ConstantsApi {
-            im_online::constants::ConstantsApi
+        pub fn octopus_appchain(&self) -> octopus_appchain::constants::ConstantsApi<'a, T> {
+            octopus_appchain::constants::ConstantsApi::new(self.client)
         }
-        pub fn assets(&self) -> assets::constants::ConstantsApi {
-            assets::constants::ConstantsApi
+        pub fn octopus_lpos(&self) -> octopus_lpos::constants::ConstantsApi<'a, T> {
+            octopus_lpos::constants::ConstantsApi::new(self.client)
+        }
+        pub fn octopus_upward_messages(
+            &self,
+        ) -> octopus_upward_messages::constants::ConstantsApi<'a, T> {
+            octopus_upward_messages::constants::ConstantsApi::new(self.client)
+        }
+        pub fn octopus_assets(&self) -> octopus_assets::constants::ConstantsApi<'a, T> {
+            octopus_assets::constants::ConstantsApi::new(self.client)
+        }
+        pub fn grandpa(&self) -> grandpa::constants::ConstantsApi<'a, T> {
+            grandpa::constants::ConstantsApi::new(self.client)
+        }
+        pub fn im_online(&self) -> im_online::constants::ConstantsApi<'a, T> {
+            im_online::constants::ConstantsApi::new(self.client)
+        }
+        pub fn uniques(&self) -> uniques::constants::ConstantsApi<'a, T> {
+            uniques::constants::ConstantsApi::new(self.client)
         }
     }
     pub struct StorageApi<'a, T: ::subxt::Config> {
@@ -9475,22 +11895,14 @@ pub mod api {
         pub fn system(&self) -> system::storage::StorageApi<'a, T> {
             system::storage::StorageApi::new(self.client)
         }
-        pub fn randomness_collective_flip(
-            &self,
-        ) -> randomness_collective_flip::storage::StorageApi<'a, T> {
-            randomness_collective_flip::storage::StorageApi::new(self.client)
+        pub fn babe(&self) -> babe::storage::StorageApi<'a, T> {
+            babe::storage::StorageApi::new(self.client)
         }
         pub fn timestamp(&self) -> timestamp::storage::StorageApi<'a, T> {
             timestamp::storage::StorageApi::new(self.client)
         }
         pub fn authorship(&self) -> authorship::storage::StorageApi<'a, T> {
             authorship::storage::StorageApi::new(self.client)
-        }
-        pub fn babe(&self) -> babe::storage::StorageApi<'a, T> {
-            babe::storage::StorageApi::new(self.client)
-        }
-        pub fn grandpa(&self) -> grandpa::storage::StorageApi<'a, T> {
-            grandpa::storage::StorageApi::new(self.client)
         }
         pub fn balances(&self) -> balances::storage::StorageApi<'a, T> {
             balances::storage::StorageApi::new(self.client)
@@ -9509,14 +11921,17 @@ pub mod api {
         ) -> octopus_upward_messages::storage::StorageApi<'a, T> {
             octopus_upward_messages::storage::StorageApi::new(self.client)
         }
+        pub fn octopus_assets(&self) -> octopus_assets::storage::StorageApi<'a, T> {
+            octopus_assets::storage::StorageApi::new(self.client)
+        }
         pub fn session(&self) -> session::storage::StorageApi<'a, T> {
             session::storage::StorageApi::new(self.client)
         }
+        pub fn grandpa(&self) -> grandpa::storage::StorageApi<'a, T> {
+            grandpa::storage::StorageApi::new(self.client)
+        }
         pub fn im_online(&self) -> im_online::storage::StorageApi<'a, T> {
             im_online::storage::StorageApi::new(self.client)
-        }
-        pub fn assets(&self) -> assets::storage::StorageApi<'a, T> {
-            assets::storage::StorageApi::new(self.client)
         }
         pub fn mmr(&self) -> mmr::storage::StorageApi<'a, T> {
             mmr::storage::StorageApi::new(self.client)
@@ -9526,6 +11941,9 @@ pub mod api {
         }
         pub fn mmr_leaf(&self) -> mmr_leaf::storage::StorageApi<'a, T> {
             mmr_leaf::storage::StorageApi::new(self.client)
+        }
+        pub fn uniques(&self) -> uniques::storage::StorageApi<'a, T> {
+            uniques::storage::StorageApi::new(self.client)
         }
         pub fn sudo(&self) -> sudo::storage::StorageApi<'a, T> {
             sudo::storage::StorageApi::new(self.client)
@@ -9537,61 +11955,66 @@ pub mod api {
             template_module::storage::StorageApi::new(self.client)
         }
     }
-    pub struct TransactionApi<'a, T: ::subxt::Config, X, A> {
+    pub struct TransactionApi<'a, T: ::subxt::Config, X> {
         client: &'a ::subxt::Client<T>,
-        marker: ::core::marker::PhantomData<(X, A)>,
+        marker: ::core::marker::PhantomData<X>,
     }
-    impl<'a, T, X, A> TransactionApi<'a, T, X, A>
+    impl<'a, T, X> TransactionApi<'a, T, X>
     where
         T: ::subxt::Config,
-        X: ::subxt::SignedExtra<T>,
-        A: ::subxt::AccountData,
+        X: ::subxt::extrinsic::ExtrinsicParams<T>,
     {
-        pub fn system(&self) -> system::calls::TransactionApi<'a, T, X, A> {
+        pub fn system(&self) -> system::calls::TransactionApi<'a, T, X> {
             system::calls::TransactionApi::new(self.client)
         }
-        pub fn timestamp(&self) -> timestamp::calls::TransactionApi<'a, T, X, A> {
-            timestamp::calls::TransactionApi::new(self.client)
-        }
-        pub fn authorship(&self) -> authorship::calls::TransactionApi<'a, T, X, A> {
-            authorship::calls::TransactionApi::new(self.client)
-        }
-        pub fn babe(&self) -> babe::calls::TransactionApi<'a, T, X, A> {
+        pub fn babe(&self) -> babe::calls::TransactionApi<'a, T, X> {
             babe::calls::TransactionApi::new(self.client)
         }
-        pub fn grandpa(&self) -> grandpa::calls::TransactionApi<'a, T, X, A> {
-            grandpa::calls::TransactionApi::new(self.client)
+        pub fn timestamp(&self) -> timestamp::calls::TransactionApi<'a, T, X> {
+            timestamp::calls::TransactionApi::new(self.client)
         }
-        pub fn balances(&self) -> balances::calls::TransactionApi<'a, T, X, A> {
+        pub fn authorship(&self) -> authorship::calls::TransactionApi<'a, T, X> {
+            authorship::calls::TransactionApi::new(self.client)
+        }
+        pub fn balances(&self) -> balances::calls::TransactionApi<'a, T, X> {
             balances::calls::TransactionApi::new(self.client)
         }
-        pub fn octopus_appchain(&self) -> octopus_appchain::calls::TransactionApi<'a, T, X, A> {
+        pub fn octopus_appchain(&self) -> octopus_appchain::calls::TransactionApi<'a, T, X> {
             octopus_appchain::calls::TransactionApi::new(self.client)
         }
-        pub fn octopus_lpos(&self) -> octopus_lpos::calls::TransactionApi<'a, T, X, A> {
+        pub fn octopus_lpos(&self) -> octopus_lpos::calls::TransactionApi<'a, T, X> {
             octopus_lpos::calls::TransactionApi::new(self.client)
         }
         pub fn octopus_upward_messages(
             &self,
-        ) -> octopus_upward_messages::calls::TransactionApi<'a, T, X, A> {
+        ) -> octopus_upward_messages::calls::TransactionApi<'a, T, X> {
             octopus_upward_messages::calls::TransactionApi::new(self.client)
         }
-        pub fn session(&self) -> session::calls::TransactionApi<'a, T, X, A> {
+        pub fn octopus_assets(&self) -> octopus_assets::calls::TransactionApi<'a, T, X> {
+            octopus_assets::calls::TransactionApi::new(self.client)
+        }
+        pub fn session(&self) -> session::calls::TransactionApi<'a, T, X> {
             session::calls::TransactionApi::new(self.client)
         }
-        pub fn im_online(&self) -> im_online::calls::TransactionApi<'a, T, X, A> {
+        pub fn grandpa(&self) -> grandpa::calls::TransactionApi<'a, T, X> {
+            grandpa::calls::TransactionApi::new(self.client)
+        }
+        pub fn im_online(&self) -> im_online::calls::TransactionApi<'a, T, X> {
             im_online::calls::TransactionApi::new(self.client)
         }
-        pub fn assets(&self) -> assets::calls::TransactionApi<'a, T, X, A> {
-            assets::calls::TransactionApi::new(self.client)
+        pub fn beefy(&self) -> beefy::calls::TransactionApi<'a, T, X> {
+            beefy::calls::TransactionApi::new(self.client)
         }
-        pub fn sudo(&self) -> sudo::calls::TransactionApi<'a, T, X, A> {
+        pub fn uniques(&self) -> uniques::calls::TransactionApi<'a, T, X> {
+            uniques::calls::TransactionApi::new(self.client)
+        }
+        pub fn sudo(&self) -> sudo::calls::TransactionApi<'a, T, X> {
             sudo::calls::TransactionApi::new(self.client)
         }
-        pub fn ibc(&self) -> ibc::calls::TransactionApi<'a, T, X, A> {
+        pub fn ibc(&self) -> ibc::calls::TransactionApi<'a, T, X> {
             ibc::calls::TransactionApi::new(self.client)
         }
-        pub fn template_module(&self) -> template_module::calls::TransactionApi<'a, T, X, A> {
+        pub fn template_module(&self) -> template_module::calls::TransactionApi<'a, T, X> {
             template_module::calls::TransactionApi::new(self.client)
         }
     }

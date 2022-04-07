@@ -13,7 +13,8 @@ use beefy_merkle_tree::Hash;
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use jsonrpsee::types::to_json_value;
-use prost_types::Any;
+// use prost_types::Any;
+use ibc_proto::google::protobuf::Any;
 use sp_core::storage::StorageKey;
 use sp_keyring::AccountKeyring;
 use subxt::storage::{StorageEntry, StorageKeyPrefix};
@@ -1578,13 +1579,15 @@ pub async fn get_connection_channels(
 }
 
 pub async fn deliver(
-    msg: Vec<Any>,
+    msg: Any,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [deliver]");
 
-    let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> =
-        msg.into_iter().map(|val| val.into()).collect();
+    let msg: ibc_node::runtime_types::pallet_ibc::Any = ibc_node::runtime_types::pallet_ibc::Any {
+        type_url: msg.type_url.as_bytes().to_vec(),
+        value: msg.value,
+    };
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
@@ -1732,30 +1735,30 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
     }
 }
 
-fn convert_changes_trie_signal(
-    value: crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal,
-) -> beefy_light_client::header::ChangesTrieSignal {
-    match value {
-        crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal::NewConfiguration(value) => {
-            if value.is_some() {
-                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(
-                    convert_changes_trie_configuration(value.unwrap()),
-                ))
-            } else {
-                beefy_light_client::header::ChangesTrieSignal::NewConfiguration(None)
-            }
-        }
-    }
-}
+// fn convert_changes_trie_signal(
+//     value: crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal,
+// ) -> beefy_light_client::header::ChangesTrieSignal {
+//     match value {
+//         crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal::NewConfiguration(value) => {
+//             if value.is_some() {
+//                 beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(
+//                     convert_changes_trie_configuration(value.unwrap()),
+//                 ))
+//             } else {
+//                 beefy_light_client::header::ChangesTrieSignal::NewConfiguration(None)
+//             }
+//         }
+//     }
+// }
 
-fn convert_changes_trie_configuration(
-    value: crate::ibc_node::runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
-) -> beefy_light_client::header::ChangesTrieConfiguration {
-    beefy_light_client::header::ChangesTrieConfiguration {
-        digest_interval: value.digest_interval,
-        digest_levels: value.digest_levels,
-    }
-}
+// fn convert_changes_trie_configuration(
+//     value: crate::ibc_node::runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
+// ) -> beefy_light_client::header::ChangesTrieConfiguration {
+//     beefy_light_client::header::ChangesTrieConfiguration {
+//         digest_interval: value.digest_interval,
+//         digest_levels: value.digest_levels,
+//     }
+// }
 
 pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
     let prefix = StorageKeyPrefix::new::<F>();
