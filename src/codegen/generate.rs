@@ -7025,7 +7025,7 @@ pub mod api {
                 pub amount: ::core::primitive::u32,
                 pub receiver: ::std::vec::Vec<::core::primitive::u8>,
                 pub timeout_height: ::core::primitive::u64,
-                pub timeout_timestamp: ::std::vec::Vec<::core::primitive::u8>,
+                pub timeout_timestamp: ::core::primitive::u64,
             }
             impl ::subxt::Call for Transfer {
                 const PALLET: &'static str = "Ibc";
@@ -7081,7 +7081,7 @@ pub mod api {
                     amount: ::core::primitive::u32,
                     receiver: ::std::vec::Vec<::core::primitive::u8>,
                     timeout_height: ::core::primitive::u64,
-                    timeout_timestamp: ::std::vec::Vec<::core::primitive::u8>,
+                    timeout_timestamp: ::core::primitive::u64,
                 ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Transfer, DispatchError, root_mod::Event>
                 {
                     let call = Transfer {
@@ -9712,7 +9712,7 @@ pub mod api {
                         amount: ::core::primitive::u32,
                         receiver: ::std::vec::Vec<::core::primitive::u8>,
                         timeout_height: ::core::primitive::u64,
-                        timeout_timestamp: ::std::vec::Vec<::core::primitive::u8>,
+                        timeout_timestamp: ::core::primitive::u64,
                     },
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
@@ -9723,6 +9723,30 @@ pub mod api {
                     ReceiveMmrRootBlockNumberLessThanClientStateLatestCommitmentBlockNumber,
                     #[codec(index = 2)]
                     ClientIdNotFound,
+                    #[codec(index = 3)]
+                    InvalidEncode,
+                    #[codec(index = 4)]
+                    InvalidDecode,
+                    #[codec(index = 5)]
+                    InvalidFromUtf8,
+                    #[codec(index = 6)]
+                    Ics26Error,
+                    #[codec(index = 7)]
+                    InvalidSigner,
+                    #[codec(index = 8)]
+                    EmptyChannelId,
+                    #[codec(index = 9)]
+                    Ics20Error,
+                    #[codec(index = 10)]
+                    InvalidPacket,
+                    #[codec(index = 11)]
+                    InvalidSignedCommitment,
+                    #[codec(index = 12)]
+                    InvalidIdentifier,
+                    #[codec(index = 13)]
+                    InvalidTimestamp,
+                    #[codec(index = 14)]
+                    EmptyLatestCommitment,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
