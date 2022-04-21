@@ -31,7 +31,7 @@ beefy-primitives = { git = "https://github.com/paritytech/substrate/", branch = 
 beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.13", features = ["keccak"], default-features = false }
 
 # ibc
-tendermint-proto = { version ="0.23.5", default-features = false }
+tendermint-proto = { version ="0.23.6", default-features = false }
 ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
 ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
 # ibc = { path = "../ibc-rs/modules" }
@@ -42,7 +42,7 @@ ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "
 hex-literal = "0.3"
 chrono = "0.4"
 
-[patch.crates-io]
-tendermint                        = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
-tendermint-proto                  = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
-tendermint-light-client-verifier  = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
+# [patch.crates-io]
+# tendermint                        = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
+# tendermint-proto                  = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
+# tendermint-light-client-verifier  = { git = "https://github.com/informalsystems/tendermint-rs", branch = "v0.23.x" }
