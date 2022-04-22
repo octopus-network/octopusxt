@@ -7001,7 +7001,7 @@ pub mod api {
             type DispatchError = runtime_types::sp_runtime::DispatchError;
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
             pub struct Deliver {
-                pub message: runtime_types::pallet_ibc::Any,
+                pub messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                 pub tmp: ::core::primitive::u8,
             }
             impl ::subxt::Call for Deliver {
@@ -7048,11 +7048,11 @@ pub mod api {
                 }
                 pub fn deliver(
                     &self,
-                    message: runtime_types::pallet_ibc::Any,
+                    messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                     tmp: ::core::primitive::u8,
                 ) -> ::subxt::SubmittableExtrinsic<'a, T, X, Deliver, DispatchError, root_mod::Event>
                 {
-                    let call = Deliver { message, tmp };
+                    let call = Deliver { messages, tmp };
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
                 pub fn update_client_state(
@@ -9696,7 +9696,7 @@ pub mod api {
                 pub enum Call {
                     #[codec(index = 0)]
                     deliver {
-                        message: runtime_types::pallet_ibc::Any,
+                        messages: ::std::vec::Vec<runtime_types::pallet_ibc::Any>,
                         tmp: ::core::primitive::u8,
                     },
                     #[codec(index = 1)]

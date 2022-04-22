@@ -1579,15 +1579,18 @@ pub async fn get_connection_channels(
 }
 
 pub async fn deliver(
-    msg: Any,
+    msg: Vec<Any>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [deliver]");
 
-    let msg: ibc_node::runtime_types::pallet_ibc::Any = ibc_node::runtime_types::pallet_ibc::Any {
-        type_url: msg.type_url.as_bytes().to_vec(),
-        value: msg.value,
-    };
+    let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
+        .into_iter()
+        .map(|value| ibc_node::runtime_types::pallet_ibc::Any {
+            type_url: value.type_url.as_bytes().to_vec(),
+            value: value.value,
+        })
+        .collect();
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
