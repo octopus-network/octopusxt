@@ -10,11 +10,9 @@ use ibc::Height as ICSHeight;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use beefy_merkle_tree::Hash;
-// use codec::{Decode, Encode};
 use core::str::FromStr;
-use jsonrpsee::types::to_json_value;
-// use prost_types::Any;
 use ibc_proto::google::protobuf::Any;
+use jsonrpsee::types::to_json_value;
 use sp_core::storage::StorageKey;
 use sp_keyring::AccountKeyring;
 use subxt::storage::{StorageEntry, StorageKeyPrefix};
@@ -24,6 +22,15 @@ use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
 use tendermint_proto::Protobuf;
 
 /// Subscribe ibc events
+/// Maybe in the future call ocw
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = subscribe_ibc_event(client).await?;
+/// ```
+///
 pub async fn subscribe_ibc_event(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IbcEvent>, Box<dyn std::error::Error>> {
@@ -549,6 +556,14 @@ pub async fn subscribe_ibc_event(
 }
 
 /// Subscribe beefy justifiactions
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = subscribe_beefy(client).await?;
+/// ```
+///
 pub async fn subscribe_beefy(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
@@ -562,6 +577,14 @@ pub async fn subscribe_beefy(
 }
 
 /// get latest height used by subscribe_blocks
+///  
+/// # Usage example
+///
+/// ```rust
+/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = get_latest_height(api).await?;
+/// ```
+///
 pub async fn get_latest_height(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<u64, Box<dyn std::error::Error>> {
@@ -587,6 +610,15 @@ pub async fn get_latest_height(
 }
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
+///
+/// # Usage example
+///
+/// ```rust
+/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let conection_id = ConnectionId::default();
+/// let result = get_connection_end(&conection_id, api).await?;
+/// ```
+///
 pub async fn get_connection_end(
     connection_identifier: &ConnectionId,
     client: Client<ibc_node::DefaultConfig>,
@@ -623,6 +655,16 @@ pub async fn get_connection_end(
 }
 
 /// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let prot_id =PortId::default();
+/// let channel_id = ChannelId::default();
+/// let result = get_channel_end(&port_id, &channel_id, client).await?;
+/// ```
+///
 pub async fn get_channel_end(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -679,6 +721,17 @@ pub async fn get_channel_end(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let prot_id =PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = Sequence::from(0);
+/// let result = get_packet_receipt(&port_id, &channel_id, &sequence, client).await?;
+/// ```
+///
 pub async fn get_packet_receipt(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -727,6 +780,16 @@ pub async fn get_packet_receipt(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let prot_id =PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = Sequence::from(0);
+/// let result = get_packet_receipt_vec(&port_id, &channel_id, &sequence, client).await?;
+/// ```
+///
 pub async fn get_packet_receipt_vec(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -771,6 +834,18 @@ pub async fn get_packet_receipt_vec(
 
 /// get send packet event by port_id, channel_id and sequence
 /// (port_id, channel_id, sequence), packet)
+///
+/// # Usage example
+///
+/// ```rust
+///
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let prot_id =PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = Sequence::from(0);
+/// let result = get_send_packet_event(&port_id, &channel_id, &sequence, client).await?;
+///
+/// ```
 pub async fn get_send_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -811,7 +886,18 @@ pub async fn get_send_packet_event(
     Ok(packet)
 }
 
-// (port_id, channel_id, sequence), ackHash)
+/// (port_id, channel_id, sequence), ackHash)
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let prot_id =PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = Sequence::from(0);
+/// let result = get_write_ack_packet_event(&port_id, &channel_id, &sequence, client).await?;
+/// ```
+///
 pub async fn get_write_ack_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -853,6 +939,15 @@ pub async fn get_write_ack_packet_event(
 }
 
 /// get client_state according by client_id, and read ClientStates StoraageMap
+///  
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client_id = ClientId::default();
+/// let result = get_client_state(&client_id, client).await?;
+/// ```
+///
 pub async fn get_client_state(
     client_id: &ClientId,
     client: Client<ibc_node::DefaultConfig>,
@@ -892,9 +987,19 @@ pub async fn get_client_state(
 
 /// get appoint height consensus_state according by client_identifier and height
 /// and read ConsensusStates StoreageMap
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client_id = ClientId::default();
+/// let height = ICSHeight::default();
+/// let result = get_client_consensus(&client_id, &height, client).await?;
+/// ```
+///
 pub async fn get_client_consensus(
     client_id: &ClientId,
-    height: ICSHeight,
+    height: &ICSHeight,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<AnyConsensusState, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_client_consensus]");
@@ -950,6 +1055,16 @@ pub async fn get_client_consensus(
     Ok(consensus_state)
 }
 
+/// get consensus state with height
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client_id = ClientId::default();
+/// let result = get_consensus_state_with_height(&client_id, client).await?;
+/// ```
+///
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
     client: Client<ibc_node::DefaultConfig>,
@@ -992,10 +1107,21 @@ pub async fn get_consensus_state_with_height(
     Ok(result)
 }
 
+/// get  unreceipt packet
+///  # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let port_id =PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = vec![Sequence::from(12),Sequence::from(13)];
+/// let result = get_unreceipt_packet(&port_id, &channel_id, sequence, client).await?;
+/// ```
+///
 pub async fn get_unreceipt_packet(
     port_id: &PortId,
     channel_id: &ChannelId,
-    sequences: Vec<u64>,
+    sequences: Vec<Sequence>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u64>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_receipt_packet]");
@@ -1021,7 +1147,7 @@ pub async fn get_unreceipt_packet(
             (
                 port_id.clone().as_bytes().to_vec(),
                 channel_id.clone().as_bytes().to_vec(),
-                sequence,
+                u64::from(sequence.clone()),
             )
         })
         .collect::<Vec<_>>();
@@ -1041,6 +1167,14 @@ pub async fn get_unreceipt_packet(
 }
 
 /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = get_clients(client).await?;
+/// ```
+///
 pub async fn get_clients(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
@@ -1097,6 +1231,14 @@ pub async fn get_clients(
 }
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = get_connections(client).await?;
+/// ```
+///
 pub async fn get_connections(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedConnectionEnd>, Box<dyn std::error::Error>> {
@@ -1155,6 +1297,15 @@ pub async fn get_connections(
 }
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
+///
+/// # Usage example
+///
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = get_channels(client).await?;
+/// ```
+///
 pub async fn get_channels(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
@@ -1211,6 +1362,14 @@ pub async fn get_channels(
 }
 
 /// get get_commitment_packet_state
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = get_commitment_packet_state(client).await?;
+/// ```
+///
 pub async fn get_commitment_packet_state(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
@@ -1272,10 +1431,21 @@ pub async fn get_commitment_packet_state(
 }
 
 /// get packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
+///
+///  # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let port_id = PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = Sequence::from(23);
+/// let result = get_packet_commitment(&port_id, &channel_id, &sequence, client).await?;
+/// ```
+///
 pub async fn get_packet_commitment(
     port_id: &PortId,
     channel_id: &ChannelId,
-    sequence: u64,
+    sequence: &Sequence,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_commitment]");
@@ -1298,7 +1468,7 @@ pub async fn get_packet_commitment(
         .packet_commitment(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            sequence,
+            u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
@@ -1314,10 +1484,21 @@ pub async fn get_packet_commitment(
 }
 
 /// get packet acknowlegement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
+///
+///  # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let port_id = PortId::default();
+/// let channel_id = ChannelId::default();
+/// let sequence = Sequence::from(12);
+/// let result = get_packet_ack(&port_id, &channel_id, &sequence, client).await?;
+/// ```
+///
 pub async fn get_packet_ack(
     port_id: &PortId,
     channel_id: &ChannelId,
-    sequence: u64,
+    sequence: &Sequence,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_ack]");
@@ -1340,7 +1521,7 @@ pub async fn get_packet_ack(
         .acknowledgements(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            sequence,
+            u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
@@ -1355,7 +1536,16 @@ pub async fn get_packet_ack(
     }
 }
 
-// get packet receipt by port_id, channel_id and sequence
+/// get packet receipt by port_id, channel_id and sequence
+///  # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let prot_id = PortId::default();
+/// let channel_id = ChannelId::default();
+/// let result = get_next_sequence_recv(&prot_id, &channel_id, client).await?;
+/// ```
+///
 pub async fn get_next_sequence_recv(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -1407,6 +1597,14 @@ pub async fn get_next_sequence_recv(
 }
 
 /// get get_commitment_packet_state
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let result = get_acknowledge_packet_state(client).await?;
+/// ```
+///
 pub async fn get_acknowledge_packet_state(
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
@@ -1461,8 +1659,18 @@ pub async fn get_acknowledge_packet_state(
 }
 
 /// get connection_identifier vector according by client_identifier
+///
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client_id = ClientId::default();
+/// let result = get_client_connections(&client_id, client).await?;
+/// ```
+///
 pub async fn get_client_connections(
-    client_id: ClientId,
+    client_id: &ClientId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<ConnectionId>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_client_connections]");
@@ -1502,8 +1710,16 @@ pub async fn get_client_connections(
     Ok(result)
 }
 
+///  # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let connection = ConnectionId::default();
+/// let result = get_connection_channels(&connection, client).await?;
+/// ```
+///
 pub async fn get_connection_channels(
-    connection_id: ConnectionId,
+    connection_id: &ConnectionId,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_connection_channels]");
@@ -1557,6 +1773,18 @@ pub async fn get_connection_channels(
     Ok(result)
 }
 
+/// ibc protocol core function, ics26 deliver function
+/// this function will dispatch msg to process
+///
+///  # Usage example
+///
+/// ```rust
+///
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let msg = vec![Any::default()];
+/// let result = deliver(msg, client).await?;
+/// ```
+///
 pub async fn deliver(
     msg: Vec<Any>,
     client: Client<ibc_node::DefaultConfig>,
@@ -1596,8 +1824,19 @@ pub async fn deliver(
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
+///
+/// # Usage example
+///
+/// ```rust
+///
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let block_number = Some(BlockNumber::from(12));
+/// let block_hash = None;
+/// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
+/// ```
+///
 pub async fn get_mmr_leaf_and_mmr_proof(
-    block_number: u64,
+    block_number: Option<BlockNumber>,
     block_hash: Option<sp_core::H256>,
     client: Client<ibc_node::DefaultConfig>,
 ) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
@@ -1625,9 +1864,19 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 }
 
 /// get header by block hash
+///
+/// # Usage example
+///
+/// ```rust
+///
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let block_hash = None;
+/// let result = get_header_by_block_hash(block_hash, client).await?;
+/// ```
+///
 pub async fn get_header_by_block_hash(
-    client: Client<ibc_node::DefaultConfig>,
     block_hash: Option<sp_core::H256>,
+    client: Client<ibc_node::DefaultConfig>,
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
     let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
@@ -1642,9 +1891,18 @@ pub async fn get_header_by_block_hash(
 }
 
 /// get header by block number
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let block_number = Some(BlockNumber::from(2));
+/// let result = get_header_by_block_number(block_number, client).await?;
+/// ```
+///
 pub async fn get_header_by_block_number(
-    client: Client<ibc_node::DefaultConfig>,
     block_number: Option<BlockNumber>,
+    client: Client<ibc_node::DefaultConfig>,
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
     let api = client
         .clone()

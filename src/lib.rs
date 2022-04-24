@@ -1,18 +1,23 @@
 // mod codegen;
 
-pub mod call_ibc;
+pub mod ibc_rpc;
 pub mod update_client_state;
-pub use call_ibc::{
+pub use ibc_rpc::{
     deliver, get_acknowledge_packet_state, get_channel_end, get_channels, get_client_connections,
     get_client_consensus, get_client_state, get_clients, get_commitment_packet_state,
     get_connection_channels, get_connection_end, get_connections, get_consensus_state_with_height,
-    get_latest_height, get_packet_commitment, get_packet_receipt, get_send_packet_event,
-    get_unreceipt_packet, subscribe_beefy, subscribe_ibc_event, get_header_by_block_number, get_mmr_leaf_and_mmr_proof
+    get_header_by_block_number, get_latest_height, get_mmr_leaf_and_mmr_proof,
+    get_packet_commitment, get_packet_receipt, get_send_packet_event, get_unreceipt_packet,
+    subscribe_beefy, subscribe_ibc_event,
 };
 
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use prost_types::Any;
+pub use update_client_state::{
+    build_mmr_proof, build_validator_proof, get_client_ids, send_update_state_request,
+    update_client_state, update_client_state_service, verify_commitment_signatures,
+};
 
 #[derive(Encode, Decode)]
 pub enum ClientType {
