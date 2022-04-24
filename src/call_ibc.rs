@@ -1258,7 +1258,6 @@ pub async fn get_commitment_packet_state(
     for (port_id, channel_id, sequence, data) in ret.into_iter() {
         let port_id = String::from_utf8(port_id).unwrap();
         let channel_id = String::from_utf8(channel_id).unwrap();
-    
 
         let packet_state = PacketState {
             port_id: port_id,
@@ -1292,7 +1291,6 @@ pub async fn get_packet_commitment(
         "In call_ibc: [get_packet_commitment] >> block_hash: {:?}",
         block_hash
     );
-
 
     let data: Vec<u8> = api
         .storage()
@@ -1335,7 +1333,6 @@ pub async fn get_packet_ack(
         "In call_ibc: [get_packet_ack] >> block_hash: {:?}",
         block_hash
     );
-
 
     let data: Vec<u8> = api
         .storage()
@@ -1388,7 +1385,6 @@ pub async fn get_next_sequence_recv(
         )
         .await?;
 
-    
     let data: Vec<u8> = api
         .storage()
         .ibc()
@@ -1440,12 +1436,7 @@ pub async fn get_acknowledge_packet_state(
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .acknowledgements(
-                key.0.clone(),
-                key.1.clone(),
-                key.2,
-                Some(block_hash),
-            )
+            .acknowledgements(key.0.clone(), key.1.clone(), key.2, Some(block_hash))
             .await?;
 
         ret.push((key.0.clone(), key.1.clone(), key.2, value));
@@ -1456,7 +1447,7 @@ pub async fn get_acknowledge_packet_state(
     for (port_id, channel_id, sequence, data) in ret.into_iter() {
         let port_id = String::from_utf8(port_id).unwrap();
         let channel_id = String::from_utf8(channel_id).unwrap();
-        
+
         let packet_state = PacketState {
             port_id: port_id,
             channel_id: channel_id,
@@ -1700,9 +1691,6 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
     digest_item: sp_runtime::DigestItem,
 ) -> beefy_light_client::header::DigestItem {
     match digest_item {
-        // sp_runtime::DigestItem::ChangesTrieRoot(value) => {
-        //     beefy_light_client::header::DigestItem::ChangesTrieRoot(Hash::from(value))
-        // }
         sp_runtime::DigestItem::PreRuntime(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::PreRuntime(consensus_engine_id, value)
         }
@@ -1712,11 +1700,6 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
         sp_runtime::DigestItem::Seal(consensus_engine_id, value) => {
             beefy_light_client::header::DigestItem::Seal(consensus_engine_id, value)
         }
-        // sp_runtime::DigestItem::ChangesTrieSignal(changes_trie_signal) => {
-        //     beefy_light_client::header::DigestItem::ChangesTrieSignal(convert_changes_trie_signal(
-        //         changes_trie_signal,
-        //     ))
-        // }
         sp_runtime::DigestItem::Other(value) => {
             beefy_light_client::header::DigestItem::Other(value)
         }
@@ -1726,188 +1709,15 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
     }
 }
 
-// fn convert_changes_trie_signal(
-//     value: crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal,
-// ) -> beefy_light_client::header::ChangesTrieSignal {
-//     match value {
-//         crate::ibc_node::runtime_types::sp_runtime::generic::digest::ChangesTrieSignal::NewConfiguration(value) => {
-//             if value.is_some() {
-//                 beefy_light_client::header::ChangesTrieSignal::NewConfiguration(Some(
-//                     convert_changes_trie_configuration(value.unwrap()),
-//                 ))
-//             } else {
-//                 beefy_light_client::header::ChangesTrieSignal::NewConfiguration(None)
-//             }
-//         }
-//     }
-// }
-
-// fn convert_changes_trie_configuration(
-//     value: crate::ibc_node::runtime_types::sp_core::changes_trie::ChangesTrieConfiguration,
-// ) -> beefy_light_client::header::ChangesTrieConfiguration {
-//     beefy_light_client::header::ChangesTrieConfiguration {
-//         digest_interval: value.digest_interval,
-//         digest_levels: value.digest_levels,
-//     }
-// }
-
+/// # Usage example
+///
+/// ```rust
+///     let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
+///     let storage_key = get_storage_key(&storage_entry);
+///     println!("key = {:?}", storage_key);
+/// ```
 pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
     let prefix = StorageKeyPrefix::new::<F>();
     let key = store.key().final_key(prefix);
     key
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::ibc_node;
-    use ibc::core::ics02_client::client_type::ClientType;
-    use ibc::core::ics02_client::height::Height;
-    use subxt::ClientBuilder;
-
-    // test API get_block_header
-    // use `cargo test -- --captuer` can print content
-    #[tokio::test]
-    async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-        let block_number = Some(BlockNumber::from(3));
-        let header = get_header_by_block_number(client, block_number).await?;
-
-        println!("convert header = {:?}", header);
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-
-        let result = get_client_consensus(
-            &ClientId::new(ClientType::Grandpa, 0).unwrap(),
-            Height::new(0, 320),
-            client,
-        )
-        .await?;
-
-        println!("result = {:?}", result);
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_get_key() -> Result<(), Box<dyn std::error::Error>> {
-        use subxt::StorageEntry;
-        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-        let result = ibc.key();
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-
-        let api = client
-            .clone()
-            .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
-
-        let block_number = 22;
-
-        let block_hash: sp_core::H256 = api
-            .client
-            .rpc()
-            .block_hash(Some(BlockNumber::from(block_number)))
-            .await?
-            .unwrap();
-
-        println!("block_hash = {:?}", block_hash);
-
-        let result =
-            get_mmr_leaf_and_mmr_proof((block_number - 1) as u64, Some(block_hash), client).await?;
-
-        println!("result = {:?}", result);
-
-        Ok(())
-    }
-
-    #[tokio::test]
-    async fn test_get_packet_commitment() -> Result<(), Box<dyn std::error::Error>> {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await?;
-
-        let client_id = PortId::from_str("transfer").unwrap();
-        let channel_id = ChannelId::from_str("channel-0").unwrap();
-
-        let result = get_packet_commitment(&client_id, &channel_id, 1, client)
-            .await
-            .unwrap();
-        println!("packet_commitment = {:?}", result);
-
-        Ok(())
-    }
-    // add unit test for get storage key
-    #[test]
-    fn test_get_storage_key() {
-        let _ibc = crate::ibc_node::ibc::storage::ClientStates(vec![1, 2, 3]);
-        let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-        let _ibc = crate::ibc_node::ibc::storage::ConsensusStates(vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::Connections(vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::ConnectionsKeys;
-        let _ibc = crate::ibc_node::ibc::storage::Channels(vec![1, 2, 3], vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::ChannelsKeys;
-        let _ibc = crate::ibc_node::ibc::storage::ChannelsConnection(vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::NextSequenceSend(vec![1, 2, 3], vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::NextSequenceRecv(vec![1, 2, 3], vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::NextSequenceAck(vec![1, 2, 3], vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::Acknowledgements(
-            vec![1, 2, 3],
-            vec![1, 2, 3],
-            vec![1, 2, 3],
-        );
-        let _ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
-        let _ibc = crate::ibc_node::ibc::storage::Clients(vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::ClientCounter;
-        let _ibc = crate::ibc_node::ibc::storage::ConnectionCounter;
-        let _ibc = crate::ibc_node::ibc::storage::ChannelCounter;
-        let _ibc = crate::ibc_node::ibc::storage::ConnectionClient(vec![1, 2, 3]);
-        let _ibc = crate::ibc_node::ibc::storage::PacketReceipt(
-            vec![1, 2, 3],
-            vec![1, 2, 3],
-            vec![1, 2, 3],
-        );
-        let _ibc = crate::ibc_node::ibc::storage::PacketCommitment(
-            vec![1, 2, 3],
-            vec![1, 2, 3],
-            vec![1, 2, 3],
-        );
-        let _ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
-        let _ibc = crate::ibc_node::ibc::storage::SendPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
-        let _ibc =
-            crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
-        let _ibc = crate::ibc_node::ibc::storage::LatestHeight;
-        let _ibc = crate::ibc_node::ibc::storage::OldHeight;
-    }
-
-    #[tokio::test]
-    async fn test_get_latest_height() {
-        let client = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
-            .await
-            .unwrap();
-
-        let height = get_latest_height(client).await.unwrap();
-        println!("height = {:?}", height);
-    }
 }
