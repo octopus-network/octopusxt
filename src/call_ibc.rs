@@ -10,7 +10,7 @@ use ibc::Height as ICSHeight;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use beefy_merkle_tree::Hash;
-use codec::{Decode, Encode};
+// use codec::{Decode, Encode};
 use core::str::FromStr;
 use jsonrpsee::types::to_json_value;
 // use prost_types::Any;
@@ -698,7 +698,7 @@ pub async fn get_packet_receipt(
         block_hash
     );
 
-    let _seq = u64::from(*sequence).encode();
+    let sequence = u64::from(*sequence);
 
     let data: Vec<u8> = api
         .storage()
@@ -706,7 +706,7 @@ pub async fn get_packet_receipt(
         .packet_receipt(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            _seq,
+            sequence,
             Some(block_hash),
         )
         .await?;
@@ -746,7 +746,7 @@ pub async fn get_packet_receipt_vec(
         block_hash
     );
 
-    let _seq = u64::from(*sequence).encode();
+    let sequence = u64::from(*sequence);
 
     let data: Vec<u8> = api
         .storage()
@@ -754,7 +754,7 @@ pub async fn get_packet_receipt_vec(
         .packet_receipt(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            _seq,
+            sequence,
             Some(block_hash),
         )
         .await?;
@@ -1021,16 +1021,16 @@ pub async fn get_unreceipt_packet(
             (
                 port_id.clone().as_bytes().to_vec(),
                 channel_id.clone().as_bytes().to_vec(),
-                (sequence.encode(), sequence),
+                sequence,
             )
         })
         .collect::<Vec<_>>();
 
-    for (port_id, channel_id, (sequence_u8, sequence)) in pair.into_iter() {
+    for (port_id, channel_id, sequence) in pair.into_iter() {
         let data: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_receipt(port_id, channel_id, sequence_u8, Some(block_hash.clone()))
+            .packet_receipt(port_id, channel_id, sequence, Some(block_hash.clone()))
             .await?;
         if data.is_empty() {
             result.push(sequence);
@@ -1230,7 +1230,7 @@ pub async fn get_commitment_packet_state(
 
     let mut ret = vec![];
 
-    let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, Vec<u8>)> = api
+    let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
         .storage()
         .ibc()
         .packet_commitment_keys(Some(block_hash))
@@ -1258,8 +1258,8 @@ pub async fn get_commitment_packet_state(
     for (port_id, channel_id, sequence, data) in ret.into_iter() {
         let port_id = String::from_utf8(port_id).unwrap();
         let channel_id = String::from_utf8(channel_id).unwrap();
-        let mut sequence: &[u8] = &sequence;
-        let sequence = u64::decode(&mut sequence).unwrap();
+    
+
         let packet_state = PacketState {
             port_id: port_id,
             channel_id: channel_id,
@@ -1293,7 +1293,6 @@ pub async fn get_packet_commitment(
         block_hash
     );
 
-    let sequence_vec = sequence.encode();
 
     let data: Vec<u8> = api
         .storage()
@@ -1301,7 +1300,7 @@ pub async fn get_packet_commitment(
         .packet_commitment(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            sequence_vec,
+            sequence,
             Some(block_hash),
         )
         .await?;
@@ -1337,7 +1336,6 @@ pub async fn get_packet_ack(
         block_hash
     );
 
-    let sequence_vec = sequence.encode();
 
     let data: Vec<u8> = api
         .storage()
@@ -1345,7 +1343,7 @@ pub async fn get_packet_ack(
         .acknowledgements(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            sequence_vec,
+            sequence,
             Some(block_hash),
         )
         .await?;
@@ -1380,7 +1378,7 @@ pub async fn get_next_sequence_recv(
         block_hash
     );
 
-    let sequence_vec: Vec<u8> = api
+    let sequence: u64 = api
         .storage()
         .ibc()
         .next_sequence_recv(
@@ -1390,23 +1388,14 @@ pub async fn get_next_sequence_recv(
         )
         .await?;
 
-    if sequence_vec.is_empty() {
-        return Err(Box::from(format!(
-            "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({})",
-            port_id, channel_id
-        )));
-    }
-
-    let mut seq: &[u8] = &sequence_vec;
-    let sequence = Sequence::from(u64::decode(&mut seq).unwrap());
-
+    
     let data: Vec<u8> = api
         .storage()
         .ibc()
         .packet_commitment(
             port_id.as_bytes().to_vec(),
             channel_id.as_bytes().to_vec(),
-            sequence_vec,
+            sequence,
             Some(block_hash),
         )
         .await?;
@@ -1441,7 +1430,7 @@ pub async fn get_acknowledge_packet_state(
 
     let mut ret = vec![];
 
-    let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, Vec<u8>)> = api
+    let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
         .storage()
         .ibc()
         .acknowledgements_keys(Some(block_hash))
@@ -1454,12 +1443,12 @@ pub async fn get_acknowledge_packet_state(
             .acknowledgements(
                 key.0.clone(),
                 key.1.clone(),
-                key.2.clone(),
+                key.2,
                 Some(block_hash),
             )
             .await?;
 
-        ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
+        ret.push((key.0.clone(), key.1.clone(), key.2, value));
     }
 
     let mut result = vec![];
@@ -1467,8 +1456,7 @@ pub async fn get_acknowledge_packet_state(
     for (port_id, channel_id, sequence, data) in ret.into_iter() {
         let port_id = String::from_utf8(port_id).unwrap();
         let channel_id = String::from_utf8(channel_id).unwrap();
-        let mut sequence: &[u8] = &sequence;
-        let sequence = u64::decode(&mut sequence).unwrap();
+        
         let packet_state = PacketState {
             port_id: port_id,
             channel_id: channel_id,

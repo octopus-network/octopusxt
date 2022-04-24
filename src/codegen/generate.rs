@@ -7525,7 +7525,7 @@ pub mod api {
             impl ::subxt::StorageEntry for NextSequenceSend<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "NextSequenceSend";
-                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                type Value = ::core::primitive::u64;
                 fn key(&self) -> ::subxt::StorageEntryKey {
                     ::subxt::StorageEntryKey::Map(vec![
                         ::subxt::StorageMapKey::new(
@@ -7546,7 +7546,7 @@ pub mod api {
             impl ::subxt::StorageEntry for NextSequenceRecv<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "NextSequenceRecv";
-                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                type Value = ::core::primitive::u64;
                 fn key(&self) -> ::subxt::StorageEntryKey {
                     ::subxt::StorageEntryKey::Map(vec![
                         ::subxt::StorageMapKey::new(
@@ -7567,7 +7567,7 @@ pub mod api {
             impl ::subxt::StorageEntry for NextSequenceAck<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "NextSequenceAck";
-                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                type Value = ::core::primitive::u64;
                 fn key(&self) -> ::subxt::StorageEntryKey {
                     ::subxt::StorageEntryKey::Map(vec![
                         ::subxt::StorageMapKey::new(
@@ -7584,7 +7584,7 @@ pub mod api {
             pub struct Acknowledgements<'a>(
                 pub &'a [::core::primitive::u8],
                 pub &'a [::core::primitive::u8],
-                pub &'a [::core::primitive::u8],
+                pub &'a ::core::primitive::u64,
             );
             impl ::subxt::StorageEntry for Acknowledgements<'_> {
                 const PALLET: &'static str = "Ibc";
@@ -7614,7 +7614,7 @@ pub mod api {
                 type Value = ::std::vec::Vec<(
                     ::std::vec::Vec<::core::primitive::u8>,
                     ::std::vec::Vec<::core::primitive::u8>,
-                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::core::primitive::u64,
                 )>;
                 fn key(&self) -> ::subxt::StorageEntryKey {
                     ::subxt::StorageEntryKey::Plain
@@ -7674,7 +7674,7 @@ pub mod api {
             pub struct PacketReceipt<'a>(
                 pub &'a [::core::primitive::u8],
                 pub &'a [::core::primitive::u8],
-                pub &'a [::core::primitive::u8],
+                pub &'a ::core::primitive::u64,
             );
             impl ::subxt::StorageEntry for PacketReceipt<'_> {
                 const PALLET: &'static str = "Ibc";
@@ -7700,7 +7700,7 @@ pub mod api {
             pub struct PacketCommitment<'a>(
                 pub &'a [::core::primitive::u8],
                 pub &'a [::core::primitive::u8],
-                pub &'a [::core::primitive::u8],
+                pub &'a ::core::primitive::u64,
             );
             impl ::subxt::StorageEntry for PacketCommitment<'_> {
                 const PALLET: &'static str = "Ibc";
@@ -7730,7 +7730,7 @@ pub mod api {
                 type Value = ::std::vec::Vec<(
                     ::std::vec::Vec<::core::primitive::u8>,
                     ::std::vec::Vec<::core::primitive::u8>,
-                    ::std::vec::Vec<::core::primitive::u8>,
+                    ::core::primitive::u64,
                 )>;
                 fn key(&self) -> ::subxt::StorageEntryKey {
                     ::subxt::StorageEntryKey::Plain
@@ -8033,10 +8033,8 @@ pub mod api {
                     _0: &[::core::primitive::u8],
                     _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
                     let entry = NextSequenceSend(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -8054,10 +8052,8 @@ pub mod api {
                     _0: &[::core::primitive::u8],
                     _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
                     let entry = NextSequenceRecv(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -8075,10 +8071,8 @@ pub mod api {
                     _0: &[::core::primitive::u8],
                     _1: &[::core::primitive::u8],
                     hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
+                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
+                {
                     let entry = NextSequenceAck(_0, _1);
                     self.client.storage().fetch_or_default(&entry, hash).await
                 }
@@ -8095,7 +8089,7 @@ pub mod api {
                     &self,
                     _0: &[::core::primitive::u8],
                     _1: &[::core::primitive::u8],
-                    _2: &[::core::primitive::u8],
+                    _2: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -8120,7 +8114,7 @@ pub mod api {
                     ::std::vec::Vec<(
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::core::primitive::u64,
                     )>,
                     ::subxt::BasicError,
                 > {
@@ -8193,7 +8187,7 @@ pub mod api {
                     &self,
                     _0: &[::core::primitive::u8],
                     _1: &[::core::primitive::u8],
-                    _2: &[::core::primitive::u8],
+                    _2: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -8215,7 +8209,7 @@ pub mod api {
                     &self,
                     _0: &[::core::primitive::u8],
                     _1: &[::core::primitive::u8],
-                    _2: &[::core::primitive::u8],
+                    _2: &::core::primitive::u64,
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -8240,7 +8234,7 @@ pub mod api {
                     ::std::vec::Vec<(
                         ::std::vec::Vec<::core::primitive::u8>,
                         ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::core::primitive::u64,
                     )>,
                     ::subxt::BasicError,
                 > {
@@ -9747,6 +9741,40 @@ pub mod api {
                     InvalidTimestamp,
                     #[codec(index = 14)]
                     EmptyLatestCommitment,
+                    #[codec(index = 15)]
+                    SendPacketError,
+                    #[codec(index = 16)]
+                    ReceivePacketError,
+                    #[codec(index = 17)]
+                    TimeoutPacketError,
+                    #[codec(index = 18)]
+                    AcknowledgePacketError,
+                    #[codec(index = 19)]
+                    OpenInitChannelError,
+                    #[codec(index = 20)]
+                    OpenTryChannelError,
+                    #[codec(index = 21)]
+                    OpenAckChannelError,
+                    #[codec(index = 22)]
+                    OpenConfirmChannelError,
+                    #[codec(index = 23)]
+                    CloseInitChannelError,
+                    #[codec(index = 24)]
+                    CloseConfirmChannelError,
+                    #[codec(index = 25)]
+                    AmountOverflow,
+                    #[codec(index = 26)]
+                    SerdeIBCFungibleTokenPacketDataError,
+                    #[codec(index = 27)]
+                    InvalidParse,
+                    #[codec(index = 28)]
+                    ParseDenomTraceError,
+                    #[codec(index = 29)]
+                    AcknowledgementResponseEmpty,
+                    #[codec(index = 30)]
+                    GetIbcDenomError,
+                    #[codec(index = 31)]
+                    InvalidValidation,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
