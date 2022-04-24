@@ -143,8 +143,8 @@ pub async fn build_mmr_proof(
     println!("generate_proof block hash : {:?}", block_hash);
 
     let mmr_proof = MmrProof {
-        mmr_leaf: mmr_leaf,
-        mmr_leaf_proof: mmr_leaf_proof,
+        mmr_leaf,
+        mmr_leaf_proof,
     };
     println!("get mmr proof = {:?}", mmr_proof);
 
@@ -237,7 +237,7 @@ pub async fn update_client_state(
     let mmr_root = help::MmrRoot {
         block_header,
         signed_commitment: help::SignedCommitment::from(signed_commmitment),
-        validator_merkle_proofs: validator_merkle_proofs,
+        validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
     };
@@ -326,9 +326,9 @@ pub async fn update_client_state_service(
 
         // build mmr root
         let mmr_root = help::MmrRoot {
-            block_header: block_header,
+            block_header,
             signed_commitment: help::SignedCommitment::from(signed_commmitment),
-            validator_merkle_proofs: validator_merkle_proofs,
+            validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
         };
@@ -372,56 +372,57 @@ pub fn verify_commitment_signatures(
     println!("verify_commitment_signatures:commiment msg is {:?}", msg);
 
     for signature in signatures
-        .into_iter()
+        .iter()
         .skip(start_position)
         .take(interations)
+        .flatten()
     {
-        if let Some(signature) = signature {
-            let sig = libsecp256k1::Signature::parse_standard_slice(&signature.0[..64])
-                .or(Err(Error::InvalidSignature))?;
-            println!("verify_commitment_signatures:signature is {:?}", sig);
+        // if let Some(signature) = signature {
+        let sig = libsecp256k1::Signature::parse_standard_slice(&signature.0[..64])
+            .or(Err(Error::InvalidSignature))?;
+        println!("verify_commitment_signatures:signature is {:?}", sig);
 
-            let recovery_id = libsecp256k1::RecoveryId::parse(signature.0[64])
-                .or(Err(Error::InvalidRecoveryId))?;
-            println!(
-                "verify_commitment_signatures:recovery_id is {:?}",
-                recovery_id
-            );
+        let recovery_id =
+            libsecp256k1::RecoveryId::parse(signature.0[64]).or(Err(Error::InvalidRecoveryId))?;
+        println!(
+            "verify_commitment_signatures:recovery_id is {:?}",
+            recovery_id
+        );
 
-            let validator = libsecp256k1::recover(&msg, &sig, &recovery_id)
-                .or(Err(Error::WrongSignature))?
-                .serialize()
-                .to_vec();
-            let validator_address = Keccak256::hash(&validator[1..])[12..].to_vec();
-            println!(
-                "verify_commitment_signatures:validator_address is {:?}",
-                hex::encode(&validator_address)
-            );
+        let validator = libsecp256k1::recover(&msg, &sig, &recovery_id)
+            .or(Err(Error::WrongSignature))?
+            .serialize()
+            .to_vec();
+        let validator_address = Keccak256::hash(&validator[1..])[12..].to_vec();
+        println!(
+            "verify_commitment_signatures:validator_address is {:?}",
+            hex::encode(&validator_address)
+        );
 
-            let mut found = false;
-            for proof in validator_proofs.iter() {
-                if validator_address == *proof.leaf {
-                    println!(
-                        "verify_commitment_signatures:proof.leaf is {:?}",
-                        hex::encode(&proof.leaf)
-                    );
-                    found = true;
-                    if !verify_proof::<Keccak256, _, _>(
-                        &validator_set_root,
-                        proof.proof.clone(),
-                        proof.number_of_leaves,
-                        proof.leaf_index,
-                        &proof.leaf,
-                    ) {
-                        return Err(Error::InvalidValidatorProof);
-                    }
-                    break;
+        let mut found = false;
+        for proof in validator_proofs.iter() {
+            if validator_address == *proof.leaf {
+                println!(
+                    "verify_commitment_signatures:proof.leaf is {:?}",
+                    hex::encode(&proof.leaf)
+                );
+                found = true;
+                if !verify_proof::<Keccak256, _, _>(
+                    validator_set_root,
+                    proof.proof.clone(),
+                    proof.number_of_leaves,
+                    proof.leaf_index,
+                    &proof.leaf,
+                ) {
+                    return Err(Error::InvalidValidatorProof);
                 }
-            }
-            if !found {
-                return Err(Error::ValidatorNotFound);
+                break;
             }
         }
+        if !found {
+            return Err(Error::ValidatorNotFound);
+        }
+        // }
     }
 
     Ok(())

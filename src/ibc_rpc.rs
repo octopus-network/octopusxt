@@ -246,10 +246,10 @@ pub async fn subscribe_ibc_event(
                     ibc::core::ics04_channel::events::OpenInit {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id,
+                        channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id: counterparty_channel_id,
+                        counterparty_channel_id,
                     },
                 ));
                 break;
@@ -272,10 +272,10 @@ pub async fn subscribe_ibc_event(
                     ibc::core::ics04_channel::events::OpenTry {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id,
+                        channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id: counterparty_channel_id,
+                        counterparty_channel_id,
                     },
                 ));
                 break;
@@ -298,10 +298,10 @@ pub async fn subscribe_ibc_event(
                     ibc::core::ics04_channel::events::OpenAck {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id,
+                        channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id: counterparty_channel_id,
+                        counterparty_channel_id,
                     },
                 ));
                 break;
@@ -324,10 +324,10 @@ pub async fn subscribe_ibc_event(
                     ibc::core::ics04_channel::events::OpenConfirm {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id,
+                        channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id: counterparty_channel_id,
+                        counterparty_channel_id,
                     },
                 ));
                 break;
@@ -353,7 +353,7 @@ pub async fn subscribe_ibc_event(
                         channel_id: channel_id.unwrap_or_default(),
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id: counterparty_channel_id,
+                        counterparty_channel_id,
                     },
                 ));
                 break;
@@ -377,10 +377,10 @@ pub async fn subscribe_ibc_event(
                     ibc::core::ics04_channel::events::CloseConfirm {
                         height: height.to_ibc_height(),
                         port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id,
+                        channel_id,
                         connection_id: connection_id.to_ibc_connection_id(),
                         counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id: counterparty_channel_id,
+                        counterparty_channel_id,
                     },
                 ));
                 break;
@@ -397,9 +397,7 @@ pub async fn subscribe_ibc_event(
                     packet: event.1.to_ibc_packet(),
                 };
 
-                events.push(IbcEvent::SendPacket(
-                    ibc::core::ics04_channel::events::SendPacket::from(send_packet),
-                ));
+                events.push(IbcEvent::SendPacket(send_packet));
                 break;
             }
             "ReceivePacket" => {
@@ -415,9 +413,7 @@ pub async fn subscribe_ibc_event(
                     packet: event.1.to_ibc_packet(),
                 };
 
-                events.push(IbcEvent::ReceivePacket(
-                    ibc::core::ics04_channel::events::ReceivePacket::from(receive_packet),
-                ));
+                events.push(IbcEvent::ReceivePacket(receive_packet));
 
                 break;
             }
@@ -435,11 +431,7 @@ pub async fn subscribe_ibc_event(
                         ack: event.2,
                     };
 
-                events.push(IbcEvent::WriteAcknowledgement(
-                    ibc::core::ics04_channel::events::WriteAcknowledgement::from(
-                        write_acknowledgement,
-                    ),
-                ));
+                events.push(IbcEvent::WriteAcknowledgement(write_acknowledgement));
 
                 break;
             }
@@ -455,9 +447,7 @@ pub async fn subscribe_ibc_event(
                     packet: event.1.to_ibc_packet(),
                 };
 
-                events.push(IbcEvent::AcknowledgePacket(
-                    ibc::core::ics04_channel::events::AcknowledgePacket::from(acknowledge_packet),
-                ));
+                events.push(IbcEvent::AcknowledgePacket(acknowledge_packet));
 
                 break;
             }
@@ -473,9 +463,7 @@ pub async fn subscribe_ibc_event(
                     packet: event.1.to_ibc_packet(),
                 };
 
-                events.push(IbcEvent::TimeoutPacket(
-                    ibc::core::ics04_channel::events::TimeoutPacket::from(timeout_packet),
-                ));
+                events.push(IbcEvent::TimeoutPacket(timeout_packet));
 
                 break;
             }
@@ -492,11 +480,7 @@ pub async fn subscribe_ibc_event(
                         packet: event.1.to_ibc_packet(),
                     };
 
-                events.push(IbcEvent::TimeoutOnClosePacket(
-                    ibc::core::ics04_channel::events::TimeoutOnClosePacket::from(
-                        timeout_on_close_packet,
-                    ),
-                ));
+                events.push(IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet));
 
                 break;
             }
@@ -706,15 +690,12 @@ pub async fn get_channel_end(
         )));
     }
 
-    tracing::info!(
-        "in call_ibc: [get_channel_end] >> data >> {:?}",
-        data.clone()
-    );
+    tracing::info!("in call_ibc: [get_channel_end] >> data >> {:?}", data);
 
     let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
     tracing::info!(
         "in call_ibc: [get_channel_end] >> channel_end >> {:?}",
-        channel_end.clone()
+        channel_end
     );
 
     Ok(channel_end)
@@ -1141,22 +1122,19 @@ pub async fn get_unreceipt_packet(
 
     let mut result = Vec::new();
 
-    let pair = sequences
-        .into_iter()
-        .map(|sequence| {
-            (
-                port_id.clone().as_bytes().to_vec(),
-                channel_id.clone().as_bytes().to_vec(),
-                u64::from(sequence.clone()),
-            )
-        })
-        .collect::<Vec<_>>();
+    let pair = sequences.into_iter().map(|sequence| {
+        (
+            port_id.clone().as_bytes().to_vec(),
+            channel_id.clone().as_bytes().to_vec(),
+            u64::from(sequence),
+        )
+    });
 
-    for (port_id, channel_id, sequence) in pair.into_iter() {
+    for (port_id, channel_id, sequence) in pair {
         let data: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_receipt(port_id, channel_id, sequence, Some(block_hash.clone()))
+            .packet_receipt(port_id, channel_id, sequence, Some(block_hash))
             .await?;
         if data.is_empty() {
             result.push(sequence);
@@ -1199,9 +1177,9 @@ pub async fn get_clients(
         .client_states_keys(Some(block_hash))
         .await?;
     if client_states_keys.is_empty() {
-        return Err(Box::from(format!(
-            "get_clients: get empty client_states_keys"
-        )));
+        return Err(Box::from(
+            "get_clients: get empty client_states_keys".to_string(),
+        ));
     }
 
     // enumate every item get client_state value
@@ -1265,9 +1243,9 @@ pub async fn get_connections(
         .await?;
 
     if connection_keys.is_empty() {
-        return Err(Box::from(format!(
-            "get_connections: get empty connection_keys"
-        )));
+        return Err(Box::from(
+            "get_connections: get empty connection_keys".to_string(),
+        ));
     }
 
     for key in connection_keys {
@@ -1330,7 +1308,9 @@ pub async fn get_channels(
         api.storage().ibc().channels_keys(Some(block_hash)).await?;
 
     if channels_keys.is_empty() {
-        return Err(Box::from(format!("get_channels: get empty channels_keys")));
+        return Err(Box::from(
+            "get_channels: get empty channels_keys".to_string(),
+        ));
     }
 
     for key in channels_keys {
@@ -1400,16 +1380,11 @@ pub async fn get_commitment_packet_state(
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_commitment(
-                key.0.clone(),
-                key.1.clone(),
-                key.2.clone(),
-                Some(block_hash),
-            )
+            .packet_commitment(key.0.clone(), key.1.clone(), key.2, Some(block_hash))
             .await?;
 
         // store key-value
-        ret.push((key.0.clone(), key.1.clone(), key.2.clone(), value));
+        ret.push((key.0.clone(), key.1.clone(), key.2, value));
     }
 
     let mut result = vec![];
@@ -1419,9 +1394,9 @@ pub async fn get_commitment_packet_state(
         let channel_id = String::from_utf8(channel_id).unwrap();
 
         let packet_state = PacketState {
-            port_id: port_id,
-            channel_id: channel_id,
-            sequence: sequence,
+            port_id,
+            channel_id,
+            sequence,
             data,
         };
         result.push(packet_state);
@@ -1647,9 +1622,9 @@ pub async fn get_acknowledge_packet_state(
         let channel_id = String::from_utf8(channel_id).unwrap();
 
         let packet_state = PacketState {
-            port_id: port_id,
-            channel_id: channel_id,
-            sequence: sequence,
+            port_id,
+            channel_id,
+            sequence,
             data,
         };
         result.push(packet_state);
@@ -1702,7 +1677,7 @@ pub async fn get_client_connections(
 
     let mut result = vec![];
 
-    let connection_id_str = String::from_utf8(connection_id.clone()).unwrap();
+    let connection_id_str = String::from_utf8(connection_id).unwrap();
     let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
 
     result.push(connection_id);
@@ -1940,7 +1915,7 @@ fn convert_substrate_digest_to_beefy_light_client_digest(
         logs: digest
             .logs
             .into_iter()
-            .map(|value| convert_substrate_digest_item_to_beefy_light_client_digest_item(value))
+            .map(convert_substrate_digest_item_to_beefy_light_client_digest_item)
             .collect(),
     }
 }
@@ -1976,6 +1951,5 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
 /// ```
 pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
     let prefix = StorageKeyPrefix::new::<F>();
-    let key = store.key().final_key(prefix);
-    key
+    store.key().final_key(prefix)
 }

@@ -1,4 +1,5 @@
 // mod codegen;
+#![allow(clippy::too_many_arguments)]
 
 pub mod ibc_rpc;
 pub mod update_client_state;
@@ -134,8 +135,7 @@ impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp {
     pub fn to_ibc_timestamp(self) -> ibc::timestamp::Timestamp {
         let value = String::from_utf8(self.time).unwrap();
-        let timestamp = ibc::timestamp::Timestamp::from_str(&value).unwrap();
-        timestamp
+        ibc::timestamp::Timestamp::from_str(&value).unwrap()
     }
 }
 
