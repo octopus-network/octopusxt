@@ -160,12 +160,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // println!("beefy_next_authorities len: {:?}", result.len);
     // println!("beefy_next_authorities root: {:?}", hex::encode(result.root));
 
-    // let block_hash = api.client.rpc().block_hash(None).await?;
-    // println!("block_hash : {:?}", block_hash);
-    //
-    // let block_hash = api.client.rpc().block_hash(Some(BlockNumber::from(12))).await?;
-    // println!("block_hash : {:?}", block_hash);
-
     // let finalized_head = api.client.rpc().finalized_head().await?;
     // println!("finalized_head : {:?}", finalized_head);
 
