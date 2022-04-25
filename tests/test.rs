@@ -613,7 +613,7 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     let signed_commitment =
         help::SignedCommitment::decode(&mut &signed_commitment_bytes[..]).unwrap();
     // covert to beefy signed_commitment
-    let signed_commitment: commitment::SignedCommitment = signed_commitment.into();
+    let signed_commitment: commitment::SignedCommitment = signed_commitment.try_into().unwrap();
 
     let validator_proofs = build_validator_proof(client.clone(), block_number).await?;
     // covert the grandpa validator proofs to beefy_light_client::ValidatorMerkleProof
@@ -889,7 +889,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let receive_mmr_root = help::MmrRoot::decode(&mut &receive_mmr_root_bytes[..]).unwrap();
     println!("receive mmr root is {:?}", receive_mmr_root);
 
-    let signed_commitment = commitment::SignedCommitment::from(receive_mmr_root.signed_commitment);
+    let signed_commitment = commitment::SignedCommitment::try_from(receive_mmr_root.signed_commitment).unwrap();
 
     let block_header = receive_mmr_root.block_header;
 
@@ -1064,7 +1064,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
         // 检查高度，如果接收到的高度小于等于链上已存在高度，就无需更新了，直接返回
         let signed_commitment =
-            commitment::SignedCommitment::from(receive_mmr_root.signed_commitment);
+            commitment::SignedCommitment::try_from(receive_mmr_root.signed_commitment).unwrap();
         let rev_block_number = signed_commitment.clone().commitment.block_number;
         if rev_block_number <= client_state.latest_commitment.block_number {
             println!("receive mmr root block number({}) less than client_state.latest_commitment.block_number({})",

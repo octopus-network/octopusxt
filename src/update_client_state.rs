@@ -136,7 +136,7 @@ pub async fn build_mmr_proof(
 
     //get mmr leaf and proof
     // Note: target_height = signed_commitment.commitment.block_number-1
-    let target_height = BlockNumber::from(block_number);
+    let target_height = BlockNumber::from(block_number - 1);
     let (block_hash, mmr_leaf, mmr_leaf_proof) =
         get_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash), src_client.clone())
             .await?;

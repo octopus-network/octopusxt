@@ -1,11 +1,11 @@
 use std::str::FromStr;
 
+use codec::Encode;
 use octopusxt::ibc_node;
 use octopusxt::ibc_rpc::get_storage_key;
 use subxt::ClientBuilder;
-use codec::Encode;
 
-/// this is example for usage query block hash 
+/// this is example for usage query block hash
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     env_logger::init();
@@ -21,7 +21,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let block_weight = ibc_node::system::storage::BlockWeight;
     let block_weight_key = get_storage_key(&block_weight);
 
-    let block_weight_proof = api.client.rpc().read_proof(vec![block_weight_key], None).await?;
+    let block_weight_proof = api
+        .client
+        .rpc()
+        .read_proof(vec![block_weight_key], None)
+        .await?;
 
     println!("Get system blockWeight proof = {:?}", block_weight_proof);
 
@@ -33,7 +37,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // interface: api.rpc.state.getStorage
     // jsonrpc: state_getStorage
     // summary: Retrieves the storage for a key
-    // 
+    //
     // this exmaple use getStorage api, can get storage_data by a StorageKey
     //
     let sudo_key = ibc_node::sudo::storage::Key;
@@ -41,7 +45,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // get sudo key storage data
     // Fetch a storage Key: storage function
-    // 
+    //
     let storage_data = api.client.rpc().storage(&sudo_key, None).await?.unwrap();
 
     // encode sudo key storage data to hex format
@@ -84,12 +88,19 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // get sudo key storage data
     // Fetch a storage Key: storage function
-    // 
+    //
 
-    let from_block_hash = sp_core::H256::from_str("0x856f7e105cafe285d361c9aae72f7763bfb222a7d65b93c8833899b352a37e8b").unwrap();
+    let from_block_hash = sp_core::H256::from_str(
+        "0x856f7e105cafe285d361c9aae72f7763bfb222a7d65b93c8833899b352a37e8b",
+    )
+    .unwrap();
     println!("from_block_hash = {}", from_block_hash);
 
-    let storage_data = api.client.rpc().query_storage(vec![sudo_key], from_block_hash, None).await?;
+    let storage_data = api
+        .client
+        .rpc()
+        .query_storage(vec![sudo_key], from_block_hash, None)
+        .await?;
 
     println!("query_storage data = {:?}", storage_data);
 
@@ -125,8 +136,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // rotate_keys
     // has_session_keys
     // has_key
-    // 
-
+    //
 
     Ok(())
 }
