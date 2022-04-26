@@ -7022,7 +7022,7 @@ pub mod api {
                 pub source_port: ::std::vec::Vec<::core::primitive::u8>,
                 pub source_channel: ::std::vec::Vec<::core::primitive::u8>,
                 pub token: ::std::vec::Vec<::core::primitive::u8>,
-                pub amount: ::core::primitive::u32,
+                pub amount: ::core::primitive::u128,
                 pub receiver: ::std::vec::Vec<::core::primitive::u8>,
                 pub timeout_height: ::core::primitive::u64,
                 pub timeout_timestamp: ::core::primitive::u64,
@@ -7078,7 +7078,7 @@ pub mod api {
                     source_port: ::std::vec::Vec<::core::primitive::u8>,
                     source_channel: ::std::vec::Vec<::core::primitive::u8>,
                     token: ::std::vec::Vec<::core::primitive::u8>,
-                    amount: ::core::primitive::u32,
+                    amount: ::core::primitive::u128,
                     receiver: ::std::vec::Vec<::core::primitive::u8>,
                     timeout_height: ::core::primitive::u64,
                     timeout_timestamp: ::core::primitive::u64,
@@ -9703,7 +9703,7 @@ pub mod api {
                         source_port: ::std::vec::Vec<::core::primitive::u8>,
                         source_channel: ::std::vec::Vec<::core::primitive::u8>,
                         token: ::std::vec::Vec<::core::primitive::u8>,
-                        amount: ::core::primitive::u32,
+                        amount: ::core::primitive::u128,
                         receiver: ::std::vec::Vec<::core::primitive::u8>,
                         timeout_height: ::core::primitive::u64,
                         timeout_timestamp: ::core::primitive::u64,
@@ -9775,6 +9775,8 @@ pub mod api {
                     GetIbcDenomError,
                     #[codec(index = 31)]
                     InvalidValidation,
+                    #[codec(index = 32)]
+                    StorePacketResultError,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {

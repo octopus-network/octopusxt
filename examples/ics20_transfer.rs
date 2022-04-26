@@ -34,13 +34,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let token = "sample".to_string().as_bytes().to_vec();
     
-    let amount = 23;
+    let amount = 123_456_789_012_3459990000u128;
 
     let receiver = format!("{}", AccountKeyring::Bob.to_account_id()).as_bytes().to_vec();
     
-    let timeout_height = 90;
+    let timeout_height = 9999;
     
-    let timeout_timestamp = 100;
+    let timeout_timestamp = 9999;
 
 
     let events = api
