@@ -1,5 +1,6 @@
 use octopusxt::ibc_node;
 use sp_keyring::AccountKeyring;
+use codec::Encode;
 use subxt::{ClientBuilder, PairSigner};
 
 #[tokio::main]
@@ -36,8 +37,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     
     let amount = 123_456_789_012_3459990000u128;
 
-    let receiver = format!("{}", AccountKeyring::Bob.to_account_id()).as_bytes().to_vec();
+    let receiver = AccountKeyring::Bob.to_account_id();
     
+    let encode_receiver = sp_runtime::AccountId32::encode(&receiver);
+	let hex_receiver = hex::encode(encode_receiver).as_bytes().to_vec();
+	println!("transfer : hex  : {:?}", hex_receiver);
+
+
     let timeout_height = 9999;
     
     let timeout_timestamp = 9999;
@@ -51,7 +57,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             source_channel,
             token,
             amount,
-            receiver,
+            hex_receiver,
             timeout_height,
             timeout_timestamp,
         )
