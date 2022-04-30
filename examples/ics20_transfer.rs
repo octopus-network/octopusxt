@@ -33,11 +33,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let source_port = ibc::core::ics24_host::identifier::PortId::transfer().as_bytes().to_vec();  
     let source_channel = ibc::core::ics24_host::identifier::ChannelId::new(0).as_bytes().to_vec();
 
-    let token = "sample".to_string().as_bytes().to_vec();
+    let token = "OCT".to_string().as_bytes().to_vec();
     
-    let amount = 123_456_789_012_3459990000u128;
+    let amount = 100 * 1_000_000_000_000_000_000u128;
 
-    let receiver = AccountKeyring::Bob.to_account_id();
+    // 对方链上的账户
+    let receiver = AccountKeyring::Ferdie.to_account_id();
     
     let encode_receiver = sp_runtime::AccountId32::encode(&receiver);
 	let hex_receiver = hex::encode(encode_receiver).as_bytes().to_vec();

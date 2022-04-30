@@ -7368,6 +7368,46 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "ChainError";
             }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct EscrowToken(
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for EscrowToken {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "EscrowToken";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct BurnToken(
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for BurnToken {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "BurnToken";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct UnEscrowToken(
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for UnEscrowToken {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "UnEscrowToken";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct MintToken(
+                pub ::core::primitive::u32,
+                pub ::subxt::sp_core::crypto::AccountId32,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for MintToken {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "MintToken";
+            }
         }
         pub mod storage {
             use super::runtime_types;
@@ -7837,6 +7877,18 @@ pub mod api {
                             ::subxt::StorageHasher::Blake2_128Concat,
                         ),
                     ])
+                }
+            }
+            pub struct AssetIdByName<'a>(pub &'a [::core::primitive::u8]);
+            impl ::subxt::StorageEntry for AssetIdByName<'_> {
+                const PALLET: &'static str = "Ibc";
+                const STORAGE: &'static str = "AssetIdByName";
+                type Value = ::core::primitive::u32;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Twox64Concat,
+                    )])
                 }
             }
             pub struct StorageApi<'a, T: ::subxt::Config> {
@@ -8340,6 +8392,24 @@ pub mod api {
                     hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::subxt::KeyIter<'a, T, EscrowAddresses<'a>>,
+                    ::subxt::BasicError,
+                > {
+                    self.client.storage().iter(hash).await
+                }
+                pub async fn asset_id_by_name(
+                    &self,
+                    _0: &[::core::primitive::u8],
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
+                {
+                    let entry = AssetIdByName(_0);
+                    self.client.storage().fetch_or_default(&entry, hash).await
+                }
+                pub async fn asset_id_by_name_iter(
+                    &self,
+                    hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::subxt::KeyIter<'a, T, AssetIdByName<'a>>,
                     ::subxt::BasicError,
                 > {
                     self.client.storage().iter(hash).await
@@ -9777,6 +9847,10 @@ pub mod api {
                     InvalidValidation,
                     #[codec(index = 32)]
                     StorePacketResultError,
+                    #[codec(index = 33)]
+                    InvalidTokenId,
+                    #[codec(index = 34)]
+                    WrongAssetId,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Event {
@@ -9976,6 +10050,30 @@ pub mod api {
                     Empty(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 23)]
                     ChainError(::std::vec::Vec<::core::primitive::u8>),
+                    #[codec(index = 24)]
+                    EscrowToken(
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 25)]
+                    BurnToken(
+                        ::core::primitive::u32,
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 26)]
+                    UnEscrowToken(
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 27)]
+                    MintToken(
+                        ::core::primitive::u32,
+                        ::subxt::sp_core::crypto::AccountId32,
+                        ::core::primitive::u128,
+                    ),
                 }
             }
             #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
