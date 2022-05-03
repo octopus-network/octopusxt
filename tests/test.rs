@@ -889,7 +889,8 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let receive_mmr_root = help::MmrRoot::decode(&mut &receive_mmr_root_bytes[..]).unwrap();
     println!("receive mmr root is {:?}", receive_mmr_root);
 
-    let signed_commitment = commitment::SignedCommitment::try_from(receive_mmr_root.signed_commitment).unwrap();
+    let signed_commitment =
+        commitment::SignedCommitment::try_from(receive_mmr_root.signed_commitment).unwrap();
 
     let block_header = receive_mmr_root.block_header;
 

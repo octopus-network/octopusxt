@@ -1,6 +1,6 @@
+use codec::Encode;
 use octopusxt::ibc_node;
 use sp_keyring::AccountKeyring;
-use codec::Encode;
 use subxt::{ClientBuilder, PairSigner};
 
 #[tokio::main]
@@ -28,27 +28,29 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // println!("Balance transfer extrinsic submitted: {:#?}", result_event);
 
     // this is pallet ibc transfer
-    
+
     let signer = PairSigner::new(AccountKeyring::Alice.pair());
-    let source_port = ibc::core::ics24_host::identifier::PortId::transfer().as_bytes().to_vec();  
-    let source_channel = ibc::core::ics24_host::identifier::ChannelId::new(0).as_bytes().to_vec();
+    let source_port = ibc::core::ics24_host::identifier::PortId::transfer()
+        .as_bytes()
+        .to_vec();
+    let source_channel = ibc::core::ics24_host::identifier::ChannelId::new(0)
+        .as_bytes()
+        .to_vec();
 
     let token = "OCT".to_string().as_bytes().to_vec();
-    
+
     let amount = 100 * 1_000_000_000_000_000_000u128;
 
     // 对方链上的账户
     let receiver = AccountKeyring::Ferdie.to_account_id();
-    
-    let encode_receiver = sp_runtime::AccountId32::encode(&receiver);
-	let hex_receiver = hex::encode(encode_receiver).as_bytes().to_vec();
-	println!("transfer : hex  : {:?}", hex_receiver);
 
+    let encode_receiver = sp_runtime::AccountId32::encode(&receiver);
+    let hex_receiver = hex::encode(encode_receiver).as_bytes().to_vec();
+    println!("transfer : hex  : {:?}", hex_receiver);
 
     let timeout_height = 9999;
-    
-    let timeout_timestamp = 9999;
 
+    let timeout_timestamp = 9999;
 
     let events = api
         .tx()

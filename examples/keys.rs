@@ -1,7 +1,7 @@
 use octopusxt::ibc_node;
 use sp_keyring::AccountKeyring;
-use subxt::{ClientBuilder, PairSigner};
 use std::str::FromStr;
+use subxt::{ClientBuilder, PairSigner};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -11,7 +11,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let dest: sp_runtime::AccountId32 = AccountKeyring::Bob.to_account_id().into();
     println!("😂😂😂😂😂😂😂😂😂😂😂😂 account id = {:?}", dest);
 
-    let dest : &[u8; 32] = dest.as_ref();
+    let dest: &[u8; 32] = dest.as_ref();
     let hex_dest = hex::encode(dest);
     println!("HH hex_dest = {}", hex_dest);
 
