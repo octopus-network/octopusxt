@@ -2631,7 +2631,7 @@ pub async fn get_connection_channels(
 pub async fn deliver(
     msg: Vec<Any>,
     client: Client<ibc_node::DefaultConfig>,
-) -> Result<(subxt::sp_core::H256, subxt::sp_core::H256, Vec<IbcEvent>), Box<dyn std::error::Error>>
+) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>>
 {
     tracing::info!("in call_ibc: [deliver]");
 
@@ -2651,17 +2651,18 @@ pub async fn deliver(
         .tx()
         .ibc()
         .deliver(msg, 0)
-        .sign_and_submit_then_watch(&signer)
+        .sign_and_submit(&signer)
         .await?;
 
-    tracing::info!("deliver block hash = {:?}", result.block);
-    tracing::info!("deliver extrinsic: {:?}", result.extrinsic);
-    tracing::info!("deliver events : {:?}", result.events);
+    // tracing::info!("deliver block hash = {:?}", result.block);
+    // tracing::info!("deliver extrinsic: {:?}", result.extrinsic);
+    // tracing::info!("deliver events : {:?}", result.events);
+    
 
     // convert raw substrate event to ibc event
-    let ibc_event = from_substrate_event_to_ibc_event(result.events);
+    // let ibc_event = from_substrate_event_to_ibc_event(result.events);
 
-    Ok((result.block, result.extrinsic, ibc_event))
+    Ok(result)
 }
 
 /// # get_mmr_leaf_and_mmr_proof
