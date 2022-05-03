@@ -50,6 +50,10 @@ sp-runtime = { git = "https://github.com/paritytech/substrate/", branch = "polka
 pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
 beefy-primitives = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
 beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.13", features = ["keccak"], default-features = false }
+# frame-support = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
+# frame-system = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
+# pallet-ibc = { git = "https://github.com/octopus-network/substrate-ibc.git", branch = "feature/ics20" }
+# scale-info = "*"
 
 # ibc
 tendermint-proto = { version ="0.23.6", default-features = false }
