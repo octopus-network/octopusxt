@@ -2665,6 +2665,42 @@ pub async fn deliver(
     Ok(result)
 }
 
+
+pub async fn delete_send_packet_event(client: Client<ibc_node::DefaultConfig>) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
+    tracing::info!("in call_ibc: [delete_send_packet_event]");
+
+    let signer = PairSigner::new(AccountKeyring::Bob.pair());
+
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let result = api
+        .tx()
+        .ibc()
+        .delete_send_packet_event()
+        .sign_and_submit(&signer)
+        .await?;
+
+    Ok(result)
+}
+
+
+pub async fn delete_write_packet_event(client: Client<ibc_node::DefaultConfig>) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
+    tracing::info!("in call_ibc: [delete_write_packet_event]");
+
+    let signer = PairSigner::new(AccountKeyring::Bob.pair());
+
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+
+    let result = api
+        .tx()
+        .ibc()
+        .delete_ack_packet_event()
+        .sign_and_submit(&signer)
+        .await?;
+
+    Ok(result)
+}
+
 /// # get_mmr_leaf_and_mmr_proof
 ///
 /// This get_mmr_leaf_and_mmr_proof api generate form generateProof api

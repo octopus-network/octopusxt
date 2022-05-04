@@ -7031,6 +7031,18 @@ pub mod api {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "transfer";
             }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct DeleteSendPacketEvent;
+            impl ::subxt::Call for DeleteSendPacketEvent {
+                const PALLET: &'static str = "Ibc";
+                const FUNCTION: &'static str = "delete_send_packet_event";
+            }
+            #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
+            pub struct DeleteAckPacketEvent;
+            impl ::subxt::Call for DeleteAckPacketEvent {
+                const PALLET: &'static str = "Ibc";
+                const FUNCTION: &'static str = "delete_ack_packet_event";
+            }
             pub struct TransactionApi<'a, T: ::subxt::Config, X> {
                 client: &'a ::subxt::Client<T>,
                 marker: ::core::marker::PhantomData<X>,
@@ -7093,6 +7105,32 @@ pub mod api {
                         timeout_height,
                         timeout_timestamp,
                     };
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn delete_send_packet_event(
+                    &self,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    DeleteSendPacketEvent,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = DeleteSendPacketEvent {};
+                    ::subxt::SubmittableExtrinsic::new(self.client, call)
+                }
+                pub fn delete_ack_packet_event(
+                    &self,
+                ) -> ::subxt::SubmittableExtrinsic<
+                    'a,
+                    T,
+                    X,
+                    DeleteAckPacketEvent,
+                    DispatchError,
+                    root_mod::Event,
+                > {
+                    let call = DeleteAckPacketEvent {};
                     ::subxt::SubmittableExtrinsic::new(self.client, call)
                 }
             }
@@ -9778,6 +9816,10 @@ pub mod api {
                         timeout_height: ::core::primitive::u64,
                         timeout_timestamp: ::core::primitive::u64,
                     },
+                    #[codec(index = 3)]
+                    delete_send_packet_event,
+                    #[codec(index = 4)]
+                    delete_ack_packet_event,
                 }
                 #[derive(:: subxt :: codec :: Encode, :: subxt :: codec :: Decode, Debug)]
                 pub enum Error {
