@@ -10,8 +10,13 @@ name = "mmr"
 path = "./examples/mmr.rs"
 
 [[bin]]
-name = "ics20-transfer"
-path = "./examples/ics20_transfer.rs"
+name = "ics20-ibc-1-transfer"
+path = "./examples/ics20_ibc_1_transfer.rs"
+
+
+[[bin]]
+name = "ics20-ibc-0-transfer"
+path = "./examples/ics20_ibc_0_transfer.rs"
 
 [[bin]]
 name = "block-hash"
