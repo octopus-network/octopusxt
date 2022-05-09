@@ -19,7 +19,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let vec_source_port = ibc::core::ics24_host::identifier::PortId::transfer().as_bytes().to_vec();
 
     let source_channel = ibc::core::ics24_host::identifier::ChannelId::new(0);
-    let vec_source_channel = ibc::core::ics24_host::identifier::ChannelId::new(0).as_bytes().to_vec();
+    let vec_source_channel = format!("{}",ibc::core::ics24_host::identifier::ChannelId::new(0)).as_bytes().to_vec();
 
     // contruct prefix
     let prefix = format!("{}/{}",source_port, source_channel);
