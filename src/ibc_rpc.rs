@@ -1546,7 +1546,7 @@ pub async fn get_channel_end(
         .ibc()
         .channels(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             Some(block_hash),
         )
         .await?;
@@ -1607,7 +1607,7 @@ pub async fn get_packet_receipt(
         .ibc()
         .packet_receipt(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             sequence,
             Some(block_hash),
         )
@@ -1665,7 +1665,7 @@ pub async fn get_packet_receipt_vec(
         .ibc()
         .packet_receipt(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             sequence,
             Some(block_hash),
         )
@@ -1719,7 +1719,7 @@ pub async fn get_send_packet_event(
         .ibc()
         .send_packet_event(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             u64::from(*sequence),
             Some(block_hash),
         )
@@ -1771,7 +1771,7 @@ pub async fn get_write_ack_packet_event(
         .ibc()
         .write_ack_packet_event(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             u64::from(*sequence),
             Some(block_hash),
         )
@@ -1993,7 +1993,7 @@ pub async fn get_unreceipt_packet(
     let pair = sequences.into_iter().map(|sequence| {
         (
             port_id.clone().as_bytes().to_vec(),
-            channel_id.clone().as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             u64::from(sequence),
         )
     });
@@ -2310,7 +2310,7 @@ pub async fn get_packet_commitment(
         .ibc()
         .packet_commitment(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             u64::from(*sequence),
             Some(block_hash),
         )
@@ -2363,7 +2363,7 @@ pub async fn get_packet_ack(
         .ibc()
         .acknowledgements(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             u64::from(*sequence),
             Some(block_hash),
         )
@@ -2413,7 +2413,7 @@ pub async fn get_next_sequence_recv(
         .ibc()
         .next_sequence_recv(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             Some(block_hash),
         )
         .await?;
@@ -2423,7 +2423,7 @@ pub async fn get_next_sequence_recv(
         .ibc()
         .packet_commitment(
             port_id.as_bytes().to_vec(),
-            channel_id.as_bytes().to_vec(),
+            format!("{}",channel_id).as_bytes().to_vec(),
             sequence,
             Some(block_hash),
         )
