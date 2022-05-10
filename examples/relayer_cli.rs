@@ -1,12 +1,14 @@
 use std::str::FromStr;
 
-use codec::{Encode, Decode};
-use ibc::applications::ics20_fungible_token_transfer::msgs::denom_trace::{DenomTrace, parse_hex_hash};
+use codec::{Decode, Encode};
+use ibc::applications::ics20_fungible_token_transfer::msgs::denom_trace::{
+    parse_hex_hash, DenomTrace,
+};
 use octopusxt::ibc_node;
 use octopusxt::ibc_rpc::get_storage_key;
+use structopt::StructOpt;
 use subxt::ClientBuilder;
 use tendermint_proto::Protobuf;
-use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
 pub struct CliDenomTrace {
@@ -80,14 +82,15 @@ impl CliDenomTrace {
 
         let mut denom_hash_and_denom_trace = vec![];
         while let Ok(Some(value)) = data.next().await {
-            let denom_trace_hash = &value.0.0[..];
+            let denom_trace_hash = &value.0 .0[..];
             println!("denom_trace_hash **1 = {:?}", denom_trace_hash);
-            
-            let denom_hex = String::from_utf8(subtle_encoding::hex::encode_upper(denom_trace_hash)).unwrap();
+
+            let denom_hex =
+                String::from_utf8(subtle_encoding::hex::encode_upper(denom_trace_hash)).unwrap();
             println!("denom hex = {}", denom_hex);
 
             let denom_trace = DenomTrace::decode(&*value.1).unwrap();
-            println!("denom trate = {:?}",denom_trace);
+            println!("denom trate = {:?}", denom_trace);
             println!("denom_trace_hash **2 = {:?}", denom_trace.hash());
 
             let ibc_denom = denom_trace.ibc_denom().unwrap();
@@ -97,7 +100,7 @@ impl CliDenomTrace {
 
             denom_hash_and_denom_trace.push((denom_hex, denom_trace));
         }
-        
+
         Ok(denom_hash_and_denom_trace)
     }
 }
@@ -155,7 +158,6 @@ pub struct Sudo {
 
 impl Sudo {
     async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-
         let api = ClientBuilder::new()
             .set_url(
                 self.websocket_url
@@ -172,11 +174,7 @@ impl Sudo {
 
         let block_hash: sp_core::H256 = block_header.hash();
 
-        let account_id32 = api
-            .storage()
-            .sudo()
-            .key(Some(block_hash))
-            .await?;
+        let account_id32 = api.storage().sudo().key(Some(block_hash)).await?;
 
         println!("Account id32 = {:?}", account_id32);
 
@@ -189,13 +187,13 @@ pub enum Command {
     #[structopt(name = "denom-trace")]
     /// Contruct Denom Trace will display ibc_denom
     DenomTrace(CliDenomTrace),
-    
+
     #[structopt(name = "balance")]
     /// substrate balance module
     Balance(Balance),
 
     #[structopt(name = "sudo")]
-    // substrate sudo module 
+    // substrate sudo module
     Sudo(Sudo),
 }
 

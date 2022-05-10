@@ -29,7 +29,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let prefix = format!("{}/{}", source_port, source_channel);
 
     // let token = format!("{}/{}", prefix, "ATOM").as_bytes().to_vec();
-    let token = format!("{}", "ibc/04C1A8B4EC211C89630916F8424F16DC9611148A5F300C122464CE8E996AABD0").as_bytes().to_vec();
+    let token = format!(
+        "{}",
+        "ibc/04C1A8B4EC211C89630916F8424F16DC9611148A5F300C122464CE8E996AABD0"
+    )
+    .as_bytes()
+    .to_vec();
 
     let amount = 100 * 1_000_000_000_000_000_000u128;
 
