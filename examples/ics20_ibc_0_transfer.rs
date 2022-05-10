@@ -14,17 +14,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
     let signer = PairSigner::new(AccountKeyring::Ferdie.pair());
-    
+
     let source_port = ibc::core::ics24_host::identifier::PortId::transfer();
-    let vec_source_port = ibc::core::ics24_host::identifier::PortId::transfer().as_bytes().to_vec();
+    let vec_source_port = ibc::core::ics24_host::identifier::PortId::transfer()
+        .as_bytes()
+        .to_vec();
 
     let source_channel = ibc::core::ics24_host::identifier::ChannelId::new(0);
-    let vec_source_channel = format!("{}",ibc::core::ics24_host::identifier::ChannelId::new(0)).as_bytes().to_vec();
+    let vec_source_channel = format!("{}", ibc::core::ics24_host::identifier::ChannelId::new(0))
+        .as_bytes()
+        .to_vec();
 
     // contruct prefix
-    let prefix = format!("{}/{}",source_port, source_channel);
-    
-    let token = format!("{}/{}", prefix, "ATOM").as_bytes().to_vec();
+    // let prefix = format!("{}/{}", source_port, source_channel);
+
+    // let token = format!("{}/{}", prefix, "ATOM").as_bytes().to_vec();
+    let token = format!("{}", "ibc/04C1A8B4EC211C89630916F8424F16DC9611148A5F300C122464CE8E996AABD0").as_bytes().to_vec();
 
     let amount = 100 * 1_000_000_000_000_000_000u128;
 
@@ -39,9 +44,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let timeout_timestamp = 9999;
 
-    // this chain sender is Feridie 
-    // the countray chain receiver is Alice 
-    // send token is 
+    // this chain sender is Feridie
+    // the countray chain receiver is Alice
+    // send token is
     let events = api
         .tx()
         .ibc()

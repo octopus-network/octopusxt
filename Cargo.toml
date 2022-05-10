@@ -30,12 +30,18 @@ path = "./examples/query.rs"
 name = "keys"
 path = "./examples/keys.rs"
 
+[[bin]]
+name = "relayer-cli"
+path = "./examples/relayer_cli.rs"
+
 [dependencies]
 # subxt call substrate
 subxt = { version = "0.15.0", git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'octopus-v0.9.13' }
 
+structopt = "0.3.26"
 tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
 hex = "0.4.3"
+subtle-encoding = { version = "0.5", default-features = false }
 hex-literal = "0.3.4"
 env_logger = "0.8.3"
 tracing = { version = "0.1.33", default-features = false }
@@ -62,8 +68,8 @@ beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branc
 
 # ibc
 tendermint-proto = { version ="0.23.6", default-features = false }
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20-1884-ics20" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20-1884-ics20" }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
 # ibc = { path = "../ibc-rs/modules" }
 # ibc-proto = { path = "../ibc-rs/proto" }
 

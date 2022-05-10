@@ -33,7 +33,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let source_port = ibc::core::ics24_host::identifier::PortId::transfer()
         .as_bytes()
         .to_vec();
-    let source_channel = format!("{}",ibc::core::ics24_host::identifier::ChannelId::new(0))
+    let source_channel = format!("{}", ibc::core::ics24_host::identifier::ChannelId::new(0))
         .as_bytes()
         .to_vec();
 
@@ -54,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // this chain sender is alice, just is sign this tx signer
     // countray chain receiver is Ferdie
-    // send token is this chain token atom 
+    // send token is this chain token atom
     // result is countray chain receiver will receive amount and token is ATOM
     let events = api
         .tx()
