@@ -41,10 +41,8 @@ impl CliDenomTrace {
         println!("path = {}", path);
 
         let ibc_denom_trace = DenomTrace::new(path, base_denom.clone());
-
         println!("ibc_denom_trace = {:?}", ibc_denom_trace);
 
-        println!("ibc hash = {:?}", ibc_denom_trace.hash());
         let ibc_denom = ibc_denom_trace.ibc_denom().unwrap();
         println!("ibc_denom = {:?}", ibc_denom);
         let split_result = ibc_denom.split('/').collect::<Vec<&str>>();
@@ -52,13 +50,14 @@ impl CliDenomTrace {
         let denom_hash_str = split_result[1];
 
         let result = parse_hex_hash(denom_hash_str).unwrap();
-        println!("prase hex hash = {:?}", result);
+        assert_eq!(ibc_denom_trace.hash(), result);
+        // println!("prase hex hash = {:?}", result);
 
-        let ret = self.get_chain_denom_trace().await?;
+        // let ret = self.get_chain_denom_trace().await?;
 
-        for item in ret.iter() {
-            println!("ibc_hash = {:?}, ibc_denom = {:?}", item.0, item.1);
-        }
+        // for item in ret.iter() {
+        //     println!("ibc_hash = {:?}, ibc_denom = {:?}", item.0, item.1);
+        // }
 
         Ok(())
     }
