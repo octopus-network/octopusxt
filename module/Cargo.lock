@@ -1221,7 +1221,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.14.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#c8cf6a5e41382d4ebd9d2b7f51b9cbed37fea28f"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#f01a0d5a33f455f680878770236cdfa3654d1a55"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1260,7 +1260,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.17.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#c8cf6a5e41382d4ebd9d2b7f51b9cbed37fea28f"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#f01a0d5a33f455f680878770236cdfa3654d1a55"
 dependencies = [
  "base64",
  "bytes",
@@ -1966,26 +1966,6 @@ dependencies = [
  "tendermint-proto",
  "tokio",
  "tracing",
-]
-
-[[package]]
-name = "octopusxt-cli"
-version = "0.1.0"
-dependencies = [
- "env_logger",
- "hex",
- "ibc",
- "ibc-proto",
- "octopusxt",
- "parity-scale-codec",
- "sp-core",
- "sp-keyring",
- "sp-runtime",
- "structopt",
- "subtle-encoding",
- "subxt",
- "tendermint-proto",
- "tokio",
 ]
 
 [[package]]

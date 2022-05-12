@@ -1,5 +1,7 @@
 // mod codegen;
 #![allow(clippy::too_many_arguments)]
+#![allow(unused_imports)]
+#![allow(unused_variables)]
 
 pub mod ibc_rpc;
 pub mod update_client_state;
