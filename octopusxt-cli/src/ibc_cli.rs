@@ -12,9 +12,6 @@ use tendermint_proto::Protobuf;
 
 #[derive(Debug, StructOpt)]
 pub struct CliDenomTrace {
-    // websocket_url
-    #[structopt(default_value = "ws://localhost:9944")]
-    pub websocket_url: String,
     /// port id
     pub port_id: Option<String>,
     /// channel id
@@ -67,7 +64,7 @@ impl CliDenomTrace {
         &self,
     ) -> Result<Vec<(String, DenomTrace)>, Box<dyn std::error::Error>> {
         let api = ClientBuilder::new()
-            .set_url(self.websocket_url.clone())
+            .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
