@@ -1,5 +1,6 @@
 #![allow(unused_imports)]
 #![allow(unused_variables)]
+#![allow(dead_code)]
 
 use ibc::applications::ics20_fungible_token_transfer::msgs::denom_trace::{
     parse_hex_hash, DenomTrace,
@@ -20,6 +21,7 @@ use substrate::query::Query;
 use substrate::sudo::Sudo;
 
 #[derive(Debug, StructOpt)]
+#[structopt(name = "octopusxt-cli", about = "A tools for octopus cli command")]
 pub enum Command {
     #[structopt(name = "denom-trace")]
     /// Contruct Denom Trace will display ibc_denom

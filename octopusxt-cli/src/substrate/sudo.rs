@@ -5,17 +5,14 @@ use subxt::ClientBuilder;
 #[derive(Debug, StructOpt)]
 pub struct Sudo {
     /// websocket_url
-    pub websocket_url: Option<String>,
+    #[structopt(default_value = "ws://localhost:9944")]
+    pub websocket_url: String,
 }
 
 impl Sudo {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let api = ClientBuilder::new()
-            .set_url(
-                self.websocket_url
-                    .as_ref()
-                    .unwrap_or(&"ws://localhost:9944".to_string()),
-            )
+            .set_url(self.websocket_url.clone())
             .build::<ibc_node::DefaultConfig>()
             .await?
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();

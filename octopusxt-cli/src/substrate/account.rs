@@ -26,17 +26,17 @@ pub struct SubstrateAccount {}
 
 impl SubstrateAccount {
     pub fn run(&self) {
-        let dest: sp_runtime::AccountId32 = AccountKeyring::Bob.to_account_id().into();
-        println!("😂😂😂😂😂😂😂😂😂😂😂😂 account id = {:?}", dest);
+        let account_id32: sp_runtime::AccountId32 = AccountKeyring::Bob.to_account_id().into();
+        println!("😂😂😂😂😂😂😂😂😂😂😂😂 account id = {:?}", account_id32);
 
-        let dest: &[u8; 32] = dest.as_ref();
-        let hex_dest = hex::encode(dest);
-        println!("HH hex_dest = {}", hex_dest);
+        let account_id32: &[u8; 32] = account_id32.as_ref();
+        let hex_account_id32 = hex::encode(account_id32);
+        println!("account id 32: hex_dest = {}", hex_account_id32);
 
-        let account = sp_core::H256::from_str(&hex_dest).unwrap();
-        println!("sudo key h256 format = {:?}", account);
+        let account_id32_h256 = sp_core::H256::from_str(&hex_account_id32).unwrap();
+        println!("account id32 h256 format = {:?}", account_id32_h256);
 
-        let account = sp_runtime::AccountId32::from_str(&hex_dest).unwrap();
-        println!("account  = {:?}", account);
+        let account = sp_runtime::AccountId32::from_str(&hex_account_id32).unwrap();
+        println!("account id  = {:?}", account);
     }
 }

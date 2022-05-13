@@ -16,7 +16,8 @@ pub enum Balance {
 #[derive(Debug, StructOpt)]
 pub struct Transfer {
     /// websocket_url
-    pub websocket_url: Option<String>,
+    #[structopt(default_value = "ws://localhost:9944")]
+    pub websocket_url: String,
     /// account sender, now advice account is alice, bob, dave, eve, ferdie, one, two,
     pub sender: Option<String>,
     /// account receiver, now advice account is alice, bob, dave, eve, ferdie, one, two,
@@ -27,7 +28,6 @@ pub struct Transfer {
 
 impl Balance {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        println!("substrate balance module start");
         match self {
             Balance::Transfer(value) => {
                 let (alice, ferdie) = ("alice".to_string(), "ferdie".to_string());
@@ -46,12 +46,7 @@ impl Balance {
                     .into();
 
                 let api = ClientBuilder::new()
-                    .set_url(
-                        value
-                            .websocket_url
-                            .as_ref()
-                            .unwrap_or(&"ws://localhost:9944".to_string()),
-                    )
+                    .set_url(value.websocket_url.clone())
                     .build()
                     .await?
                     .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();

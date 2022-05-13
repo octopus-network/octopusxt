@@ -4,7 +4,11 @@ use subxt::sp_core::Public;
 use subxt::ClientBuilder;
 
 #[derive(Debug, StructOpt)]
-pub enum Beefy {}
+pub struct Beefy {
+    #[structopt(default_value = "ws://localhost:9944")]
+    /// websocket url
+    pub websocket_url: String,
+}
 
 impl Beefy {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -90,7 +94,7 @@ impl Beefy {
         // println!("counter : {}", counter);
 
         let api = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
+            .set_url(self.websocket_url.clone())
             .build::<ibc_node::DefaultConfig>()
             .await?;
 
@@ -99,7 +103,7 @@ impl Beefy {
         println!("authorities : {:?}", authorities);
 
         let api = ClientBuilder::new()
-            .set_url("ws://localhost:9944")
+            .set_url(self.websocket_url.clone())
             .build::<ibc_node::DefaultConfig>()
             .await?
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
