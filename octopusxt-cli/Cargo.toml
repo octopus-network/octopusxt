@@ -14,6 +14,7 @@ tendermint-proto = { version ="0.23.6", default-features = false }
 
 hex = "0.4.3"
 env_logger = "0.8.3"
+serde_json = { version = "*"}
 structopt = "0.3.26"
 subtle-encoding = { version = "0.5", default-features = false }
 tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
@@ -23,3 +24,4 @@ subxt = { version = "0.15.0", git = "https://github.com/octopus-network/substrat
 sp-runtime = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
 sp-core = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
 sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
+sc-cli = {git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
