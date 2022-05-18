@@ -1,5 +1,5 @@
-use std::str::FromStr;
 use sp_keyring::AccountKeyring;
+use std::str::FromStr;
 use structopt::StructOpt;
 use subxt::ClientBuilder;
 use subxt::PairSigner;

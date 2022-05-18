@@ -21,7 +21,7 @@ impl TimeStamp {
                 println!("now");
             }
             TimeStamp::DidUpdate => {
-               println!("did update");
+                println!("did update");
             }
         }
 

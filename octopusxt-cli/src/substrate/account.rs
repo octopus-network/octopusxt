@@ -6,29 +6,15 @@ use std::str::FromStr;
 use structopt::StructOpt;
 use subxt::{ClientBuilder, PairSigner};
 
-
 #[derive(Debug, StructOpt)]
 pub enum Account {
     #[structopt(name = "substrate-account")]
     /// basic substrate account
-    SubstrateAccount(SubstrateAccount),
+    Account,
 }
 
 impl Account {
     pub fn run(&self) {
-        match self {
-            Account::SubstrateAccount(value) => {
-                let ret = value.run();
-            }
-        }
-    }
-}
-
-#[derive(Debug, StructOpt)]
-pub struct SubstrateAccount {}
-
-impl SubstrateAccount {
-    pub fn run(&self) {
-        println!("substrate account!");
+        println!("account!");
     }
 }

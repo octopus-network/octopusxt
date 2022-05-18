@@ -1,4 +1,3 @@
-
 #[subxt::subxt(runtime_metadata_path = "metadata/substrate.scale")]
 pub mod substrate {}
 
