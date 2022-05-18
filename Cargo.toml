@@ -1,4 +1,23 @@
 [workspace]
 members = [
+    "generator-metadata",
     "octopusxt-cli",
 ]
+
+
+[patch.crates-io]
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-keyring = {  git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sc-cli = {git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-core-hashing = { git = "https://github.com/paritytech/substrate.git", branch = "master"}
+sp-panic-handler = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-externalities = { git = "https://github.com/paritytech/substrate.git", branch = "master"}
+sp-arithmetic  = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-runtime-interface = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-database = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-trie = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-keystore = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-state-machine = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-io = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-application-crypto = { git = "https://github.com/paritytech/substrate.git", branch = "master" }

@@ -6,6 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+
+generator-metadata = { path = "../generator-metadata" }
+
 hex = "0.4.3"
 env_logger = "0.8.3"
 serde_json = { version = "*"}
@@ -14,8 +17,9 @@ subtle-encoding = { version = "0.5", default-features = false }
 tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
 
 codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive", "full", "bit-vec"] }
-subxt = { version = "0.15.0", git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'octopus-v0.9.13' }
-sp-runtime = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-sp-core = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-sc-cli = {git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
+
+subxt = { git = "https://github.com/paritytech/subxt.git", branch = "master" }
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sp-keyring = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
+sc-cli = {git = "https://github.com/paritytech/substrate.git", branch = "master" }
