@@ -1,11 +1,11 @@
 use octopusxt::ibc_node;
+use sp_core::hexdisplay::HexDisplay;
+use sp_core::Pair;
 use sp_keyring::AccountKeyring;
+use sp_runtime::{traits::IdentifyAccount, MultiSigner};
 use std::str::FromStr;
 use structopt::StructOpt;
 use subxt::{ClientBuilder, PairSigner};
-use sp_core::Pair;
-use sp_core::hexdisplay::HexDisplay;
-use sp_runtime::{traits::IdentifyAccount, MultiSigner};
 
 /// Public key type for Runtime
 pub type PublicFor<P> = <P as sp_core::Pair>::Public;
@@ -13,9 +13,12 @@ pub type PublicFor<P> = <P as sp_core::Pair>::Public;
 /// formats public key as accountId as hex
 fn format_account_id<P: sp_core::Pair>(public_key: PublicFor<P>) -> String
 where
-	PublicFor<P>: Into<MultiSigner>,
+    PublicFor<P>: Into<MultiSigner>,
 {
-	format!("0x{}", HexDisplay::from(&public_key.into().into_account().as_ref()))
+    format!(
+        "0x{}",
+        HexDisplay::from(&public_key.into().into_account().as_ref())
+    )
 }
 
 #[derive(Debug, StructOpt)]
@@ -55,7 +58,12 @@ impl SubstrateAccount {
 
         let private_seed = "ecology agent adjust admit raw castle rather travel asthma good say field away vote timber miss demand mandate rib print sport vault warfare thrive".to_string();
 
-        let result = sc_cli::utils::print_from_uri::<sp_core::sr25519::Pair>(&private_seed, None, None, sc_cli::OutputType::Json);
+        let result = sc_cli::utils::print_from_uri::<sp_core::sr25519::Pair>(
+            &private_seed,
+            None,
+            None,
+            sc_cli::OutputType::Json,
+        );
 
         // let temp = "0x3cea083c24de7949fd99c890f351abbeed730efae8f074aa6625293dbc9ef642".to_string();
 
@@ -66,17 +74,12 @@ impl SubstrateAccount {
         // println!("account id = {:?}", account);
 
         // let password = password.as_ref().map(|s| s.expose_secret().as_str());
-  
 
-        
+        let (pair, seed) = sp_core::sr25519::Pair::from_phrase(&private_seed, None).unwrap();
+        let public_key = pair.public();
 
-	    let (pair, seed) = sp_core::sr25519::Pair::from_phrase(&private_seed, None).unwrap();
-		let public_key = pair.public();
-		
         let account_id = format_account_id::<sp_core::sr25519::Pair>(public_key);
 
         println!("account_id = {:?}", account_id);
-				
-
     }
 }
