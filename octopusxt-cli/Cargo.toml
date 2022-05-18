@@ -6,12 +6,6 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-octopusxt = { path = "../module"}
-
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
-tendermint-proto = { version ="0.23.6", default-features = false }
-
 hex = "0.4.3"
 env_logger = "0.8.3"
 serde_json = { version = "*"}
