@@ -1,4 +1,36 @@
 use structopt::StructOpt;
 
+pub mod constants;
+pub mod extrinsics;
+pub mod storage;
+
+use constants::Constants;
+use extrinsics::Extrinsics;
+use storage::Storage;
+
 #[derive(Debug, StructOpt)]
-pub enum Contracts {}
+pub enum Contracts {
+    #[structopt(name = "extrinsics")]
+    Extrinsics(Extrinsics),
+    #[structopt(name = "storage")]
+    Storage(Storage),
+    #[structopt(name = "constants")]
+    Constants(Constants),
+}
+
+impl Contracts {
+    pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+        match self {
+            Contracts::Extrinsics(extrinsics) => {
+                let ret = extrinsics.run().await?;
+            }
+            Contracts::Storage(storage) => {
+                let ret = storage.run().await?;
+            }
+            Contracts::Constants(constants) => {
+                let ret = constants.run().await?;
+            }
+        }
+        Ok(())
+    }
+}

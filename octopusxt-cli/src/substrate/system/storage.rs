@@ -152,7 +152,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .account(account_id_32, hash.clone())
+                    .account(account_id_32, *hash)
                     .await?;
 
                 println!("account = {:#?}", result);
@@ -168,7 +168,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().account_iter(hash.clone()).await?;
+                let result = api.storage().system().account_iter(*hash).await?;
 
                 // println!("account_iter = {:?}", result);
             }
@@ -183,7 +183,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().extrinsic_count(hash.clone()).await?;
+                let result = api.storage().system().extrinsic_count(*hash).await?;
 
                 println!("extrinsic_count = {:#?}", result);
             }
@@ -198,7 +198,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().block_weight(hash.clone()).await?;
+                let result = api.storage().system().block_weight(*hash).await?;
 
                 println!("block_weight = {:#?}", result);
             }
@@ -216,7 +216,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .all_extrinsics_len(hash.clone())
+                    .all_extrinsics_len(*hash)
                     .await?;
 
                 println!("all_extrinsics_len = {:#?}", result);
@@ -233,7 +233,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().block_hash(id, hash.clone()).await?;
+                let result = api.storage().system().block_hash(id, *hash).await?;
 
                 println!("block_hash = {:#?}", result);
             }
@@ -248,7 +248,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().block_hash_iter(hash.clone()).await?;
+                let result = api.storage().system().block_hash_iter(*hash).await?;
 
                 // println!("block_hash_iter = {:?}", result);
             }
@@ -267,7 +267,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .extrinsic_data(id, hash.clone())
+                    .extrinsic_data(id, *hash)
                     .await?;
 
                 println!("extrinsic_data = {:#?}", result);
@@ -286,7 +286,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .extrinsic_data_iter(hash.clone())
+                    .extrinsic_data_iter(*hash)
                     .await?;
 
                 // println!("extrinsic_data_iter = {:?}", result);
@@ -302,7 +302,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().number(hash.clone()).await?;
+                let result = api.storage().system().number(*hash).await?;
 
                 println!("number = {:#?}", result);
             }
@@ -317,7 +317,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().parent_hash(hash.clone()).await?;
+                let result = api.storage().system().parent_hash(*hash).await?;
 
                 println!("parent_hash = {:#?}", result);
             }
@@ -332,7 +332,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().digest(hash.clone()).await?;
+                let result = api.storage().system().digest(*hash).await?;
 
                 println!("digest = {:#?}", result);
             }
@@ -347,7 +347,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().events(hash.clone()).await?;
+                let result = api.storage().system().events(*hash).await?;
 
                 println!("events = {:#?}", result);
             }
@@ -362,7 +362,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().event_count(hash.clone()).await?;
+                let result = api.storage().system().event_count(*hash).await?;
 
                 println!("event_count = {:#?}", result);
             }
@@ -381,7 +381,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .event_topics(hash_value, hash.clone())
+                    .event_topics(hash_value, *hash)
                     .await?;
 
                 println!("event_topics = {:#?}", result);
@@ -400,7 +400,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .event_topics_iter(hash.clone())
+                    .event_topics_iter(*hash)
                     .await?;
 
                 // println!("event_topics_iter = {:?}", result);
@@ -419,7 +419,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .last_runtime_upgrade(hash.clone())
+                    .last_runtime_upgrade(*hash)
                     .await?;
 
                 println!("last_runtime_upgrade = {:#?}", result);
@@ -438,7 +438,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .upgraded_to_u32_ref_count(hash.clone())
+                    .upgraded_to_u32_ref_count(*hash)
                     .await?;
 
                 println!("upgraded_to_u32_ref_count = {:#?}", result);
@@ -457,7 +457,7 @@ impl Storage {
                 let result = api
                     .storage()
                     .system()
-                    .upgraded_to_triple_ref_count(hash.clone())
+                    .upgraded_to_triple_ref_count(*hash)
                     .await?;
 
                 println!("upgraded_to_triple_ref_count = {:#?}", result);
@@ -473,7 +473,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api.storage().system().execution_phase(hash.clone()).await?;
+                let result = api.storage().system().execution_phase(*hash).await?;
 
                 println!("execution_phase = {:#?}", result);
             }

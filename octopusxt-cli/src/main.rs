@@ -47,7 +47,7 @@ pub enum Command {
 
     #[structopt(name = "balance")]
     /// balance module
-    Balance(Balance),
+    Balance(Balances),
 
     #[structopt(name = "beefy")]
     /// beefy module
@@ -190,7 +190,7 @@ pub enum Command {
 
     #[structopt(name = "timestamp")]
     /// substrate timestamp module
-    TimeStamp(TimeStamp),
+    TimeStamp(Timestamp),
 
     #[structopt(name = "tips")]
     /// tips module

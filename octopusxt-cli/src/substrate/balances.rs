@@ -4,34 +4,37 @@ use structopt::StructOpt;
 use subxt::ClientBuilder;
 use subxt::PairSigner;
 
-#[derive(Debug, StructOpt)]
-pub enum Balance {
-    /// balance transfer api
-    #[structopt(name = "transfer")]
-    Transfer(Transfer),
-}
+pub mod constants;
+pub mod extrinsics;
+pub mod storage;
+
+use constants::Constants;
+use extrinsics::Extrinsics;
+use storage::Storage;
 
 #[derive(Debug, StructOpt)]
-pub struct Transfer {
-    /// websocket_url
-    #[structopt(default_value = "ws://localhost:9944")]
-    pub websocket_url: String,
-    /// account sender, now advice account is alice, bob, dave, eve, ferdie, one, two,
-    pub sender: Option<String>,
-    /// account receiver, now advice account is alice, bob, dave, eve, ferdie, one, two,
-    pub receiver: Option<String>,
-    /// sender want to send amout
-    pub amount: Option<u128>,
+pub enum Balances {
+    #[structopt(name = "extrinsics")]
+    Extrinsics(Extrinsics),
+    #[structopt(name = "storage")]
+    Storage(Storage),
+    #[structopt(name = "constants")]
+    Constants(Constants),
 }
 
-impl Balance {
+impl Balances {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
-            Balance::Transfer(value) => {
-                println!("balance transfer");
+            Balances::Extrinsics(extrinsics) => {
+                let ret = extrinsics.run().await?;
+            }
+            Balances::Storage(storage) => {
+                let ret = storage.run().await?;
+            }
+            Balances::Constants(constants) => {
+                let ret = constants.run().await?;
             }
         }
-
         Ok(())
     }
 }

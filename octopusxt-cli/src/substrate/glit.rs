@@ -1,4 +1,36 @@
 use structopt::StructOpt;
 
+pub mod constants;
+pub mod extrinsics;
+pub mod storage;
+
+use constants::Constants;
+use extrinsics::Extrinsics;
+use storage::Storage;
+
 #[derive(Debug, StructOpt)]
-pub enum Glit {}
+pub enum Glit {
+    #[structopt(name = "extrinsics")]
+    Extrinsics(Extrinsics),
+    #[structopt(name = "storage")]
+    Storage(Storage),
+    #[structopt(name = "constants")]
+    Constants(Constants),
+}
+
+impl Glit {
+    pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
+        match self {
+            Glit::Extrinsics(extrinsics) => {
+                let ret = extrinsics.run().await?;
+            }
+            Glit::Storage(storage) => {
+                let ret = storage.run().await?;
+            }
+            Glit::Constants(constants) => {
+                let ret = constants.run().await?;
+            }
+        }
+        Ok(())
+    }
+}

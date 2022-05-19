@@ -4,27 +4,37 @@ use structopt::StructOpt;
 use subxt::BlockNumber;
 use subxt::{ClientBuilder, PairSigner};
 
+pub mod constants;
+pub mod extrinsics;
+pub mod storage;
+
+use constants::Constants;
+use extrinsics::Extrinsics;
+use storage::Storage;
+
 #[derive(Debug, StructOpt)]
-pub enum TimeStamp {
-    #[structopt(name = "now")]
-    /// Current time for the current block.
-    Now,
-    #[structopt(name = "did-update")]
-    ///  Did the timestamp get updated in this block?
-    DidUpdate,
+pub enum Timestamp {
+    #[structopt(name = "extrinsics")]
+    Extrinsics(Extrinsics),
+    #[structopt(name = "storage")]
+    Storage(Storage),
+    #[structopt(name = "constants")]
+    Constants(Constants),
 }
 
-impl TimeStamp {
+impl Timestamp {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
-            TimeStamp::Now => {
-                println!("now");
+            Timestamp::Extrinsics(extrinsics) => {
+                let ret = extrinsics.run().await?;
             }
-            TimeStamp::DidUpdate => {
-                println!("did update");
+            Timestamp::Storage(storage) => {
+                let ret = storage.run().await?;
+            }
+            Timestamp::Constants(constants) => {
+                let ret = constants.run().await?;
             }
         }
-
         Ok(())
     }
 }
