@@ -288,7 +288,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Command::Sudo(value) => {
             let _ = value.run().await?;
         }
-        Command::System(value) => {}
+        Command::System(value) => {
+            let _ = value.run().await?;
+        }
         Command::TechnicalCommittee(value) => {}
         Command::TechnicalMembership(value) => {}
 

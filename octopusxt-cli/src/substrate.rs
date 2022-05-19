@@ -1,3 +1,4 @@
+pub mod account;
 pub mod asset_tx_payment;
 pub mod assets;
 pub mod authority_discovery;
@@ -5,6 +6,7 @@ pub mod authorship;
 pub mod babe;
 pub mod bags_list;
 pub mod balances;
+pub mod beefy;
 pub mod bounties;
 pub mod child_bounties;
 pub mod contracts;
@@ -26,6 +28,7 @@ pub mod nomiation_pools;
 pub mod offences;
 pub mod preimage;
 pub mod proxy;
+pub mod query;
 pub mod randomness_collective_flip;
 pub mod recovery;
 pub mod referenda;
@@ -48,10 +51,6 @@ pub mod uniques;
 pub mod utility;
 pub mod vesting;
 pub mod whitelist;
-
-pub mod account;
-pub mod beefy;
-pub mod query;
 
 pub use account::Account;
 pub use asset_tx_payment::AssetTxPayment;
