@@ -1,113 +1,483 @@
+use generator_metadata::{substrate, MyConfig};
 use structopt::StructOpt;
+use subxt::sp_core::crypto::AccountId32;
+use subxt::sp_core::H256;
+use subxt::ClientBuilder;
+use subxt::SubstrateExtrinsicParams;
 
 #[derive(Debug, StructOpt)]
 pub enum Storage {
-    Account(Account),
-    AccountIter(AccountIter),
-    ExtrinsicCount(ExtrinsicCount),
-    BlockWeight(BlockWeight),
-    AllExtrinsicsLen(AllExtrinsicsLen),
-    BlockHash(BlockHash),
-    BlockHashIter(BlockHashIter),
-    ExtrinsicData(ExtrinsicsData),
-    ExtrinsicDataIter(ExtrinsicDataIter),
-    Number(Number),
-    ParentHash(ParentHash),
-    Digest(Digest),
-    Events(Events),
-    EventCount(EventCount),
-    EventTopics(EventTopics),
-    EventTopicsIter(EventTopicsIter),
-    LastRutimeUpgrade(LastRuntimeUpgrade),
-    UpgradedToU32RefCount(UpgradedToU32RefCount),
-    UpgradedToTripleRefCount(UpgradedToTripleRefCount),
-    ExecutionPhase(ExecutionPhase),
+    #[structopt(name = "account")]
+    Account {
+        account_id_32: AccountId32,
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "account-iter")]
+    AccountIter {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "extrinsic-count")]
+    ExtrinsicCount {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "block-weight")]
+    BlockWeight {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "all-extrinsics-len")]
+    AllExtrinsicsLen {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "block-hash")]
+    BlockHash {
+        id: u32,
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "block-hash-iter")]
+    BlockHashIter {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "extrinsic-data")]
+    ExtrinsicData {
+        id: u32,
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "extrinsic-data-iter")]
+    ExtrinsicDataIter {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "number")]
+    Number {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "parent-hash")]
+    ParentHash {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "digest")]
+    Digest {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "events")]
+    Events {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "event-count")]
+    EventCount {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "event-topics")]
+    EventTopics {
+        hash_value: H256,
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "event-topics-iter")]
+    EventTopicsIter {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "last-runtime-upgrade")]
+    LastRutimeUpgrade {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "upgraded-to-u32-ref-count")]
+    UpgradedToU32RefCount {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "upgraded-to-trip-ref-count")]
+    UpgradedToTripleRefCount {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
+    #[structopt(name = "execution-phase")]
+    ExecutionPhase {
+        hash: Option<H256>,
+        #[structopt(default_value = "ws://localhost:9944")]
+        websocket_url: String,
+    },
 }
 
 impl Storage {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
-            Storage::Account(account) => {}
-            Storage::AccountIter(acounter) => {}
-            Storage::ExtrinsicCount(extrinsic_count) => {}
-            Storage::BlockWeight(block_weight) => {}
-            Storage::AllExtrinsicsLen(all_extrinsics_len) => {}
-            Storage::BlockHash(block_hash) => {}
-            Storage::BlockHashIter(block_hash_iter) => {}
-            Storage::ExtrinsicData(extrinsic_data) => {}
-            Storage::ExtrinsicDataIter(extrinsic_data_iter) => {}
-            Storage::Number(number) => {}
-            Storage::ParentHash(parent_hash) => {}
-            Storage::Digest(digest) => {}
-            Storage::Events(events) => {}
-            Storage::EventCount(event_count) => {}
-            Storage::EventTopics(event_topics) => {}
-            Storage::EventTopicsIter(event_topics_iter) => {}
-            Storage::LastRutimeUpgrade(last_runtime_upfgrade) => {}
-            Storage::UpgradedToU32RefCount(upgrade_to_u32_ref_count) => {}
-            Storage::UpgradedToTripleRefCount(upgrade_to_triple_ref_count) => {}
-            Storage::ExecutionPhase(execution_phase) => {}
+            Storage::Account {
+                account_id_32,
+                hash,
+                websocket_url,
+            } => {
+                // TODO
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .account(account_id_32, hash.clone())
+                    .await?;
+
+                println!("account = {:#?}", result);
+            }
+            Storage::AccountIter {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().account_iter(hash.clone()).await?;
+
+                // println!("account_iter = {:?}", result);
+            }
+            Storage::ExtrinsicCount {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().extrinsic_count(hash.clone()).await?;
+
+                println!("extrinsic_count = {:#?}", result);
+            }
+            Storage::BlockWeight {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().block_weight(hash.clone()).await?;
+
+                println!("block_weight = {:#?}", result);
+            }
+            Storage::AllExtrinsicsLen {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .all_extrinsics_len(hash.clone())
+                    .await?;
+
+                println!("all_extrinsics_len = {:#?}", result);
+            }
+            Storage::BlockHash {
+                id,
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().block_hash(id, hash.clone()).await?;
+
+                println!("block_hash = {:#?}", result);
+            }
+            Storage::BlockHashIter {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().block_hash_iter(hash.clone()).await?;
+
+                // println!("block_hash_iter = {:?}", result);
+            }
+            Storage::ExtrinsicData {
+                id,
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .extrinsic_data(id, hash.clone())
+                    .await?;
+
+                println!("extrinsic_data = {:#?}", result);
+            }
+            Storage::ExtrinsicDataIter {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .extrinsic_data_iter(hash.clone())
+                    .await?;
+
+                // println!("extrinsic_data_iter = {:?}", result);
+            }
+            Storage::Number {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().number(hash.clone()).await?;
+
+                println!("number = {:#?}", result);
+            }
+            Storage::ParentHash {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().parent_hash(hash.clone()).await?;
+
+                println!("parent_hash = {:#?}", result);
+            }
+            Storage::Digest {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().digest(hash.clone()).await?;
+
+                println!("digest = {:#?}", result);
+            }
+            Storage::Events {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().events(hash.clone()).await?;
+
+                println!("events = {:#?}", result);
+            }
+            Storage::EventCount {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().event_count(hash.clone()).await?;
+
+                println!("event_count = {:#?}", result);
+            }
+            Storage::EventTopics {
+                hash_value,
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .event_topics(hash_value, hash.clone())
+                    .await?;
+
+                println!("event_topics = {:#?}", result);
+            }
+            Storage::EventTopicsIter {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .event_topics_iter(hash.clone())
+                    .await?;
+
+                // println!("event_topics_iter = {:?}", result);
+            }
+            Storage::LastRutimeUpgrade {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .last_runtime_upgrade(hash.clone())
+                    .await?;
+
+                println!("last_runtime_upgrade = {:#?}", result);
+            }
+            Storage::UpgradedToU32RefCount {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .upgraded_to_u32_ref_count(hash.clone())
+                    .await?;
+
+                println!("upgraded_to_u32_ref_count = {:#?}", result);
+            }
+            Storage::UpgradedToTripleRefCount {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api
+                    .storage()
+                    .system()
+                    .upgraded_to_triple_ref_count(hash.clone())
+                    .await?;
+
+                println!("upgraded_to_triple_ref_count = {:#?}", result);
+            }
+            Storage::ExecutionPhase {
+                hash,
+                websocket_url,
+            } => {
+                // set client
+                let api = ClientBuilder::new()
+                    .set_url(websocket_url)
+                    .build()
+                    .await?
+                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+                let result = api.storage().system().execution_phase(hash.clone()).await?;
+
+                println!("execution_phase = {:#?}", result);
+            }
         }
         Ok(())
     }
 }
-
-#[derive(Debug, StructOpt)]
-pub struct Account {}
-
-#[derive(Debug, StructOpt)]
-pub struct AccountIter {}
-
-#[derive(Debug, StructOpt)]
-pub struct ExtrinsicCount {}
-
-#[derive(Debug, StructOpt)]
-pub struct BlockWeight {}
-
-#[derive(Debug, StructOpt)]
-pub struct AllExtrinsicsLen {}
-
-#[derive(Debug, StructOpt)]
-pub struct BlockHash {}
-
-#[derive(Debug, StructOpt)]
-pub struct BlockHashIter {}
-
-#[derive(Debug, StructOpt)]
-pub struct ExtrinsicsData {}
-
-#[derive(Debug, StructOpt)]
-pub struct ExtrinsicDataIter {}
-
-#[derive(Debug, StructOpt)]
-pub struct Number {}
-
-#[derive(Debug, StructOpt)]
-pub struct ParentHash {}
-
-#[derive(Debug, StructOpt)]
-pub struct Digest {}
-
-#[derive(Debug, StructOpt)]
-pub struct Events {}
-
-#[derive(Debug, StructOpt)]
-pub struct EventCount {}
-
-#[derive(Debug, StructOpt)]
-pub struct EventTopics {}
-
-#[derive(Debug, StructOpt)]
-pub struct EventTopicsIter {}
-
-#[derive(Debug, StructOpt)]
-pub struct LastRuntimeUpgrade {}
-
-#[derive(Debug, StructOpt)]
-pub struct UpgradedToU32RefCount {}
-
-#[derive(Debug, StructOpt)]
-pub struct UpgradedToTripleRefCount {}
-
-#[derive(Debug, StructOpt)]
-pub struct ExecutionPhase {}

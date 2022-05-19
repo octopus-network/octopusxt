@@ -22,10 +22,10 @@ impl System {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
             System::Extrinsics(extrinsics) => {
-                println!("extrinsics");
+                let ret = extrinsics.run().await?;
             }
             System::Storage(storage) => {
-                println!("storage");
+                let ret = storage.run().await?;
             }
             System::Constants(constants) => {
                 let ret = constants.run().await?;
