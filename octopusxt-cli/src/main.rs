@@ -242,69 +242,162 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         Command::Account(value) => {
             let ret = value.run();
         }
-        Command::AssetTxPayment(value) => {}
-        Command::Assets(value) => {}
-        Command::AuthorityDiscovery(value) => {}
-        Command::Authorship(value) => {}
-        Command::Babe(value) => {}
-        Command::BagsList(value) => {}
+        Command::AssetTxPayment(value) => {
+            let ret = value.run();
+        }
+        Command::Assets(value) => {
+            let ret = value.run().await?;
+        }
+        Command::AuthorityDiscovery(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Authorship(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Babe(value) => {
+            let ret = value.run().await?;
+        }
+        Command::BagsList(value) => {
+            let ret = value.run().await?;
+        }
         Command::Balance(value) => {
             let _ = value.run().await?;
         }
-        Command::Beefy(value) => {}
-        Command::Bounties(value) => {}
-        Command::ChildBounties(value) => {}
-        Command::Contracts(value) => {}
-        Command::ConvictionVoting(value) => {}
-        Command::Council(value) => {}
-        Command::Democracy(value) => {}
-        Command::ElectionProviderMultiPhase(value) => {}
-        Command::Elections(value) => {}
-        Command::Glit(value) => {}
-        Command::Grandpa(value) => {}
-        Command::Historical(value) => {}
-        Command::Identity(value) => {}
-        Command::ImOnline(value) => {}
-        Command::Indices(value) => {}
-        Command::Lottery(value) => {}
-        Command::Mmr(value) => {}
-        Command::Multisig(value) => {}
-        Command::NomiationPools(value) => {}
-        Command::Offences(value) => {}
-        Command::Preimage(value) => {}
-        Command::Proxy(value) => {}
+        Command::Beefy(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Bounties(value) => {
+            let ret = value.run().await?;
+        }
+        Command::ChildBounties(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Contracts(value) => {
+            let ret = value.run().await?;
+        }
+        Command::ConvictionVoting(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Council(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Democracy(value) => {
+            let ret = value.run().await?;
+        }
+        Command::ElectionProviderMultiPhase(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Elections(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Glit(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Grandpa(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Historical(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Identity(value) => {
+            let ret = value.run().await?;
+        }
+        Command::ImOnline(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Indices(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Lottery(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Mmr(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Multisig(value) => {
+            let ret = value.run().await?;
+        }
+        Command::NomiationPools(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Offences(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Preimage(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Proxy(value) => {
+            let ret = value.run().await?;
+        }
         Command::Query(value) => {
             let ret = value.run().await?;
         }
-        Command::RandomnessCollectiveFlip(value) => {}
-        Command::Recovery(value) => {}
-        Command::Referenda(value) => {}
-        Command::Remark(value) => {}
-        Command::Scheduler(value) => {}
-        Command::Session(value) => {}
-        Command::Society(value) => {}
-        Command::Staking(value) => {}
-        Command::StateTrieMigration(value) => {}
+        Command::RandomnessCollectiveFlip(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Recovery(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Referenda(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Remark(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Scheduler(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Session(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Society(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Staking(value) => {
+            let ret = value.run().await?;
+        }
+        Command::StateTrieMigration(value) => {
+            let ret = value.run().await?;
+        }
         Command::Sudo(value) => {
             let _ = value.run().await?;
         }
         Command::System(value) => {
             let _ = value.run().await?;
         }
-        Command::TechnicalCommittee(value) => {}
-        Command::TechnicalMembership(value) => {}
-
+        Command::TechnicalCommittee(value) => {
+            let ret = value.run().await?;
+        }
+        Command::TechnicalMembership(value) => {
+            let ret = value.run().await?;
+        }
         Command::TimeStamp(value) => {
             let ret = value.run().await?;
         }
-        Command::Tips(value) => {}
-        Command::TransactionPayment(value) => {}
-        Command::TransactionStorage(value) => {}
-        Command::Treasury(value) => {}
-        Command::Uniques(value) => {}
-        Command::Utility(value) => {}
-        Command::Vesting(value) => {}
-        Command::Whitelist(value) => {}
+        Command::Tips(value) => {
+            let ret = value.run().await?;
+        }
+        Command::TransactionPayment(value) => {
+            let ret = value.run().await?;
+        }
+        Command::TransactionStorage(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Treasury(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Uniques(value) => {
+            let ret = value.run().await?;
+        }
+        Command::Utility(utility) => {
+            let ret = utility.run().await?;
+        }
+        Command::Vesting(vesting) => {
+            let ret = vesting.run().await?;
+        }
+        Command::Whitelist(value) => {
+            let ret = value.run().await?;
+        }
     }
 
     Ok(())

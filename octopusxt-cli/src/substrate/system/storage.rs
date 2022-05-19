@@ -149,11 +149,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api
-                    .storage()
-                    .system()
-                    .account(account_id_32, *hash)
-                    .await?;
+                let result = api.storage().system().account(account_id_32, *hash).await?;
 
                 println!("account = {:#?}", result);
             }
@@ -213,11 +209,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api
-                    .storage()
-                    .system()
-                    .all_extrinsics_len(*hash)
-                    .await?;
+                let result = api.storage().system().all_extrinsics_len(*hash).await?;
 
                 println!("all_extrinsics_len = {:#?}", result);
             }
@@ -264,11 +256,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api
-                    .storage()
-                    .system()
-                    .extrinsic_data(id, *hash)
-                    .await?;
+                let result = api.storage().system().extrinsic_data(id, *hash).await?;
 
                 println!("extrinsic_data = {:#?}", result);
             }
@@ -283,11 +271,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api
-                    .storage()
-                    .system()
-                    .extrinsic_data_iter(*hash)
-                    .await?;
+                let result = api.storage().system().extrinsic_data_iter(*hash).await?;
 
                 // println!("extrinsic_data_iter = {:?}", result);
             }
@@ -397,11 +381,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api
-                    .storage()
-                    .system()
-                    .event_topics_iter(*hash)
-                    .await?;
+                let result = api.storage().system().event_topics_iter(*hash).await?;
 
                 // println!("event_topics_iter = {:?}", result);
             }
@@ -416,11 +396,7 @@ impl Storage {
                     .await?
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let result = api
-                    .storage()
-                    .system()
-                    .last_runtime_upgrade(*hash)
-                    .await?;
+                let result = api.storage().system().last_runtime_upgrade(*hash).await?;
 
                 println!("last_runtime_upgrade = {:#?}", result);
             }
