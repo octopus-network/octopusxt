@@ -1203,7 +1203,7 @@ pub async fn get_packet_receipt(
         )));
     }
 
-    let _data = String::from_utf8(data).unwrap();
+    let _data = String::decode(&mut data.as_slice()).unwrap();
     if _data.eq("Ok") {
         Ok(Receipt::Ok)
     } else {

@@ -1382,3 +1382,39 @@ async fn test_get_send_packet_event() -> Result<(), Box<dyn std::error::Error>> 
 
     Ok(())
 }
+
+#[tokio::test]
+async fn test_get_packet_ack() -> Result<(), Box<dyn std::error::Error>> {
+    let client = ClientBuilder::new()
+        .set_url("ws://localhost:9944")
+        .build::<ibc_node::DefaultConfig>()
+        .await?;
+
+    let port_id = PortId::from_str("transfer").unwrap();
+    let channel_id = ChannelId::from_str("channel-0").unwrap();
+
+    let result = get_packet_ack(&port_id, &channel_id, &Sequence::from(1), client)
+        .await
+        .unwrap();
+    println!("packet_ack = {:?}", result);
+
+    Ok(())
+}
+
+#[tokio::test]
+async fn test_get_packet_receipt() -> Result<(), Box<dyn std::error::Error>> {
+    let client = ClientBuilder::new()
+        .set_url("ws://localhost:8844")
+        .build::<ibc_node::DefaultConfig>()
+        .await?;
+
+    let port_id = PortId::from_str("transfer").unwrap();
+    let channel_id = ChannelId::from_str("channel-0").unwrap();
+
+    let result = get_packet_receipt(&port_id, &channel_id, &Sequence::from(2), client)
+        .await
+        .unwrap();
+    println!("packet_receipt = {:?}", result);
+
+    Ok(())
+}

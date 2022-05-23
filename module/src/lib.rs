@@ -11,7 +11,7 @@ pub use ibc_rpc::{
     get_connection_channels, get_connection_end, get_connections, get_consensus_state_with_height,
     get_header_by_block_number, get_latest_height, get_mmr_leaf_and_mmr_proof,
     get_packet_commitment, get_packet_receipt, get_send_packet_event, get_unreceipt_packet,
-    subscribe_beefy, subscribe_ibc_event,
+    subscribe_beefy, subscribe_ibc_event,get_packet_ack,
 };
 
 use codec::{Decode, Encode};
