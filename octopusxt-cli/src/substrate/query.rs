@@ -26,7 +26,20 @@ impl Query {
 }
 
 #[derive(Debug, StructOpt)]
-pub struct BlockHash {}
+pub struct BlockHash {
+    /// websocket url, the default websocket url is ws://localhost:9944
+    #[structopt(default_value = "ws://localhost:9944")]
+    pub websocket_url: String,
+    /// block number, query block hash by block number, is blocl number is None, query last block's block hash
+    pub block_number: Option<u32>,
+}
+
+#[derive(Debug, StructOpt)]
+pub struct Other {
+    /// websocket url, the default websocket url is ws://localhost:9944
+    #[structopt(default_value = "ws://localhost:9944")]
+    pub websocket_url: String,
+}
 
 #[derive(Debug, StructOpt)]
 pub enum SubstrateQuery {
@@ -36,38 +49,38 @@ pub enum SubstrateQuery {
 
     #[structopt(name = "other")]
     /// query other
-    Other,
+    Other(Other),
 }
 
 impl SubstrateQuery {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
             SubstrateQuery::BlockHash(value) => {
-                println!("block hash = {:?}", value);
+                println!("BlockHash = {:?}", value);
 
                 let api = ClientBuilder::new()
-                    .set_url("ws://localhost:9944")
+                    .set_url(value.websocket_url.clone())
                     .build::<ibc_node::DefaultConfig>()
                     .await?
                     .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
 
+                let block_number = value.block_number.map(|val| BlockNumber::from(val));
+
                 // Get a block hash, returns hash of latest block by default
-                let block_hash = api.client.rpc().block_hash(None).await?;
+                let block_hash = api.client.rpc().block_hash(block_number).await?;
 
-                println!("the latest block hash : {:?}", block_hash);
-
-                // Get the block number 56 hash
-                // let block_hash = api
-                //     .client
-                //     .rpc()
-                //     .block_hash(Some(BlockNumber::from(56)))
-                //     .await?;
-
-                // println!("block number 56 is hash : {:?}", block_hash);
+                if value.block_number.is_none() {
+                    println!("the latest block hash : {:?}", block_hash);
+                } else {
+                    println!(
+                        "the number of [{:?}] block hash: {:?}",
+                        value.block_number, block_hash
+                    );
+                }
             }
-            SubstrateQuery::Other => {
+            SubstrateQuery::Other(value) => {
                 let api = ClientBuilder::new()
-                    .set_url("ws://localhost:8844")
+                    .set_url(value.websocket_url.clone())
                     .build::<ibc_node::DefaultConfig>()
                     .await?
                     .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();

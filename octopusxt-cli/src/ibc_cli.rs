@@ -12,8 +12,6 @@ use tendermint_proto::Protobuf;
 
 #[derive(Debug, StructOpt)]
 pub struct CliDenomTrace {
-    // websocket_url
-    pub websocket_url: Option<String>,
     /// port id
     pub port_id: Option<String>,
     /// channel id
@@ -66,11 +64,7 @@ impl CliDenomTrace {
         &self,
     ) -> Result<Vec<(String, DenomTrace)>, Box<dyn std::error::Error>> {
         let api = ClientBuilder::new()
-            .set_url(
-                self.websocket_url
-                    .as_ref()
-                    .unwrap_or(&"ws://localhost:9944".to_string()),
-            )
+            .set_url("ws://localhost:9944")
             .build::<ibc_node::DefaultConfig>()
             .await?
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
@@ -115,7 +109,8 @@ impl CliDenomTrace {
 #[derive(Debug, StructOpt)]
 pub struct IbcModule {
     // websocket_url
-    pub websocket_url: Option<String>,
+    #[structopt(default_value = "ws://localhost:9944")]
+    pub websocket_url: String,
     /// account sender, now advice account is alice, bob, dave, eve, ferdie, one, two,
     pub sender: Option<String>,
     /// account receiver, now advice account is alice, bob, dave, eve, ferdie, one, two,
@@ -136,14 +131,9 @@ pub struct IbcModule {
 
 impl IbcModule {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-
         // set client
         let api = ClientBuilder::new()
-            .set_url(
-                self.websocket_url
-                    .as_ref()
-                    .unwrap_or(&"ws://localhost:9944".to_string()),
-            )
+            .set_url(self.websocket_url.clone())
             .build()
             .await?
             .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
@@ -159,8 +149,8 @@ impl IbcModule {
         let port_id = self.port_id.as_ref().unwrap_or(&default_port_id);
         let channel_id = self.channel_id.as_ref().unwrap_or(&default_channel_id);
         let amount = self.amount.unwrap_or(1_000_000_000_000_000_000_000);
-        let timeout_height = self.timeout_height.unwrap_or(9999);
-        let timeout_timestamp = self.timeout_timestamp.unwrap_or(9999);
+        let timeout_height = self.timeout_height.unwrap_or(999999);
+        let timeout_timestamp = self.timeout_timestamp.unwrap_or(999999);
 
         println!("sender = {:?}", sender);
         println!("receiver = {:?}", receiver);
