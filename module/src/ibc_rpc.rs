@@ -49,10 +49,6 @@ pub async fn subscribe_ibc_event(
     let mut counter_system_event = 0;
     while let Some(raw_event) = sub.next().await {
         if let Err(err) = raw_event {
-            println!(
-                "In call_ibc: [subscribe_events] >> raw_event error: {:?}",
-                err
-            );
             continue;
         }
         let raw_event = raw_event.unwrap();
@@ -1470,11 +1466,6 @@ pub async fn get_client_consensus(
         }
     }
 
-    println!(
-        "call_ibc: [consensus_state] >> consensus_state >> {:?}",
-        consensus_state
-    );
-
     let consensus_state = if consensus_state.is_empty() {
         // TODO
         AnyConsensusState::Grandpa(
@@ -2379,11 +2370,9 @@ pub async fn get_header_by_block_number(
     let block_hash = api.client.rpc().block_hash(block_number).await?;
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
-    println!("header before = {:?}", header);
     tracing::info!("header = {:?}", header);
 
     let header = convert_substrate_header_to_ibc_header(header);
-    println!("header after = {:?}", header);
     tracing::info!("convert header = {:?}", header);
 
     Ok(header.into())
