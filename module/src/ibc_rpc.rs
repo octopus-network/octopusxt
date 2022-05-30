@@ -1,4 +1,5 @@
 use crate::ibc_node;
+use crate::MyConfig;
 use ibc::core::ics02_client::client_consensus::AnyConsensusState;
 use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
 use ibc::core::ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd};
@@ -13,15 +14,20 @@ use beefy_merkle_tree::Hash;
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use ibc_proto::google::protobuf::Any;
-use jsonrpsee::types::to_json_value;
+use subxt::rpc::to_json_value;
 use sp_core::{storage::StorageKey, twox_128, H256};
 use sp_keyring::AccountKeyring;
 use subxt::storage::{StorageEntry, StorageKeyPrefix};
-use subxt::BeefySubscription;
-use subxt::RawEvent;
+use subxt::beefy::BeefySubscription;
+// use subxt::RawEvent;
+use futures::StreamExt;
 use subxt::SignedCommitment;
-use subxt::{BlockNumber, Client, EventSubscription, PairSigner};
+use subxt::DefaultConfig;
+use subxt::{BlockNumber, Client, /*EventSubscription,*/ PairSigner};
 use tendermint_proto::Protobuf;
+use subxt::SubstrateExtrinsicParams;
+use subxt::rpc::ClientT;
+use subxt::events::EventSubscription;
 
 /// Subscribe ibc events
 /// Maybe in the future call ocw
@@ -29,29 +35,50 @@ use tendermint_proto::Protobuf;
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = subscribe_ibc_event(client).await?;
 /// ```
 ///
 pub async fn subscribe_ibc_event(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<IbcEvent>, Box<dyn std::error::Error>> {
     const COUNTER_SYSTEM_EVENT: i32 = 8;
     tracing::info!("In call_ibc: [subscribe_events]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-    let sub = api.client.rpc().subscribe_events().await?;
-    let decoder = api.client.events_decoder();
-    let mut sub = EventSubscription::<ibc_node::DefaultConfig>::new(sub, decoder);
+    // Subscribe to any events that occur:
+    let mut event_sub = api.events().subscribe().await?;
 
     let mut events = Vec::new();
     let mut counter_system_event = 0;
-    while let Some(raw_event) = sub.next().await {
-        if let Err(err) = raw_event {
-            continue;
+    // Our subscription will see the events emitted as a result of this:
+    while let Some(events) = event_sub.next().await {
+        let events = events?;
+        let block_hash = events.block_hash();
+
+        // We can iterate, statically decoding all events if we want:
+        println!("All events in block {block_hash:?}:");
+        println!("  Static event details:");
+        for event in events.iter() {
+            let event = event?;
+            println!("    {event:?}");
         }
-        let raw_event = raw_event.unwrap();
+         // Or we can dynamically decode events:
+         println!("  Dynamic event details: {block_hash:?}:");
+         for event in events.iter_raw() {
+             let event = event?;
+             let is_balance_transfer = event
+                 .as_event::<ibc_node::balances::events::Transfer>()?
+                 .is_some();
+             let pallet = event.pallet;
+             let variant = event.variant;
+             println!(
+                 "    {pallet}::{variant} (is balance transfer? {is_balance_transfer})"
+             );
+         }
+
+        // let raw_event = raw_event.unwrap();
         let variant = raw_event.variant;
         tracing::info!("In substrate: [subscribe_events] >> variant: {:?}", variant);
         match variant.as_str() {
@@ -991,15 +1018,15 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEvent>) -> Vec<IbcEv
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = subscribe_beefy(client).await?;
 /// ```
 ///
 pub async fn subscribe_beefy(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
     tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let sub = api.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
     let raw = sub.next().await.unwrap();
@@ -1012,27 +1039,26 @@ pub async fn subscribe_beefy(
 /// # Usage example
 ///
 /// ```rust
-/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_latest_height(api).await?;
 /// ```
 ///
 pub async fn get_latest_height(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<u64, Box<dyn std::error::Error>> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut blocks = api.client.rpc().subscribe_finalized_blocks().await?;
 
     let height = match blocks.next().await {
-        Ok(Some(header)) => header.number as u64,
-        Ok(None) => {
+        Some(Ok(header)) => header.number as u64,
+        Some(Err(_)) => {
             tracing::info!("In call_ibc: [get_latest_height] >> None");
             0
         }
-        Err(err) => {
-            tracing::info!(" In call_ibc: [get_latest_height] >> error: {:?} ", err);
+        None => {
             0
         }
     };
@@ -1045,17 +1071,17 @@ pub async fn get_latest_height(
 /// # Usage example
 ///
 /// ```rust
-/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let conection_id = ConnectionId::default();
 /// let result = get_connection_end(&conection_id, api).await?;
 /// ```
 ///
 pub async fn get_connection_end(
     connection_identifier: &ConnectionId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<ConnectionEnd, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_connection_end]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1070,7 +1096,7 @@ pub async fn get_connection_end(
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .connections(connection_identifier.as_bytes().to_vec(), Some(block_hash))
+        .connections(connection_identifier.as_bytes(), Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -1090,7 +1116,7 @@ pub async fn get_connection_end(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id =PortId::default();
 /// let channel_id = ChannelId::default();
 /// let result = get_channel_end(&port_id, &channel_id, client).await?;
@@ -1099,7 +1125,7 @@ pub async fn get_connection_end(
 pub async fn get_channel_end(
     port_id: &PortId,
     channel_id: &ChannelId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<ChannelEnd, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_channel_end]");
     tracing::info!(
@@ -1108,7 +1134,7 @@ pub async fn get_channel_end(
         channel_id.clone()
     );
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1124,8 +1150,8 @@ pub async fn get_channel_end(
         .storage()
         .ibc()
         .channels(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
             Some(block_hash),
         )
         .await?;
@@ -1153,7 +1179,7 @@ pub async fn get_channel_end(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id =PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
@@ -1164,10 +1190,10 @@ pub async fn get_packet_receipt(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequence: &Sequence,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Receipt, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1185,9 +1211,9 @@ pub async fn get_packet_receipt(
         .storage()
         .ibc()
         .packet_receipt(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            sequence,
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &sequence,
             Some(block_hash),
         )
         .await?;
@@ -1211,7 +1237,7 @@ pub async fn get_packet_receipt(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id =PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
@@ -1222,10 +1248,10 @@ pub async fn get_packet_receipt_vec(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequence: &Sequence,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1243,9 +1269,9 @@ pub async fn get_packet_receipt_vec(
         .storage()
         .ibc()
         .packet_receipt(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            sequence,
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &sequence,
             Some(block_hash),
         )
         .await?;
@@ -1267,7 +1293,7 @@ pub async fn get_packet_receipt_vec(
 ///
 /// ```rust
 ///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id =PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
@@ -1278,10 +1304,10 @@ pub async fn get_send_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequence: &Sequence,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Packet, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_send_packet_event]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1297,9 +1323,9 @@ pub async fn get_send_packet_event(
         .storage()
         .ibc()
         .send_packet_event(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            u64::from(*sequence),
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
@@ -1319,7 +1345,7 @@ pub async fn get_send_packet_event(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id =PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
@@ -1330,10 +1356,10 @@ pub async fn get_write_ack_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequence: &Sequence,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_write_ack_packet_event]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1349,9 +1375,9 @@ pub async fn get_write_ack_packet_event(
         .storage()
         .ibc()
         .write_ack_packet_event(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            u64::from(*sequence),
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
@@ -1371,17 +1397,17 @@ pub async fn get_write_ack_packet_event(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let result = get_client_state(&client_id, client).await?;
 /// ```
 ///
 pub async fn get_client_state(
     client_id: &ClientId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<AnyClientState, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_client_state]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1392,7 +1418,7 @@ pub async fn get_client_state(
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .client_states(client_id.as_bytes().to_vec(), Some(block_hash))
+        .client_states(client_id.as_bytes(), Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -1419,7 +1445,7 @@ pub async fn get_client_state(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let height = ICSHeight::default();
 /// let result = get_client_consensus(&client_id, &height, client).await?;
@@ -1428,11 +1454,11 @@ pub async fn get_client_state(
 pub async fn get_client_consensus(
     client_id: &ClientId,
     height: &ICSHeight,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<AnyConsensusState, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_client_consensus]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1448,7 +1474,7 @@ pub async fn get_client_consensus(
     let data: Vec<(Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
-        .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
+        .consensus_states(client_id.as_bytes(), Some(block_hash))
         .await?;
     if data.is_empty() {
         return Err(Box::from(format!(
@@ -1483,18 +1509,18 @@ pub async fn get_client_consensus(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let result = get_consensus_state_with_height(&client_id, client).await?;
 /// ```
 ///
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1510,7 +1536,7 @@ pub async fn get_consensus_state_with_height(
     let data: Vec<(Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
-        .consensus_states(client_id.as_bytes().to_vec(), Some(block_hash))
+        .consensus_states(client_id.as_bytes(), Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -1534,7 +1560,7 @@ pub async fn get_consensus_state_with_height(
 ///  # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let port_id =PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = vec![Sequence::from(12),Sequence::from(13)];
@@ -1545,11 +1571,11 @@ pub async fn get_unreceipt_packet(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequences: Vec<Sequence>,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<u64>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_receipt_packet]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1576,7 +1602,7 @@ pub async fn get_unreceipt_packet(
         let data: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_receipt(port_id, channel_id, sequence, Some(block_hash))
+            .packet_receipt(&port_id, &channel_id, &sequence, Some(block_hash))
             .await?;
         if data.is_empty() {
             result.push(sequence);
@@ -1591,16 +1617,16 @@ pub async fn get_unreceipt_packet(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_clients(client).await?;
 /// ```
 ///
 pub async fn get_clients(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_clients]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1630,7 +1656,7 @@ pub async fn get_clients(
         let client_states_value: Vec<u8> = api
             .storage()
             .ibc()
-            .client_states(key.clone(), Some(block_hash))
+            .client_states(&key, Some(block_hash))
             .await?;
         // store key-value
         ret.push((key.clone(), client_states_value));
@@ -1655,15 +1681,15 @@ pub async fn get_clients(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_connections(client).await?;
 /// ```
 ///
 pub async fn get_connections(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<IdentifiedConnectionEnd>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_connctions]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1695,7 +1721,7 @@ pub async fn get_connections(
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .connections(key.clone(), Some(block_hash))
+            .connections(&key, Some(block_hash))
             .await?;
 
         // store key-value
@@ -1722,16 +1748,16 @@ pub async fn get_connections(
 ///
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_channels(client).await?;
 /// ```
 ///
 pub async fn get_channels(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_channels]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1760,7 +1786,7 @@ pub async fn get_channels(
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .channels(key.0.clone(), key.1.clone(), Some(block_hash))
+            .channels(&key.0, &key.1, Some(block_hash))
             .await?;
 
         // store key-value
@@ -1788,16 +1814,16 @@ pub async fn get_channels(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_commitment_packet_state(client).await?;
 /// ```
 ///
 pub async fn get_commitment_packet_state(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1822,7 +1848,7 @@ pub async fn get_commitment_packet_state(
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_commitment(key.0.clone(), key.1.clone(), key.2, Some(block_hash))
+            .packet_commitment(&key.0, &key.1, &key.2, Some(block_hash))
             .await?;
 
         // store key-value
@@ -1852,7 +1878,7 @@ pub async fn get_commitment_packet_state(
 ///  # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let port_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(23);
@@ -1863,11 +1889,11 @@ pub async fn get_packet_commitment(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequence: &Sequence,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_commitment]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1883,9 +1909,9 @@ pub async fn get_packet_commitment(
         .storage()
         .ibc()
         .packet_commitment(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            u64::from(*sequence),
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
@@ -1905,7 +1931,7 @@ pub async fn get_packet_commitment(
 ///  # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let port_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(12);
@@ -1916,11 +1942,11 @@ pub async fn get_packet_ack(
     port_id: &PortId,
     channel_id: &ChannelId,
     sequence: &Sequence,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_ack]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1936,9 +1962,9 @@ pub async fn get_packet_ack(
         .storage()
         .ibc()
         .acknowledgements(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            u64::from(*sequence),
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &u64::from(*sequence),
             Some(block_hash),
         )
         .await?;
@@ -1957,7 +1983,7 @@ pub async fn get_packet_ack(
 ///  # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let result = get_next_sequence_recv(&prot_id, &channel_id, client).await?;
@@ -1966,11 +1992,11 @@ pub async fn get_packet_ack(
 pub async fn get_next_sequence_recv(
     port_id: &PortId,
     channel_id: &ChannelId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1986,8 +2012,8 @@ pub async fn get_next_sequence_recv(
         .storage()
         .ibc()
         .next_sequence_recv(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
             Some(block_hash),
         )
         .await?;
@@ -1996,9 +2022,9 @@ pub async fn get_next_sequence_recv(
         .storage()
         .ibc()
         .packet_commitment(
-            port_id.as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            sequence,
+            port_id.as_bytes(),
+            format!("{}", channel_id).as_bytes(),
+            &sequence,
             Some(block_hash),
         )
         .await?;
@@ -2018,16 +2044,16 @@ pub async fn get_next_sequence_recv(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_acknowledge_packet_state(client).await?;
 /// ```
 ///
 pub async fn get_acknowledge_packet_state(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -2051,7 +2077,7 @@ pub async fn get_acknowledge_packet_state(
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .acknowledgements(key.0.clone(), key.1.clone(), key.2, Some(block_hash))
+            .acknowledgements(&key.0, &key.1, &key.2, Some(block_hash))
             .await?;
 
         ret.push((key.0.clone(), key.1.clone(), key.2, value));
@@ -2081,17 +2107,17 @@ pub async fn get_acknowledge_packet_state(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let result = get_client_connections(&client_id, client).await?;
 /// ```
 ///
 pub async fn get_client_connections(
     client_id: &ClientId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<ConnectionId>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_client_connections]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -2107,7 +2133,7 @@ pub async fn get_client_connections(
     let connection_id: Vec<u8> = api
         .storage()
         .ibc()
-        .connection_client(client_id.as_bytes().to_vec(), Some(block_hash))
+        .connection_client(client_id.as_bytes(), Some(block_hash))
         .await?;
 
     if connection_id.is_empty() {
@@ -2130,20 +2156,20 @@ pub async fn get_client_connections(
 ///  # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let connection = ConnectionId::default();
 /// let result = get_connection_channels(&connection, client).await?;
 /// ```
 ///
 pub async fn get_connection_channels(
     connection_id: &ConnectionId,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_connection_channels]");
 
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -2160,7 +2186,7 @@ pub async fn get_connection_channels(
     let channel_id_and_port_id: Vec<(Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
-        .channels_connection(connection_id.as_bytes().to_vec(), Some(block_hash))
+        .channels_connection(connection_id.as_bytes(), Some(block_hash))
         .await?;
 
     if channel_id_and_port_id.is_empty() {
@@ -2197,14 +2223,14 @@ pub async fn get_connection_channels(
 ///
 /// ```rust
 ///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let msg = vec![Any::default()];
 /// let result = deliver(msg, client).await?;
 /// ```
 /// return block_hash, extrinsic_hash, and event
 pub async fn deliver(
     msg: Vec<Any>,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [deliver]");
 
@@ -2218,13 +2244,13 @@ pub async fn deliver(
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
         .ibc()
-        .deliver(msg, 0)
-        .sign_and_submit(&signer)
+        .deliver(msg, 0)?
+        .sign_and_submit_default(&signer)
         .await?;
 
     // tracing::info!("deliver block hash = {:?}", result.block);
@@ -2238,38 +2264,38 @@ pub async fn deliver(
 }
 
 pub async fn delete_send_packet_event(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [delete_send_packet_event]");
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
         .ibc()
-        .delete_send_packet_event()
-        .sign_and_submit(&signer)
+        .delete_send_packet_event()?
+        .sign_and_submit_default(&signer)
         .await?;
 
     Ok(result)
 }
 
 pub async fn delete_write_packet_event(
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [delete_write_packet_event]");
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
         .ibc()
-        .delete_ack_packet_event()
-        .sign_and_submit(&signer)
+        .delete_ack_packet_event()?
+        .sign_and_submit_default(&signer)
         .await?;
 
     Ok(result)
@@ -2289,7 +2315,7 @@ pub async fn delete_write_packet_event(
 ///
 /// ```rust
 ///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let block_number = Some(BlockNumber::from(12));
 /// let block_hash = None;
 /// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
@@ -2298,11 +2324,11 @@ pub async fn delete_write_packet_event(
 pub async fn get_mmr_leaf_and_mmr_proof(
     block_number: Option<BlockNumber>,
     block_hash: Option<sp_core::H256>,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     // need to use `to_json_value` to convert the params to json value
     // need make sure mmr_generate_proof index is u64
@@ -2311,7 +2337,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
         .client
         .rpc()
         .client
-        .request("mmr_generateProof", params)
+        .request("mmr_generateProof", Some(jsonrpsee_types::params::ParamsSer::ArrayRef(params)))
         .await?;
 
     tracing::info!("info generate_proof : {:?}", generate_proof);
@@ -2329,16 +2355,16 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 ///
 /// ```rust
 ///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let block_hash = None;
 /// let result = get_header_by_block_hash(block_hash, client).await?;
 /// ```
 ///
 pub async fn get_header_by_block_hash(
     block_hash: Option<sp_core::H256>,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
@@ -2355,18 +2381,18 @@ pub async fn get_header_by_block_hash(
 /// # Usage example
 ///
 /// ```rust
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<ibc_node::DefaultConfig>().await?;
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let block_number = Some(BlockNumber::from(2));
 /// let result = get_header_by_block_number(block_number, client).await?;
 /// ```
 ///
 pub async fn get_header_by_block_number(
     block_number: Option<BlockNumber>,
-    client: Client<ibc_node::DefaultConfig>,
+    client: Client<MyConfig>,
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let block_hash = api.client.rpc().block_hash(block_number).await?;
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();

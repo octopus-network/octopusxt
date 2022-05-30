@@ -21,8 +21,9 @@ pub use update_client_state::{
     build_mmr_proof, build_validator_proof, get_client_ids, send_update_state_request,
     update_client_state, update_client_state_service, verify_commitment_signatures,
 };
+use subxt::{Config, DefaultConfig};
 
-#[derive(Encode, Decode)]
+#[derive(Debug, Encode, Decode)]
 pub enum ClientType {
     Tendermint,
     Grandpa,
@@ -52,29 +53,24 @@ pub mod ibc_node {
     use beefy_primitives::crypto::Public;
 }
 
-// const _: () = {
-//     use ibc_node::runtime_types::polkadot_parachain::primitives::Id;
-
-//     impl PartialEq for Id {
-//         fn eq(&self, other: &Self) -> bool {
-//             self.0 == other.0
-//         }
-//     }
-
-//     impl Eq for Id {}
-
-//     impl PartialOrd for Id {
-//         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-//             self.0.partial_cmp(&other.0)
-//         }
-//     }
-
-//     impl Ord for Id {
-//         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-//             self.0.cmp(&other.0)
-//         }
-//     }
-// };
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+pub struct MyConfig;
+impl Config for MyConfig {
+    // This is different from the default `u32`.
+    //
+    // *Note* that in this example it does differ from the actual `Index` type in the
+    // polkadot runtime used, so some operations will fail. Normally when using a custom `Config`
+    // impl types MUST match exactly those used in the actual runtime.
+    type Index = u64;
+    type BlockNumber = <DefaultConfig as Config>::BlockNumber;
+    type Hash = <DefaultConfig as Config>::Hash;
+    type Hashing = <DefaultConfig as Config>::Hashing;
+    type AccountId = <DefaultConfig as Config>::AccountId;
+    type Address = <DefaultConfig as Config>::Address;
+    type Header = <DefaultConfig as Config>::Header;
+    type Signature = <DefaultConfig as Config>::Signature;
+    type Extrinsic = <DefaultConfig as Config>::Extrinsic;
+}
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
     pub fn to_ibc_height(self) -> ibc::Height {

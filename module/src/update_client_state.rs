@@ -4,7 +4,7 @@ use sp_core::hexdisplay::HexDisplay;
 use std::str::FromStr;
 use tendermint_proto::Protobuf;
 
-use crate::ibc_node::{DefaultConfig, RuntimeApi};
+use crate::ibc_node::RuntimeApi;
 use crate::ibc_rpc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use codec::Encode;
 use ibc::clients::ics10_grandpa::help;
@@ -16,7 +16,11 @@ use subxt::sp_core::Public;
 use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
 use beefy_merkle_tree::Hash;
-use subxt::{BeefySubscription, BlockNumber, Client, PairSigner};
+use crate::MyConfig;
+use subxt::SubstrateExtrinsicParams;
+use subxt::{BlockNumber, Client, PairSigner};
+use subxt::beefy::BeefySubscription;
+use sp_core::ByteArray;
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -27,10 +31,10 @@ pub struct MmrProof {
 
 /// build merkle proof for validator
 pub async fn build_validator_proof(
-    src_client: Client<DefaultConfig>,
+    src_client: Client<MyConfig>,
     block_number: u32,
 ) -> Result<Vec<help::ValidatorMerkleProof>, Box<dyn std::error::Error>> {
-    let api = src_client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
+    let api = src_client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     // get block hash
     let block_hash = api
@@ -116,12 +120,12 @@ pub async fn build_validator_proof(
 
 /// build mmr proof
 pub async fn build_mmr_proof(
-    src_client: Client<DefaultConfig>,
+    src_client: Client<MyConfig>,
     block_number: u32,
 ) -> Result<MmrProof, Box<dyn std::error::Error>> {
     let api = src_client
         .clone()
-        .to_runtime_api::<RuntimeApi<DefaultConfig>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     //get block hash by block_number
     let block_hash: sp_core::H256 = api
         .client
@@ -153,29 +157,24 @@ pub async fn build_mmr_proof(
 
 /// send Update client state request
 pub async fn send_update_state_request(
-    client: Client<DefaultConfig>,
+    client: Client<MyConfig>,
     client_id: ClientId,
     mmr_root: help::MmrRoot,
 ) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [update_client_state]");
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
-    let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
-    // let client_state_bytes = <commitment::SignedCommitment as codec::Encode>::encode(&client_state);
-
+    let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+  
     let encode_client_id = client_id.as_bytes().to_vec();
     let encode_mmr_root = <help::MmrRoot as Encode>::encode(&mmr_root);
     println!("encode mmr root is {:?}", encode_mmr_root);
 
-    // // test
-    // let received_mmr_root = encode_mmr_root.clone();
-    // let decode_received_mmr_root = help::MmrRoot::decode(&mut &received_mmr_root[..]).unwrap();
-    // println!("decode mmr root is {:?}", decode_received_mmr_root);
 
     let result = api
         .tx()
         .ibc()
-        .update_client_state(encode_client_id, encode_mmr_root)
-        .sign_and_submit(&signer)
+        .update_client_state(encode_client_id, encode_mmr_root)?
+        .sign_and_submit_default(&signer)
         .await?;
 
     tracing::info!("update client state result: {:?}", result);
@@ -185,15 +184,14 @@ pub async fn send_update_state_request(
 
 /// update client state by cli for single.
 pub async fn update_client_state(
-    src_client: Client<DefaultConfig>,
-    target_client: Client<DefaultConfig>,
+    src_client: Client<MyConfig>,
+    target_client: Client<MyConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // env_logger::init();
 
     // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
-        .to_runtime_api::<RuntimeApi<DefaultConfig>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
 
@@ -244,8 +242,6 @@ pub async fn update_client_state(
     println!("build mmr_root = {:?}", mmr_root);
 
     // get client id from target chain
-    // mock client id
-    // let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
     let client_ids = get_client_ids(target_client.clone(), ClientType::Grandpa)
         .await
         .unwrap();
@@ -269,15 +265,14 @@ pub async fn update_client_state(
 
 /// update client state service.
 pub async fn update_client_state_service(
-    src_client: Client<DefaultConfig>,
-    target_client: Client<DefaultConfig>,
+    src_client: Client<MyConfig>,
+    target_client: Client<MyConfig>,
 ) -> Result<(), Box<dyn std::error::Error>> {
-    // env_logger::init();
 
     // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
-        .to_runtime_api::<RuntimeApi<DefaultConfig>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
 
@@ -336,8 +331,6 @@ pub async fn update_client_state_service(
         println!("build mmr_root = {:?}", mmr_root);
 
         // get client id from target chain
-        // mock client id
-        // let client_id = ClientId::new(ClientType::Grandpa, 0).unwrap();
         let client_ids = get_client_ids(target_client.clone(), ClientType::Grandpa)
             .await
             .unwrap();
@@ -430,26 +423,24 @@ pub fn verify_commitment_signatures(
 
 /// get client ids store in chain
 pub async fn get_client_ids(
-    client: Client<DefaultConfig>,
+    client: Client<MyConfig>,
     expect_client_type: ClientType,
 ) -> Result<Vec<ClientId>, Box<dyn std::error::Error>> {
-    let api = client.to_runtime_api::<RuntimeApi<DefaultConfig>>();
+    let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     // get client_state Keys
     let client_states_keys: Vec<Vec<u8>> = api
         .storage()
         .ibc()
-        // .client_states_keys(Some(block_hash))
         .client_states_keys(None)
         .await?;
-    // assert!(!client_states_keys.is_empty());
 
     let mut client_ids = vec![];
     for key in client_states_keys {
         // get client_state value
         let client_states_value: Vec<u8> =
-            api.storage().ibc().client_states(key.clone(), None).await?;
-        // assert!(!client_states_value.is_empty());
+            api.storage().ibc().client_states(&key, None).await?;
+
         let any_client_state = AnyClientState::decode_vec(&*client_states_value).unwrap();
         let client_type = any_client_state.client_type();
         if client_type == expect_client_type {
