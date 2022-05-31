@@ -1,9 +1,11 @@
 use octopusxt::ibc_node;
 use octopusxt::ibc_rpc::get_storage_key;
+use octopusxt::MyConfig;
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use structopt::StructOpt;
 use subxt::BlockNumber;
+use subxt::SubstrateExtrinsicParams;
 use subxt::{ClientBuilder, PairSigner};
 
 #[derive(Debug, StructOpt)]
@@ -60,9 +62,9 @@ impl SubstrateQuery {
 
                 let api = ClientBuilder::new()
                     .set_url(value.websocket_url.clone())
-                    .build::<ibc_node::DefaultConfig>()
+                    .build()
                     .await?
-                    .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+                    .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let block_number = value.block_number.map(|val| BlockNumber::from(val));
 
@@ -81,9 +83,9 @@ impl SubstrateQuery {
             SubstrateQuery::Other(value) => {
                 let api = ClientBuilder::new()
                     .set_url(value.websocket_url.clone())
-                    .build::<ibc_node::DefaultConfig>()
+                    .build()
                     .await?
-                    .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+                    .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 println!("😂😂😂😂😂😂😂😂😂😂😂😂😂 Example1: Read proof RPC 😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂");
                 // example 1: read_proof rpc
@@ -130,73 +132,11 @@ impl SubstrateQuery {
 
                 println!("sudo key AccountId32 format = {}", account_id);
 
-                println!("😂😂😂😂😂😂😂😂😂😂😂😂Example3: storage_keys_paged 😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂");
-
-                // getKeysPaged(key: StorageKey, count: u32, startKey?: StorageKey, at?: BlockHash): Vec<StorageKey>
-                // interface: api.rpc.state.getKeysPaged
-                // jsonrpc: state_getKeysPaged
-                // summary: Returns the keys with prefix with pagination support.
-
-                // Returns the keys with prefix with pagination support.
-                // Up to `count` keys will be returned.
-                // If `start_key` is passed, return next keys in storage in lexicographic order.
-                // pub async fn storage_keys_paged(
-                //     &self,
-                //     prefix: Option<StorageKeyPrefix>,
-                //     count: u32,
-                //     start_key: Option<StorageKey>,
-                //     hash: Option<T::Hash>,
-                // ) -> Result<Vec<StorageKey>, Error>;
-
-                // todo
-
                 println!("😂😂😂😂😂😂😂😂😂😂😂😂Example3: query_storage RPC 😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂");
 
                 let sudo_key = ibc_node::sudo::storage::Key;
                 let sudo_key = get_storage_key(&sudo_key);
 
-                // get sudo key storage data
-                // Fetch a storage Key: storage function
-                //
-
-                // let from_block_hash = sp_core::H256::from_str(
-                //     "0x856f7e105cafe285d361c9aae72f7763bfb222a7d65b93c8833899b352a37e8b",
-                // )
-                // .unwrap();
-                // println!("from_block_hash = {}", from_block_hash);
-
-                // let storage_data = api
-                //     .client
-                //     .rpc()
-                //     .query_storage(vec![sudo_key], from_block_hash, None)
-                //     .await?;
-
-                // println!("query_storage data = {:?}", storage_data);
-
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
-                println!(
-                    "😂😂😂😂😂😂😂😂😂😂😂😂Example3:  😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂"
-                );
                 println!("😂😂😂😂😂😂😂😂😂😂😂😂Example Query Block 😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂");
 
                 let from_block_hash = sp_core::H256::from_str(
@@ -208,30 +148,6 @@ impl SubstrateQuery {
                 let block = api.client.rpc().block(Some(from_block_hash)).await?;
 
                 println!("block = {:?}", block);
-
-                // state_queryStorageAt
-                // chain_getBlockHash
-                // state_getMetadata
-                // system_properties
-                // chain_getHeader
-                // chain_getBlockHash
-                // chain_getFinalizedHead
-                // chain_getBlock
-                // state_getReadProof
-                // state_getRuntimeVersion
-                // subscribe_events
-                // subscribe_finalized_events
-                // subscribe_blocks
-                // subscribe_finalized_blocks
-                //subscribe_beefy_justifications
-                // submit_extrinsic
-                // watch_extrinsic
-                // submit_and_watch_extrinsic
-                // insert_key
-                // rotate_keys
-                // has_session_keys
-                // has_key
-                //
             }
         }
 

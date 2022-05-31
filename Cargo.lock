@@ -3486,6 +3486,7 @@ name = "octopusxt-cli"
 version = "0.1.0"
 dependencies = [
  "env_logger",
+ "futures 0.3.21",
  "hex",
  "ibc",
  "ibc-proto",

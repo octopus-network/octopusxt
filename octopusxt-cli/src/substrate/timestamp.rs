@@ -1,9 +1,11 @@
 use octopusxt::ibc_node;
 use octopusxt::ibc_rpc::get_storage_key;
+use octopusxt::MyConfig;
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use structopt::StructOpt;
 use subxt::BlockNumber;
+use subxt::SubstrateExtrinsicParams;
 use subxt::{ClientBuilder, PairSigner};
 
 #[derive(Debug, StructOpt)]
@@ -22,7 +24,7 @@ impl TimeStamp {
             TimeStamp::Now => {
                 let api = ClientBuilder::new()
                     .set_url("ws://localhost:9944")
-                    .build::<ibc_node::DefaultConfig>()
+                    .build::<MyConfig>()
                     .await?;
 
                 let storage_api = ibc_node::timestamp::storage::StorageApi::new(&api);
@@ -34,7 +36,7 @@ impl TimeStamp {
             TimeStamp::DidUpdate => {
                 let api = ClientBuilder::new()
                     .set_url("ws://localhost:9944")
-                    .build::<ibc_node::DefaultConfig>()
+                    .build::<MyConfig>()
                     .await?;
 
                 let storage_api = ibc_node::timestamp::storage::StorageApi::new(&api);

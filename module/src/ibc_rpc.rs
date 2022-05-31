@@ -14,20 +14,22 @@ use beefy_merkle_tree::Hash;
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use ibc_proto::google::protobuf::Any;
-use subxt::rpc::to_json_value;
 use sp_core::{storage::StorageKey, twox_128, H256};
 use sp_keyring::AccountKeyring;
-use subxt::storage::{StorageEntry, StorageKeyPrefix};
 use subxt::beefy::BeefySubscription;
+use subxt::rpc::to_json_value;
+use subxt::storage::{StorageEntry, StorageKeyPrefix};
 // use subxt::RawEvent;
 use futures::StreamExt;
-use subxt::SignedCommitment;
+use jsonrpsee::rpc_params;
+use subxt::events::EventSubscription;
+use subxt::rpc::ClientT;
 use subxt::DefaultConfig;
+use subxt::RawEventDetails;
+use subxt::SignedCommitment;
+use subxt::SubstrateExtrinsicParams;
 use subxt::{BlockNumber, Client, /*EventSubscription,*/ PairSigner};
 use tendermint_proto::Protobuf;
-use subxt::SubstrateExtrinsicParams;
-use subxt::rpc::ClientT;
-use subxt::events::EventSubscription;
 
 /// Subscribe ibc events
 /// Maybe in the future call ocw
@@ -45,528 +47,529 @@ pub async fn subscribe_ibc_event(
     const COUNTER_SYSTEM_EVENT: i32 = 8;
     tracing::info!("In call_ibc: [subscribe_events]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     // Subscribe to any events that occur:
     let mut event_sub = api.events().subscribe().await?;
 
-    let mut events = Vec::new();
+    let mut result_events = Vec::new();
     let mut counter_system_event = 0;
+
     // Our subscription will see the events emitted as a result of this:
     while let Some(events) = event_sub.next().await {
         let events = events?;
         let block_hash = events.block_hash();
 
-        // We can iterate, statically decoding all events if we want:
-        println!("All events in block {block_hash:?}:");
-        println!("  Static event details:");
-        for event in events.iter() {
-            let event = event?;
-            println!("    {event:?}");
-        }
-         // Or we can dynamically decode events:
-         println!("  Dynamic event details: {block_hash:?}:");
-         for event in events.iter_raw() {
-             let event = event?;
-             let is_balance_transfer = event
-                 .as_event::<ibc_node::balances::events::Transfer>()?
-                 .is_some();
-             let pallet = event.pallet;
-             let variant = event.variant;
-             println!(
-                 "    {pallet}::{variant} (is balance transfer? {is_balance_transfer})"
-             );
-         }
+        // Or we can dynamically decode events:
+        println!("  Dynamic event details: {block_hash:?}:");
+        for event in events.iter_raw() {
+            let event: RawEventDetails = event?;
+            let raw_event = event.clone();
+            let pallet = event.pallet;
+            let variant = event.variant;
 
-        // let raw_event = raw_event.unwrap();
-        let variant = raw_event.variant;
-        tracing::info!("In substrate: [subscribe_events] >> variant: {:?}", variant);
-        match variant.as_str() {
-            "CreateClient" => {
-                let event = <ibc_node::ibc::events::CreateClient as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> CreateClient Event");
-
-                let height = event.0;
-                let client_id = event.1;
-                let client_type = event.2;
-                let consensus_height = event.3;
-
-                use ibc::core::ics02_client::events::Attributes;
-                events.push(IbcEvent::CreateClient(
-                    ibc::core::ics02_client::events::CreateClient::from(Attributes {
-                        height: height.to_ibc_height(),
-                        client_id: client_id.to_ibc_client_id(),
-                        client_type: client_type.to_ibc_client_type(),
-                        consensus_height: consensus_height.to_ibc_height(),
-                    }),
-                ));
-                break;
-            }
-            "UpdateClient" => {
-                let event = <ibc_node::ibc::events::UpdateClient as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> UpdateClient Event");
-
-                let height = event.0;
-                let client_id = event.1;
-                let client_type = event.2;
-                let consensus_height = event.3;
-
-                use ibc::core::ics02_client::events::Attributes;
-                events.push(IbcEvent::UpdateClient(
-                    ibc::core::ics02_client::events::UpdateClient::from(Attributes {
-                        height: height.to_ibc_height(),
-                        client_id: client_id.to_ibc_client_id(),
-                        client_type: client_type.to_ibc_client_type(),
-                        consensus_height: consensus_height.to_ibc_height(),
-                    }),
-                ));
-                // break;
-            }
-            "ClientMisbehaviour" => {
-                let event = <ibc_node::ibc::events::ClientMisbehaviour as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
-
-                let height = event.0;
-                let client_id = event.1;
-                let client_type = event.2;
-                let consensus_height = event.3;
-
-                use ibc::core::ics02_client::events::Attributes;
-                events.push(IbcEvent::ClientMisbehaviour(
-                    ibc::core::ics02_client::events::ClientMisbehaviour::from(Attributes {
-                        height: height.to_ibc_height(),
-                        client_id: client_id.to_ibc_client_id(),
-                        client_type: client_type.to_ibc_client_type(),
-                        consensus_height: consensus_height.to_ibc_height(),
-                    }),
-                ));
-                // break;
-            }
-            "OpenInitConnection" => {
-                let event = <ibc_node::ibc::events::OpenInitConnection as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
-
-                let height = event.0;
-                let connection_id = event.1.map(|val| val.to_ibc_connection_id());
-                let client_id = event.2;
-                let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
-                let counterparty_client_id = event.4;
-
-                use ibc::core::ics03_connection::events::Attributes;
-                events.push(IbcEvent::OpenInitConnection(
-                    ibc::core::ics03_connection::events::OpenInit::from(Attributes {
-                        height: height.to_ibc_height(),
-                        connection_id,
-                        client_id: client_id.to_ibc_client_id(),
-                        counterparty_connection_id,
-                        counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
-                    }),
-                ));
-                break;
-            }
-            "OpenTryConnection" => {
-                let event = <ibc_node::ibc::events::OpenTryConnection as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
-
-                let height = event.0;
-                let connection_id = event.1.map(|val| val.to_ibc_connection_id());
-                let client_id = event.2;
-                let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
-                let counterparty_client_id = event.4;
-
-                use ibc::core::ics03_connection::events::Attributes;
-                events.push(IbcEvent::OpenTryConnection(
-                    ibc::core::ics03_connection::events::OpenTry::from(Attributes {
-                        height: height.to_ibc_height(),
-                        connection_id,
-                        client_id: client_id.to_ibc_client_id(),
-                        counterparty_connection_id,
-                        counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
-                    }),
-                ));
-                break;
-            }
-            "OpenAckConnection" => {
-                let event = <ibc_node::ibc::events::OpenAckConnection as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
-
-                let height = event.0;
-                let connection_id = event.1.map(|val| val.to_ibc_connection_id());
-                let client_id = event.2;
-                let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
-                let counterparty_client_id = event.4;
-
-                use ibc::core::ics03_connection::events::Attributes;
-                events.push(IbcEvent::OpenAckConnection(
-                    ibc::core::ics03_connection::events::OpenAck::from(Attributes {
-                        height: height.to_ibc_height(),
-                        connection_id,
-                        client_id: client_id.to_ibc_client_id(),
-                        counterparty_connection_id,
-                        counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
-                    }),
-                ));
-                break;
-            }
-            "OpenConfirmConnection" => {
-                let event =
-                    <ibc_node::ibc::events::OpenConfirmConnection as codec::Decode>::decode(
+            tracing::info!("In substrate: [subscribe_events] >> variant: {:?}", variant);
+            match variant.as_str() {
+                "CreateClient" => {
+                    let event = <ibc_node::ibc::events::CreateClient as codec::Decode>::decode(
                         &mut &raw_event.data[..],
                     )
                     .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenConfirmConnection Event");
 
-                let height = event.0;
-                let connection_id = event.1.map(|val| val.to_ibc_connection_id());
-                let client_id = event.2;
-                let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
-                let counterparty_client_id = event.4;
+                    tracing::info!("In call_ibc: [subscribe_events] >> CreateClient Event");
 
-                use ibc::core::ics03_connection::events::Attributes;
-                events.push(IbcEvent::OpenConfirmConnection(
-                    ibc::core::ics03_connection::events::OpenConfirm::from(Attributes {
-                        height: height.to_ibc_height(),
-                        connection_id,
-                        client_id: client_id.to_ibc_client_id(),
-                        counterparty_connection_id,
-                        counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
-                    }),
-                ));
-                break;
-            }
+                    let height = event.0;
+                    let client_id = event.1;
+                    let client_type = event.2;
+                    let consensus_height = event.3;
 
-            "OpenInitChannel" => {
-                let event = <ibc_node::ibc::events::OpenInitChannel as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
-
-                let height = event.0;
-                let port_id = event.1;
-                let channel_id = event.2.map(|val| val.to_ibc_channel_id());
-                let connection_id = event.3;
-                let counterparty_port_id = event.4;
-                let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
-
-                events.push(IbcEvent::OpenInitChannel(
-                    ibc::core::ics04_channel::events::OpenInit {
-                        height: height.to_ibc_height(),
-                        port_id: port_id.to_ibc_port_id(),
-                        channel_id,
-                        connection_id: connection_id.to_ibc_connection_id(),
-                        counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id,
-                    },
-                ));
-                break;
-            }
-            "OpenTryChannel" => {
-                let event = <ibc_node::ibc::events::OpenTryChannel as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
-
-                let height = event.0;
-                let port_id = event.1;
-                let channel_id = event.2.map(|val| val.to_ibc_channel_id());
-                let connection_id = event.3;
-                let counterparty_port_id = event.4;
-                let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
-
-                events.push(IbcEvent::OpenTryChannel(
-                    ibc::core::ics04_channel::events::OpenTry {
-                        height: height.to_ibc_height(),
-                        port_id: port_id.to_ibc_port_id(),
-                        channel_id,
-                        connection_id: connection_id.to_ibc_connection_id(),
-                        counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id,
-                    },
-                ));
-                break;
-            }
-            "OpenAckChannel" => {
-                let event = <ibc_node::ibc::events::OpenAckChannel as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
-
-                let height = event.0;
-                let port_id = event.1;
-                let channel_id = event.2.map(|val| val.to_ibc_channel_id());
-                let connection_id = event.3;
-                let counterparty_port_id = event.4;
-                let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
-
-                events.push(IbcEvent::OpenAckChannel(
-                    ibc::core::ics04_channel::events::OpenAck {
-                        height: height.to_ibc_height(),
-                        port_id: port_id.to_ibc_port_id(),
-                        channel_id,
-                        connection_id: connection_id.to_ibc_connection_id(),
-                        counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id,
-                    },
-                ));
-                break;
-            }
-            "OpenConfirmChannel" => {
-                let event = <ibc_node::ibc::events::OpenConfirmChannel as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
-
-                let height = event.0;
-                let port_id = event.1;
-                let channel_id = event.2.map(|val| val.to_ibc_channel_id());
-                let connection_id = event.3;
-                let counterparty_port_id = event.4;
-                let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
-
-                events.push(IbcEvent::OpenConfirmChannel(
-                    ibc::core::ics04_channel::events::OpenConfirm {
-                        height: height.to_ibc_height(),
-                        port_id: port_id.to_ibc_port_id(),
-                        channel_id,
-                        connection_id: connection_id.to_ibc_connection_id(),
-                        counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id,
-                    },
-                ));
-                break;
-            }
-            "CloseInitChannel" => {
-                let event = <ibc_node::ibc::events::CloseInitChannel as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
-
-                let height = event.0;
-                let port_id = event.1;
-                let channel_id = event.2.map(|val| val.to_ibc_channel_id());
-                let connection_id = event.3;
-                let counterparty_port_id = event.4;
-                let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
-
-                events.push(IbcEvent::CloseInitChannel(
-                    ibc::core::ics04_channel::events::CloseInit {
-                        height: height.to_ibc_height(),
-                        port_id: port_id.to_ibc_port_id(),
-                        channel_id: channel_id.unwrap_or_default(),
-                        connection_id: connection_id.to_ibc_connection_id(),
-                        counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id,
-                    },
-                ));
-                break;
-            }
-            "CloseConfirmChannel" => {
-                let event = <ibc_node::ibc::events::CloseConfirmChannel as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-
-                tracing::info!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
-
-                let height = event.0;
-                let port_id = event.1;
-                let channel_id = event.2.map(|val| val.to_ibc_channel_id());
-                let connection_id = event.3;
-                let counterparty_port_id = event.4;
-                let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
-
-                events.push(IbcEvent::CloseConfirmChannel(
-                    ibc::core::ics04_channel::events::CloseConfirm {
-                        height: height.to_ibc_height(),
-                        port_id: port_id.to_ibc_port_id(),
-                        channel_id,
-                        connection_id: connection_id.to_ibc_connection_id(),
-                        counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
-                        counterparty_channel_id,
-                    },
-                ));
-                break;
-            }
-            "SendPacket" => {
-                let event = <ibc_node::ibc::events::SendPacket as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [substrate_events] >> SendPacket Event");
-
-                let send_packet = ibc::core::ics04_channel::events::SendPacket {
-                    height: event.0.to_ibc_height(),
-                    packet: event.1.to_ibc_packet(),
-                };
-
-                events.push(IbcEvent::SendPacket(send_packet));
-                break;
-            }
-            "ReceivePacket" => {
-                let event = <ibc_node::ibc::events::ReceivePacket as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-
-                tracing::info!("In call_ibc: [substrate_events] >> ReceivePacket Event");
-
-                let receive_packet = ibc::core::ics04_channel::events::ReceivePacket {
-                    height: event.0.to_ibc_height(),
-                    packet: event.1.to_ibc_packet(),
-                };
-
-                events.push(IbcEvent::ReceivePacket(receive_packet));
-
-                break;
-            }
-            "WriteAcknowledgement" => {
-                let event = <ibc_node::ibc::events::WriteAcknowledgement as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [substrate_events] >> WriteAcknowledgement Event");
-
-                let write_acknowledgement =
-                    ibc::core::ics04_channel::events::WriteAcknowledgement {
-                        height: event.0.to_ibc_height(),
-                        packet: event.1.to_ibc_packet(),
-                        ack: event.2,
-                    };
-
-                events.push(IbcEvent::WriteAcknowledgement(write_acknowledgement));
-
-                break;
-            }
-            "AcknowledgePacket" => {
-                let event = <ibc_node::ibc::events::AcknowledgePacket as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
-
-                let acknowledge_packet = ibc::core::ics04_channel::events::AcknowledgePacket {
-                    height: event.0.to_ibc_height(),
-                    packet: event.1.to_ibc_packet(),
-                };
-
-                events.push(IbcEvent::AcknowledgePacket(acknowledge_packet));
-
-                break;
-            }
-            "TimeoutPacket" => {
-                let event = <ibc_node::ibc::events::TimeoutPacket as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
-
-                let timeout_packet = ibc::core::ics04_channel::events::TimeoutPacket {
-                    height: event.0.to_ibc_height(),
-                    packet: event.1.to_ibc_packet(),
-                };
-
-                events.push(IbcEvent::TimeoutPacket(timeout_packet));
-
-                break;
-            }
-            "TimeoutOnClosePacket" => {
-                let event = <ibc_node::ibc::events::TimeoutOnClosePacket as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [substrate_events] >> TimeoutOnClosePacket Event");
-
-                let timeout_on_close_packet =
-                    ibc::core::ics04_channel::events::TimeoutOnClosePacket {
-                        height: event.0.to_ibc_height(),
-                        packet: event.1.to_ibc_packet(),
-                    };
-
-                events.push(IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet));
-
-                break;
-            }
-            "Empty" => {
-                let event = <ibc_node::ibc::events::Empty as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-
-                tracing::info!("in call_ibc: [substrate_events] >> Empty Event");
-
-                let data = String::from_utf8(event.0).unwrap();
-
-                events.push(IbcEvent::Empty(data));
-                break;
-            }
-            "ChainError" => {
-                let event = <ibc_node::ibc::events::ChainError as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-
-                tracing::info!("in call_ibc: [substrate_events] >> ChainError Event");
-
-                let data = String::from_utf8(event.0).unwrap();
-
-                events.push(IbcEvent::Empty(data));
-                break;
-            }
-            "ExtrinsicSuccess" => {
-                let _event = <ibc_node::system::events::ExtrinsicSuccess as codec::Decode>::decode(
-                    &mut &raw_event.data[..],
-                )
-                .unwrap();
-                tracing::info!("In call_ibc: [subscribe_events] >> ExtrinsicSuccess ");
-
-                if counter_system_event < COUNTER_SYSTEM_EVENT {
-                    tracing::info!(
-                        "In call_ibc: [subscribe_events] >> counter_system_event: {:?}",
-                        counter_system_event
-                    );
-                    counter_system_event += 1;
-                } else {
-                    tracing::info!(
-                        "In call_ibc: [subscribe_events] >> counter_system_event: {:?}",
-                        counter_system_event
-                    );
+                    use ibc::core::ics02_client::events::Attributes;
+                    result_events.push(IbcEvent::CreateClient(
+                        ibc::core::ics02_client::events::CreateClient::from(Attributes {
+                            height: height.to_ibc_height(),
+                            client_id: client_id.to_ibc_client_id(),
+                            client_type: client_type.to_ibc_client_type(),
+                            consensus_height: consensus_height.to_ibc_height(),
+                        }),
+                    ));
                     break;
                 }
-            }
-            _ => {
-                continue;
+                "UpdateClient" => {
+                    let event = <ibc_node::ibc::events::UpdateClient as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> UpdateClient Event");
+
+                    let height = event.0;
+                    let client_id = event.1;
+                    let client_type = event.2;
+                    let consensus_height = event.3;
+
+                    use ibc::core::ics02_client::events::Attributes;
+                    result_events.push(IbcEvent::UpdateClient(
+                        ibc::core::ics02_client::events::UpdateClient::from(Attributes {
+                            height: height.to_ibc_height(),
+                            client_id: client_id.to_ibc_client_id(),
+                            client_type: client_type.to_ibc_client_type(),
+                            consensus_height: consensus_height.to_ibc_height(),
+                        }),
+                    ));
+                    // break;
+                }
+                "ClientMisbehaviour" => {
+                    let event =
+                        <ibc_node::ibc::events::ClientMisbehaviour as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
+
+                    let height = event.0;
+                    let client_id = event.1;
+                    let client_type = event.2;
+                    let consensus_height = event.3;
+
+                    use ibc::core::ics02_client::events::Attributes;
+                    result_events.push(IbcEvent::ClientMisbehaviour(
+                        ibc::core::ics02_client::events::ClientMisbehaviour::from(Attributes {
+                            height: height.to_ibc_height(),
+                            client_id: client_id.to_ibc_client_id(),
+                            client_type: client_type.to_ibc_client_type(),
+                            consensus_height: consensus_height.to_ibc_height(),
+                        }),
+                    ));
+                    // break;
+                }
+                "OpenInitConnection" => {
+                    let event =
+                        <ibc_node::ibc::events::OpenInitConnection as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
+
+                    let height = event.0;
+                    let connection_id = event.1.map(|val| val.to_ibc_connection_id());
+                    let client_id = event.2;
+                    let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
+                    let counterparty_client_id = event.4;
+
+                    use ibc::core::ics03_connection::events::Attributes;
+                    result_events.push(IbcEvent::OpenInitConnection(
+                        ibc::core::ics03_connection::events::OpenInit::from(Attributes {
+                            height: height.to_ibc_height(),
+                            connection_id,
+                            client_id: client_id.to_ibc_client_id(),
+                            counterparty_connection_id,
+                            counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
+                        }),
+                    ));
+                    break;
+                }
+                "OpenTryConnection" => {
+                    let event =
+                        <ibc_node::ibc::events::OpenTryConnection as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
+
+                    let height = event.0;
+                    let connection_id = event.1.map(|val| val.to_ibc_connection_id());
+                    let client_id = event.2;
+                    let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
+                    let counterparty_client_id = event.4;
+
+                    use ibc::core::ics03_connection::events::Attributes;
+                    result_events.push(IbcEvent::OpenTryConnection(
+                        ibc::core::ics03_connection::events::OpenTry::from(Attributes {
+                            height: height.to_ibc_height(),
+                            connection_id,
+                            client_id: client_id.to_ibc_client_id(),
+                            counterparty_connection_id,
+                            counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
+                        }),
+                    ));
+                    break;
+                }
+                "OpenAckConnection" => {
+                    let event =
+                        <ibc_node::ibc::events::OpenAckConnection as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
+
+                    let height = event.0;
+                    let connection_id = event.1.map(|val| val.to_ibc_connection_id());
+                    let client_id = event.2;
+                    let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
+                    let counterparty_client_id = event.4;
+
+                    use ibc::core::ics03_connection::events::Attributes;
+                    result_events.push(IbcEvent::OpenAckConnection(
+                        ibc::core::ics03_connection::events::OpenAck::from(Attributes {
+                            height: height.to_ibc_height(),
+                            connection_id,
+                            client_id: client_id.to_ibc_client_id(),
+                            counterparty_connection_id,
+                            counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
+                        }),
+                    ));
+                    break;
+                }
+                "OpenConfirmConnection" => {
+                    let event =
+                        <ibc_node::ibc::events::OpenConfirmConnection as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!(
+                        "In call_ibc: [subscribe_events] >> OpenConfirmConnection Event"
+                    );
+
+                    let height = event.0;
+                    let connection_id = event.1.map(|val| val.to_ibc_connection_id());
+                    let client_id = event.2;
+                    let counterparty_connection_id = event.3.map(|val| val.to_ibc_connection_id());
+                    let counterparty_client_id = event.4;
+
+                    use ibc::core::ics03_connection::events::Attributes;
+                    result_events.push(IbcEvent::OpenConfirmConnection(
+                        ibc::core::ics03_connection::events::OpenConfirm::from(Attributes {
+                            height: height.to_ibc_height(),
+                            connection_id,
+                            client_id: client_id.to_ibc_client_id(),
+                            counterparty_connection_id,
+                            counterparty_client_id: counterparty_client_id.to_ibc_client_id(),
+                        }),
+                    ));
+                    break;
+                }
+
+                "OpenInitChannel" => {
+                    let event = <ibc_node::ibc::events::OpenInitChannel as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
+
+                    let height = event.0;
+                    let port_id = event.1;
+                    let channel_id = event.2.map(|val| val.to_ibc_channel_id());
+                    let connection_id = event.3;
+                    let counterparty_port_id = event.4;
+                    let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
+
+                    result_events.push(IbcEvent::OpenInitChannel(
+                        ibc::core::ics04_channel::events::OpenInit {
+                            height: height.to_ibc_height(),
+                            port_id: port_id.to_ibc_port_id(),
+                            channel_id,
+                            connection_id: connection_id.to_ibc_connection_id(),
+                            counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
+                            counterparty_channel_id,
+                        },
+                    ));
+                    break;
+                }
+                "OpenTryChannel" => {
+                    let event = <ibc_node::ibc::events::OpenTryChannel as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
+
+                    let height = event.0;
+                    let port_id = event.1;
+                    let channel_id = event.2.map(|val| val.to_ibc_channel_id());
+                    let connection_id = event.3;
+                    let counterparty_port_id = event.4;
+                    let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
+
+                    result_events.push(IbcEvent::OpenTryChannel(
+                        ibc::core::ics04_channel::events::OpenTry {
+                            height: height.to_ibc_height(),
+                            port_id: port_id.to_ibc_port_id(),
+                            channel_id,
+                            connection_id: connection_id.to_ibc_connection_id(),
+                            counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
+                            counterparty_channel_id,
+                        },
+                    ));
+                    break;
+                }
+                "OpenAckChannel" => {
+                    let event = <ibc_node::ibc::events::OpenAckChannel as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
+
+                    let height = event.0;
+                    let port_id = event.1;
+                    let channel_id = event.2.map(|val| val.to_ibc_channel_id());
+                    let connection_id = event.3;
+                    let counterparty_port_id = event.4;
+                    let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
+
+                    result_events.push(IbcEvent::OpenAckChannel(
+                        ibc::core::ics04_channel::events::OpenAck {
+                            height: height.to_ibc_height(),
+                            port_id: port_id.to_ibc_port_id(),
+                            channel_id,
+                            connection_id: connection_id.to_ibc_connection_id(),
+                            counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
+                            counterparty_channel_id,
+                        },
+                    ));
+                    break;
+                }
+                "OpenConfirmChannel" => {
+                    let event =
+                        <ibc_node::ibc::events::OpenConfirmChannel as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
+
+                    let height = event.0;
+                    let port_id = event.1;
+                    let channel_id = event.2.map(|val| val.to_ibc_channel_id());
+                    let connection_id = event.3;
+                    let counterparty_port_id = event.4;
+                    let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
+
+                    result_events.push(IbcEvent::OpenConfirmChannel(
+                        ibc::core::ics04_channel::events::OpenConfirm {
+                            height: height.to_ibc_height(),
+                            port_id: port_id.to_ibc_port_id(),
+                            channel_id,
+                            connection_id: connection_id.to_ibc_connection_id(),
+                            counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
+                            counterparty_channel_id,
+                        },
+                    ));
+                    break;
+                }
+                "CloseInitChannel" => {
+                    let event = <ibc_node::ibc::events::CloseInitChannel as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
+
+                    let height = event.0;
+                    let port_id = event.1;
+                    let channel_id = event.2.map(|val| val.to_ibc_channel_id());
+                    let connection_id = event.3;
+                    let counterparty_port_id = event.4;
+                    let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
+
+                    result_events.push(IbcEvent::CloseInitChannel(
+                        ibc::core::ics04_channel::events::CloseInit {
+                            height: height.to_ibc_height(),
+                            port_id: port_id.to_ibc_port_id(),
+                            channel_id: channel_id.unwrap_or_default(),
+                            connection_id: connection_id.to_ibc_connection_id(),
+                            counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
+                            counterparty_channel_id,
+                        },
+                    ));
+                    break;
+                }
+                "CloseConfirmChannel" => {
+                    let event =
+                        <ibc_node::ibc::events::CloseConfirmChannel as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+
+                    tracing::info!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
+
+                    let height = event.0;
+                    let port_id = event.1;
+                    let channel_id = event.2.map(|val| val.to_ibc_channel_id());
+                    let connection_id = event.3;
+                    let counterparty_port_id = event.4;
+                    let counterparty_channel_id = event.5.map(|val| val.to_ibc_channel_id());
+
+                    result_events.push(IbcEvent::CloseConfirmChannel(
+                        ibc::core::ics04_channel::events::CloseConfirm {
+                            height: height.to_ibc_height(),
+                            port_id: port_id.to_ibc_port_id(),
+                            channel_id,
+                            connection_id: connection_id.to_ibc_connection_id(),
+                            counterparty_port_id: counterparty_port_id.to_ibc_port_id(),
+                            counterparty_channel_id,
+                        },
+                    ));
+                    break;
+                }
+                "SendPacket" => {
+                    let event = <ibc_node::ibc::events::SendPacket as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [substrate_events] >> SendPacket Event");
+
+                    let send_packet = ibc::core::ics04_channel::events::SendPacket {
+                        height: event.0.to_ibc_height(),
+                        packet: event.1.to_ibc_packet(),
+                    };
+
+                    result_events.push(IbcEvent::SendPacket(send_packet));
+                    break;
+                }
+                "ReceivePacket" => {
+                    let event = <ibc_node::ibc::events::ReceivePacket as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+
+                    tracing::info!("In call_ibc: [substrate_events] >> ReceivePacket Event");
+
+                    let receive_packet = ibc::core::ics04_channel::events::ReceivePacket {
+                        height: event.0.to_ibc_height(),
+                        packet: event.1.to_ibc_packet(),
+                    };
+
+                    result_events.push(IbcEvent::ReceivePacket(receive_packet));
+
+                    break;
+                }
+                "WriteAcknowledgement" => {
+                    let event =
+                        <ibc_node::ibc::events::WriteAcknowledgement as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [substrate_events] >> WriteAcknowledgement Event");
+
+                    let write_acknowledgement =
+                        ibc::core::ics04_channel::events::WriteAcknowledgement {
+                            height: event.0.to_ibc_height(),
+                            packet: event.1.to_ibc_packet(),
+                            ack: event.2,
+                        };
+
+                    result_events.push(IbcEvent::WriteAcknowledgement(write_acknowledgement));
+
+                    break;
+                }
+                "AcknowledgePacket" => {
+                    let event =
+                        <ibc_node::ibc::events::AcknowledgePacket as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
+
+                    let acknowledge_packet = ibc::core::ics04_channel::events::AcknowledgePacket {
+                        height: event.0.to_ibc_height(),
+                        packet: event.1.to_ibc_packet(),
+                    };
+
+                    result_events.push(IbcEvent::AcknowledgePacket(acknowledge_packet));
+
+                    break;
+                }
+                "TimeoutPacket" => {
+                    let event = <ibc_node::ibc::events::TimeoutPacket as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+                    tracing::info!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
+
+                    let timeout_packet = ibc::core::ics04_channel::events::TimeoutPacket {
+                        height: event.0.to_ibc_height(),
+                        packet: event.1.to_ibc_packet(),
+                    };
+
+                    result_events.push(IbcEvent::TimeoutPacket(timeout_packet));
+
+                    break;
+                }
+                "TimeoutOnClosePacket" => {
+                    let event =
+                        <ibc_node::ibc::events::TimeoutOnClosePacket as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [substrate_events] >> TimeoutOnClosePacket Event");
+
+                    let timeout_on_close_packet =
+                        ibc::core::ics04_channel::events::TimeoutOnClosePacket {
+                            height: event.0.to_ibc_height(),
+                            packet: event.1.to_ibc_packet(),
+                        };
+
+                    result_events.push(IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet));
+
+                    break;
+                }
+                "Empty" => {
+                    let event = <ibc_node::ibc::events::Empty as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+
+                    tracing::info!("in call_ibc: [substrate_events] >> Empty Event");
+
+                    let data = String::from_utf8(event.0).unwrap();
+
+                    result_events.push(IbcEvent::Empty(data));
+                    break;
+                }
+                "ChainError" => {
+                    let event = <ibc_node::ibc::events::ChainError as codec::Decode>::decode(
+                        &mut &raw_event.data[..],
+                    )
+                    .unwrap();
+
+                    tracing::info!("in call_ibc: [substrate_events] >> ChainError Event");
+
+                    let data = String::from_utf8(event.0).unwrap();
+
+                    result_events.push(IbcEvent::Empty(data));
+                    break;
+                }
+                "ExtrinsicSuccess" => {
+                    let _event =
+                        <ibc_node::system::events::ExtrinsicSuccess as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                        .unwrap();
+                    tracing::info!("In call_ibc: [subscribe_events] >> ExtrinsicSuccess ");
+
+                    if counter_system_event < COUNTER_SYSTEM_EVENT {
+                        tracing::info!(
+                            "In call_ibc: [subscribe_events] >> counter_system_event: {:?}",
+                            counter_system_event
+                        );
+                        counter_system_event += 1;
+                    } else {
+                        tracing::info!(
+                            "In call_ibc: [subscribe_events] >> counter_system_event: {:?}",
+                            counter_system_event
+                        );
+                        break;
+                    }
+                }
+                _ => {
+                    continue;
+                }
             }
         }
     }
-    Ok(events)
+    Ok(result_events)
 }
 
 /// convert substrate event to ibc event
-pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEvent>) -> Vec<IbcEvent> {
-    fn inner_convert_event(raw_events: Vec<RawEvent>, module: &str) -> Vec<RawEvent> {
+pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Vec<IbcEvent> {
+    fn inner_convert_event(raw_events: Vec<RawEventDetails>, module: &str) -> Vec<RawEventDetails> {
         raw_events
             .into_iter()
             .filter(|raw| raw.pallet == module)
@@ -1026,7 +1029,8 @@ pub async fn subscribe_beefy(
     client: Client<MyConfig>,
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
     tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let sub = api.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
     let raw = sub.next().await.unwrap();
@@ -1048,7 +1052,8 @@ pub async fn get_latest_height(
 ) -> Result<u64, Box<dyn std::error::Error>> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut blocks = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1058,9 +1063,7 @@ pub async fn get_latest_height(
             tracing::info!("In call_ibc: [get_latest_height] >> None");
             0
         }
-        None => {
-            0
-        }
+        None => 0,
     };
     tracing::info!("In call_ibc: [get_latest_height] >> height: {:?}", height);
     Ok(height)
@@ -1081,7 +1084,8 @@ pub async fn get_connection_end(
     client: Client<MyConfig>,
 ) -> Result<ConnectionEnd, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_connection_end]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1134,7 +1138,8 @@ pub async fn get_channel_end(
         channel_id.clone()
     );
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1193,7 +1198,8 @@ pub async fn get_packet_receipt(
     client: Client<MyConfig>,
 ) -> Result<Receipt, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1251,7 +1257,8 @@ pub async fn get_packet_receipt_vec(
     client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1307,7 +1314,8 @@ pub async fn get_send_packet_event(
     client: Client<MyConfig>,
 ) -> Result<Packet, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_send_packet_event]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1359,7 +1367,8 @@ pub async fn get_write_ack_packet_event(
     client: Client<MyConfig>,
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_write_ack_packet_event]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1407,7 +1416,8 @@ pub async fn get_client_state(
     client: Client<MyConfig>,
 ) -> Result<AnyClientState, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc : [get_client_state]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1458,7 +1468,8 @@ pub async fn get_client_consensus(
 ) -> Result<AnyConsensusState, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_client_consensus]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1520,7 +1531,8 @@ pub async fn get_consensus_state_with_height(
 ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1575,7 +1587,8 @@ pub async fn get_unreceipt_packet(
 ) -> Result<Vec<u64>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_receipt_packet]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1626,7 +1639,8 @@ pub async fn get_clients(
 ) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_clients]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1689,7 +1703,8 @@ pub async fn get_connections(
     client: Client<MyConfig>,
 ) -> Result<Vec<IdentifiedConnectionEnd>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_connctions]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1757,7 +1772,8 @@ pub async fn get_channels(
 ) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_channels]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1823,7 +1839,8 @@ pub async fn get_commitment_packet_state(
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1893,7 +1910,8 @@ pub async fn get_packet_commitment(
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_commitment]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1946,7 +1964,8 @@ pub async fn get_packet_ack(
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_packet_ack]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -1996,7 +2015,8 @@ pub async fn get_next_sequence_recv(
 ) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -2053,7 +2073,8 @@ pub async fn get_acknowledge_packet_state(
 ) -> Result<Vec<PacketState>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -2117,7 +2138,8 @@ pub async fn get_client_connections(
     client: Client<MyConfig>,
 ) -> Result<Vec<ConnectionId>, Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc: [get_client_connections]");
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -2244,7 +2266,8 @@ pub async fn deliver(
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
@@ -2270,7 +2293,8 @@ pub async fn delete_send_packet_event(
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
@@ -2289,7 +2313,8 @@ pub async fn delete_write_packet_event(
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
@@ -2328,16 +2353,17 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 ) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
     tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     // need to use `to_json_value` to convert the params to json value
     // need make sure mmr_generate_proof index is u64
-    let params = &[to_json_value(block_number)?, to_json_value(block_hash)?];
+    let params = rpc_params![block_number, block_hash];
     let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
         .client
         .rpc()
         .client
-        .request("mmr_generateProof", Some(jsonrpsee_types::params::ParamsSer::ArrayRef(params)))
+        .request("mmr_generateProof", params)
         .await?;
 
     tracing::info!("info generate_proof : {:?}", generate_proof);
@@ -2364,7 +2390,8 @@ pub async fn get_header_by_block_hash(
     block_hash: Option<sp_core::H256>,
     client: Client<MyConfig>,
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
-    let api = client.to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256> =
         api.client.rpc().header(block_hash).await?.unwrap();
