@@ -22,6 +22,11 @@ pub mod client;
 pub mod connection;
 pub mod events;
 
+pub use channel::*;
+pub use client::*;
+pub use connection::*;
+pub use events::*;
+
 /// Subscribe beefy justifiactions
 ///
 /// # Usage example
@@ -37,8 +42,11 @@ pub async fn subscribe_beefy(
     tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
     let sub = api.client.rpc().subscribe_beefy_justifications().await?;
+
     let mut sub = BeefySubscription::new(sub);
+
     let raw = sub.next().await.unwrap();
 
     Ok(raw)
@@ -112,6 +120,7 @@ pub async fn get_send_packet_event(
             Some(block_hash),
         )
         .await?;
+
     if data.is_empty() {
         return Err(Box::from(format!(
             "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
@@ -292,8 +301,6 @@ pub async fn get_mmr_leaf_and_mmr_proof(
         .request("mmr_generateProof", params)
         .await?;
 
-    tracing::info!("info generate_proof : {:?}", generate_proof);
-
     Ok((
         generate_proof.block_hash,
         generate_proof.leaf.0,
@@ -322,7 +329,6 @@ pub async fn get_header_by_block_hash(
     let header = api.client.rpc().header(block_hash).await?.unwrap();
 
     let header = convert_substrate_header_to_ibc_header(header);
-    tracing::info!("convert header = {:?}", header);
 
     Ok(header.into())
 }
