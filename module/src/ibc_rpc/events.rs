@@ -61,7 +61,7 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
         .collect::<Vec<_>>()
 }
 
-fn inner_process_ibc_event(raw_event: RawEventDetails) -> IbcEvent {
+pub fn inner_process_ibc_event(raw_event: RawEventDetails) -> IbcEvent {
     let variant = raw_event.variant;
 
     match variant.as_str() {
