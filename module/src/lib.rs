@@ -136,13 +136,13 @@ impl From<Any> for ibc_node::runtime_types::pallet_ibc::Any {
     }
 }
 
-// impl Copy for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {}
+impl Copy for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {}
 
-// impl Clone for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
-//     fn clone(&self) -> Self {
-//         Self {
-//             revision_number: self.revision_number,
-//             revision_height: self.revision_height,
-//         }
-//     }
-// }
+impl Clone for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
+    fn clone(&self) -> Self {
+        Self {
+            revision_number: self.revision_number,
+            revision_height: self.revision_height,
+        }
+    }
+}
