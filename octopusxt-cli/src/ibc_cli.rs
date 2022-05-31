@@ -162,10 +162,7 @@ impl IbcModule {
         println!("timeout timeout = {:?}", timeout_timestamp);
 
         let sender = PairSigner::new(AccountKeyring::from_str(sender).unwrap().pair());
-        let receiver = AccountKeyring::from_str(receiver)
-            .unwrap()
-            .to_account_id()
-            .into();
+        let receiver = AccountKeyring::from_str(receiver).unwrap().to_account_id();
 
         let encode_receiver = sp_runtime::AccountId32::encode(&receiver);
         let hex_receiver = hex::encode(encode_receiver).as_bytes().to_vec();

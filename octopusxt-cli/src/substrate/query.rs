@@ -19,7 +19,7 @@ impl Query {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
             Query::SubstrateQuery(value) => {
-                let ret = value.run().await?;
+                value.run().await?;
             }
         }
 
@@ -66,7 +66,7 @@ impl SubstrateQuery {
                     .await?
                     .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-                let block_number = value.block_number.map(|val| BlockNumber::from(val));
+                let block_number = value.block_number.map(BlockNumber::from);
 
                 // Get a block hash, returns hash of latest block by default
                 let block_hash = api.client.rpc().block_hash(block_number).await?;
@@ -143,6 +143,7 @@ impl SubstrateQuery {
                     "0x0d232c3a18e8dd0144386ce53e5524fd30cdef673b2460041752fb641ed4de1f",
                 )
                 .unwrap();
+
                 println!("from_block_hash = {}", from_block_hash);
 
                 let block = api.client.rpc().block(Some(from_block_hash)).await?;

@@ -31,9 +31,7 @@ pub enum Account {
 impl Account {
     pub fn run(&self) {
         match self {
-            Account::SubstrateAccount(value) => {
-                let ret = value.run();
-            }
+            Account::SubstrateAccount(value) => value.run(),
         }
     }
 }
@@ -43,7 +41,7 @@ pub struct SubstrateAccount {}
 
 impl SubstrateAccount {
     pub fn run(&self) {
-        let account_id32: sp_runtime::AccountId32 = AccountKeyring::Bob.to_account_id().into();
+        let account_id32: sp_runtime::AccountId32 = AccountKeyring::Bob.to_account_id();
         println!("😂😂😂😂😂😂😂😂😂😂😂😂 account id = {:?}", account_id32);
 
         let account_id32: &[u8; 32] = account_id32.as_ref();
@@ -58,7 +56,7 @@ impl SubstrateAccount {
 
         let private_seed = "ecology agent adjust admit raw castle rather travel asthma good say field away vote timber miss demand mandate rib print sport vault warfare thrive".to_string();
 
-        let result = sc_cli::utils::print_from_uri::<sp_core::sr25519::Pair>(
+        sc_cli::utils::print_from_uri::<sp_core::sr25519::Pair>(
             &private_seed,
             None,
             None,

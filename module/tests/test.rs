@@ -1,16 +1,22 @@
 use crate::ibc_node;
-use crate::ibc_node::{DefaultConfig, RuntimeApi};
+use crate::ibc_node::RuntimeApi;
+use crate::MyConfig;
 use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment};
 use codec::Encode;
+use octopusxt::channel::{get_packet_ack, get_packet_commitment};
+use octopusxt::client::get_client_consensus;
 use core::str::FromStr;
 use ibc::core::ics02_client::client_type::ClientType;
 use ibc::core::ics24_host::identifier::{ChainId, ChannelId, ClientId, PortId};
 use ibc::Height;
 use octopusxt::*;
+use subxt::beefy::BeefySubscription;
+use subxt::rpc::NumberOrHex;
+use subxt::BlockNumber;
 use subxt::ClientBuilder;
-use subxt::{BeefySubscription, BlockNumber};
+use subxt::SubstrateExtrinsicParams;
 
-use crate::{get_client_state, get_clients, get_send_packet_event, subscribe_beefy};
+use crate::{get_send_packet_event, subscribe_beefy};
 use beefy_light_client::{self, mmr};
 use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
 use codec::Decode;
@@ -34,9 +40,10 @@ use tokio::{self, task, time};
 async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
-    let block_number = Some(BlockNumber::from(3));
+
+    let block_number = Some(BlockNumber::from(NumberOrHex::Number(3)));
     let header = get_header_by_block_number(block_number, client).await?;
 
     println!("convert header = {:?}", header);
@@ -48,7 +55,7 @@ async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
 async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let result = get_client_consensus(
@@ -76,26 +83,26 @@ async fn test_get_key() -> Result<(), Box<dyn std::error::Error>> {
 async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let block_number = 22;
 
     let block_hash: sp_core::H256 = api
         .client
         .rpc()
-        .block_hash(Some(BlockNumber::from(block_number)))
+        .block_hash(Some(BlockNumber::from(NumberOrHex::Number(block_number))))
         .await?
         .unwrap();
 
     println!("block_hash = {:?}", block_hash);
 
     let result = get_mmr_leaf_and_mmr_proof(
-        Some(BlockNumber::from(block_number)),
+        Some(BlockNumber::from(NumberOrHex::Number(block_number))),
         Some(block_hash),
         client,
     )
@@ -110,7 +117,7 @@ async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Err
 async fn test_get_packet_commitment() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let client_id = PortId::from_str("transfer").unwrap();
@@ -123,32 +130,18 @@ async fn test_get_packet_commitment() -> Result<(), Box<dyn std::error::Error>> 
 
     Ok(())
 }
+
 // add unit test for get storage key
 #[test]
 fn test_get_storage_key() {
-    let _ibc = crate::ibc_node::ibc::storage::ClientStates(vec![1, 2, 3]);
     let _ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-    let _ibc = crate::ibc_node::ibc::storage::ConsensusStates(vec![1, 2, 3]);
-    let _ibc = crate::ibc_node::ibc::storage::Connections(vec![1, 2, 3]);
     let _ibc = crate::ibc_node::ibc::storage::ConnectionsKeys;
-    let _ibc = crate::ibc_node::ibc::storage::Channels(vec![1, 2, 3], vec![1, 2, 3]);
     let _ibc = crate::ibc_node::ibc::storage::ChannelsKeys;
-    let _ibc = crate::ibc_node::ibc::storage::ChannelsConnection(vec![1, 2, 3]);
-    let _ibc = crate::ibc_node::ibc::storage::NextSequenceSend(vec![1, 2, 3], vec![1, 2, 3]);
-    let _ibc = crate::ibc_node::ibc::storage::NextSequenceRecv(vec![1, 2, 3], vec![1, 2, 3]);
-    let _ibc = crate::ibc_node::ibc::storage::NextSequenceAck(vec![1, 2, 3], vec![1, 2, 3]);
-    let _ibc = crate::ibc_node::ibc::storage::Acknowledgements(vec![1, 2, 3], vec![1, 2, 3], 1);
     let _ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
-    let _ibc = crate::ibc_node::ibc::storage::Clients(vec![1, 2, 3]);
     let _ibc = crate::ibc_node::ibc::storage::ClientCounter;
     let _ibc = crate::ibc_node::ibc::storage::ConnectionCounter;
     let _ibc = crate::ibc_node::ibc::storage::ChannelCounter;
-    let _ibc = crate::ibc_node::ibc::storage::ConnectionClient(vec![1, 2, 3]);
-    let _ibc = crate::ibc_node::ibc::storage::PacketReceipt(vec![1, 2, 3], vec![1, 2, 3], 1);
-    let _ibc = crate::ibc_node::ibc::storage::PacketCommitment(vec![1, 2, 3], vec![1, 2, 3], 1);
     let _ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
-    let _ibc = crate::ibc_node::ibc::storage::SendPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
-    let _ibc = crate::ibc_node::ibc::storage::WriteAckPacketEvent(vec![1, 2, 3], vec![1, 2, 3], 1);
     let _ibc = crate::ibc_node::ibc::storage::LatestHeight;
     let _ibc = crate::ibc_node::ibc::storage::OldHeight;
 }
@@ -157,7 +150,7 @@ fn test_get_storage_key() {
 async fn test_get_latest_height() {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await
         .unwrap();
 
@@ -169,7 +162,7 @@ async fn test_get_latest_height() {
 async fn test_subscribe_beefy_justification() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     // subscribe beefy justification
@@ -256,6 +249,7 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
     //     "03bc9d0ca094bd5b8b3225d7651eac5d18c1c04bf8ae8f8b263eebca4e1410ed0c", // Dave
     //     "031d10105e323c4afce225208f71a6441ee327a65b9e646e772500c74d31f669aa", // Eve
     // ];
+
     let signatures = vec![
         "020a1091341fe5664bfa1782d5e04779689068c916b04cb365ec3153755684d9a1", // Alice
     ];
@@ -282,7 +276,7 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
 
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let block_number = 100;
@@ -443,7 +437,7 @@ async fn verify_leaf_proof_works_1() -> Result<(), Box<dyn std::error::Error>> {
 async fn verify_leaf_proof_works_2() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     // subscribe beefy justification
@@ -476,13 +470,15 @@ signed commitment validator_set_id : {}",
 
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     //get block hash by block_number
     let block_hash: sp_core::H256 = api
         .client
         .rpc()
-        .block_hash(Some(BlockNumber::from(block_number)))
+        .block_hash(Some(BlockNumber::from(NumberOrHex::Number(
+            block_number as u64,
+        ))))
         .await?
         .unwrap();
     println!(
@@ -492,7 +488,7 @@ signed commitment validator_set_id : {}",
 
     //get mmr leaf and proof
     // Note: target height=block_number - 1
-    let target_height = Some(BlockNumber::from(block_number));
+    let target_height = Some(BlockNumber::from(NumberOrHex::Number(block_number as u64)));
     let (block_hash, mmr_leaf, mmr_leaf_proof) =
         get_mmr_leaf_and_mmr_proof(target_height, Some(block_hash), client.clone()).await?;
     println!("generate_proof block hash : {:?}", block_hash);
@@ -534,11 +530,6 @@ signed commitment validator_set_id : {}",
         HexDisplay::from(&mmr_leaf_2.parent_number_and_hash.1)
     );
 
-    // verify leaf proof
-    // assert_eq!(
-    //     mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof),
-    //     Ok(true)
-    // );
     let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof);
 
     match result {
@@ -578,7 +569,7 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
 
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     // subscribe beefy justification
@@ -586,8 +577,6 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
 
     let signed_commitment =
         commitment::SignedCommitment::decode(&mut &signed_commitment_raw.clone()[..]).unwrap();
-    // let signed_commitment = commitment::SignedCommitment::decode(&mut &signed_commitment[..])
-    //     .map_err(|_| Error::InvalidSignedCommitment)?;
 
     let commitment::Commitment {
         payload,
@@ -626,7 +615,6 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     if let Some(latest_commitment) = &light_client.latest_commitment {
         if signed_commitment.commitment <= *latest_commitment {
             println!("Commitment already Updated! ");
-            // return Err(Error::CommitmentAlreadyUpdated);
             return Ok(());
         }
     }
@@ -784,9 +772,12 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     // subscribe beefy justification for src chain
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
-    let api_a = client.clone().to_runtime_api::<RuntimeApi<DefaultConfig>>();
+
+    let api_a = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
 
@@ -822,10 +813,12 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     println!("signature :  {:?}", signatures);
 
     // get block header by block number
-    let block_header =
-        get_header_by_block_number(Some(BlockNumber::from(block_number)), client.clone())
-            .await
-            .unwrap();
+    let block_header = get_header_by_block_number(
+        Some(BlockNumber::from(NumberOrHex::Number(block_number as u64))),
+        client.clone(),
+    )
+    .await
+    .unwrap();
     println!("header = {:?}", block_header);
 
     // build validator proof
@@ -874,7 +867,6 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
         block_number: u32::default(),
         frozen_height: Some(Height::default()),
         block_header: BlockHeader::default(),
-        // latest_commitment: lc.latest_commitment.unwrap().into(),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.clone().into(),
     };
@@ -965,7 +957,6 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         block_number: u32::default(),
         frozen_height: Some(Height::default()),
         block_header: BlockHeader::default(),
-        // latest_commitment: lc.latest_commitment.unwrap().into(),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.into(),
     };
@@ -974,9 +965,13 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
     // subscribe beefy justification for src chain
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
-    let api_a = client.clone().to_runtime_api::<RuntimeApi<DefaultConfig>>();
+
+    let api_a = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
     let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
     let mut sub = BeefySubscription::new(sub);
 
@@ -1014,10 +1009,12 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header =
-            get_header_by_block_number(Some(BlockNumber::from(block_number)), client.clone())
-                .await
-                .unwrap();
+        let block_header = get_header_by_block_number(
+            Some(BlockNumber::from(NumberOrHex::Number(block_number as u64))),
+            client.clone(),
+        )
+        .await
+        .unwrap();
         println!("header = {:?}", block_header);
 
         // build validator proof
@@ -1145,13 +1142,16 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 async fn test_update_client_state() -> Result<(), Box<dyn std::error::Error>> {
     let chain_a = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
+
     let chain_b = ClientBuilder::new()
         .set_url("ws://localhost:8844")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
+
     update_client_state(chain_a.clone(), chain_b.clone()).await?;
+
     update_client_state(chain_b.clone(), chain_a.clone()).await?;
 
     Ok(())
@@ -1163,12 +1163,12 @@ async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Er
     let update_task1 = task::spawn(async {
         let chain_a = ClientBuilder::new()
             .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
+            .build::<MyConfig>()
             .await
             .unwrap();
         let chain_b = ClientBuilder::new()
             .set_url("ws://localhost:8844")
-            .build::<ibc_node::DefaultConfig>()
+            .build::<MyConfig>()
             .await
             .unwrap();
         let _ret = update_client_state_service(chain_a, chain_b).await;
@@ -1177,12 +1177,12 @@ async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Er
     let update_task2 = task::spawn(async {
         let chain_a = ClientBuilder::new()
             .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
+            .build::<MyConfig>()
             .await
             .unwrap();
         let chain_b = ClientBuilder::new()
             .set_url("ws://localhost:8844")
-            .build::<ibc_node::DefaultConfig>()
+            .build::<MyConfig>()
             .await
             .unwrap();
         let _ret = update_client_state_service(chain_b, chain_a).await;
@@ -1198,7 +1198,7 @@ async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Er
 async fn test_get_clients() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
     let clients = get_clients(client).await.unwrap();
     println!("{:?}", clients);
@@ -1210,7 +1210,7 @@ async fn test_get_clients() -> Result<(), Box<dyn std::error::Error>> {
 async fn test_get_client_state() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:8844")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
     let client_state = get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
         .await
@@ -1225,11 +1225,11 @@ async fn test_get_client_state() -> Result<(), Box<dyn std::error::Error>> {
 async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
     let block_header = block.next().await.unwrap().unwrap();
@@ -1251,7 +1251,7 @@ async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
         let client_states_value: Vec<u8> = api
             .storage()
             .ibc()
-            .client_states(key.clone(), Some(block_hash))
+            .client_states(&key, Some(block_hash))
             .await?;
         // assert!(!client_states_value.is_empty());
         // store key-value
@@ -1264,7 +1264,7 @@ async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
 
         let any_client_state = AnyClientState::decode_vec(&*client_state).unwrap();
         let client_type = any_client_state.client_type();
-        // let client_state = ClientState::decode_vec(&*client_state).unwrap();
+
         let client_state = match any_client_state {
             AnyClientState::Grandpa(value) => value,
             _ => unimplemented!(),
@@ -1367,7 +1367,7 @@ fn test_mmr_root_codec() {
 async fn test_get_send_packet_event() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let port_id = PortId::from_str("transfer").unwrap();
@@ -1387,7 +1387,7 @@ async fn test_get_send_packet_event() -> Result<(), Box<dyn std::error::Error>> 
 async fn test_get_packet_ack() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let port_id = PortId::from_str("transfer").unwrap();
@@ -1405,7 +1405,7 @@ async fn test_get_packet_ack() -> Result<(), Box<dyn std::error::Error>> {
 async fn test_get_packet_receipt() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:8844")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
 
     let port_id = PortId::from_str("transfer").unwrap();

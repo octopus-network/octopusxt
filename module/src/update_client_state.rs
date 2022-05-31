@@ -11,7 +11,6 @@ use ibc::clients::ics10_grandpa::help;
 use ibc::core::ics02_client::client_type::ClientType;
 use ibc::core::ics24_host::identifier::ClientId;
 use sp_keyring::AccountKeyring;
-use subxt::sp_core::Public;
 
 use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
@@ -71,21 +70,11 @@ pub async fn build_validator_proof(
         .collect();
     println!("get validators : {:?}", validators);
 
-    // let eth_addresss_merkle_root = merkle_root::<Keccak256, _, _>(eth_addresss.clone());
-    // println!(
-    //     "eth_addresss_merkle_root = {}",
-    //     hex::encode(&eth_addresss_merkle_root)
-    // );
-
     let mut validator_merkle_proofs: Vec<help::ValidatorMerkleProof> = Vec::new();
     for l in 0..validators.len() {
         // when
         let proof = merkle_proof::<Keccak256, _, _>(validators.clone(), l);
         println!("get validator proof root = {}", hex::encode(&proof.root));
-        // assert_eq!(
-        //     hex::encode(&proof.root),
-        //     hex::encode(&eth_addresss_merkle_root)
-        // );
 
         println!("get validator proof  = {:?}", proof.proof);
         println!(
@@ -280,7 +269,6 @@ pub async fn update_client_state_service(
         // let target_raw = raw.clone();
         let signed_commmitment: commitment::SignedCommitment =
             <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw[..]).unwrap();
-        // let signed_commmitment = mmr::SignedCommitment::decode(&mut &raw.0[..]).unwrap();
 
         let commitment::Commitment {
             payload,

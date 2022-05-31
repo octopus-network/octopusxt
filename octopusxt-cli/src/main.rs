@@ -68,25 +68,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match opt.command {
         Command::DenomTrace(value) => {
-            let _ = value.run().await?;
+            value.run().await?;
         }
         Command::Balance(value) => {
-            let _ = value.run().await?;
+            value.run().await?;
         }
         Command::Sudo(value) => {
-            let _ = value.run().await?;
+            value.run().await?;
         }
         Command::IbcModule(value) => {
-            let ret = value.run().await?;
+            value.run().await?;
         }
         Command::Account(value) => {
-            let ret = value.run();
+            value.run();
         }
         Command::Query(value) => {
-            let ret = value.run().await?;
+            value.run().await?;
         }
         Command::TimeStamp(value) => {
-            let ret = value.run().await?;
+            value.run().await?;
         }
     }
 
