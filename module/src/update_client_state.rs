@@ -17,7 +17,6 @@ use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 use crate::MyConfig;
 use beefy_merkle_tree::Hash;
 use sp_core::ByteArray;
-use subxt::beefy::BeefySubscription;
 use subxt::SubstrateExtrinsicParams;
 use subxt::{BlockNumber, Client, PairSigner};
 
@@ -180,10 +179,9 @@ pub async fn update_client_state(
     let api_a = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-    let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
-    let mut sub = BeefySubscription::new(sub);
+    let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
-    let raw_signed_commitment = sub.next().await.unwrap().0;
+    let raw_signed_commitment = sub.next().await.unwrap().unwrap().0;
     // decode signed commitment
     let signed_commmitment: commitment::SignedCommitment =
         <commitment::SignedCommitment as codec::Decode>::decode(
@@ -260,12 +258,11 @@ pub async fn update_client_state_service(
     let api_a = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-    let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
-    let mut sub = BeefySubscription::new(sub);
+    let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     // msg loop for handle the beefy SignedCommitment
     loop {
-        let raw = sub.next().await.unwrap().0;
+        let raw = sub.next().await.unwrap().unwrap().0;
         // let target_raw = raw.clone();
         let signed_commmitment: commitment::SignedCommitment =
             <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw[..]).unwrap();

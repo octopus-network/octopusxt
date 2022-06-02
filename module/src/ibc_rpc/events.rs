@@ -1,7 +1,7 @@
 use crate::{ibc_node, MyConfig};
+use futures::StreamExt;
 use ibc::events::IbcEvent;
 use subxt::{Client, RawEventDetails, SubstrateExtrinsicParams};
-use futures::StreamExt;
 
 /// Subscribe ibc events
 /// Maybe in the future call ocw
@@ -55,9 +55,7 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
     let ret = inner_convert_event(raw_events, "Ibc");
 
     ret.into_iter()
-        .map(|raw_event| {
-            inner_process_ibc_event(raw_event)
-        })
+        .map(inner_process_ibc_event)
         .collect::<Vec<_>>()
 }
 

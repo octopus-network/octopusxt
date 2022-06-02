@@ -777,10 +777,9 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let api_a = client
         .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-    let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
-    let mut sub = BeefySubscription::new(sub);
+    let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
-    let raw_signed_commitment = sub.next().await.unwrap();
+    let raw_signed_commitment = sub.next().await.unwrap().unwrap();
     // decode signed commitment
     let signed_commmitment: commitment::SignedCommitment =
         <commitment::SignedCommitment as codec::Decode>::decode(
@@ -971,12 +970,11 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-    let sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
-    let mut sub = BeefySubscription::new(sub);
+    let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     // msg loop for handle the beefy SignedCommitment
     loop {
-        let raw_signed_commitment = sub.next().await.unwrap();
+        let raw_signed_commitment = sub.next().await.unwrap().unwrap();
         // decode signed commitment
         let signed_commmitment: commitment::SignedCommitment =
             <commitment::SignedCommitment as codec::Decode>::decode(

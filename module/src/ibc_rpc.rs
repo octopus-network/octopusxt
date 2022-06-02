@@ -4,7 +4,6 @@ use ibc::core::{
     ics24_host::identifier::{ChannelId, PortId},
 };
 use subxt::{
-    beefy::BeefySubscription,
     rpc::ClientT,
     storage::{StorageEntry, StorageKeyPrefix},
     BlockNumber, Client, PairSigner, SignedCommitment, SubstrateExtrinsicParams,
@@ -43,11 +42,9 @@ pub async fn subscribe_beefy(
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
-    let sub = api.client.rpc().subscribe_beefy_justifications().await?;
+    let mut sub = api.client.rpc().subscribe_beefy_justifications().await?;
 
-    let mut sub = BeefySubscription::new(sub);
-
-    let raw = sub.next().await.unwrap();
+    let raw = sub.next().await.unwrap().unwrap();
 
     Ok(raw)
 }
