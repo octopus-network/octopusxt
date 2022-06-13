@@ -15,6 +15,7 @@ use ibc_proto::google::protobuf::Any;
 use jsonrpsee::rpc_params;
 use sp_core::{storage::StorageKey, H256};
 use sp_keyring::AccountKeyring;
+use anyhow::Result;
 
 pub mod channel;
 pub mod client;
@@ -60,7 +61,7 @@ pub async fn subscribe_beefy(
 ///
 pub async fn get_latest_height(
     client: Client<MyConfig>,
-) -> Result<u64, Box<dyn std::error::Error>> {
+) -> Result<u64> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
     let api = client
@@ -96,7 +97,7 @@ pub async fn get_send_packet_event(
     channel_id: &ChannelId,
     sequence: &Sequence,
     client: Client<MyConfig>,
-) -> Result<Packet, Box<dyn std::error::Error>> {
+) -> Result<Packet> {
     tracing::info!("in call_ibc: [get_send_packet_event]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -119,10 +120,10 @@ pub async fn get_send_packet_event(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id, channel_id, sequence
-        )));
+        ));
     }
 
     let packet = Packet::decode_vec(&*data).unwrap();
@@ -146,7 +147,7 @@ pub async fn get_write_ack_packet_event(
     channel_id: &ChannelId,
     sequence: &Sequence,
     client: Client<MyConfig>,
-) -> Result<Vec<u8>, Box<dyn std::error::Error>> {
+) -> Result<Vec<u8>> {
     tracing::info!("in call_ibc: [get_write_ack_packet_event]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -169,10 +170,10 @@ pub async fn get_write_ack_packet_event(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_write_ack_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id, channel_id, sequence
-        )));
+        ));
     }
 
     Ok(data)
@@ -193,7 +194,7 @@ pub async fn get_write_ack_packet_event(
 pub async fn deliver(
     msg: Vec<Any>,
     client: Client<MyConfig>,
-) -> Result<H256, Box<dyn std::error::Error>> {
+) -> Result<H256> {
     tracing::info!("in call_ibc: [deliver]");
 
     let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
@@ -221,7 +222,7 @@ pub async fn deliver(
 
 pub async fn delete_send_packet_event(
     client: Client<MyConfig>,
-) -> Result<H256, Box<dyn std::error::Error>> {
+) -> Result<H256> {
     tracing::info!("in call_ibc: [delete_send_packet_event]");
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
@@ -241,7 +242,7 @@ pub async fn delete_send_packet_event(
 
 pub async fn delete_write_packet_event(
     client: Client<MyConfig>,
-) -> Result<H256, Box<dyn std::error::Error>> {
+) -> Result<H256> {
     tracing::info!("in call_ibc: [delete_write_packet_event]");
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
@@ -283,7 +284,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
     block_number: Option<BlockNumber>,
     block_hash: Option<H256>,
     client: Client<MyConfig>,
-) -> Result<(String, Vec<u8>, Vec<u8>), Box<dyn std::error::Error>> {
+) -> Result<(String, Vec<u8>, Vec<u8>)> {
     tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
     let api = client
@@ -319,7 +320,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 pub async fn get_header_by_block_hash(
     block_hash: Option<H256>,
     client: Client<MyConfig>,
-) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
+) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
@@ -343,7 +344,7 @@ pub async fn get_header_by_block_hash(
 pub async fn get_header_by_block_number(
     block_number: Option<BlockNumber>,
     client: Client<MyConfig>,
-) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader, Box<dyn std::error::Error>> {
+) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
     let api = client
         .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();

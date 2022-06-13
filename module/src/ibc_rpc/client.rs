@@ -14,6 +14,7 @@ use tendermint_proto::Protobuf;
 
 use core::str::FromStr;
 use sp_core::H256;
+use anyhow::Result;
 
 /// get client_state according by client_id, and read ClientStates StoraageMap
 ///  
@@ -28,7 +29,7 @@ use sp_core::H256;
 pub async fn get_client_state(
     client_id: &ClientId,
     client: Client<MyConfig>,
-) -> Result<AnyClientState, Box<dyn std::error::Error>> {
+) -> Result<AnyClientState> {
     tracing::info!("in call_ibc : [get_client_state]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -46,10 +47,10 @@ pub async fn get_client_state(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_client_state is empty! by client_id = ({})",
             client_id
-        )));
+        ));
     }
 
     let client_state = AnyClientState::decode_vec(&*data).unwrap();
@@ -73,7 +74,7 @@ pub async fn get_client_consensus(
     client_id: &ClientId,
     height: &ICSHeight,
     client: Client<MyConfig>,
-) -> Result<AnyConsensusState, Box<dyn std::error::Error>> {
+) -> Result<AnyConsensusState> {
     tracing::info!("in call_ibc: [get_client_consensus]");
 
     let api = client
@@ -92,10 +93,10 @@ pub async fn get_client_consensus(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_client_consensus is empty! by client_id = ({}), height = ({})",
             client_id, height
-        )));
+        ));
     }
 
     // get the height consensus_state
@@ -131,7 +132,7 @@ pub async fn get_client_consensus(
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
     client: Client<MyConfig>,
-) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Box<dyn std::error::Error>> {
+) -> Result<Vec<(ICSHeight, AnyConsensusState)>> {
     tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
     let api = client
@@ -151,10 +152,10 @@ pub async fn get_consensus_state_with_height(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_consensus_state_with_height is empty! by client_id = ({})",
             client_id
-        )));
+        ));
     }
 
     let mut result = vec![];
@@ -178,7 +179,7 @@ pub async fn get_consensus_state_with_height(
 ///
 pub async fn get_clients(
     client: Client<MyConfig>,
-) -> Result<Vec<IdentifiedAnyClientState>, Box<dyn std::error::Error>> {
+) -> Result<Vec<IdentifiedAnyClientState>> {
     tracing::info!("in call_ibc: [get_clients]");
 
     let api = client
@@ -200,8 +201,8 @@ pub async fn get_clients(
         .client_states_keys(Some(block_hash))
         .await?;
     if client_states_keys.is_empty() {
-        return Err(Box::from(
-            "get_clients: get empty client_states_keys".to_string(),
+        return Err(anyhow::anyhow!(
+            "get_clients: get empty client_states_keys"
         ));
     }
 
@@ -245,7 +246,7 @@ pub async fn get_clients(
 pub async fn get_client_connections(
     client_id: &ClientId,
     client: Client<MyConfig>,
-) -> Result<Vec<ConnectionId>, Box<dyn std::error::Error>> {
+) -> Result<Vec<ConnectionId>> {
     tracing::info!("in call_ibc: [get_client_connections]");
 
     let api = client
@@ -265,10 +266,10 @@ pub async fn get_client_connections(
         .await?;
 
     if connection_id.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_client_connections is empty! by client_id = ({})",
             client_id
-        )));
+        ));
     }
 
     let mut result = vec![];

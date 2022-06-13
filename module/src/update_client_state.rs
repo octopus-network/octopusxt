@@ -20,6 +20,7 @@ use beefy_merkle_tree::Hash;
 use sp_core::ByteArray;
 use subxt::SubstrateExtrinsicParams;
 use subxt::{BlockNumber, Client, PairSigner};
+use anyhow::Result;
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -32,7 +33,7 @@ pub struct MmrProof {
 pub async fn build_validator_proof(
     src_client: Client<MyConfig>,
     block_number: u32,
-) -> Result<Vec<help::ValidatorMerkleProof>, Box<dyn std::error::Error>> {
+) -> Result<Vec<help::ValidatorMerkleProof>> {
     let api =
         src_client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
@@ -107,7 +108,7 @@ pub async fn build_validator_proof(
 pub async fn build_mmr_proof(
     src_client: Client<MyConfig>,
     block_number: u32,
-) -> Result<MmrProof, Box<dyn std::error::Error>> {
+) -> Result<MmrProof> {
     let api = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -159,7 +160,7 @@ pub async fn send_update_state_request(
     client: Client<MyConfig>,
     client_id: ClientId,
     mmr_root: help::MmrRoot,
-) -> Result<subxt::sp_core::H256, Box<dyn std::error::Error>> {
+) -> Result<subxt::sp_core::H256> {
     tracing::info!("in call_ibc: [update_client_state]");
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
     let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -184,7 +185,7 @@ pub async fn send_update_state_request(
 pub async fn update_client_state(
     src_client: Client<MyConfig>,
     target_client: Client<MyConfig>,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<()> {
     // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
@@ -260,7 +261,7 @@ pub async fn update_client_state(
 pub async fn update_client_state_service(
     src_client: Client<MyConfig>,
     target_client: Client<MyConfig>,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<()> {
     // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
@@ -349,7 +350,7 @@ pub fn verify_commitment_signatures(
     validator_proofs: &[beefy_light_client::ValidatorMerkleProof],
     start_position: usize,
     interations: usize,
-) -> Result<(), Error> {
+) -> core::result::Result<(), Error> {
     let msg =
         libsecp256k1::Message::parse_slice(&commitment_hash[..]).or(Err(Error::InvalidMessage))?;
     println!("verify_commitment_signatures:commiment msg is {:?}", msg);
@@ -362,7 +363,7 @@ pub fn verify_commitment_signatures(
     {
         // if let Some(signature) = signature {
         let sig = libsecp256k1::Signature::parse_standard_slice(&signature.0[..64])
-            .or(Err(Error::InvalidSignature))?;
+            .or(Err( Error::InvalidSignature))?;
         println!("verify_commitment_signatures:signature is {:?}", sig);
 
         let recovery_id =
@@ -415,7 +416,7 @@ pub fn verify_commitment_signatures(
 pub async fn get_client_ids(
     client: Client<MyConfig>,
     expect_client_type: ClientType,
-) -> Result<Vec<ClientId>, Box<dyn std::error::Error>> {
+) -> Result<Vec<ClientId>> {
     let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     // get client_state Keys

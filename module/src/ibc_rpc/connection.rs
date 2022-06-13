@@ -10,6 +10,7 @@ use tendermint_proto::Protobuf;
 use crate::channel::get_channel_end;
 use core::str::FromStr;
 use sp_core::H256;
+use anyhow::Result;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
 ///
@@ -24,7 +25,7 @@ use sp_core::H256;
 pub async fn get_connection_end(
     connection_identifier: &ConnectionId,
     client: Client<MyConfig>,
-) -> Result<ConnectionEnd, Box<dyn std::error::Error>> {
+) -> Result<ConnectionEnd> {
     tracing::info!("in call_ibc: [get_connection_end]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -42,10 +43,10 @@ pub async fn get_connection_end(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_connection_end is empty! by connection_identifier = ({})",
             connection_identifier
-        )));
+        ));
     }
 
     let connection_end = ConnectionEnd::decode_vec(&*data).unwrap();
@@ -64,7 +65,7 @@ pub async fn get_connection_end(
 ///
 pub async fn get_connections(
     client: Client<MyConfig>,
-) -> Result<Vec<IdentifiedConnectionEnd>, Box<dyn std::error::Error>> {
+) -> Result<Vec<IdentifiedConnectionEnd>> {
     tracing::info!("in call_ibc: [get_connctions]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -85,8 +86,8 @@ pub async fn get_connections(
         .await?;
 
     if connection_keys.is_empty() {
-        return Err(Box::from(
-            "get_connections: get empty connection_keys".to_string(),
+        return Err(anyhow::anyhow!(
+            "get_connections: get empty connection_keys"
         ));
     }
 
@@ -127,7 +128,7 @@ pub async fn get_connections(
 pub async fn get_connection_channels(
     connection_id: &ConnectionId,
     client: Client<MyConfig>,
-) -> Result<Vec<IdentifiedChannelEnd>, Box<dyn std::error::Error>> {
+) -> Result<Vec<IdentifiedChannelEnd>> {
     tracing::info!("in call_ibc: [get_connection_channels]");
 
     let api = client
@@ -148,10 +149,10 @@ pub async fn get_connection_channels(
         .await?;
 
     if channel_id_and_port_id.is_empty() {
-        return Err(Box::from(format!(
+        return Err(anyhow::anyhow!(
             "get_connection_channels is empty! by connection_id = ({})",
             connection_id
-        )));
+        ));
     }
 
     let mut result = vec![];

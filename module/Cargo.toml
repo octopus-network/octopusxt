@@ -20,6 +20,7 @@ prost-types = { version = "0.10.1", default-features = false }
 serde = { version = "1.0.130", default-features = false }
 libsecp256k1 = { version = "0.7.0", features = ["static-context"], default-features = false }
 futures = "0.3.13"
+anyhow = "1.0"
 
 # beefy
 # beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "feature/v0.9.18", default-features = false }
