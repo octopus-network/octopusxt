@@ -6,7 +6,7 @@ use tendermint_proto::Protobuf;
 
 use crate::ibc_node::RuntimeApi;
 use crate::ibc_rpc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
-use codec::Encode;
+use codec::{Decode, Encode};
 use ibc::clients::ics10_grandpa::help;
 use ibc::core::ics02_client::client_type::ClientType;
 use ibc::core::ics24_host::identifier::ClientId;
@@ -14,7 +14,8 @@ use sp_keyring::AccountKeyring;
 
 use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
-use crate::MyConfig;
+use crate::{get_latest_height, MyConfig};
+use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
 use beefy_merkle_tree::Hash;
 use sp_core::ByteArray;
 use subxt::SubstrateExtrinsicParams;
@@ -49,12 +50,7 @@ pub async fn build_validator_proof(
     // covert authorities to strings
     let authority_strs: Vec<String> = authorities
         .into_iter()
-        .map(|authority| {
-            format!(
-                "{}",
-                subxt::sp_core::hexdisplay::HexDisplay::from(&authority.to_raw_vec())
-            )
-        })
+        .map(|authority| format!("{}", HexDisplay::from(&authority.to_raw_vec())))
         .collect();
     println!("get authorities strs : {:?}", authority_strs);
 
@@ -115,13 +111,24 @@ pub async fn build_mmr_proof(
     let api = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
+    // asset block block number < get laset height
+    {
+        let latest_height = get_latest_height(src_client.clone()).await?;
+        println!("[build_mmr_proof] latest height = {:?}", latest_height);
+        assert!(
+            u64::from(block_number) <= latest_height,
+            "block_number must less than or equal latest height"
+        );
+    }
+
     //get block hash by block_number
-    let block_hash: sp_core::H256 = api
+    let block_hash = api
         .client
         .rpc()
         .block_hash(Some(BlockNumber::from(block_number)))
-        .await?
-        .unwrap();
+        .await?;
+
     println!(
         "block number : {} -> block hash : {:?}",
         block_number, block_hash
@@ -130,9 +137,12 @@ pub async fn build_mmr_proof(
     //get mmr leaf and proof
     // Note: target_height = signed_commitment.commitment.block_number-1
     let target_height = BlockNumber::from(block_number - 1);
-    let (block_hash, mmr_leaf, mmr_leaf_proof) =
-        get_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash), src_client.clone())
-            .await?;
+    let (block_hash, mmr_leaf, mmr_leaf_proof) = get_mmr_leaf_and_mmr_proof(
+        Some(target_height),
+        Some(block_hash.unwrap()),
+        src_client.clone(),
+    )
+    .await?;
     println!("generate_proof block hash : {:?}", block_hash);
 
     let mmr_proof = MmrProof {
@@ -155,7 +165,7 @@ pub async fn send_update_state_request(
     let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
     let encode_client_id = client_id.as_bytes().to_vec();
-    let encode_mmr_root = <help::MmrRoot as Encode>::encode(&mmr_root);
+    let encode_mmr_root = help::MmrRoot::encode(&mmr_root);
     println!("encode mmr root is {:?}", encode_mmr_root);
 
     let result = api
@@ -183,11 +193,8 @@ pub async fn update_client_state(
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap().0;
     // decode signed commitment
-    let signed_commmitment: commitment::SignedCommitment =
-        <commitment::SignedCommitment as codec::Decode>::decode(
-            &mut &raw_signed_commitment.clone()[..],
-        )
-        .unwrap();
+    let signed_commmitment =
+        commitment::SignedCommitment::decode(&mut &raw_signed_commitment.clone()[..]).unwrap();
 
     // get commitment
     let commitment::Commitment {
@@ -197,7 +204,7 @@ pub async fn update_client_state(
     } = signed_commmitment.clone().commitment;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
-    let payload = format!("{}", HexDisplay::from(&payload));
+    let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
     println!("signed commitment payload : {:?}", payload);
 
     // get block header by block number
@@ -258,14 +265,14 @@ pub async fn update_client_state_service(
     let api_a = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     // msg loop for handle the beefy SignedCommitment
     loop {
         let raw = sub.next().await.unwrap().unwrap().0;
         // let target_raw = raw.clone();
-        let signed_commmitment: commitment::SignedCommitment =
-            <commitment::SignedCommitment as codec::Decode>::decode(&mut &raw[..]).unwrap();
+        let signed_commmitment = commitment::SignedCommitment::decode(&mut &raw[..]).unwrap();
 
         let commitment::Commitment {
             payload,
@@ -274,7 +281,7 @@ pub async fn update_client_state_service(
         } = signed_commmitment.clone().commitment;
         println!("signed commitment block_number : {}", block_number);
         println!("signed commitment validator_set_id : {}", validator_set_id);
-        let payload = format!("{}", HexDisplay::from(&payload));
+        let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
         println!("signed commitment payload : {:?}", payload);
 
         let signatures: Vec<String> = signed_commmitment
