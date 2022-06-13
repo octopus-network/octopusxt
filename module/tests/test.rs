@@ -32,6 +32,7 @@ use octopusxt::update_client_state::MmrProof;
 use subxt::sp_core::hexdisplay::HexDisplay;
 use tendermint_proto::Protobuf;
 use tokio::{self, task, time};
+use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
 
 // test API get_block_header
 // use `cargo test -- --captuer` can print content
@@ -324,14 +325,17 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
     let signed_commitment =
         commitment::SignedCommitment::decode(&mut &signed_commitment[..]).unwrap();
 
-    let commitment::Commitment {
-        payload,
-        block_number,
-        validator_set_id,
-    } = signed_commitment.commitment;
+    // let commitment::Commitment {
+    //     payload
+    //     block_number,
+    //     validator_set_id,
+    // } = signed_commitment.commitment;
+    let payload = signed_commitment.commitment.payload.clone();
+    let block_number = signed_commitment.commitment.block_number;
+    let validator_set_id = signed_commitment.commitment.validator_set_id;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
-    let payload = format!("{}", HexDisplay::from(&payload));
+    let payload = format!("{}", HexDisplay::from(payload.clone().get_raw(&MMR_ROOT_ID).unwrap()));
     println!("signed commitment payload : {:?}", payload);
 
     let signatures: Vec<String> = signed_commitment
@@ -456,8 +460,10 @@ async fn verify_leaf_proof_works_2() -> Result<(), Box<dyn std::error::Error>> {
         validator_set_id,
     } = signed_commitment.commitment;
 
-    // get mmr root
-    let mmr_root = payload;
+    let mmr_root: [u8; 32] =
+			payload
+			.get_decoded(&MMR_ROOT_ID).unwrap();
+
     println!(
         "root_hash(signed commitment payload) : {:?}
 signed commitment block_number : {}
@@ -577,14 +583,12 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     let signed_commitment =
         commitment::SignedCommitment::decode(&mut &signed_commitment_raw.clone()[..]).unwrap();
 
-    let commitment::Commitment {
-        payload,
-        block_number,
-        validator_set_id,
-    } = signed_commitment.commitment;
+    let payload = signed_commitment.commitment.payload.clone();
+    let block_number = signed_commitment.commitment.block_number;
+    let validator_set_id = signed_commitment.commitment.validator_set_id;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
-    let payload = format!("{}", HexDisplay::from(&payload));
+    let payload = format!("{}", HexDisplay::from(payload.get_raw(&MMR_ROOT_ID).unwrap()));
     println!("signed commitment payload : {:?}", payload);
 
     let signatures: Vec<String> = signed_commitment
@@ -668,9 +672,11 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
     println!("decode mmr_leaf : {:?}", mmr_leaf);
 
-    // assert!(mmr::verify_leaf_proof(commitment.payload, mmr_leaf_hash, mmr_leaf_proof).is_ok());
-
-    let result = mmr::verify_leaf_proof(commitment.payload, mmr_leaf_hash, mmr_leaf_proof);
+    let mmr_root: [u8; 32] =
+            commitment.payload
+			.get_decoded(&MMR_ROOT_ID).unwrap();
+  
+    let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, mmr_leaf_proof);
 
     match result {
         Ok(b) => {
@@ -731,7 +737,7 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     );
     let payload = format!(
         "{}",
-        HexDisplay::from(&signed_commitment2.commitment.payload)
+        HexDisplay::from(&signed_commitment2.commitment.payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
     );
     println!("signed commitment payload : {:?}", payload);
 
@@ -781,28 +787,25 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap();
     // decode signed commitment
-    let signed_commmitment: commitment::SignedCommitment =
+    let signed_commitment: commitment::SignedCommitment =
         <commitment::SignedCommitment as codec::Decode>::decode(
             &mut &raw_signed_commitment.clone().0[..],
         )
         .unwrap();
 
-    // get commitment
-    let commitment::Commitment {
-        payload,
-        block_number,
-        validator_set_id,
-    } = signed_commmitment.commitment;
+    let payload = signed_commitment.commitment.payload.clone();
+    let block_number = signed_commitment.commitment.block_number;
+    let validator_set_id = signed_commitment.commitment.validator_set_id;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
     let payload = format!(
         "0x{}",
-        subxt::sp_core::hexdisplay::HexDisplay::from(&payload)
+        subxt::sp_core::hexdisplay::HexDisplay::from(&payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
     );
     println!("signed commitment payload : {:?}", payload);
 
     // get signatures
-    let signatures: Vec<String> = signed_commmitment
+    let signatures: Vec<String> = signed_commitment
         .signatures
         .clone()
         .into_iter()
@@ -830,7 +833,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     // build mmr root
     let mmr_root = help::MmrRoot {
         block_header,
-        signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+        signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
         validator_merkle_proofs: validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
@@ -976,28 +979,26 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
     loop {
         let raw_signed_commitment = sub.next().await.unwrap().unwrap();
         // decode signed commitment
-        let signed_commmitment: commitment::SignedCommitment =
+        let signed_commitment: commitment::SignedCommitment =
             <commitment::SignedCommitment as codec::Decode>::decode(
                 &mut &raw_signed_commitment.clone().0[..],
             )
             .unwrap();
 
         // get commitment
-        let commitment::Commitment {
-            payload,
-            block_number,
-            validator_set_id,
-        } = signed_commmitment.commitment;
+        let payload = signed_commitment.commitment.payload.clone();
+        let block_number = signed_commitment.commitment.block_number;
+        let validator_set_id = signed_commitment.commitment.validator_set_id;
         println!("signed commitment block_number : {}", block_number);
         println!("signed commitment validator_set_id : {}", validator_set_id);
         let payload = format!(
             "0x{}",
-            subxt::sp_core::hexdisplay::HexDisplay::from(&payload)
+            subxt::sp_core::hexdisplay::HexDisplay::from(&payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
         );
         println!("signed commitment payload : {:?}", payload);
 
         // get signatures
-        let signatures: Vec<String> = signed_commmitment
+        let signatures: Vec<String> = signed_commitment
             .signatures
             .clone()
             .into_iter()
@@ -1025,7 +1026,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         // build mmr root
         let mmr_root = help::MmrRoot {
             block_header,
-            signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+            signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
             validator_merkle_proofs: validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,

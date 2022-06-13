@@ -71,7 +71,7 @@ pub async fn get_channels(
         let channel_id_str = String::from_utf8(channel_id.clone()).unwrap();
         let channel_id = ChannelId::from_str(channel_id_str.as_str()).unwrap();
 
-        let channel_end = ChannelEnd::decode_vec(&*channel_end).unwrap();
+        let channel_end = ChannelEnd::decode_vec(channel_end).unwrap();
 
         result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
     }
