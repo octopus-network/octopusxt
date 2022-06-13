@@ -26,13 +26,13 @@ use ibc::clients::ics10_grandpa::help;
 use ibc::clients::ics10_grandpa::help::{BlockHeader, Commitment};
 use ibc::core::ics02_client::client_state::AnyClientState;
 
+use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
 use chrono::Local;
 use ibc::core::ics04_channel::packet::Sequence;
 use octopusxt::update_client_state::MmrProof;
 use subxt::sp_core::hexdisplay::HexDisplay;
 use tendermint_proto::Protobuf;
 use tokio::{self, task, time};
-use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
 
 // test API get_block_header
 // use `cargo test -- --captuer` can print content
@@ -335,7 +335,10 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
     let validator_set_id = signed_commitment.commitment.validator_set_id;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
-    let payload = format!("{}", HexDisplay::from(payload.clone().get_raw(&MMR_ROOT_ID).unwrap()));
+    let payload = format!(
+        "{}",
+        HexDisplay::from(payload.clone().get_raw(&MMR_ROOT_ID).unwrap())
+    );
     println!("signed commitment payload : {:?}", payload);
 
     let signatures: Vec<String> = signed_commitment
@@ -460,9 +463,7 @@ async fn verify_leaf_proof_works_2() -> Result<(), Box<dyn std::error::Error>> {
         validator_set_id,
     } = signed_commitment.commitment;
 
-    let mmr_root: [u8; 32] =
-			payload
-			.get_decoded(&MMR_ROOT_ID).unwrap();
+    let mmr_root: [u8; 32] = payload.get_decoded(&MMR_ROOT_ID).unwrap();
 
     println!(
         "root_hash(signed commitment payload) : {:?}
@@ -588,7 +589,10 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     let validator_set_id = signed_commitment.commitment.validator_set_id;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
-    let payload = format!("{}", HexDisplay::from(payload.get_raw(&MMR_ROOT_ID).unwrap()));
+    let payload = format!(
+        "{}",
+        HexDisplay::from(payload.get_raw(&MMR_ROOT_ID).unwrap())
+    );
     println!("signed commitment payload : {:?}", payload);
 
     let signatures: Vec<String> = signed_commitment
@@ -672,10 +676,8 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
     println!("decode mmr_leaf : {:?}", mmr_leaf);
 
-    let mmr_root: [u8; 32] =
-            commitment.payload
-			.get_decoded(&MMR_ROOT_ID).unwrap();
-  
+    let mmr_root: [u8; 32] = commitment.payload.get_decoded(&MMR_ROOT_ID).unwrap();
+
     let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, mmr_leaf_proof);
 
     match result {
@@ -737,7 +739,13 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
     );
     let payload = format!(
         "{}",
-        HexDisplay::from(&signed_commitment2.commitment.payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
+        HexDisplay::from(
+            &signed_commitment2
+                .commitment
+                .payload
+                .get_decoded::<[u8; 32]>(&MMR_ROOT_ID)
+                .unwrap()
+        )
     );
     println!("signed commitment payload : {:?}", payload);
 
@@ -800,7 +808,9 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     println!("signed commitment validator_set_id : {}", validator_set_id);
     let payload = format!(
         "0x{}",
-        subxt::sp_core::hexdisplay::HexDisplay::from(&payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
+        subxt::sp_core::hexdisplay::HexDisplay::from(
+            &payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap()
+        )
     );
     println!("signed commitment payload : {:?}", payload);
 
@@ -993,7 +1003,9 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         println!("signed commitment validator_set_id : {}", validator_set_id);
         let payload = format!(
             "0x{}",
-            subxt::sp_core::hexdisplay::HexDisplay::from(&payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
+            subxt::sp_core::hexdisplay::HexDisplay::from(
+                &payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap()
+            )
         );
         println!("signed commitment payload : {:?}", payload);
 
