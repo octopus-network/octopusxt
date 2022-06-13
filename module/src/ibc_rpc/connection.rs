@@ -108,7 +108,7 @@ pub async fn get_connections(
         let connection_id_str = String::from_utf8(connection_id.clone()).unwrap();
         let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
 
-        let connnection_end = ConnectionEnd::decode_vec(&*connection_end).unwrap();
+        let connnection_end = ConnectionEnd::decode_vec(connection_end).unwrap();
 
         result.push(IdentifiedConnectionEnd::new(connection_id, connnection_end));
     }

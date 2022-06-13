@@ -388,10 +388,10 @@ pub async fn get_packet_commitment(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        Err(Box::from(format!(
             "get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id, channel_id, sequence
-        )));
+        )))
     } else {
         Ok(data)
     }
@@ -438,10 +438,10 @@ pub async fn get_packet_ack(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        Err(Box::from(format!(
             "get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id, channel_id, sequence
-        )));
+        )))
     } else {
         Ok(data)
     }
@@ -495,10 +495,10 @@ pub async fn get_next_sequence_recv(
         .await?;
 
     if data.is_empty() {
-        return Err(Box::from(format!(
+        Err(Box::from(format!(
             "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id, channel_id, sequence
-        )));
+        )))
     } else {
         Ok(data)
     }

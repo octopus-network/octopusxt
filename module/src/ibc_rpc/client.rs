@@ -159,8 +159,8 @@ pub async fn get_consensus_state_with_height(
 
     let mut result = vec![];
     for (height, consensus_state) in data.iter() {
-        let height = ICSHeight::decode_vec(&*height).unwrap();
-        let consensus_state = AnyConsensusState::decode_vec(&*consensus_state).unwrap();
+        let height = ICSHeight::decode_vec(height).unwrap();
+        let consensus_state = AnyConsensusState::decode_vec(consensus_state).unwrap();
         result.push((height, consensus_state));
     }
 
@@ -223,7 +223,7 @@ pub async fn get_clients(
         let client_id_str = String::from_utf8(client_id.clone()).unwrap();
         let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
 
-        let client_state = AnyClientState::decode_vec(&*client_state).unwrap();
+        let client_state = AnyClientState::decode_vec(client_state).unwrap();
 
         result.push(IdentifiedAnyClientState::new(client_id, client_state));
     }
