@@ -20,6 +20,7 @@ use substrate::balance::Balance;
 use substrate::query::Query;
 use substrate::sudo::Sudo;
 use substrate::timestamp::TimeStamp;
+use substrate::beefy::Beefy;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "octopusxt-cli", about = "A tools for octopus cli command")]
@@ -51,6 +52,10 @@ pub enum Command {
     #[structopt(name = "timestamp")]
     /// substrate timestamp module
     TimeStamp(TimeStamp),
+
+    #[structopt(name = "beefy")]
+    /// beefy timestamp module
+    Beefy(Beefy),
 }
 
 #[derive(Debug, StructOpt)]
@@ -86,6 +91,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             value.run().await?;
         }
         Command::TimeStamp(value) => {
+            value.run().await?;
+        }
+        Command::Beefy(value) => {
             value.run().await?;
         }
     }
