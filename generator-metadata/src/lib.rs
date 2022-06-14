@@ -4,6 +4,9 @@ use subxt::{Config, DefaultConfig};
 #[subxt::subxt(runtime_metadata_path = "metadata/substrate.scale")]
 pub mod substrate {}
 
+#[subxt::subxt(runtime_metadata_path = "metadata/substrate_node_template.scale")]
+pub mod substrate_node_template {}
+
 #[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub struct MyConfig;
 impl Config for MyConfig {

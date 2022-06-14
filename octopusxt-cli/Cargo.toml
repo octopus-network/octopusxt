@@ -15,9 +15,9 @@ serde_json = { version = "*"}
 structopt = "0.3.26"
 subtle-encoding = { version = "0.5", default-features = false }
 tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
+futures = "0.3.13"
 
 codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive", "full", "bit-vec"] }
-
 subxt = { git = "https://github.com/paritytech/subxt.git", branch = "master" }
 sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "master" }
 sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "master" }

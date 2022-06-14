@@ -93,7 +93,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::fill_block{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::fill_block{
                         ratio: Perbill(*ratio),
                     });
 
@@ -119,7 +119,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::remark{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::remark{
                         remark: remark.clone(),
                     });
 
@@ -146,7 +146,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_heap_pages{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_heap_pages{
                         pages: *pages,
                     });
 
@@ -174,7 +174,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_code{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_code{
                         code: code.clone()
                     });
 
@@ -202,7 +202,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_code_without_checks{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_code_without_checks{
                         code: code.clone()
                     });
 
@@ -232,7 +232,7 @@ impl Extrinsics {
                 // todo
                 let items = vec![(vec![1, 2, 3], vec![1, 2, 3])];
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_storage{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::set_storage{
                         items
                     });
 
@@ -263,7 +263,7 @@ impl Extrinsics {
                 let keys = vec![vec![1, 2, 3, 4, 5]];
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::kill_storage{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::kill_storage{
                         keys
                     });
 
@@ -292,7 +292,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::kill_prefix{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::kill_prefix{
                         prefix: prefix.clone(),
                         subkeys: *subkeys,
                     });
@@ -321,7 +321,7 @@ impl Extrinsics {
                     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
 
                 let call =
-                    generator_metadata::substrate::runtime_types::node_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::remark_with_event{
+                    generator_metadata::substrate::runtime_types::node_template_runtime::Call::System(generator_metadata::substrate::runtime_types::frame_system::pallet::Call::remark_with_event{
                         remark: remarks.clone(),
                     });
 
@@ -340,29 +340,3 @@ impl Extrinsics {
         Ok(())
     }
 }
-#[derive(Debug, StructOpt)]
-pub struct FillBlock {}
-
-#[derive(Debug, StructOpt)]
-pub struct Remark {}
-
-#[derive(Debug, StructOpt)]
-pub struct SetHeapPages {}
-
-#[derive(Debug, StructOpt)]
-pub struct SetCode {}
-
-#[derive(Debug, StructOpt)]
-pub struct SetCodeWithoutChecks {}
-
-#[derive(Debug, StructOpt)]
-pub struct SetStorage {}
-
-#[derive(Debug, StructOpt)]
-pub struct KillStorage {}
-
-#[derive(Debug, StructOpt)]
-pub struct KillPrefix {}
-
-#[derive(Debug, StructOpt)]
-pub struct RemarkWithEvent {}

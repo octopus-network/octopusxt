@@ -21,50 +21,50 @@ pub enum Constants {
 
 impl Constants {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        match self {
-            Constants::OperationalFeeMultiplier {
-                websocket_url
-            } => {
-                // set client
-                let api = ClientBuilder::new()
-                    .set_url(websocket_url)
-                    .build()
-                    .await?
-                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-
-                let result = api.constants().transaction_payment().operational_fee_multiplier();
-
-                println!("operational_fee_multiplier = {:#?}", result);
-            },
-            Constants::WeightToFee {
-                websocket_url
-            } => {
-                // set client
-                let api = ClientBuilder::new()
-                    .set_url(websocket_url)
-                    .build()
-                    .await?
-                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-
-                let result = api.constants().transaction_payment().weight_to_fee();
-
-                println!("weight_to_fee = {:#?}", result);
-            }
-            Constants::LengthToFee {
-                websocket_url
-            } => {
-                // set client
-                let api = ClientBuilder::new()
-                    .set_url(websocket_url)
-                    .build()
-                    .await?
-                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-
-                let result = api.constants().transaction_payment().length_to_fee();
-
-                println!("length_to_fee = {:#?}", result);
-            }
-        }
+        // match self {
+        //     Constants::OperationalFeeMultiplier {
+        //         websocket_url
+        //     } => {
+        //         // set client
+        //         let api = ClientBuilder::new()
+        //             .set_url(websocket_url)
+        //             .build()
+        //             .await?
+        //             .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        //
+        //         let result = api.constants().transaction_payment().operational_fee_multiplier();
+        //
+        //         println!("operational_fee_multiplier = {:#?}", result);
+        //     },
+        //     Constants::WeightToFee {
+        //         websocket_url
+        //     } => {
+        //         // set client
+        //         let api = ClientBuilder::new()
+        //             .set_url(websocket_url)
+        //             .build()
+        //             .await?
+        //             .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        //
+        //         let result = api.constants().transaction_payment().weight_to_fee();
+        //
+        //         println!("weight_to_fee = {:#?}", result);
+        //     }
+        //     Constants::LengthToFee {
+        //         websocket_url
+        //     } => {
+        //         // set client
+        //         let api = ClientBuilder::new()
+        //             .set_url(websocket_url)
+        //             .build()
+        //             .await?
+        //             .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        //
+        //         let result = api.constants().transaction_payment().length_to_fee();
+        //
+        //         println!("length_to_fee = {:#?}", result);
+        //     }
+        // }
         Ok(())
     }
 }

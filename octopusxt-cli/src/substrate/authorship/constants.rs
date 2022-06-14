@@ -16,16 +16,16 @@ impl Constants {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         match self {
             Constants::UncleGenerations { websocket_url } => {
-                // set client
-                let api = ClientBuilder::new()
-                    .set_url(websocket_url)
-                    .build()
-                    .await?
-                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
-
-                let result = api.constants().authorship().uncle_generations();
-
-                println!("uncle_generations = {:#?}", result);
+                // // set client
+                // let api = ClientBuilder::new()
+                //     .set_url(websocket_url)
+                //     .build()
+                //     .await?
+                //     .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+                //
+                // let result = api.constants().authorship().uncle_generations();
+                //
+                // println!("uncle_generations = {:#?}", result);
             }
         }
         Ok(())

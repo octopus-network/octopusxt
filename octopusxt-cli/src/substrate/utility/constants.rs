@@ -14,21 +14,21 @@ pub enum Constants {
 
 impl Constants {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
-        match self {
-            Constants::BatchedCallsLimit { websocket_url } => {
-                // set client
-                let api = ClientBuilder::new()
-                    .set_url(websocket_url)
-                    .build()
-                    .await?
-                    .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>(
-                    );
-
-                let result = api.constants().utility().batched_calls_limit();
-
-                println!("batched_calls_limit = {:#?}", result);
-            }
-        }
+        // match self {
+        //     Constants::BatchedCallsLimit { websocket_url } => {
+        //         // set client
+        //         let api = ClientBuilder::new()
+        //             .set_url(websocket_url)
+        //             .build()
+        //             .await?
+        //             .to_runtime_api::<substrate::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>(
+        //             );
+        //
+        //         let result = api.constants().utility().batched_calls_limit();
+        //
+        //         println!("batched_calls_limit = {:#?}", result);
+        //     }
+        // }
         Ok(())
     }
 }

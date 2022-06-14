@@ -2989,6 +2989,7 @@ name = "octopusxt-cli"
 version = "0.1.0"
 dependencies = [
  "env_logger",
+ "futures",
  "generator-metadata",
  "hex",
  "parity-scale-codec 2.3.1",
