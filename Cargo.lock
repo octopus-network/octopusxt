@@ -380,6 +380,7 @@ dependencies = [
 [[package]]
 name = "beefy-light-client"
 version = "0.1.0"
+source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=feature/v0.9.18#c625ba01e349fac212da67bbdfd7c837472fefc1"
 dependencies = [
  "beefy-merkle-tree",
  "blake2-rfc",
@@ -1934,6 +1935,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.14.1"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ibc-v0.9.18#6d58b4f3bf15282388980465a1c0395f29f54891"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1972,6 +1974,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.17.1"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ibc-v0.9.18#6d58b4f3bf15282388980465a1c0395f29f54891"
 dependencies = [
  "base64",
  "bytes 1.1.0",
