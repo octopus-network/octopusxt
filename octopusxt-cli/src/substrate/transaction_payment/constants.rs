@@ -16,7 +16,7 @@ pub enum Constants {
     LengthToFee {
         #[structopt(default_value = "ws://localhost:9944")]
         websocket_url: String,
-    }
+    },
 }
 
 impl Constants {

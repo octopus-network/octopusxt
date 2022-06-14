@@ -51,7 +51,10 @@ impl Extrinsics {
                     .set_url(value.websocket_url.clone())
                     .build()
                     .await?
-                    .to_runtime_api::<substrate_node_template::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+                    .to_runtime_api::<substrate_node_template::RuntimeApi<
+                        MyConfig,
+                        SubstrateExtrinsicParams<MyConfig>,
+                    >>();
 
                 let mut transfer_events = api
                     .events()
