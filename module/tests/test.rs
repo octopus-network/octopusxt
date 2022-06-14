@@ -9,7 +9,6 @@ use ibc::Height;
 use octopusxt::channel::{get_packet_ack, get_packet_commitment, get_packet_receipt};
 use octopusxt::client::{get_client_consensus, get_client_state, get_clients};
 use octopusxt::*;
-use subxt::beefy::BeefySubscription;
 use subxt::rpc::NumberOrHex;
 use subxt::BlockNumber;
 use subxt::ClientBuilder;
