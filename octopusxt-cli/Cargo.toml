@@ -6,8 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# octopusxt
 octopusxt = { path = "../module"}
 
+# ibc protocl
 ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ibc-v0.9.18" }
 ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ibc-v0.9.18" }
 # ibc = { path = "../../ibc-rs/modules" }
@@ -23,8 +25,8 @@ tokio = { version = "1.0", default-features = false, features = ["rt-multi-threa
 futures = "0.3.13"
 
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive", "full", "bit-vec"] }
-subxt = {  git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'octopus-v0.9.18' }
-sp-runtime = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.18" }
-sp-core = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.18" }
-sp-keyring = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.18" }
-sc-cli = {git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.18" }
+subxt = {  git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'master' }
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+sp-keyring = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+sc-cli = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
