@@ -8,9 +8,9 @@ use subxt::{Client, SubstrateExtrinsicParams};
 use tendermint_proto::Protobuf;
 
 use crate::channel::get_channel_end;
+use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;
-use anyhow::Result;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
 ///
@@ -63,9 +63,7 @@ pub async fn get_connection_end(
 /// let result = get_connections(client).await?;
 /// ```
 ///
-pub async fn get_connections(
-    client: Client<MyConfig>,
-) -> Result<Vec<IdentifiedConnectionEnd>> {
+pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedConnectionEnd>> {
     tracing::info!("in call_ibc: [get_connctions]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();

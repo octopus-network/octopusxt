@@ -17,10 +17,10 @@ use ibc_cli::CliDenomTrace;
 use ibc_cli::IbcModule;
 use substrate::account::Account;
 use substrate::balance::Balance;
+use substrate::beefy::Beefy;
 use substrate::query::Query;
 use substrate::sudo::Sudo;
 use substrate::timestamp::TimeStamp;
-use substrate::beefy::Beefy;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "octopusxt-cli", about = "A tools for octopus cli command")]

@@ -12,9 +12,9 @@ use ibc::{
 use subxt::{Client, SubstrateExtrinsicParams};
 use tendermint_proto::Protobuf;
 
+use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;
-use anyhow::Result;
 
 /// get client_state according by client_id, and read ClientStates StoraageMap
 ///  
@@ -95,7 +95,8 @@ pub async fn get_client_consensus(
     if data.is_empty() {
         return Err(anyhow::anyhow!(
             "get_client_consensus is empty! by client_id = ({}), height = ({})",
-            client_id, height
+            client_id,
+            height
         ));
     }
 
@@ -177,9 +178,7 @@ pub async fn get_consensus_state_with_height(
 /// let result = get_clients(client).await?;
 /// ```
 ///
-pub async fn get_clients(
-    client: Client<MyConfig>,
-) -> Result<Vec<IdentifiedAnyClientState>> {
+pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyClientState>> {
     tracing::info!("in call_ibc: [get_clients]");
 
     let api = client
@@ -201,9 +200,7 @@ pub async fn get_clients(
         .client_states_keys(Some(block_hash))
         .await?;
     if client_states_keys.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_clients: get empty client_states_keys"
-        ));
+        return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
     }
 
     // enumate every item get client_state value

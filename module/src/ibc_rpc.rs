@@ -10,12 +10,12 @@ use subxt::{
 };
 use tendermint_proto::Protobuf;
 
+use anyhow::Result;
 use beefy_merkle_tree::Hash;
 use ibc_proto::google::protobuf::Any;
 use jsonrpsee::rpc_params;
 use sp_core::{storage::StorageKey, H256};
 use sp_keyring::AccountKeyring;
-use anyhow::Result;
 
 pub mod channel;
 pub mod client;
@@ -59,9 +59,7 @@ pub async fn subscribe_beefy(
 /// let result = get_latest_height(api).await?;
 /// ```
 ///
-pub async fn get_latest_height(
-    client: Client<MyConfig>,
-) -> Result<u64> {
+pub async fn get_latest_height(client: Client<MyConfig>) -> Result<u64> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
     let api = client
@@ -122,7 +120,9 @@ pub async fn get_send_packet_event(
     if data.is_empty() {
         return Err(anyhow::anyhow!(
             "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, sequence
+            port_id,
+            channel_id,
+            sequence
         ));
     }
 
@@ -191,10 +191,7 @@ pub async fn get_write_ack_packet_event(
 /// let result = deliver(msg, client).await?;
 /// ```
 /// return block_hash, extrinsic_hash, and event
-pub async fn deliver(
-    msg: Vec<Any>,
-    client: Client<MyConfig>,
-) -> Result<H256> {
+pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [deliver]");
 
     let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
@@ -220,9 +217,7 @@ pub async fn deliver(
     Ok(result)
 }
 
-pub async fn delete_send_packet_event(
-    client: Client<MyConfig>,
-) -> Result<H256> {
+pub async fn delete_send_packet_event(client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [delete_send_packet_event]");
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
@@ -240,9 +235,7 @@ pub async fn delete_send_packet_event(
     Ok(result)
 }
 
-pub async fn delete_write_packet_event(
-    client: Client<MyConfig>,
-) -> Result<H256> {
+pub async fn delete_write_packet_event(client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [delete_write_packet_event]");
 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());

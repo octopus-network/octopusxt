@@ -13,8 +13,8 @@ use codec::Decode;
 use core::str::FromStr;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 
-use sp_core::H256;
 use anyhow::Result;
+use sp_core::H256;
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
 ///
@@ -26,9 +26,7 @@ use anyhow::Result;
 /// let result = get_channels(client).await?;
 /// ```
 ///
-pub async fn get_channels(
-    client: Client<MyConfig>,
-) -> Result<Vec<IdentifiedChannelEnd>> {
+pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChannelEnd>> {
     tracing::info!("in call_ibc: [get_channels]");
 
     let api = client
@@ -47,9 +45,7 @@ pub async fn get_channels(
         api.storage().ibc().channels_keys(Some(block_hash)).await?;
 
     if channels_keys.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_channels: get empty channels_keys",
-        ));
+        return Err(anyhow::anyhow!("get_channels: get empty channels_keys",));
     }
 
     for key in channels_keys {
@@ -120,7 +116,8 @@ pub async fn get_channel_end(
     if data.is_empty() {
         return Err(anyhow::anyhow!(
             "get_channel_end is empty by port_id = ({}), channel_id = ({})",
-            port_id, channel_id
+            port_id,
+            channel_id
         ));
     }
 
@@ -173,7 +170,8 @@ pub async fn get_packet_receipt(
     if data.is_empty() {
         return Err(anyhow::anyhow!(
             "get_packet_receipt is empty! by port_id = ({}), channel_id = ({})",
-            port_id, channel_id
+            port_id,
+            channel_id
         ));
     }
 
@@ -228,7 +226,8 @@ pub async fn get_packet_receipt_vec(
     if data.is_empty() {
         return Err(anyhow::anyhow!(
             "get_packet_receipt is empty! by port_id = ({}), channel_id = ({})",
-            port_id, channel_id
+            port_id,
+            channel_id
         ));
     }
 
@@ -296,9 +295,7 @@ pub async fn get_unreceipt_packet(
 /// let result = get_commitment_packet_state(client).await?;
 /// ```
 ///
-pub async fn get_commitment_packet_state(
-    client: Client<MyConfig>,
-) -> Result<Vec<PacketState>> {
+pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec<PacketState>> {
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
     let api = client
@@ -391,7 +388,9 @@ pub async fn get_packet_commitment(
     if data.is_empty() {
         Err(anyhow::anyhow!(
             "get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, sequence
+            port_id,
+            channel_id,
+            sequence
         ))
     } else {
         Ok(data)
@@ -441,7 +440,9 @@ pub async fn get_packet_ack(
     if data.is_empty() {
         Err(anyhow::anyhow!(
             "get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, sequence
+            port_id,
+            channel_id,
+            sequence
         ))
     } else {
         Ok(data)
@@ -514,9 +515,7 @@ pub async fn get_next_sequence_recv(
 /// let result = get_acknowledge_packet_state(client).await?;
 /// ```
 ///
-pub async fn get_acknowledge_packet_state(
-    client: Client<MyConfig>,
-) -> Result<Vec<PacketState>> {
+pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Vec<PacketState>> {
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
     let api = client

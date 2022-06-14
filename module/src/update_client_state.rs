@@ -15,12 +15,12 @@ use sp_keyring::AccountKeyring;
 use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
 use crate::{get_latest_height, MyConfig};
+use anyhow::Result;
 use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
 use beefy_merkle_tree::Hash;
 use sp_core::ByteArray;
 use subxt::SubstrateExtrinsicParams;
 use subxt::{BlockNumber, Client, PairSigner};
-use anyhow::Result;
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -105,10 +105,7 @@ pub async fn build_validator_proof(
 }
 
 /// build mmr proof
-pub async fn build_mmr_proof(
-    src_client: Client<MyConfig>,
-    block_number: u32,
-) -> Result<MmrProof> {
+pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) -> Result<MmrProof> {
     let api = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
@@ -363,7 +360,7 @@ pub fn verify_commitment_signatures(
     {
         // if let Some(signature) = signature {
         let sig = libsecp256k1::Signature::parse_standard_slice(&signature.0[..64])
-            .or(Err( Error::InvalidSignature))?;
+            .or(Err(Error::InvalidSignature))?;
         println!("verify_commitment_signatures:signature is {:?}", sig);
 
         let recovery_id =

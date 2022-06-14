@@ -1,8 +1,8 @@
 use crate::{ibc_node, MyConfig};
+use anyhow::Result;
 use futures::StreamExt;
 use ibc::events::IbcEvent;
 use subxt::{Client, RawEventDetails, SubstrateExtrinsicParams};
-use anyhow::Result;
 
 /// Subscribe ibc events
 /// Maybe in the future call ocw
@@ -14,9 +14,7 @@ use anyhow::Result;
 /// let result = subscribe_ibc_event(client).await?;
 /// ```
 ///
-pub async fn subscribe_ibc_event(
-    client: Client<MyConfig>,
-) -> Result<Vec<IbcEvent>> {
+pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEvent>> {
     tracing::info!("In call_ibc: [subscribe_events]");
 
     let api = client
