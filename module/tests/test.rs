@@ -1,35 +1,29 @@
-use crate::ibc_node;
-use crate::MyConfig;
-use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment};
-use codec::Encode;
-use core::str::FromStr;
-use ibc::core::ics02_client::client_type::ClientType;
-use ibc::core::ics24_host::identifier::{ChainId, ChannelId, ClientId, PortId};
-use ibc::Height;
-use octopusxt::channel::{get_packet_ack, get_packet_commitment, get_packet_receipt};
-use octopusxt::client::{get_client_consensus, get_client_state, get_clients};
-use octopusxt::*;
-use subxt::rpc::NumberOrHex;
-use subxt::BlockNumber;
-use subxt::ClientBuilder;
-use subxt::SubstrateExtrinsicParams;
-
-use crate::{get_send_packet_event, subscribe_beefy};
-use beefy_light_client::{self, mmr};
-use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
-use codec::Decode;
-use hex_literal::hex;
-
-use ibc::clients::ics10_grandpa::client_state::ClientState;
-use ibc::clients::ics10_grandpa::help;
-use ibc::clients::ics10_grandpa::help::{BlockHeader, Commitment};
-use ibc::core::ics02_client::client_state::AnyClientState;
-
-use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
-use chrono::Local;
-use ibc::core::ics04_channel::packet::Sequence;
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use octopusxt::update_client_state::MmrProof;
-use subxt::sp_core::hexdisplay::HexDisplay;
+use octopusxt::*;
+
+use beefy_light_client::{
+    self, beefy_ecdsa_to_ethereum,
+    commitment::{self, known_payload_ids::MMR_ROOT_ID},
+    mmr,
+};
+use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
+use chrono::Local;
+use codec::{DEcode, Encode};
+use core::str::FromStr;
+use hex_literal::hex;
+use ibc::core::{
+    clients::ics10_grandpa::{
+        client_state::ClientState,
+        help::{self, BlockHeader, Commitment},
+    },
+    ics02_client::{client_state::AnyClientState, client_type::ClientType},
+    ics04_channel::packet::Sequence,
+    ics24_host::identifier::{ChainId, ChannelId, ClientId, PortId},
+    Height,
+};
+use sp_core::hexdisplay::HexDisplay;
+use subxt::{rpc::NumberOrHex, BlockNumber, ClientBuilder};
 use tendermint_proto::Protobuf;
 use tokio::{self, task, time};
 
@@ -87,7 +81,7 @@ async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Err
 
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let block_number = 22;
 
@@ -475,7 +469,7 @@ signed commitment validator_set_id : {}",
 
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     //get block hash by block_number
     let block_hash: sp_core::H256 = api
@@ -789,7 +783,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
     let api_a = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap();
@@ -980,7 +974,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
     let api_a = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
@@ -1238,7 +1232,7 @@ async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
     let block_header = block.next().await.unwrap().unwrap();

@@ -1,8 +1,8 @@
-use crate::{ibc_node, MyConfig};
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use anyhow::Result;
 use futures::StreamExt;
 use ibc::events::IbcEvent;
-use subxt::{Client, RawEventDetails, SubstrateExtrinsicParams};
+use subxt::{Client, RawEventDetails};
 
 /// Subscribe ibc events
 /// Maybe in the future call ocw
@@ -10,6 +10,10 @@ use subxt::{Client, RawEventDetails, SubstrateExtrinsicParams};
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use octopusxt::subscribe_ibc_event;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = subscribe_ibc_event(client).await?;
 /// ```
@@ -18,7 +22,7 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
     tracing::info!("In call_ibc: [subscribe_events]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     // Subscribe to any events that occur:
     let mut event_sub = api.events().subscribe().await?;

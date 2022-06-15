@@ -1,10 +1,10 @@
-use crate::{ibc_node, MyConfig};
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use ibc::core::{
     ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd},
     ics04_channel::channel::IdentifiedChannelEnd,
     ics24_host::identifier::{ChannelId, ConnectionId, PortId},
 };
-use subxt::{Client, SubstrateExtrinsicParams};
+use subxt::Client;
 use tendermint_proto::Protobuf;
 
 use crate::channel::get_channel_end;
@@ -17,6 +17,11 @@ use sp_core::H256;
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+/// use octopusxt::get_connection_end;
+///
 /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let conection_id = ConnectionId::default();
 /// let result = get_connection_end(&conection_id, api).await?;
@@ -28,7 +33,7 @@ pub async fn get_connection_end(
 ) -> Result<ConnectionEnd> {
     tracing::info!("in call_ibc: [get_connection_end]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -59,6 +64,10 @@ pub async fn get_connection_end(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use octopusxt::get_connections;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_connections(client).await?;
 /// ```
@@ -66,7 +75,7 @@ pub async fn get_connection_end(
 pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedConnectionEnd>> {
     tracing::info!("in call_ibc: [get_connctions]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -118,6 +127,11 @@ pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedC
 ///  # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+/// use octopusxt::get_connection_channels;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let connection = ConnectionId::default();
 /// let result = get_connection_channels(&connection, client).await?;
@@ -131,7 +145,7 @@ pub async fn get_connection_channels(
 
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 

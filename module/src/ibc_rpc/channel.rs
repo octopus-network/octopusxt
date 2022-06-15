@@ -1,4 +1,4 @@
-use crate::{ibc_node, MyConfig};
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
@@ -6,7 +6,7 @@ use ibc::core::{
     },
     ics24_host::identifier::{ChannelId, PortId},
 };
-use subxt::{Client, SubstrateExtrinsicParams};
+use subxt::Client;
 use tendermint_proto::Protobuf;
 
 use codec::Decode;
@@ -22,6 +22,9 @@ use sp_core::H256;
 ///
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_channels;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_channels(client).await?;
 /// ```
@@ -30,7 +33,7 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
     tracing::info!("in call_ibc: [get_channels]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -81,8 +84,13 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
 /// # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_channel_end;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id =PortId::default();
+/// let prot_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let result = get_channel_end(&port_id, &channel_id, client).await?;
 /// ```
@@ -95,7 +103,7 @@ pub async fn get_channel_end(
     tracing::info!("in call_ibc: [get_channel_end]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -131,8 +139,13 @@ pub async fn get_channel_end(
 /// # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_packet_receipt;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id =PortId::default();
+/// let prot_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
 /// let result = get_packet_receipt(&port_id, &channel_id, &sequence, client).await?;
@@ -146,7 +159,7 @@ pub async fn get_packet_receipt(
 ) -> Result<Receipt> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -187,8 +200,13 @@ pub async fn get_packet_receipt(
 /// # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_packet_receipt_vec;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id =PortId::default();
+/// let prot_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
 /// let result = get_packet_receipt_vec(&port_id, &channel_id, &sequence, client).await?;
@@ -202,7 +220,7 @@ pub async fn get_packet_receipt_vec(
 ) -> Result<Vec<u8>> {
     tracing::info!("in call_ibc : [get_packet_receipt]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -238,8 +256,13 @@ pub async fn get_packet_receipt_vec(
 ///  # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_unreceipt_packet;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id =PortId::default();
+/// let port_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = vec![Sequence::from(12),Sequence::from(13)];
 /// let result = get_unreceipt_packet(&port_id, &channel_id, sequence, client).await?;
@@ -254,7 +277,7 @@ pub async fn get_unreceipt_packet(
     tracing::info!("in call_ibc: [get_receipt_packet]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -291,6 +314,10 @@ pub async fn get_unreceipt_packet(
 /// # Usage example
 ///
 /// ```rust
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_commitment_packet_state;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_commitment_packet_state(client).await?;
 /// ```
@@ -299,7 +326,7 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -350,6 +377,11 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
 ///  # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_packet_commitment;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let port_id = PortId::default();
 /// let channel_id = ChannelId::default();
@@ -366,7 +398,7 @@ pub async fn get_packet_commitment(
     tracing::info!("in call_ibc: [get_packet_commitment]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -402,6 +434,11 @@ pub async fn get_packet_commitment(
 ///  # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+/// use octopusxt::MyConfig;
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_packet_ack;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let port_id = PortId::default();
 /// let channel_id = ChannelId::default();
@@ -418,7 +455,7 @@ pub async fn get_packet_ack(
     tracing::info!("in call_ibc: [get_packet_ack]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -453,6 +490,11 @@ pub async fn get_packet_ack(
 ///  # Usage example
 ///
 /// ```rust
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_next_sequence_recv;
+/// use octopusxt::MyConfig;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id = PortId::default();
 /// let channel_id = ChannelId::default();
@@ -467,7 +509,7 @@ pub async fn get_next_sequence_recv(
     tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -511,6 +553,10 @@ pub async fn get_next_sequence_recv(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::get_acknowledge_packet_state;
+/// use octopusxt::MyConfig;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_acknowledge_packet_state(client).await?;
 /// ```
@@ -519,7 +565,7 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 

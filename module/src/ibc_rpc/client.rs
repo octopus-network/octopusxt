@@ -1,4 +1,4 @@
-use crate::{ibc_node, MyConfig};
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use ibc::{
     core::{
         ics02_client::{
@@ -9,7 +9,7 @@ use ibc::{
     },
     Height as ICSHeight,
 };
-use subxt::{Client, SubstrateExtrinsicParams};
+use subxt::Client;
 use tendermint_proto::Protobuf;
 
 use anyhow::Result;
@@ -21,6 +21,11 @@ use sp_core::H256;
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+/// use octopusxt::get_client_state;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let result = get_client_state(&client_id, client).await?;
@@ -32,7 +37,7 @@ pub async fn get_client_state(
 ) -> Result<AnyClientState> {
     tracing::info!("in call_ibc : [get_client_state]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -64,6 +69,11 @@ pub async fn get_client_state(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+/// use octopusxt::get_client_consensus;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let height = ICSHeight::default();
@@ -78,7 +88,7 @@ pub async fn get_client_consensus(
     tracing::info!("in call_ibc: [get_client_consensus]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -125,6 +135,11 @@ pub async fn get_client_consensus(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+/// use octopusxt::get_consensus_state_with_height;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let result = get_consensus_state_with_height(&client_id, client).await?;
@@ -137,7 +152,7 @@ pub async fn get_consensus_state_with_height(
     tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -174,6 +189,10 @@ pub async fn get_consensus_state_with_height(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use octopusxt::get_clients;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_clients(client).await?;
 /// ```
@@ -182,7 +201,7 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
     tracing::info!("in call_ibc: [get_clients]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -235,6 +254,11 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+/// use octopusxt::get_client_connections;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let client_id = ClientId::default();
 /// let result = get_client_connections(&client_id, client).await?;
@@ -247,7 +271,7 @@ pub async fn get_client_connections(
     tracing::info!("in call_ibc: [get_client_connections]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 

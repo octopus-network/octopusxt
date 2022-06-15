@@ -1,4 +1,4 @@
-use crate::{ibc_node, MyConfig};
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use ibc::core::{
     ics04_channel::packet::{Packet, Sequence},
     ics24_host::identifier::{ChannelId, PortId},
@@ -6,7 +6,7 @@ use ibc::core::{
 use subxt::{
     rpc::ClientT,
     storage::{StorageEntry, StorageKeyPrefix},
-    BlockNumber, Client, PairSigner, SignedCommitment, SubstrateExtrinsicParams,
+    BlockNumber, Client, PairSigner, SignedCommitment,
 };
 use tendermint_proto::Protobuf;
 
@@ -32,6 +32,10 @@ pub use events::*;
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use octopusxt::subscribe_beefy;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = subscribe_beefy(client).await?;
 /// ```
@@ -41,7 +45,7 @@ pub async fn subscribe_beefy(
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
     tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut sub = api.client.rpc().subscribe_beefy_justifications().await?;
 
@@ -55,6 +59,10 @@ pub async fn subscribe_beefy(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use subxt::MyConfig;
+/// use octopusxt::get_latest_height;
+///
 /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let result = get_latest_height(api).await?;
 /// ```
@@ -63,7 +71,7 @@ pub async fn get_latest_height(client: Client<MyConfig>) -> Result<u64> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut blocks = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -82,6 +90,10 @@ pub async fn get_latest_height(client: Client<MyConfig>) -> Result<u64> {
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use subxt::MyConfig;
+/// use octopusxt::get_send_packet_event;
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
 ///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let prot_id =PortId::default();
@@ -98,7 +110,7 @@ pub async fn get_send_packet_event(
 ) -> Result<Packet> {
     tracing::info!("in call_ibc: [get_send_packet_event]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -135,8 +147,13 @@ pub async fn get_send_packet_event(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use subxt::MyConfig;
+/// use octopusxt::get_write_ack_packet_event;
+/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id =PortId::default();
+/// let prot_id = PortId::default();
 /// let channel_id = ChannelId::default();
 /// let sequence = Sequence::from(0);
 /// let result = get_write_ack_packet_event(&port_id, &channel_id, &sequence, client).await?;
@@ -150,7 +167,7 @@ pub async fn get_write_ack_packet_event(
 ) -> Result<Vec<u8>> {
     tracing::info!("in call_ibc: [get_write_ack_packet_event]");
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -185,6 +202,10 @@ pub async fn get_write_ack_packet_event(
 ///  # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use ibc_proto::google::protobuf::Any;
+/// use octopusxt::deliver;
 ///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let msg = vec![Any::default()];
@@ -205,7 +226,7 @@ pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
@@ -223,7 +244,7 @@ pub async fn delete_send_packet_event(client: Client<MyConfig>) -> Result<H256> 
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
@@ -241,7 +262,7 @@ pub async fn delete_write_packet_event(client: Client<MyConfig>) -> Result<H256>
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let result = api
         .tx()
@@ -266,6 +287,9 @@ pub async fn delete_write_packet_event(client: Client<MyConfig>) -> Result<H256>
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::{ClientBuilder, BlockNumber};
+/// use octopusxt::MyConfig;
+/// use octopusxt::get_mmr_leaf_and_mmr_proof;
 ///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let block_number = Some(BlockNumber::from(12));
@@ -281,7 +305,7 @@ pub async fn get_mmr_leaf_and_mmr_proof(
     tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let params = rpc_params![block_number, block_hash];
 
@@ -304,6 +328,9 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::ClientBuilder;
+/// use octopusxt::MyConfig;
+/// use octopusxt::get_header_by_block_hash;
 ///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let block_hash = None;
@@ -315,7 +342,7 @@ pub async fn get_header_by_block_hash(
     client: Client<MyConfig>,
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let header = api.client.rpc().header(block_hash).await?.unwrap();
 
@@ -329,6 +356,10 @@ pub async fn get_header_by_block_hash(
 /// # Usage example
 ///
 /// ```rust
+/// use subxt::{ClientBuilder, BlockNumber};
+/// use octopusxt::MyConfig;
+/// use octopusxt::get_header_by_block_number;
+///
 /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
 /// let block_number = Some(BlockNumber::from(2));
 /// let result = get_header_by_block_number(block_number, client).await?;
@@ -340,7 +371,7 @@ pub async fn get_header_by_block_number(
 ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
     let api = client
         .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let block_hash = api.client.rpc().block_hash(block_number).await?;
 
@@ -352,7 +383,7 @@ pub async fn get_header_by_block_number(
 }
 
 /// convert substrate Header to Ibc Header
-pub fn convert_substrate_header_to_ibc_header(
+fn convert_substrate_header_to_ibc_header(
     header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
 ) -> beefy_light_client::header::Header {
     beefy_light_client::header::Header {
@@ -401,9 +432,12 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
 /// # Usage example
 ///
 /// ```rust
-///     let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
-///     let storage_key = get_storage_key(&storage_entry);
-///     println!("key = {:?}", storage_key);
+///  use octopusxt::ibc_node;
+///  use octopusxt::get_storage_key;
+///
+///  let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
+///  let storage_key = get_storage_key(&storage_entry);
+///  println!("key = {:?}", storage_key);
 /// ```
 pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
     let prefix = StorageKeyPrefix::new::<F>();

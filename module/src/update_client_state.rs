@@ -1,26 +1,27 @@
-use beefy_light_client::{beefy_ecdsa_to_ethereum, commitment, Error};
-use ibc::core::ics02_client::client_state::AnyClientState;
-use sp_core::hexdisplay::HexDisplay;
-use std::str::FromStr;
-use tendermint_proto::Protobuf;
-
 use crate::ibc_node::RuntimeApi;
 use crate::ibc_rpc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
-use codec::{Decode, Encode};
-use ibc::clients::ics10_grandpa::help;
-use ibc::core::ics02_client::client_type::ClientType;
-use ibc::core::ics24_host::identifier::ClientId;
-use sp_keyring::AccountKeyring;
+use crate::{get_latest_height, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 
-use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
-
-use crate::{get_latest_height, MyConfig};
 use anyhow::Result;
-use beefy_light_client::commitment::known_payload_ids::MMR_ROOT_ID;
-use beefy_merkle_tree::Hash;
-use sp_core::ByteArray;
-use subxt::SubstrateExtrinsicParams;
+use beefy_light_client::{
+    beefy_ecdsa_to_ethereum,
+    commitment::{self, known_payload_ids::MMR_ROOT_ID},
+    Error,
+};
+use beefy_merkle_tree::{merkle_proof, verify_proof, Hash, Keccak256};
+use codec::{Decode, Encode};
+use ibc::{
+    clients::ics10_grandpa::help,
+    core::{
+        ics02_client::{client_state::AnyClientState, client_type::ClientType},
+        ics24_host::identifier::ClientId,
+    },
+};
+use sp_core::{hexdisplay::HexDisplay, ByteArray};
+use sp_keyring::AccountKeyring;
+use std::str::FromStr;
 use subxt::{BlockNumber, Client, PairSigner};
+use tendermint_proto::Protobuf;
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -34,8 +35,8 @@ pub async fn build_validator_proof(
     src_client: Client<MyConfig>,
     block_number: u32,
 ) -> Result<Vec<help::ValidatorMerkleProof>> {
-    let api =
-        src_client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = src_client
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     // get block hash
     let block_hash = api
@@ -108,7 +109,7 @@ pub async fn build_validator_proof(
 pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) -> Result<MmrProof> {
     let api = src_client
         .clone()
-        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     // asset block block number < get laset height
     {
@@ -160,7 +161,8 @@ pub async fn send_update_state_request(
 ) -> Result<subxt::sp_core::H256> {
     tracing::info!("in call_ibc: [update_client_state]");
     let signer = PairSigner::new(AccountKeyring::Bob.pair());
-    let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let encode_client_id = client_id.as_bytes().to_vec();
     let encode_mmr_root = help::MmrRoot::encode(&mmr_root);
@@ -186,7 +188,7 @@ pub async fn update_client_state(
     // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
-        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap().0;
@@ -262,7 +264,7 @@ pub async fn update_client_state_service(
     // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
-        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
@@ -414,7 +416,8 @@ pub async fn get_client_ids(
     client: Client<MyConfig>,
     expect_client_type: ClientType,
 ) -> Result<Vec<ClientId>> {
-    let api = client.to_runtime_api::<RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+    let api = client
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     // get client_state Keys
     let client_states_keys: Vec<Vec<u8>> = api.storage().ibc().client_states_keys(None).await?;
