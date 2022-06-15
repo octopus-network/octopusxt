@@ -1,12 +1,10 @@
-use octopusxt::ibc_node;
-use octopusxt::ibc_rpc::get_storage_key;
-use octopusxt::MyConfig;
+use octopusxt::{
+    ibc_node, ibc_rpc::get_storage_key, MyConfig, SubstrateNodeTemplateExtrinsicParams,
+};
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use structopt::StructOpt;
-use subxt::BlockNumber;
-use subxt::SubstrateExtrinsicParams;
-use subxt::{ClientBuilder, PairSigner};
+use subxt::{BlockNumber, ClientBuilder, PairSigner};
 
 #[derive(Debug, StructOpt)]
 pub enum Query {
@@ -60,11 +58,15 @@ impl SubstrateQuery {
             SubstrateQuery::BlockHash(value) => {
                 println!("BlockHash = {:?}", value);
 
-                let api = ClientBuilder::new()
-                    .set_url(value.websocket_url.clone())
-                    .build()
-                    .await?
-                    .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+                let api =
+                    ClientBuilder::new()
+                        .set_url(value.websocket_url.clone())
+                        .build()
+                        .await?
+                        .to_runtime_api::<ibc_node::RuntimeApi<
+                            MyConfig,
+                            SubstrateNodeTemplateExtrinsicParams<MyConfig>,
+                        >>();
 
                 let block_number = value.block_number.map(BlockNumber::from);
 
@@ -81,11 +83,15 @@ impl SubstrateQuery {
                 }
             }
             SubstrateQuery::Other(value) => {
-                let api = ClientBuilder::new()
-                    .set_url(value.websocket_url.clone())
-                    .build()
-                    .await?
-                    .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+                let api =
+                    ClientBuilder::new()
+                        .set_url(value.websocket_url.clone())
+                        .build()
+                        .await?
+                        .to_runtime_api::<ibc_node::RuntimeApi<
+                            MyConfig,
+                            SubstrateNodeTemplateExtrinsicParams<MyConfig>,
+                        >>();
 
                 println!("😂😂😂😂😂😂😂😂😂😂😂😂😂 Example1: Read proof RPC 😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂😂");
                 // example 1: read_proof rpc

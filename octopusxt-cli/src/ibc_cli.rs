@@ -2,14 +2,11 @@ use codec::{Decode, Encode};
 use ibc::applications::ics20_fungible_token_transfer::msgs::denom_trace::{
     parse_hex_hash, DenomTrace,
 };
-use octopusxt::ibc_node;
-use octopusxt::MyConfig;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use structopt::StructOpt;
-use subxt::ClientBuilder;
-use subxt::PairSigner;
-use subxt::SubstrateExtrinsicParams;
+use subxt::{ClientBuilder, PairSigner};
 use tendermint_proto::Protobuf;
 
 #[derive(Debug, StructOpt)]
@@ -51,13 +48,6 @@ impl CliDenomTrace {
 
         let result = parse_hex_hash(denom_hash_str).unwrap();
         assert_eq!(ibc_denom_trace.hash(), result);
-        // println!("prase hex hash = {:?}", result);
-
-        // let ret = self.get_chain_denom_trace().await?;
-
-        // for item in ret.iter() {
-        //     println!("ibc_hash = {:?}, ibc_denom = {:?}", item.0, item.1);
-        // }
 
         Ok(())
     }
@@ -69,7 +59,7 @@ impl CliDenomTrace {
             .set_url("ws://localhost:9944")
             .build::<MyConfig>()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -138,7 +128,7 @@ impl IbcModule {
             .set_url(self.websocket_url.clone())
             .build()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let (alice, ferdie) = ("alice".to_string(), "ferdie".to_string());
         let default_token = "ATOM".to_string();

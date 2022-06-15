@@ -1,12 +1,10 @@
-use octopusxt::ibc_node;
-use octopusxt::ibc_rpc::get_storage_key;
-use octopusxt::MyConfig;
+use octopusxt::{
+    ibc_node, ibc_rpc::get_storage_key, MyConfig, SubstrateNodeTemplateExtrinsicParams,
+};
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use structopt::StructOpt;
-use subxt::BlockNumber;
-use subxt::SubstrateExtrinsicParams;
-use subxt::{ClientBuilder, PairSigner};
+use subxt::{BlockNumber, ClientBuilder, PairSigner};
 
 #[derive(Debug, StructOpt)]
 pub enum TimeStamp {

@@ -1,10 +1,7 @@
-use octopusxt::ibc_node;
-use octopusxt::MyConfig;
-use sp_core::ByteArray;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use sp_core::{ByteArray, Public};
 use structopt::StructOpt;
-use subxt::sp_core::Public;
 use subxt::ClientBuilder;
-use subxt::SubstrateExtrinsicParams;
 
 #[derive(Debug, StructOpt)]
 pub struct Beefy {
@@ -28,7 +25,7 @@ impl Beefy {
             .set_url(self.websocket_url.clone())
             .build()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
         let block_header = block.next().await.unwrap().unwrap();

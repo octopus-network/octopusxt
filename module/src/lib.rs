@@ -13,6 +13,17 @@ pub mod update_client_state;
 pub use ibc_rpc::*;
 pub use update_client_state::*;
 
+/// A struct representing the signed extra and additional parameters required
+/// to construct a transaction for a substrate node template.
+pub type SubstrateNodeTemplateExtrinsicParams<T> =
+    subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
+
+/// A builder which leads to [`SubstrateNodeTemplateExtrinsicParams`] being constructed.
+/// This is what you provide to methods like `sign_and_submit()`.
+pub type SubstrateNodeTemplateExtrinsicParamsBuilder<T> =
+    subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
+
+// use subxt::SubstrateExtrinsicParams;
 #[derive(Debug, Encode, Decode)]
 pub enum ClientType {
     Tendermint,

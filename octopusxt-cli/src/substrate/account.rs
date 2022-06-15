@@ -1,6 +1,5 @@
 use octopusxt::ibc_node;
-use sp_core::hexdisplay::HexDisplay;
-use sp_core::Pair;
+use sp_core::{hexdisplay::HexDisplay, Pair};
 use sp_keyring::AccountKeyring;
 use sp_runtime::{traits::IdentifyAccount, MultiSigner};
 use std::str::FromStr;

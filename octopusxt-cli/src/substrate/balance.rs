@@ -1,13 +1,10 @@
 use std::str::FromStr;
 
 use futures::StreamExt;
-use octopusxt::ibc_node;
-use octopusxt::MyConfig;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use sp_keyring::AccountKeyring;
 use structopt::StructOpt;
-use subxt::ClientBuilder;
-use subxt::PairSigner;
-use subxt::SubstrateExtrinsicParams;
+use subxt::{ClientBuilder, PairSigner};
 
 #[derive(Debug, StructOpt)]
 pub enum Balance {
@@ -48,11 +45,15 @@ impl Balance {
                     .to_account_id()
                     .into();
 
-                let api = ClientBuilder::new()
-                    .set_url(value.websocket_url.clone())
-                    .build()
-                    .await?
-                    .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+                let api =
+                    ClientBuilder::new()
+                        .set_url(value.websocket_url.clone())
+                        .build()
+                        .await?
+                        .to_runtime_api::<ibc_node::RuntimeApi<
+                            MyConfig,
+                            SubstrateNodeTemplateExtrinsicParams<MyConfig>,
+                        >>();
 
                 let mut transfer_events = api
                     .events()
@@ -67,8 +68,10 @@ impl Balance {
                     .sign_and_submit_default(&sender)
                     .await?;
 
+                println!("balance transfer Hash : {:?}", hash);
+
                 // Our subscription will see all of the transfer events emitted as a result of this:
-                while let Some(transfer_event) = transfer_events.next().await {
+                if let Some(transfer_event) = transfer_events.next().await {
                     println!("Balance transfer event: {transfer_event:?}");
                 }
             }

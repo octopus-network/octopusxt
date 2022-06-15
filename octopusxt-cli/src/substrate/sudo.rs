@@ -1,8 +1,6 @@
-use octopusxt::ibc_node;
-use octopusxt::MyConfig;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use structopt::StructOpt;
 use subxt::ClientBuilder;
-use subxt::SubstrateExtrinsicParams;
 
 #[derive(Debug, StructOpt)]
 pub struct Sudo {
@@ -17,7 +15,7 @@ impl Sudo {
             .set_url(self.websocket_url.clone())
             .build()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateExtrinsicParams<MyConfig>>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
