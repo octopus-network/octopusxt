@@ -27,7 +27,7 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
     // Subscribe to any events that occur:
     let mut event_sub = api.events().subscribe().await?;
 
-    let mut result_events = Vec::new();
+    let mut result_raw_events = Vec::new();
 
     // Our subscription will see the events emitted as a result of this:
     while let Some(events) = event_sub.next().await {
@@ -38,12 +38,15 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
 
             let raw_event = event.clone();
 
-            let ibc_event = inner_process_ibc_event(raw_event);
+            // let ibc_event = inner_process_ibc_event(raw_event);
 
-            result_events.push(ibc_event);
+            result_raw_events.push(raw_event);
         }
     }
-    Ok(result_events)
+
+    let result = from_substrate_event_to_ibc_event(result_raw_events);
+
+    Ok(result)
 }
 
 /// convert substrate event to ibc event
@@ -62,7 +65,7 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
         .collect::<Vec<_>>()
 }
 
-pub fn inner_process_ibc_event(raw_event: RawEventDetails) -> IbcEvent {
+fn inner_process_ibc_event(raw_event: RawEventDetails) -> IbcEvent {
     let variant = raw_event.variant;
 
     match variant.as_str() {

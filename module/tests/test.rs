@@ -9,17 +9,19 @@ use beefy_light_client::{
 };
 use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
 use chrono::Local;
-use codec::{DEcode, Encode};
+use codec::{Decode, Encode};
 use core::str::FromStr;
 use hex_literal::hex;
-use ibc::core::{
+use ibc::{
     clients::ics10_grandpa::{
         client_state::ClientState,
         help::{self, BlockHeader, Commitment},
     },
-    ics02_client::{client_state::AnyClientState, client_type::ClientType},
-    ics04_channel::packet::Sequence,
-    ics24_host::identifier::{ChainId, ChannelId, ClientId, PortId},
+    core::{
+        ics02_client::{client_state::AnyClientState, client_type::ClientType},
+        ics04_channel::packet::Sequence,
+        ics24_host::identifier::{ChainId, ChannelId, ClientId, PortId},
+    },
     Height,
 };
 use sp_core::hexdisplay::HexDisplay;
