@@ -4,7 +4,7 @@ use octopusxt::*;
 
 use beefy_light_client::{
     self, beefy_ecdsa_to_ethereum,
-    commitment::{self, known_payload_ids::MMR_ROOT_ID},
+    commitment::{self, known_payload_ids::MMR_ROOT_ID, VersionedFinalityProof},
     mmr,
 };
 use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
@@ -757,9 +757,10 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
         build_mmr_proof(client.clone(), signed_commitment2.commitment.block_number).await?;
 
     // let signed_commitment2_bytes = commitment::SignedCommitment::encode(&signed_commitment2);
+    let encoded_versioned_finality_proof = VersionedFinalityProof::V1(signed_commitment2).encode();
 
     let result2 = light_client2.update_state(
-        &signed_commitment_raw2,
+        &encoded_versioned_finality_proof,
         &validator_proofs2,
         &proof2.mmr_leaf,
         &proof2.mmr_leaf_proof,
@@ -803,9 +804,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     println!("signed commitment validator_set_id : {}", validator_set_id);
     let payload = format!(
         "0x{}",
-        subxt::sp_core::hexdisplay::HexDisplay::from(
-            &payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap()
-        )
+        HexDisplay::from(&payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
     );
     println!("signed commitment payload : {:?}", payload);
 
@@ -903,10 +902,11 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
         .collect();
 
     // encode signed_commitment
-    let encoded_signed_commitment = commitment::SignedCommitment::encode(&signed_commitment);
+    // let encoded_signed_commitment = commitment::SignedCommitment::encode(&signed_commitment);
+    let encoded_versioned_finality_proof = VersionedFinalityProof::V1(signed_commitment).encode();
 
     let result = lc.update_state(
-        &encoded_signed_commitment,
+        &encoded_versioned_finality_proof,
         &validator_proofs,
         &mmr_leaf,
         &mmr_leaf_proof,
@@ -982,13 +982,12 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
     // msg loop for handle the beefy SignedCommitment
     loop {
-        let raw_signed_commitment = sub.next().await.unwrap().unwrap();
+        let raw_versioned_finality_proof = sub.next().await.unwrap().unwrap().0;
         // decode signed commitment
-        let signed_commitment: commitment::SignedCommitment =
-            <commitment::SignedCommitment as codec::Decode>::decode(
-                &mut &raw_signed_commitment.clone().0[..],
-            )
-            .unwrap();
+        let versioned_finality_proof =
+            VersionedFinalityProof::decode(&mut &raw_versioned_finality_proof[..]).unwrap();
+
+        let VersionedFinalityProof::V1(signed_commitment) = versioned_finality_proof;
 
         // get commitment
         let payload = signed_commitment.commitment.payload.clone();
@@ -998,9 +997,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         println!("signed commitment validator_set_id : {}", validator_set_id);
         let payload = format!(
             "0x{}",
-            subxt::sp_core::hexdisplay::HexDisplay::from(
-                &payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap()
-            )
+            HexDisplay::from(&payload.get_decoded::<[u8; 32]>(&MMR_ROOT_ID).unwrap())
         );
         println!("signed commitment payload : {:?}", payload);
 
@@ -1097,13 +1094,15 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
             .collect();
 
         // encode signed_commitment
-        let encoded_signed_commitment = commitment::SignedCommitment::encode(&signed_commitment);
+        // let encoded_signed_commitment = commitment::SignedCommitment::encode(&signed_commitment);
+        let encoded_versioned_finality_proof =
+            VersionedFinalityProof::V1(signed_commitment).encode();
 
         let mmr_leaf = receive_mmr_root.mmr_leaf;
         let mmr_leaf_proof = receive_mmr_root.mmr_leaf_proof;
 
         let result = rebuild_light_client.update_state(
-            &encoded_signed_commitment,
+            &encoded_versioned_finality_proof,
             &validator_proofs,
             &mmr_leaf,
             &mmr_leaf_proof,

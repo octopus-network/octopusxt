@@ -193,7 +193,7 @@ pub async fn update_client_state(
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap().0;
     // decode signed commitment
-    let signed_commmitment =
+    let signed_commitment =
         commitment::SignedCommitment::decode(&mut &raw_signed_commitment.clone()[..]).unwrap();
 
     // get commitment
@@ -201,7 +201,7 @@ pub async fn update_client_state(
         payload,
         block_number,
         validator_set_id,
-    } = signed_commmitment.clone().commitment;
+    } = signed_commitment.clone().commitment;
     println!("signed commitment block_number : {}", block_number);
     println!("signed commitment validator_set_id : {}", validator_set_id);
     let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
@@ -227,7 +227,7 @@ pub async fn update_client_state(
     // build mmr root
     let mmr_root = help::MmrRoot {
         block_header,
-        signed_commitment: help::SignedCommitment::from(signed_commmitment),
+        signed_commitment: help::SignedCommitment::from(signed_commitment),
         validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
@@ -272,19 +272,19 @@ pub async fn update_client_state_service(
     loop {
         let raw = sub.next().await.unwrap().unwrap().0;
         // let target_raw = raw.clone();
-        let signed_commmitment = commitment::SignedCommitment::decode(&mut &raw[..]).unwrap();
+        let signed_commitment = commitment::SignedCommitment::decode(&mut &raw[..]).unwrap();
 
         let commitment::Commitment {
             payload,
             block_number,
             validator_set_id,
-        } = signed_commmitment.clone().commitment;
+        } = signed_commitment.clone().commitment;
         println!("signed commitment block_number : {}", block_number);
         println!("signed commitment validator_set_id : {}", validator_set_id);
         let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
         println!("signed commitment payload : {:?}", payload);
 
-        let signatures: Vec<String> = signed_commmitment
+        let signatures: Vec<String> = signed_commitment
             .signatures
             .clone()
             .into_iter()
@@ -312,7 +312,7 @@ pub async fn update_client_state_service(
         // build mmr root
         let mmr_root = help::MmrRoot {
             block_header,
-            signed_commitment: help::SignedCommitment::from(signed_commmitment),
+            signed_commitment: help::SignedCommitment::from(signed_commitment),
             validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
