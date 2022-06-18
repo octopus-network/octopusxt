@@ -394,10 +394,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "beefy-light-client"
+version = "0.1.0"
+source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=main#23fa167b2290977279b1140828de9fcbb7297709"
+dependencies = [
+ "beefy-merkle-tree",
+ "blake2-rfc",
+ "borsh",
+ "ckb-merkle-mountain-range",
+ "hex",
+ "libsecp256k1",
+ "parity-scale-codec",
+ "scale-info",
+]
+
+[[package]]
 name = "beefy-merkle-tree"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.18#fc3fd073d3a0acf9933c3994b660ebd7b5833f65"
 dependencies = [
+ "hex",
+ "log",
  "tiny-keccak",
 ]
 
@@ -880,12 +897,12 @@ dependencies = [
 
 [[package]]
 name = "crossbeam-utils"
-version = "0.8.8"
+version = "0.8.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0bf124c720b7686e3c2663cf54062ab0f68a88af2fb6a030e87e30bf721fcb38"
+checksum = "8ff1f980957787286a554052d03c7aee98d99cc32e09f6d45f0a814133c87978"
 dependencies = [
  "cfg-if 1.0.0",
- "lazy_static",
+ "once_cell",
 ]
 
 [[package]]
@@ -1935,9 +1952,9 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.14.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ibc-v0.9.18#80b7a03e63a54eae45b9d63dfcc78e01c4181356"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ibc-v0.9.18#16f7d714704e1b251c6aef6ea183bb30da9a6ed9"
 dependencies = [
- "beefy-light-client",
+ "beefy-light-client 0.1.0 (git+https://github.com/octopus-network/beefy-light-client.git?branch=feature/v0.9.18)",
  "beefy-merkle-tree",
  "blake2-rfc",
  "bytes 1.1.0",
@@ -1974,7 +1991,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.17.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ibc-v0.9.18#80b7a03e63a54eae45b9d63dfcc78e01c4181356"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ibc-v0.9.18#16f7d714704e1b251c6aef6ea183bb30da9a6ed9"
 dependencies = [
  "base64",
  "bytes 1.1.0",
@@ -2103,12 +2120,12 @@ checksum = "ce23b50ad8242c51a442f3ff322d56b02f08852c77e4c0b4d3fd684abc89c683"
 
 [[package]]
 name = "indexmap"
-version = "1.8.2"
+version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e6012d540c5baa3589337a98ce73408de9b5a25ec9fc2c6fd6be8f0d39e0ca5a"
+checksum = "6c6392766afd7964e2531940894cffe4bd8d7d17dbc3c1c4857040fd4b33bdb3"
 dependencies = [
  "autocfg",
- "hashbrown 0.11.2",
+ "hashbrown 0.12.1",
 ]
 
 [[package]]
@@ -2339,13 +2356,22 @@ version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a1f2ab5a60e558e74ea93bcf5164ebc47939a7fff8938fa9b5233bbc63e16061"
 dependencies = [
- "jsonrpsee-client-transport",
- "jsonrpsee-core",
+ "jsonrpsee-core 0.13.1",
  "jsonrpsee-http-client",
  "jsonrpsee-proc-macros",
- "jsonrpsee-types",
+ "jsonrpsee-types 0.13.1",
  "jsonrpsee-ws-client",
  "tracing",
+]
+
+[[package]]
+name = "jsonrpsee"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "11e017217fcd18da0a25296d3693153dd19c8a6aadab330b3595285d075385d1"
+dependencies = [
+ "jsonrpsee-client-transport 0.14.0",
+ "jsonrpsee-core 0.14.0",
 ]
 
 [[package]]
@@ -2356,8 +2382,29 @@ checksum = "26d682f4a55081a2be3e639280c640523070e4aeb8ee2fd8dd9168fdae57a9db"
 dependencies = [
  "futures-util",
  "http",
- "jsonrpsee-core",
- "jsonrpsee-types",
+ "jsonrpsee-core 0.13.1",
+ "jsonrpsee-types 0.13.1",
+ "pin-project 1.0.10",
+ "rustls-native-certs 0.6.2",
+ "soketto",
+ "thiserror",
+ "tokio",
+ "tokio-rustls 0.23.4",
+ "tokio-util 0.7.3",
+ "tracing",
+ "webpki-roots 0.22.3",
+]
+
+[[package]]
+name = "jsonrpsee-client-transport"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ce395539a14d3ad4ec1256fde105abd36a2da25d578a291cabe98f45adfdb111"
+dependencies = [
+ "futures-util",
+ "http",
+ "jsonrpsee-core 0.14.0",
+ "jsonrpsee-types 0.14.0",
  "pin-project 1.0.10",
  "rustls-native-certs 0.6.2",
  "soketto",
@@ -2383,7 +2430,29 @@ dependencies = [
  "futures-timer",
  "futures-util",
  "hyper",
- "jsonrpsee-types",
+ "jsonrpsee-types 0.13.1",
+ "rustc-hash",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "jsonrpsee-core"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "16efcd4477de857d4a2195a45769b2fe9ebb54f3ef5a4221d3b014a4fe33ec0b"
+dependencies = [
+ "anyhow",
+ "async-lock",
+ "async-trait",
+ "beef",
+ "futures-channel",
+ "futures-timer",
+ "futures-util",
+ "jsonrpsee-types 0.14.0",
  "rustc-hash",
  "serde",
  "serde_json",
@@ -2401,8 +2470,8 @@ dependencies = [
  "async-trait",
  "hyper",
  "hyper-rustls 0.23.0",
- "jsonrpsee-core",
- "jsonrpsee-types",
+ "jsonrpsee-core 0.13.1",
+ "jsonrpsee-types 0.13.1",
  "rustc-hash",
  "serde",
  "serde_json",
@@ -2438,14 +2507,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "jsonrpsee-types"
+version = "0.14.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3bcf76cd316f5d3ad48138085af1f45e2c58c98e02f0779783dbb034d43f7c86"
+dependencies = [
+ "anyhow",
+ "beef",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tracing",
+]
+
+[[package]]
 name = "jsonrpsee-ws-client"
 version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "76f15180afb3761c7a3a32c0a8b680788176dcfdfe725b24c1758c90b1d1595b"
 dependencies = [
- "jsonrpsee-client-transport",
- "jsonrpsee-core",
- "jsonrpsee-types",
+ "jsonrpsee-client-transport 0.13.1",
+ "jsonrpsee-core 0.13.1",
+ "jsonrpsee-types 0.13.1",
 ]
 
 [[package]]
@@ -3456,7 +3539,7 @@ name = "octopusxt"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "beefy-light-client",
+ "beefy-light-client 0.1.0 (git+https://github.com/octopus-network/beefy-light-client.git?branch=main)",
  "beefy-merkle-tree",
  "beefy-primitives",
  "chrono",
@@ -3466,7 +3549,7 @@ dependencies = [
  "hex-literal",
  "ibc",
  "ibc-proto",
- "jsonrpsee",
+ "jsonrpsee 0.13.1",
  "libsecp256k1",
  "pallet-mmr-rpc",
  "parity-scale-codec",
@@ -6192,14 +6275,14 @@ dependencies = [
 [[package]]
 name = "subxt"
 version = "0.21.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#9d5c50067abe2f2575b5602577353ff8e42b984d"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#445742ed5c37ebc9b4ec6158dcd51340a1837749"
 dependencies = [
  "bitvec",
  "derivative",
  "frame-metadata",
  "futures 0.3.21",
  "hex",
- "jsonrpsee",
+ "jsonrpsee 0.14.0",
  "parity-scale-codec",
  "parking_lot 0.12.1",
  "scale-info",
@@ -6216,7 +6299,7 @@ dependencies = [
 [[package]]
 name = "subxt-codegen"
 version = "0.21.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#9d5c50067abe2f2575b5602577353ff8e42b984d"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#445742ed5c37ebc9b4ec6158dcd51340a1837749"
 dependencies = [
  "darling",
  "frame-metadata",
@@ -6233,7 +6316,7 @@ dependencies = [
 [[package]]
 name = "subxt-macro"
 version = "0.21.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#9d5c50067abe2f2575b5602577353ff8e42b984d"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#445742ed5c37ebc9b4ec6158dcd51340a1837749"
 dependencies = [
  "darling",
  "proc-macro-error",
@@ -6244,7 +6327,7 @@ dependencies = [
 [[package]]
 name = "subxt-metadata"
 version = "0.21.0"
-source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#9d5c50067abe2f2575b5602577353ff8e42b984d"
+source = "git+https://github.com/octopus-network/substrate-subxt.git?branch=master#445742ed5c37ebc9b4ec6158dcd51340a1837749"
 dependencies = [
  "frame-metadata",
  "parity-scale-codec",
@@ -6633,9 +6716,9 @@ dependencies = [
 
 [[package]]
 name = "tower"
-version = "0.4.12"
+version = "0.4.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9a89fd63ad6adf737582df5db40d286574513c69a11dac5214dc3b5603d6713e"
+checksum = "b8fa9be0de6cf49e536ce1851f987bd21a43b771b09473c3549a6c853db37c1c"
 dependencies = [
  "futures-core",
  "futures-util",
@@ -6659,9 +6742,9 @@ checksum = "343bc9466d3fe6b0f960ef45960509f84480bf4fd96f92901afe7ff3df9d3a62"
 
 [[package]]
 name = "tower-service"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "360dfd1d6d30e05fda32ace2c8c70e9c0a9da713275777f5a4dbb8a1893930c6"
+checksum = "b6bc1c9ce2b5135ac7f93c72918fc37feb872bdc6a5533a8b85eb4b86bfdae52"
 
 [[package]]
 name = "tracing"

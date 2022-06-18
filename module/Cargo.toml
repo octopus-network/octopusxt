@@ -15,28 +15,28 @@ hex-literal = "0.3.4"
 env_logger = "0.9.0"
 structopt = "0.3.26"
 futures = "0.3.13"
-serde = { version = "1.0.130", default-features = false }
-subtle-encoding = { version = "0.5", default-features = false }
-tracing = { version = "0.1.33", default-features = false }
-prost-types = { version = "0.10.1", default-features = false }
-tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
+serde = { version = "1.0.130" }
+subtle-encoding = { version = "0.5"}
+tracing = { version = "0.1.33" }
+prost-types = { version = "0.10.1" }
+tokio = { version = "1.0", features = ["rt-multi-thread", "time", "sync"] }
 jsonrpsee = { version = "0.13.1", features = ["macros", "ws-client", "http-client"] }
-libsecp256k1 = { version = "0.7.0", features = ["static-context"], default-features = false }
+libsecp256k1 = { version = "0.7.0", features = ["static-context"] }
 
 # substrate
-codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive", "full", "bit-vec"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive", "full", "bit-vec"] }
 sp-keyring = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
 sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
 sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
 pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
 beefy-primitives = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
-beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18", features = ["keccak"], default-features = false }
+beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18", features = ["keccak"]}
 # beefy
-beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "feature/v0.9.18", default-features = false }
+beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "main" }
 # beefy-light-client = { path = "../../beefy-light-client", default-features = false }
 
 # ibc
-tendermint-proto = { version = "0.23.6", default-features = false }
+tendermint-proto = { version = "0.23.6"}
 ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ibc-v0.9.18" }
 ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ibc-v0.9.18" }
 # ibc = { path = "../../ibc-rs/modules" }
