@@ -21,7 +21,7 @@ use subxt::{Client, RawEventDetails};
 ///
 pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEvent>> {
     println!("In call_ibc: [subscribe_events]");
-    const COUNTER: i32 = 4;
+    const COUNTER: i32 = 3;
 
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
@@ -39,6 +39,7 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
             "In substrate: [subscribe_events] >> events length : {:?}",
             events.len()
         );
+        let event_length = events.len();
         'inner: for event in events.iter_raw() {
             let event: RawEventDetails = event?;
 
@@ -93,7 +94,11 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                             consensus_height: consensus_height.to_ibc_height(),
                         }),
                     ));
-                    break 'inner;
+                    if event_length > 1 {
+                        continue
+                    } else {
+                        break 'inner;
+                    }
                 }
                 "ClientMisbehaviour" => {
                     let event =
