@@ -20,7 +20,7 @@ subtle-encoding = { version = "0.5"}
 tracing = { version = "0.1.33" }
 prost-types = { version = "0.10.1" }
 tokio = { version = "1.0", features = ["rt-multi-thread", "time", "sync"] }
-jsonrpsee = { version = "0.13.1", features = ["macros", "ws-client", "http-client"] }
+jsonrpsee = { version = "0.14", features = ["macros", "ws-client", "http-client"] }
 libsecp256k1 = { version = "0.7.0", features = ["static-context"] }
 
 # substrate
