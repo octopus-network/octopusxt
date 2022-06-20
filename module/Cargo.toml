@@ -34,10 +34,10 @@ beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branc
 
 # ibc
 tendermint-proto = { version ="0.23.6", default-features = false }
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
-# ibc = { path = "../ibc-rs/modules" }
-# ibc-proto = { path = "../ibc-rs/proto" }
+# ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
+# ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/ics20" }
+ibc = { path = "../../ibc-rs/modules" }
+ibc-proto = { path = "../../ibc-rs/proto" }
 
 
 [dev-dependencies]
