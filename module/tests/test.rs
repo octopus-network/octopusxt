@@ -988,7 +988,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
             <commitment::SignedCommitment as codec::Decode>::decode(
                 &mut &raw_signed_commitment.clone().0[..],
             )
-                .unwrap();
+            .unwrap();
 
         // get commitment
         let payload = signed_commitment.commitment.payload.clone();

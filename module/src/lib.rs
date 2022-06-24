@@ -1,7 +1,5 @@
 // mod codegen;
 #![allow(clippy::too_many_arguments)]
-// #![allow(unused_imports)]
-// #![allow(unused_variables)]
 
 use codec::{Decode, Encode};
 use core::str::FromStr;
@@ -13,6 +11,29 @@ pub mod update_client_state;
 pub use ibc_rpc::*;
 pub use update_client_state::*;
 
+use ibc_node::runtime_types::pallet_ibc::{
+    event::primitive::{
+        ChannelId as OctopusxtChannelId, ClientId as OctopusxtClientId,
+        ClientType as OctopusxtClientType, ConnectionId as OctopusxtConnectionId,
+        Height as OctopusxtHeight, Packet as OctopusxtPacket, PortId as OctopusxtPortId,
+        Sequence as OctopusxtSequence, Timestamp as OctopusxtTimestamp,
+    },
+    Any as OctopusxtAny,
+};
+
+use ibc::{
+    core::{
+        ics02_client::client_type::ClientType as IbcClientType,
+        ics04_channel::packet::{Packet as IbcPacket, Sequence as IbcSequence},
+        ics24_host::identifier::{
+            ChannelId as IbcChannelId, ClientId as IbcClientId, ConnectionId as IbcConnectionId,
+            PortId as IbcPortId,
+        },
+    },
+    timestamp::Timestamp as IbcTimestamp,
+    Height as IbcHeight,
+};
+
 /// A struct representing the signed extra and additional parameters required
 /// to construct a transaction for a substrate node template.
 pub type SubstrateNodeTemplateExtrinsicParams<T> =
@@ -23,18 +44,11 @@ pub type SubstrateNodeTemplateExtrinsicParams<T> =
 pub type SubstrateNodeTemplateExtrinsicParamsBuilder<T> =
     subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
 
-// use subxt::SubstrateExtrinsicParams;
-#[derive(Debug, Encode, Decode)]
-pub enum ClientType {
-    Tendermint,
-    Grandpa,
-}
-
-impl ClientType {
-    pub fn to_ibc_client_type(self) -> ibc::core::ics02_client::client_type::ClientType {
-        match self {
-            ClientType::Tendermint => ibc::core::ics02_client::client_type::ClientType::Tendermint,
-            ClientType::Grandpa => ibc::core::ics02_client::client_type::ClientType::Grandpa,
+impl From<OctopusxtClientType> for IbcClientType {
+    fn from(octopus_client_type: OctopusxtClientType) -> Self {
+        match octopus_client_type {
+            OctopusxtClientType::Tendermint => Self::Tendermint,
+            OctopusxtClientType::Grandpa => Self::Grandpa,
         }
     }
 }
@@ -44,8 +58,6 @@ pub struct MessageQueueChain(pub subxt::sp_core::H256);
 
 #[subxt::subxt(runtime_metadata_path = "metadata_file/metadata.scale")]
 pub mod ibc_node {
-    #[subxt(substitute_type = "pallet_ibc::event::primitive::ClientType")]
-    use crate::ClientType;
 
     #[subxt(substitute_type = "cumulus_pallet_parachain_system::MessageQueueChain")]
     use crate::MessageQueueChain;
@@ -73,83 +85,83 @@ impl Config for MyConfig {
     type Extrinsic = <DefaultConfig as Config>::Extrinsic;
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
-    pub fn to_ibc_height(self) -> ibc::Height {
-        ibc::Height {
-            revision_number: self.revision_number,
-            revision_height: self.revision_height,
+impl From<OctopusxtHeight> for IbcHeight {
+    fn from(height: OctopusxtHeight) -> Self {
+        Self {
+            revision_number: height.revision_number,
+            revision_height: height.revision_height,
         }
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Packet {
-    pub fn to_ibc_packet(self) -> ibc::core::ics04_channel::packet::Packet {
-        ibc::core::ics04_channel::packet::Packet {
-            sequence: self.sequence.to_ibc_sequence(),
-            source_port: self.source_port.to_ibc_port_id(),
-            source_channel: self.source_channel.to_ibc_channel_id(),
-            destination_port: self.destination_port.to_ibc_port_id(),
-            destination_channel: self.destination_channel.to_ibc_channel_id(),
-            data: self.data,
-            timeout_height: self.timeout_height.to_ibc_height(),
-            timeout_timestamp: self.timeout_timestamp.to_ibc_timestamp(),
+impl From<OctopusxtPacket> for IbcPacket {
+    fn from(octopus_packet: OctopusxtPacket) -> Self {
+        Self {
+            sequence: octopus_packet.sequence.into(),
+            source_port: octopus_packet.source_port.into(),
+            source_channel: octopus_packet.source_channel.into(),
+            destination_port: octopus_packet.destination_port.into(),
+            destination_channel: octopus_packet.destination_channel.into(),
+            data: octopus_packet.data,
+            timeout_height: octopus_packet.timeout_height.into(),
+            timeout_timestamp: octopus_packet.timeout_timestamp.into(),
         }
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId {
-    pub fn to_ibc_connection_id(self) -> ibc::core::ics24_host::identifier::ConnectionId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::ConnectionId(value)
+impl From<OctopusxtConnectionId> for IbcConnectionId {
+    fn from(octopus_connection_id: OctopusxtConnectionId) -> Self {
+        let value = String::from_utf8(octopus_connection_id.0).unwrap();
+        Self(value)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId {
-    pub fn to_ibc_channel_id(self) -> ibc::core::ics24_host::identifier::ChannelId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::ChannelId::from_str(&value).unwrap()
+impl From<OctopusxtChannelId> for IbcChannelId {
+    fn from(octopus_channel_id: OctopusxtChannelId) -> Self {
+        let value = String::from_utf8(octopus_channel_id.0).unwrap();
+        Self::from_str(&value).unwrap()
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::PortId {
-    pub fn to_ibc_port_id(self) -> ibc::core::ics24_host::identifier::PortId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::PortId(value)
+impl From<OctopusxtPortId> for IbcPortId {
+    fn from(octopus_port_id: OctopusxtPortId) -> Self {
+        let value = String::from_utf8(octopus_port_id.0).unwrap();
+        Self(value)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId {
-    pub fn to_ibc_client_id(self) -> ibc::core::ics24_host::identifier::ClientId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::ClientId(value)
+impl From<OctopusxtClientId> for IbcClientId {
+    fn from(octopus_client_id: OctopusxtClientId) -> Self {
+        let value = String::from_utf8(octopus_client_id.0).unwrap();
+        Self(value)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
-    pub fn to_ibc_sequence(self) -> ibc::core::ics04_channel::packet::Sequence {
-        ibc::core::ics04_channel::packet::Sequence::from(self.0)
+impl From<OctopusxtSequence> for IbcSequence {
+    fn from(octopus_sequence: OctopusxtSequence) -> Self {
+        Self::from(octopus_sequence.0)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp {
-    pub fn to_ibc_timestamp(self) -> ibc::timestamp::Timestamp {
-        let value = String::from_utf8(self.time).unwrap();
-        ibc::timestamp::Timestamp::from_str(&value).unwrap()
+impl From<OctopusxtTimestamp> for IbcTimestamp {
+    fn from(octopus_timestamp: OctopusxtTimestamp) -> Self {
+        let value = String::from_utf8(octopus_timestamp.time).unwrap();
+        Self::from_str(&value).unwrap()
     }
 }
 
-impl From<Any> for ibc_node::runtime_types::pallet_ibc::Any {
+impl From<Any> for OctopusxtAny {
     fn from(value: Any) -> Self {
-        ibc_node::runtime_types::pallet_ibc::Any {
+        Self {
             type_url: value.type_url.as_bytes().to_vec(),
             value: value.value,
         }
     }
 }
 
-impl Copy for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {}
+impl Copy for OctopusxtHeight {}
 
-impl Clone for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
+impl Clone for OctopusxtHeight {
     fn clone(&self) -> Self {
         Self {
             revision_number: self.revision_number,
