@@ -7,7 +7,6 @@ use std::future::Future;
 use subxt::{rpc::ClientT, BlockNumber, Client, SignedCommitment};
 
 use anyhow::Result;
-use codec::Output;
 use ibc::core::ics02_client::client_consensus::AnyConsensusState;
 use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
 use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};

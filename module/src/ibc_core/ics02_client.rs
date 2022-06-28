@@ -1,4 +1,4 @@
-use crate::{ibc_node, ClientRpc, MyConfig, OctopusxtClient, SubstrateNodeTemplateExtrinsicParams};
+use crate::{ClientRpc, OctopusxtClient};
 use ibc::{
     core::{
         ics02_client::{
@@ -9,7 +9,6 @@ use ibc::{
     },
     Height as ICSHeight,
 };
-use subxt::Client;
 use tendermint_proto::Protobuf;
 
 use anyhow::Result;
