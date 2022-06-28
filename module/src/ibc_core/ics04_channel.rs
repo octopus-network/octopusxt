@@ -1,5 +1,5 @@
-use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use crate::ibc_core::{OctopusxtClient, PacketRpc};
+use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
@@ -733,4 +733,3 @@ impl PacketRpc for OctopusxtClient {
         Box::new(result)
     }
 }
-

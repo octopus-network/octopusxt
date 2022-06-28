@@ -3,10 +3,10 @@
 
 use subxt::{Config, DefaultConfig};
 
+pub mod events;
 pub mod ibc_core;
 pub mod primitive;
 pub mod update_client_state;
-pub mod events;
 
 pub use ibc_core::*;
 pub use update_client_state::*;

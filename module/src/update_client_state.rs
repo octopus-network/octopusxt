@@ -1,5 +1,5 @@
-use crate::ibc_node::RuntimeApi;
 use crate::ibc_core::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
+use crate::ibc_node::RuntimeApi;
 use crate::{MyConfig, OctopusxtClient, SubstrateNodeTemplateExtrinsicParams};
 
 use anyhow::Result;

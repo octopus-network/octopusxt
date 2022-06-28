@@ -5,33 +5,32 @@ use ibc::core::{
 };
 use std::future::Future;
 use subxt::{
-    BlockNumber,
-    Client,
-    PairSigner, rpc::ClientT, SignedCommitment, storage::{StorageEntry, StorageKeyPrefix},
+    rpc::ClientT,
+    storage::{StorageEntry, StorageKeyPrefix},
+    BlockNumber, Client, SignedCommitment,
 };
 
 use anyhow::Result;
 use beefy_merkle_tree::Hash;
 use ibc_proto::google::protobuf::Any;
 use jsonrpsee::rpc_params;
-use sp_core::{H256, storage::StorageKey};
-use sp_keyring::AccountKeyring;
+use sp_core::{storage::StorageKey, H256};
 
-pub mod ics04_channel;
 pub mod ics02_client;
 pub mod ics03_connection;
+pub mod ics04_channel;
+pub mod ics26_router;
 
-pub use ics04_channel::*;
+pub use crate::events::*;
 pub use ics02_client::*;
 pub use ics03_connection::*;
-pub use crate::events::*;
+pub use ics04_channel::*;
 
 pub trait ClientRpc {}
 
 pub trait ChannelRpc {}
 
 pub trait ConnectionRpc {}
-
 
 pub trait PacketRpc {
     fn get_send_packet_event(
@@ -49,13 +48,16 @@ pub trait PacketRpc {
     ) -> Box<dyn Future<Output = Result<Vec<u8>>>>;
 }
 
+pub trait Router {
+    fn deliver(&self, msg: Vec<Any>) -> Box<dyn Future<Output = Result<H256>>>;
+}
+
 pub trait OctopusxtRpc: ClientRpc + ChannelRpc + ConnectionRpc + PacketRpc {}
 
 #[derive(Debug)]
 pub struct OctopusxtClient {
     client: Client<MyConfig>,
 }
-
 
 impl ClientRpc for OctopusxtClient {}
 
@@ -84,7 +86,7 @@ impl OctopusxtClient {
     /// ```
     pub async fn subscribe_beefy(&self) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
         tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
-        
+
         let api = self.to_runtime_api();
 
         let mut sub = api.client.rpc().subscribe_beefy_justifications().await?;
@@ -123,52 +125,12 @@ impl OctopusxtClient {
         Ok(height)
     }
 
-    pub fn to_runtime_api(&self) -> ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>> {
+    pub fn to_runtime_api(
+        &self,
+    ) -> ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>> {
         self.client.clone()
             .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>()
     }
-}
-
-/// ibc protocol core function, ics26 deliver function
-/// this function will dispatch msg to process
-///
-///  # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc_proto::google::protobuf::Any;
-/// use octopusxt::deliver;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let msg = vec![Any::default()];
-/// let result = deliver(msg, client).await?;
-/// ```
-/// return block_hash, extrinsic_hash, and event
-pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
-    tracing::info!("in call_ibc: [deliver]");
-
-    let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
-        .into_iter()
-        .map(|value| ibc_node::runtime_types::pallet_ibc::Any {
-            type_url: value.type_url.as_bytes().to_vec(),
-            value: value.value,
-        })
-        .collect();
-
-    let signer = PairSigner::new(AccountKeyring::Bob.pair());
-
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
-
-    let result = api
-        .tx()
-        .ibc()
-        .deliver(msg, 0)?
-        .sign_and_submit_default(&signer)
-        .await?;
-
-    Ok(result)
 }
 
 /// # get_mmr_leaf_and_mmr_proof
