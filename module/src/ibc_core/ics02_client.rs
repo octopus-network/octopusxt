@@ -13,13 +13,15 @@ use ibc::{
 use tendermint_proto::Protobuf;
 
 use core::str::FromStr;
+use beefy_merkle_tree::Hash;
 use sp_core::H256;
+use crate::primitive::{IdentifiedClientState, QueryClientStateResponse, QueryConsensusStateResponse};
 
 #[async_trait]
 impl ClientRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error> {
+    async fn query_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error> {
         tracing::info!("in call_ibc : [get_client_state]");
 
         let api = self.to_runtime_api();
@@ -48,7 +50,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(client_state)
     }
 
-    async fn get_client_consensus(
+    async fn query_client_consensus_state(
         &self,
         client_id: ClientId,
         height: ICSHeight,
@@ -97,7 +99,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(consensus_state)
     }
 
-    async fn get_consensus_state_with_height(
+    async fn query_consensus_state_with_height(
         &self,
         client_id: ClientId,
     ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error> {
@@ -135,7 +137,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error> {
+    async fn query_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error> {
         tracing::info!("in call_ibc: [get_clients]");
 
         let api = self.to_runtime_api();
@@ -185,7 +187,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_client_connections(
+    async fn query_client_connections(
         &self,
         client_id: ClientId,
     ) -> Result<Vec<ConnectionId>, Self::Error> {
@@ -221,5 +223,21 @@ impl ClientRpc for OctopusxtClient {
         result.push(connection_id);
 
         Ok(result)
+    }
+
+    fn query_consensus_state(&self, _height: ICSHeight) -> Result<QueryConsensusStateResponse, Self::Error> {
+        todo!()
+    }
+
+    fn query_upgraded_client(&self, _height: ICSHeight) -> Result<QueryClientStateResponse, Self::Error> {
+        todo!()
+    }
+
+    fn query_upgraded_cons_state(&self, _height: ICSHeight) -> Result<QueryConsensusStateResponse, Self::Error> {
+        todo!()
+    }
+
+    fn query_newly_created_clients(&self, _block_hash: Hash) -> Result<Vec<IdentifiedClientState>, Self::Error> {
+        todo!()
     }
 }

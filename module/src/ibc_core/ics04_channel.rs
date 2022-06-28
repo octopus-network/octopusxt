@@ -12,14 +12,17 @@ use tendermint_proto::Protobuf;
 use async_trait::async_trait;
 use codec::Decode;
 use core::str::FromStr;
+use ibc::core::ics24_host::identifier::ConnectionId;
+use ibc::Height;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 use sp_core::H256;
+use crate::primitive::QueryChannelsResponse;
 
 #[async_trait]
 impl ChannelRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn get_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
+    async fn query_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_channels]");
 
         let api = self.to_runtime_api();
@@ -68,7 +71,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_channel_end(
+    async fn query_channel_end(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -106,7 +109,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(channel_end)
     }
 
-    async fn get_packet_receipt(
+    async fn query_packet_receipt(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -115,7 +118,7 @@ impl ChannelRpc for OctopusxtClient {
         tracing::info!("in call_ibc : [get_packet_receipt]");
 
         let packet_receipt_vec = self
-            .get_packet_receipt_vec(port_id, channel_id, sequence)
+            .query_packet_receipt_vec(port_id, channel_id, sequence)
             .await?;
         let data = String::decode(&mut packet_receipt_vec.as_slice()).unwrap();
         if data.eq("Ok") {
@@ -125,7 +128,7 @@ impl ChannelRpc for OctopusxtClient {
         }
     }
 
-    async fn get_packet_receipt_vec(
+    async fn query_packet_receipt_vec(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -165,7 +168,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(data)
     }
 
-    async fn get_unreceipt_packet(
+    async fn query_unreceipt_packet(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -204,7 +207,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
+    async fn query_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
         tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
         let api = self.to_runtime_api();
@@ -253,7 +256,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_packet_commitment(
+    async fn query_packet_commitment(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -293,7 +296,7 @@ impl ChannelRpc for OctopusxtClient {
         }
     }
 
-    async fn get_packet_ack(
+    async fn query_packet_acknowledgements(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -333,7 +336,7 @@ impl ChannelRpc for OctopusxtClient {
         }
     }
 
-    async fn get_next_sequence_recv(
+    async fn query_next_sequence_recv(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -379,7 +382,7 @@ impl ChannelRpc for OctopusxtClient {
         }
     }
 
-    async fn get_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
+    async fn query_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
         tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
         let api = self.to_runtime_api();
@@ -425,13 +428,25 @@ impl ChannelRpc for OctopusxtClient {
 
         Ok(result)
     }
+
+    fn query_connection_channels(&self, _height: Height, _connection_id: ConnectionId) -> Result<QueryChannelsResponse, Self::Error> {
+        todo!()
+    }
+
+    fn query_unreceived_packets(&self, _height: Height, _channel_id: ChannelId, _port_id: PortId, _seqs: Vec<Sequence>) -> Result<Vec<Sequence>, Self::Error> {
+        todo!()
+    }
+
+    fn query_unreceived_acknowledgements(&self, _height: Height, _channel_id: ChannelId, _port_id: PortId, _seqs: Vec<Sequence>) -> Result<Vec<Sequence>, Self::Error> {
+        todo!()
+    }
 }
 
 #[async_trait]
 impl PacketRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn get_send_packet_event(
+    async fn query_send_packet_event(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -472,7 +487,7 @@ impl PacketRpc for OctopusxtClient {
         Ok(packet)
     }
 
-    async fn get_write_ack_packet_event(
+    async fn query_write_ack_packet_event(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -507,5 +522,9 @@ impl PacketRpc for OctopusxtClient {
         }
 
         Ok(data)
+    }
+
+    async fn query_packets(&self, _channel_id: ChannelId, _port_id: PortId, _seqs: Vec<Sequence>) -> Result<Vec<Packet>, Self::Error> {
+        todo!()
     }
 }

@@ -114,7 +114,7 @@ pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) ->
 
     // asset block block number < get last height
     {
-        let latest_height = octopusxt_client.get_latest_height().await?;
+        let latest_height = octopusxt_client.query_latest_height().await?;
         println!("[build_mmr_proof] latest height = {:?}", latest_height);
         assert!(
             u64::from(block_number) <= latest_height,
@@ -138,7 +138,7 @@ pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) ->
     // Note: target_height = signed_commitment.commitment.block_number-1
     let target_height = BlockNumber::from(block_number - 1);
     let (block_hash, mmr_leaf, mmr_leaf_proof) = octopusxt_client
-        .get_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash.unwrap()))
+        .query_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash.unwrap()))
         .await?;
     println!("generate_proof block hash : {:?}", block_hash);
 
@@ -210,7 +210,7 @@ pub async fn update_client_state(
 
     // get block header by block number
     let block_header = octopusxt_src_client
-        .get_header_by_block_number(Some(BlockNumber::from(block_number)))
+        .query_header_by_block_number(Some(BlockNumber::from(block_number)))
         .await
         .unwrap();
     println!("header = {:?}", block_header);
@@ -297,7 +297,7 @@ pub async fn update_client_state_service(
 
         // get block header by block number
         let block_header = octpusxt_src_client
-            .get_header_by_block_number(Some(BlockNumber::from(block_number)))
+            .query_header_by_block_number(Some(BlockNumber::from(block_number)))
             .await
             .unwrap();
         println!("header = {:?}", block_header);

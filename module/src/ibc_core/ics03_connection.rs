@@ -1,4 +1,4 @@
-use crate::{ChannelRpc, ConnectionRpc, OctopusxtClient};
+use crate::{ChannelRpc, ConnectionRpc, ConnHandshakeProof, OctopusxtClient};
 use ibc::core::{
     ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd},
     ics04_channel::channel::IdentifiedChannelEnd,
@@ -7,14 +7,17 @@ use ibc::core::{
 
 use async_trait::async_trait;
 use core::str::FromStr;
+use ibc::core::ics24_host::identifier::ClientId;
+use ibc::Height;
 use sp_core::H256;
 use tendermint_proto::Protobuf;
+use crate::primitive::IdentifiedConnection;
 
 #[async_trait]
 impl ConnectionRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn get_connection_end(
+    async fn query_connection_end(
         &self,
         connection_identifier: ConnectionId,
     ) -> Result<ConnectionEnd, Self::Error> {
@@ -46,7 +49,7 @@ impl ConnectionRpc for OctopusxtClient {
         Ok(connection_end)
     }
 
-    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error> {
+    async fn query_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_connections]");
 
         let api = self.to_runtime_api();
@@ -98,7 +101,7 @@ impl ConnectionRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_connection_channels(
+    async fn query_connection_channels(
         &self,
         connection_id: ConnectionId,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
@@ -139,12 +142,20 @@ impl ConnectionRpc for OctopusxtClient {
 
             // get channel_end
             let channel_end = self
-                .get_channel_end(port_id.clone(), channel_id.clone())
+                .query_channel_end(port_id.clone(), channel_id.clone())
                 .await?;
 
             result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
         }
 
         Ok(result)
+    }
+
+    fn query_connection_using_client(&self, _height: Height, _client_id: ClientId) -> Result<Vec<IdentifiedConnection>, Self::Error> {
+        todo!()
+    }
+
+    fn generate_conn_handshake_proof(&self, _height: Height, _client_id: ClientId, _conn_id: ConnectionId) -> Result<ConnHandshakeProof, Self::Error> {
+        todo!()
     }
 }

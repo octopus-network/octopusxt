@@ -7,17 +7,20 @@ use ibc::core::{
 use subxt::{rpc::ClientT, BlockNumber, Client, SignedCommitment};
 
 use async_trait::async_trait;
+use beefy_merkle_tree::Hash;
 use ibc::core::ics02_client::client_consensus::AnyConsensusState;
 use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
 use ibc::core::ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd};
 use ibc::core::ics04_channel::channel::{ChannelEnd, IdentifiedChannelEnd};
 use ibc::core::ics04_channel::packet::Receipt;
 use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-use ibc::Height as ICSHeight;
+use ibc::{Height as ICSHeight, Height};
 use ibc_proto::google::protobuf::Any;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 use jsonrpsee::rpc_params;
 use sp_core::H256;
+use serde::{Serialize,Deserialize};
+
 
 pub mod ics02_client;
 pub mod ics03_connection;
@@ -28,12 +31,14 @@ pub use crate::events::*;
 pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
+use crate::primitive::{IdentifiedClientState, IdentifiedConnection, QueryChannelsResponse, QueryClientStateResponse, QueryConsensusStateResponse, QueryDenomTraceResponse, QueryDenomTracesResponse};
 
 #[async_trait]
 pub trait ClientRpc {
     type Error;
 
-    /// get client_state according by client_id, and read ClientStates StoraageMap
+    /// Query a client state
+    /// query client_state according by client_id, and read ClientStates StorageMap
     ///
     /// # Usage example
     ///
@@ -47,10 +52,10 @@ pub trait ClientRpc {
     /// let client_id = ClientId::default();
     /// let result = get_client_state(&client_id, client).await?;
     /// ```
-    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error>;
+    async fn query_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error>;
 
-    /// get appoint height consensus_state according by client_identifier and height
-    /// and read ConsensusStates StoreageMap
+    /// query appoint height consensus_state according by client_identifier and height
+    /// and read ConsensusStates StorageMap
     ///
     /// # Usage example
     ///
@@ -65,13 +70,13 @@ pub trait ClientRpc {
     /// let height = ICSHeight::default();
     /// let result = get_client_consensus(&client_id, &height, client).await?;
     /// ```
-    async fn get_client_consensus(
+    async fn query_client_consensus_state(
         &self,
         client_id: ClientId,
         height: ICSHeight,
     ) -> Result<AnyConsensusState, Self::Error>;
 
-    /// get consensus state with height
+    /// query consensus state with height
     ///
     /// # Usage example
     ///
@@ -85,12 +90,12 @@ pub trait ClientRpc {
     /// let client_id = ClientId::default();
     /// let result = get_consensus_state_with_height(&client_id, client).await?;
     /// ```
-    async fn get_consensus_state_with_height(
+    async fn query_consensus_state_with_height(
         &self,
         client_id: ClientId,
     ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error>;
 
-    /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
+    /// query key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
     ///
     /// # Usage example
     ///
@@ -102,7 +107,7 @@ pub trait ClientRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_clients(client).await?;
     /// ```
-    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
+    async fn query_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
 
     /// get connection_identifier vector according by client_identifier
     ///
@@ -119,16 +124,30 @@ pub trait ClientRpc {
     /// let client_id = ClientId::default();
     /// let result = get_client_connections(&client_id, client).await?;
     /// ```
-    async fn get_client_connections(
+    async fn query_client_connections(
         &self,
         client_id: ClientId,
     ) -> Result<Vec<ConnectionId>, Self::Error>;
+
+    /// Query local chain consensus state
+    fn query_consensus_state(&self, height: Height) -> Result<QueryConsensusStateResponse, Self::Error>;
+
+    /// Query upgraded client state
+    fn query_upgraded_client(&self, height: Height) -> Result<QueryClientStateResponse, Self::Error>;
+
+    /// Query upgraded consensus state for client
+    fn query_upgraded_cons_state(&self, height: Height) -> Result<QueryConsensusStateResponse, Self::Error>;
+
+    /// Query newly created clients in block
+    fn query_newly_created_clients(&self, block_hash: Hash) -> Result<Vec<IdentifiedClientState>, Self::Error>;
 }
 
 #[async_trait]
 pub trait ChannelRpc {
     type Error;
-    /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
+
+    /// Query all channel states
+    /// query key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
     ///
     /// # Usage example
     /// ```rust
@@ -139,7 +158,7 @@ pub trait ChannelRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_channels(client).await?;
     /// ```
-    async fn get_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
+    async fn query_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
     /// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
     ///
@@ -156,13 +175,32 @@ pub trait ChannelRpc {
     /// let channel_id = ChannelId::default();
     /// let result = get_channel_end(&port_id, &channel_id, client).await?;
     /// ```
-    async fn get_channel_end(
+    async fn query_channel_end(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
     ) -> Result<ChannelEnd, Self::Error>;
 
-    /// get packet receipt by port_id, channel_id and sequence
+
+    // TODO
+    // /// Query client state for channel and port id
+    // #[method(name = "ibc_queryChannelClient")]
+    // fn query_channel_client(
+    //     &self,
+    //     height: u32,
+    //     channel_id: String,
+    //     port_id: String,
+    // ) -> Result<IdentifiedClientState>;
+
+
+    /// Query all channel states for associated connection
+    fn query_connection_channels(
+        &self,
+        height: Height,
+        connection_id: ConnectionId,
+    ) -> Result<QueryChannelsResponse,Self::Error>;
+
+    /// query packet receipt by port_id, channel_id and sequence
     ///
     /// # Usage example
     ///
@@ -179,14 +217,14 @@ pub trait ChannelRpc {
     /// let sequence = Sequence::from(0);
     /// let result = get_packet_receipt(&port_id, &channel_id, &sequence, client).await?;
     /// ```
-    async fn get_packet_receipt(
+    async fn query_packet_receipt(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
     ) -> Result<Receipt, Self::Error>;
 
-    /// get packet receipt by port_id, channel_id and sequence
+    /// query packet receipt by port_id, channel_id and sequence
     /// # Usage example
     ///
     /// ```rust
@@ -202,14 +240,14 @@ pub trait ChannelRpc {
     /// let sequence = Sequence::from(0);
     /// let result = get_packet_receipt_vec(&port_id, &channel_id, &sequence, client).await?;
     /// ```
-    async fn get_packet_receipt_vec(
+    async fn query_packet_receipt_vec(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
     ) -> Result<Vec<u8>, Self::Error>;
 
-    /// get  unreceipt packet
+    /// query  unreceipt packet
     ///  # Usage example
     ///
     /// ```rust
@@ -225,14 +263,14 @@ pub trait ChannelRpc {
     /// let sequence = vec![Sequence::from(12),Sequence::from(13)];
     /// let result = get_unreceipt_packet(&port_id, &channel_id, sequence, client).await?;
     /// ```
-    async fn get_unreceipt_packet(
+    async fn query_unreceipt_packet(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
     ) -> Result<Vec<u64>, Self::Error>;
 
-    /// get get_commitment_packet_state
+    /// query get_commitment_packet_state
     ///
     /// # Usage example
     ///
@@ -244,9 +282,9 @@ pub trait ChannelRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_commitment_packet_state(client).await?;
     /// ```
-    async fn get_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
+    async fn query_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
 
-    /// get packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
+    /// query packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
     ///
     ///  # Usage example
     ///
@@ -263,14 +301,14 @@ pub trait ChannelRpc {
     /// let sequence = Sequence::from(23);
     /// let result = get_packet_commitment(&port_id, &channel_id, &sequence, client).await?;
     /// ```
-    async fn get_packet_commitment(
+    async fn query_packet_commitment(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
     ) -> Result<Vec<u8>, Self::Error>;
 
-    /// get packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
+    /// query packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
     ///
     ///  # Usage example
     ///
@@ -287,7 +325,7 @@ pub trait ChannelRpc {
     /// let sequence = Sequence::from(12);
     /// let result = get_packet_ack(&port_id, &channel_id, &sequence, client).await?;
     /// ```
-    async fn get_packet_ack(
+    async fn query_packet_acknowledgements(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -308,13 +346,13 @@ pub trait ChannelRpc {
     /// let channel_id = ChannelId::default();
     /// let result = get_next_sequence_recv(&prot_id, &channel_id, client).await?;
     /// ```
-    async fn get_next_sequence_recv(
+    async fn query_next_sequence_recv(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
     ) -> Result<Vec<u8>, Self::Error>;
 
-    /// get get_commitment_packet_state
+    /// query get_commitment_packet_state
     ///
     /// # Usage example
     ///
@@ -326,13 +364,35 @@ pub trait ChannelRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_acknowledge_packet_state(client).await?;
     /// ```
-    async fn get_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
+    async fn query_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
+
+
+    /// Query unreceived packet commitments
+    fn query_unreceived_packets(
+        &self,
+        height: Height,
+        channel_id: ChannelId,
+        port_id: PortId,
+        seqs: Vec<Sequence>,
+    ) -> Result<Vec<Sequence>, Self::Error>;
+
+
+    /// Query the unreceived acknowledgements
+    fn query_unreceived_acknowledgements(
+        &self,
+        height: Height,
+        channel_id: ChannelId,
+        port_id: PortId,
+        seqs: Vec<Sequence>,
+    ) -> Result<Vec<Sequence>, Self::Error>;
+
+
 }
 
 #[async_trait]
 pub trait ConnectionRpc {
     type Error;
-    /// get connectionEnd according by connection_identifier and read Connections StorageMaps
+    /// query connectionEnd according by connection_identifier and read Connections StorageMaps
     ///
     /// # Usage example
     ///
@@ -346,12 +406,21 @@ pub trait ConnectionRpc {
     /// let conection_id = ConnectionId::default();
     /// let result = get_connection_end(&conection_id, api).await?;
     /// ```
-    async fn get_connection_end(
+    async fn query_connection_end(
         &self,
         connection_identifier: ConnectionId,
     ) -> Result<ConnectionEnd, Self::Error>;
 
-    /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
+    // TODO
+    // /// Query a connection state
+    // fn query_connection(
+    //     &self,
+    //     height: u32,
+    //     connection_id: String,
+    // ) -> Result<QueryConnectionResponse>;
+
+    /// Query all connection states
+    /// query key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
     ///
     /// # Usage example
     ///
@@ -363,9 +432,11 @@ pub trait ConnectionRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_connections(client).await?;
     /// ```
-    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
+    async fn query_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
 
-    ///  # Usage example
+    /// # Query IdentifiedChannelEnd by connection_identifier
+    ///
+    /// ## Usage example
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
@@ -377,16 +448,33 @@ pub trait ConnectionRpc {
     /// let connection = ConnectionId::default();
     /// let result = get_connection_channels(&connection, client).await?;
     /// ```
-    async fn get_connection_channels(
+    async fn query_connection_channels(
         &self,
         connection_id: ConnectionId,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
+
+
+    /// Query all connection states for associated client
+    fn query_connection_using_client(
+        &self,
+        height: Height,
+        client_id: ClientId,
+    ) -> Result<Vec<IdentifiedConnection>, Self::Error>;
+
+
+    /// Generate proof for connection handshake
+    fn generate_conn_handshake_proof(
+        &self,
+        height: Height,
+        client_id: ClientId,
+        conn_id: ConnectionId,
+    ) -> Result<ConnHandshakeProof, Self::Error>;
 }
 
 #[async_trait]
 pub trait PacketRpc {
     type Error;
-    /// get send packet event by port_id, channel_id and sequence
+    /// Query send packet event by port_id, channel_id and sequence
     /// (port_id, channel_id, sequence), packet)
     ///
     /// # Usage example
@@ -403,7 +491,7 @@ pub trait PacketRpc {
     /// let sequence = Sequence::from(0);
     /// let result = get_send_packet_event(&port_id, &channel_id, &sequence, client).await?;
     /// ```
-    async fn get_send_packet_event(
+    async fn query_send_packet_event(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
@@ -426,12 +514,21 @@ pub trait PacketRpc {
     /// let sequence = Sequence::from(0);
     /// let result = get_write_ack_packet_event(&port_id, &channel_id, &sequence, client).await?;
     /// ```
-    async fn get_write_ack_packet_event(
+    async fn query_write_ack_packet_event(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
     ) -> Result<Vec<u8>, Self::Error>;
+
+
+    /// Query packet data
+    async fn query_packets(
+        &self,
+        channel_id: ChannelId,
+        port_id: PortId,
+        seqs: Vec<Sequence>,
+    ) -> Result<Vec<Packet>, Self::Error>;
 }
 
 #[async_trait]
@@ -455,6 +552,22 @@ pub trait Router {
     /// ```
     /// return block_hash, extrinsic_hash, and event
     async fn deliver(&self, msg: Vec<Any>) -> Result<H256, Self::Error>;
+}
+
+
+pub trait Transfer {
+    type Error;
+
+    /// Query the denom trace for an ibc denom
+    fn query_denom_trace(&self, denom: String) -> Result<QueryDenomTraceResponse, Self::Error>;
+
+    /// Query the denom traces for ibc denoms matching offset
+    fn query_denom_traces(
+        &self,
+        offset: String,
+        limit: u64,
+        height: Height,
+    ) -> Result<QueryDenomTracesResponse, Self::Error>;
 }
 
 #[async_trait]
@@ -510,7 +623,7 @@ impl OctopusxtClient {
     /// let result = get_latest_height(api).await?;
     /// ```
     ///
-    pub async fn get_latest_height(&self) -> anyhow::Result<u64> {
+    pub async fn query_latest_height(&self) -> anyhow::Result<u64> {
         tracing::info!("In call_ibc: [get_latest_height]");
 
         let api = self.to_runtime_api();
@@ -555,7 +668,7 @@ impl OctopusxtClient {
     /// let block_hash = None;
     /// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
     /// ```
-    pub async fn get_mmr_leaf_and_mmr_proof(
+    pub async fn query_mmr_leaf_and_mmr_proof(
         &self,
         block_number: Option<BlockNumber>,
         block_hash: Option<H256>,
@@ -594,7 +707,7 @@ impl OctopusxtClient {
     /// let result = get_header_by_block_hash(block_hash, client).await?;
     /// ```
     ///
-    pub async fn get_header_by_block_hash(
+    pub async fn query_header_by_block_hash(
         &self,
         block_hash: Option<H256>,
     ) -> anyhow::Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
@@ -621,7 +734,7 @@ impl OctopusxtClient {
     /// let result = get_header_by_block_number(block_number, client).await?;
     /// ```
     ///
-    pub async fn get_header_by_block_number(
+    pub async fn query_header_by_block_number(
         &self,
         block_number: Option<BlockNumber>,
     ) -> anyhow::Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
@@ -635,4 +748,38 @@ impl OctopusxtClient {
 
         Ok(header.into())
     }
+
+    /// Generate proof for given key
+    pub fn query_proof(&self, _height: u32, _keys: Vec<Vec<u8>>) -> anyhow::Result<Proof> {
+        todo!()
+    }
+
+    /// Query balance of an address on chain, addr should be a valid hexadecimal or SS58 string,
+    /// representing the account id.
+    pub fn query_balance_with_address(&self, _addr: String) -> anyhow::Result<ibc_proto::cosmos::base::v1beta1::Coin> {
+        todo!()
+    }
+
+}
+
+
+/// Proof for a set of keys
+#[derive(Serialize, Deserialize)]
+pub struct Proof {
+    /// Trie proof
+    pub proof: Vec<u8>,
+    /// Height at which proof was recovered
+    pub height: ibc_proto::ibc::core::client::v1::Height,
+}
+
+
+/// Connection handshake proof
+#[derive(Serialize, Deserialize)]
+pub struct ConnHandshakeProof {
+    /// Protobuf encoded client state
+    pub client_state: IdentifiedClientState,
+    /// Trie proof for connection state, client state and consensus state
+    pub proof: Vec<u8>,
+    /// Proof height
+    pub height: ibc_proto::ibc::core::client::v1::Height,
 }

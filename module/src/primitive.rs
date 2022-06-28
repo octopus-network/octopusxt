@@ -1,5 +1,7 @@
 use prost_types::Any;
 use std::str::FromStr;
+use codec::{Encode, Decode};
+use serde::{Serialize, Deserialize};
 
 use crate::ibc_node::runtime_types::pallet_ibc::{
     event::primitive::{
@@ -117,3 +119,142 @@ impl Clone for OctopusxtHeight {
         }
     }
 }
+
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct IdentifiedChannel {
+    pub channel_id: Vec<u8>,
+    pub port_id: Vec<u8>,
+    /// Protobuf encoded `ibc::core::ics04_channel::connection::ChannelEnd`
+    pub channel_end: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd, Serialize, Deserialize)]
+pub struct IdentifiedClientState {
+    pub client_id: Vec<u8>,
+    /// Protobuf encoded `AnyClientState`
+    pub client_state: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct IdentifiedConnection {
+    pub connection_id: Vec<u8>,
+    /// Protobuf encoded `ibc::core::ics03_connection::connection::ConnectionEnd`
+    pub connection_end: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryClientStateResponse {
+    /// Protobuf encoded `AnyClientState`
+    pub client_state: Vec<u8>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryClientStatesResponse {
+    pub client_states: Vec<Vec<u8>>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryConsensusStateResponse {
+    pub consensus_state: Vec<u8>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryConnectionResponse {
+    /// Protobuf encoded `ibc::core::ics03_connection::connection::ConnectionEnd`
+    pub connection: Vec<u8>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryChannelResponse {
+    /// Protobuf encoded `ibc::core::ics04_channel::connection::ChannelEnd`
+    pub channel: Vec<u8>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryChannelsResponse {
+    pub channels: Vec<IdentifiedChannel>,
+    pub height: u64,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryConnectionsResponse {
+    pub connections: Vec<IdentifiedConnection>,
+    pub height: u64,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryNextSequenceReceiveResponse {
+    pub sequence: u64,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryPacketCommitmentResponse {
+    pub commitment: Vec<u8>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct PacketState {
+    pub port_id: Vec<u8>,
+    pub channel_id: Vec<u8>,
+    pub sequence: u64,
+    pub data: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryPacketCommitmentsResponse {
+    pub commitments: Vec<PacketState>,
+    pub height: u64,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryPacketAcknowledgementResponse {
+    pub ack: Vec<u8>,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryPacketAcknowledgementsResponse {
+    pub acks: Vec<PacketState>,
+    pub height: u64,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryPacketReceiptResponse {
+    pub receipt: bool,
+    pub height: u64,
+    pub trie_key: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryDenomTraceResponse {
+    pub trace: Vec<u8>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct QueryDenomTracesResponse {
+    pub trace: Vec<Vec<u8>>,
+}
+
+#[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
+pub struct ConnectionHandshake {
+    pub client_state: Vec<u8>,
+    pub trie_keys: Vec<Vec<u8>>,
+    pub height: u64,
+}
+
