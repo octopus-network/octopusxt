@@ -112,7 +112,7 @@ pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) ->
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
-    // asset block block number < get laset height
+    // asset block block number < get last height
     {
         let latest_height = octopusxt_client.get_latest_height().await?;
         println!("[build_mmr_proof] latest height = {:?}", latest_height);
@@ -355,7 +355,7 @@ pub fn verify_commitment_signatures(
 ) -> core::result::Result<(), Error> {
     let msg =
         libsecp256k1::Message::parse_slice(&commitment_hash[..]).or(Err(Error::InvalidMessage))?;
-    println!("verify_commitment_signatures:commiment msg is {:?}", msg);
+    println!("verify_commitment_signatures:comment msg is {:?}", msg);
 
     for signature in signatures
         .iter()

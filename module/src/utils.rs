@@ -5,7 +5,7 @@ use subxt::StorageEntry;
 
 /// convert substrate Header to Ibc Header
 pub(crate) fn convert_substrate_header_to_ibc_header(
-    header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
+    header: sp_runtime::generic::Header<u32, sp_runtime::traits::BlakeTwo256>,
 ) -> beefy_light_client::header::Header {
     beefy_light_client::header::Header {
         parent_hash: Hash::from(header.parent_hash),
