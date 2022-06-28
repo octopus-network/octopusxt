@@ -1,5 +1,5 @@
 use octopusxt::{
-    ibc_core::get_storage_key, ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams,
+    utils::get_storage_key, ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams,
 };
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
