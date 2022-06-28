@@ -6,7 +6,9 @@ use sp_core::H256;
 use sp_keyring::AccountKeyring;
 use std::future::Future;
 use subxt::PairSigner;
+use async_trait::async_trait;
 
+#[async_trait]
 impl Router for OctopusxtClient {
     /// ibc protocol core function, ics26 deliver function
     /// this function will dispatch msg to process
@@ -24,7 +26,7 @@ impl Router for OctopusxtClient {
     /// let result = deliver(msg, client).await?;
     /// ```
     /// return block_hash, extrinsic_hash, and event
-    fn deliver(&self, msg: Vec<Any>) -> Box<dyn Future<Output = Result<H256>>> {
+    async fn deliver(&self, msg: Vec<Any>) -> Result<H256> {
         tracing::info!("in call_ibc: [deliver]");
 
         let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
@@ -39,17 +41,13 @@ impl Router for OctopusxtClient {
 
         let api = self.to_runtime_api();
 
-        let result = async move {
-            let result = api
-                .tx()
-                .ibc()
-                .deliver(msg, 0)?
-                .sign_and_submit_default(&signer)
-                .await?;
+        let result = api
+            .tx()
+            .ibc()
+            .deliver(msg, 0)?
+            .sign_and_submit_default(&signer)
+            .await?;
 
-            Ok(result)
-        };
-
-        Box::new(result)
+        Ok(result)
     }
 }

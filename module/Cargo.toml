@@ -22,6 +22,7 @@ prost-types = { version = "0.10.1" }
 tokio = { version = "1.0", features = ["rt-multi-thread", "time", "sync"] }
 jsonrpsee = { version = "0.14", features = ["macros", "ws-client", "http-client"] }
 libsecp256k1 = { version = "0.7.0", features = ["static-context"] }
+async-trait = "0.1.56"
 
 # substrate
 codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive", "full", "bit-vec"] }

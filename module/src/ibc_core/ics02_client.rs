@@ -10,12 +10,14 @@ use ibc::{
     Height as ICSHeight,
 };
 use tendermint_proto::Protobuf;
+use async_trait::async_trait;
 
 use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;
 use std::future::Future;
 
+#[async_trait]
 impl ClientRpc for OctopusxtClient {
     /// get client_state according by client_id, and read ClientStates StoraageMap
     ///
@@ -32,40 +34,33 @@ impl ClientRpc for OctopusxtClient {
     /// let result = get_client_state(&client_id, client).await?;
     /// ```
     ///
-    fn get_client_state(
-        &self,
-        client_id: ClientId,
-    ) -> Box<dyn Future<Output = Result<AnyClientState>>> {
+    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState> {
         tracing::info!("in call_ibc : [get_client_state]");
 
         let api = self.to_runtime_api();
 
-        let result = async move {
-            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-            let block_header = block.next().await.unwrap().unwrap();
+        let block_header = block.next().await.unwrap().unwrap();
 
-            let block_hash: H256 = block_header.hash();
+        let block_hash: H256 = block_header.hash();
 
-            let data: Vec<u8> = api
-                .storage()
-                .ibc()
-                .client_states(client_id.as_bytes(), Some(block_hash))
-                .await?;
+        let data: Vec<u8> = api
+            .storage()
+            .ibc()
+            .client_states(client_id.as_bytes(), Some(block_hash))
+            .await?;
 
-            if data.is_empty() {
-                return Err(anyhow::anyhow!(
-                    "get_client_state is empty! by client_id = ({})",
-                    client_id
-                ));
-            }
+        if data.is_empty() {
+            return Err(anyhow::anyhow!(
+                "get_client_state is empty! by client_id = ({})",
+                client_id
+            ));
+        }
 
-            let client_state = AnyClientState::decode_vec(&*data).unwrap();
+        let client_state = AnyClientState::decode_vec(&*data).unwrap();
 
-            Ok(client_state)
-        };
-
-        Box::new(result)
+        Ok(client_state)
     }
 
     /// get appoint height consensus_state according by client_identifier and height
@@ -85,57 +80,53 @@ impl ClientRpc for OctopusxtClient {
     /// let result = get_client_consensus(&client_id, &height, client).await?;
     /// ```
     ///
-    fn get_client_consensus(
+    async fn get_client_consensus(
         &self,
         client_id: ClientId,
         height: ICSHeight,
-    ) -> Box<dyn Future<Output = Result<AnyConsensusState>>> {
+    ) -> Result<AnyConsensusState> {
         tracing::info!("in call_ibc: [get_client_consensus]");
 
         let api = self.to_runtime_api();
 
-        let result = async move {
-            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-            let block_header = block.next().await.unwrap().unwrap();
+        let block_header = block.next().await.unwrap().unwrap();
 
-            let block_hash: H256 = block_header.hash();
+        let block_hash: H256 = block_header.hash();
 
-            let data: Vec<(Vec<u8>, Vec<u8>)> = api
-                .storage()
-                .ibc()
-                .consensus_states(client_id.as_bytes(), Some(block_hash))
-                .await?;
+        let data: Vec<(Vec<u8>, Vec<u8>)> = api
+            .storage()
+            .ibc()
+            .consensus_states(client_id.as_bytes(), Some(block_hash))
+            .await?;
 
-            if data.is_empty() {
-                return Err(anyhow::anyhow!(
-                    "get_client_consensus is empty! by client_id = ({}), height = ({})",
-                    client_id,
-                    height
-                ));
+        if data.is_empty() {
+            return Err(anyhow::anyhow!(
+                "get_client_consensus is empty! by client_id = ({}), height = ({})",
+                client_id,
+                height
+            ));
+        }
+
+        // get the height consensus_state
+        let mut consensus_state = vec![];
+        for item in data.iter() {
+            if item.0 == height.encode_vec().unwrap() {
+                consensus_state = item.1.clone();
             }
+        }
 
-            // get the height consensus_state
-            let mut consensus_state = vec![];
-            for item in data.iter() {
-                if item.0 == height.encode_vec().unwrap() {
-                    consensus_state = item.1.clone();
-                }
-            }
-
-            let consensus_state = if consensus_state.is_empty() {
-                // TODO
-                AnyConsensusState::Grandpa(
-                    ibc::clients::ics10_grandpa::consensus_state::ConsensusState::default(),
-                )
-            } else {
-                AnyConsensusState::decode_vec(&*consensus_state).unwrap()
-            };
-
-            Ok(consensus_state)
+        let consensus_state = if consensus_state.is_empty() {
+            // TODO
+            AnyConsensusState::Grandpa(
+                ibc::clients::ics10_grandpa::consensus_state::ConsensusState::default(),
+            )
+        } else {
+            AnyConsensusState::decode_vec(&*consensus_state).unwrap()
         };
 
-        Box::new(result)
+        Ok(consensus_state)
     }
 
     /// get consensus state with height
@@ -153,46 +144,42 @@ impl ClientRpc for OctopusxtClient {
     /// let result = get_consensus_state_with_height(&client_id, client).await?;
     /// ```
     ///
-    fn get_consensus_state_with_height(
+    async fn get_consensus_state_with_height(
         &self,
         client_id: ClientId,
-    ) -> Box<dyn Future<Output = Result<Vec<(ICSHeight, AnyConsensusState)>>>> {
+    ) -> Result<Vec<(ICSHeight, AnyConsensusState)>> {
         tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
         let api = self.to_runtime_api();
 
-        let result = async move {
-            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-            let block_header = block.next().await.unwrap().unwrap();
+        let block_header = block.next().await.unwrap().unwrap();
 
-            let block_hash: H256 = block_header.hash();
+        let block_hash: H256 = block_header.hash();
 
-            // vector<height, consensus_state>
-            let data: Vec<(Vec<u8>, Vec<u8>)> = api
-                .storage()
-                .ibc()
-                .consensus_states(client_id.as_bytes(), Some(block_hash))
-                .await?;
+        // vector<height, consensus_state>
+        let data: Vec<(Vec<u8>, Vec<u8>)> = api
+            .storage()
+            .ibc()
+            .consensus_states(client_id.as_bytes(), Some(block_hash))
+            .await?;
 
-            if data.is_empty() {
-                return Err(anyhow::anyhow!(
-                    "get_consensus_state_with_height is empty! by client_id = ({})",
-                    client_id
-                ));
-            }
+        if data.is_empty() {
+            return Err(anyhow::anyhow!(
+                "get_consensus_state_with_height is empty! by client_id = ({})",
+                client_id
+            ));
+        }
 
-            let mut result = vec![];
-            for (height, consensus_state) in data.iter() {
-                let height = ICSHeight::decode_vec(height).unwrap();
-                let consensus_state = AnyConsensusState::decode_vec(consensus_state).unwrap();
-                result.push((height, consensus_state));
-            }
+        let mut result = vec![];
+        for (height, consensus_state) in data.iter() {
+            let height = ICSHeight::decode_vec(height).unwrap();
+            let consensus_state = AnyConsensusState::decode_vec(consensus_state).unwrap();
+            result.push((height, consensus_state));
+        }
 
-            Ok(result)
-        };
-
-        Box::new(result)
+        Ok(result)
     }
 
     /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
@@ -208,58 +195,54 @@ impl ClientRpc for OctopusxtClient {
     /// let result = get_clients(client).await?;
     /// ```
     ///
-    fn get_clients(&self) -> Box<dyn Future<Output = Result<Vec<IdentifiedAnyClientState>>>> {
+    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>> {
         tracing::info!("in call_ibc: [get_clients]");
 
         let api = self.to_runtime_api();
 
-        let result = async move {
-            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-            let block_header = block.next().await.unwrap().unwrap();
+        let block_header = block.next().await.unwrap().unwrap();
 
-            let block_hash: H256 = block_header.hash();
+        let block_hash: H256 = block_header.hash();
 
-            // vector key-value
-            let mut ret = vec![];
+        // vector key-value
+        let mut ret = vec![];
 
-            // get client_state Keys
-            let client_states_keys: Vec<Vec<u8>> = api
+        // get client_state Keys
+        let client_states_keys: Vec<Vec<u8>> = api
+            .storage()
+            .ibc()
+            .client_states_keys(Some(block_hash))
+            .await?;
+        if client_states_keys.is_empty() {
+            return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
+        }
+
+        // enumerate every item get client_state value
+        for key in client_states_keys {
+            // get client_state value
+            let client_states_value: Vec<u8> = api
                 .storage()
                 .ibc()
-                .client_states_keys(Some(block_hash))
+                .client_states(&key, Some(block_hash))
                 .await?;
-            if client_states_keys.is_empty() {
-                return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
-            }
+            // store key-value
+            ret.push((key.clone(), client_states_value));
+        }
 
-            // enumerate every item get client_state value
-            for key in client_states_keys {
-                // get client_state value
-                let client_states_value: Vec<u8> = api
-                    .storage()
-                    .ibc()
-                    .client_states(&key, Some(block_hash))
-                    .await?;
-                // store key-value
-                ret.push((key.clone(), client_states_value));
-            }
+        let mut result = vec![];
 
-            let mut result = vec![];
+        for (client_id, client_state) in ret.iter() {
+            let client_id_str = String::from_utf8(client_id.clone()).unwrap();
+            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
 
-            for (client_id, client_state) in ret.iter() {
-                let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-                let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+            let client_state = AnyClientState::decode_vec(client_state).unwrap();
 
-                let client_state = AnyClientState::decode_vec(client_state).unwrap();
+            result.push(IdentifiedAnyClientState::new(client_id, client_state));
+        }
 
-                result.push(IdentifiedAnyClientState::new(client_id, client_state));
-            }
-
-            Ok(result)
-        };
-
-        Box::new(result)
+        Ok(result)
     }
 
     /// get connection_identifier vector according by client_identifier
@@ -278,45 +261,38 @@ impl ClientRpc for OctopusxtClient {
     /// let result = get_client_connections(&client_id, client).await?;
     /// ```
     ///
-    fn get_client_connections(
-        &self,
-        client_id: ClientId,
-    ) -> Box<dyn Future<Output = Result<Vec<ConnectionId>>>> {
+    async fn get_client_connections(&self, client_id: ClientId) -> Result<Vec<ConnectionId>> {
         tracing::info!("in call_ibc: [get_client_connections]");
 
         let api = self.to_runtime_api();
 
-        let result = async move {
-            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-            let block_header = block.next().await.unwrap().unwrap();
+        let block_header = block.next().await.unwrap().unwrap();
 
-            let block_hash: H256 = block_header.hash();
+        let block_hash: H256 = block_header.hash();
 
-            // client_id <-> connection_id
-            let connection_id: Vec<u8> = api
-                .storage()
-                .ibc()
-                .connection_client(client_id.as_bytes(), Some(block_hash))
-                .await?;
+        // client_id <-> connection_id
+        let connection_id: Vec<u8> = api
+            .storage()
+            .ibc()
+            .connection_client(client_id.as_bytes(), Some(block_hash))
+            .await?;
 
-            if connection_id.is_empty() {
-                return Err(anyhow::anyhow!(
-                    "get_client_connections is empty! by client_id = ({})",
-                    client_id
-                ));
-            }
+        if connection_id.is_empty() {
+            return Err(anyhow::anyhow!(
+                "get_client_connections is empty! by client_id = ({})",
+                client_id
+            ));
+        }
 
-            let mut result = vec![];
+        let mut result = vec![];
 
-            let connection_id_str = String::from_utf8(connection_id).unwrap();
-            let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
+        let connection_id_str = String::from_utf8(connection_id).unwrap();
+        let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
 
-            result.push(connection_id);
+        result.push(connection_id);
 
-            Ok(result)
-        };
-
-        Box::new(result)
+        Ok(result)
     }
 }

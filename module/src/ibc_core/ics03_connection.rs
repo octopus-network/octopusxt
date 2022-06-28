@@ -7,7 +7,7 @@ use ibc::core::{
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
-use crate::ics04_channel::get_channel_end;
+// use crate::ics04_channel::get_channel_end;
 use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;
@@ -179,9 +179,10 @@ pub async fn get_connection_channels(
         let channel_id = ChannelId::from_str(channel_id.as_str()).unwrap();
 
         // get channel_end
-        let channel_end = get_channel_end(&port_id, &channel_id, client.clone()).await?;
+        //TODO
+        // let channel_end = get_channel_end(&port_id, &channel_id, client.clone()).await?;
 
-        result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
+        // result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
     }
 
     Ok(result)
