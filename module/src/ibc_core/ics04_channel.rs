@@ -9,6 +9,7 @@ use ibc::core::{
 };
 use tendermint_proto::Protobuf;
 
+use crate::primitive::QueryChannelsResponse;
 use async_trait::async_trait;
 use codec::Decode;
 use core::str::FromStr;
@@ -16,7 +17,6 @@ use ibc::core::ics24_host::identifier::ConnectionId;
 use ibc::Height;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 use sp_core::H256;
-use crate::primitive::QueryChannelsResponse;
 
 #[async_trait]
 impl ChannelRpc for OctopusxtClient {
@@ -429,15 +429,31 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    fn query_connection_channels(&self, _height: Height, _connection_id: ConnectionId) -> Result<QueryChannelsResponse, Self::Error> {
+    fn query_connection_channels(
+        &self,
+        _height: Height,
+        _connection_id: ConnectionId,
+    ) -> Result<QueryChannelsResponse, Self::Error> {
         todo!()
     }
 
-    fn query_unreceived_packets(&self, _height: Height, _channel_id: ChannelId, _port_id: PortId, _seqs: Vec<Sequence>) -> Result<Vec<Sequence>, Self::Error> {
+    fn query_unreceived_packets(
+        &self,
+        _height: Height,
+        _channel_id: ChannelId,
+        _port_id: PortId,
+        _seqs: Vec<Sequence>,
+    ) -> Result<Vec<Sequence>, Self::Error> {
         todo!()
     }
 
-    fn query_unreceived_acknowledgements(&self, _height: Height, _channel_id: ChannelId, _port_id: PortId, _seqs: Vec<Sequence>) -> Result<Vec<Sequence>, Self::Error> {
+    fn query_unreceived_acknowledgements(
+        &self,
+        _height: Height,
+        _channel_id: ChannelId,
+        _port_id: PortId,
+        _seqs: Vec<Sequence>,
+    ) -> Result<Vec<Sequence>, Self::Error> {
         todo!()
     }
 }
@@ -524,7 +540,12 @@ impl PacketRpc for OctopusxtClient {
         Ok(data)
     }
 
-    async fn query_packets(&self, _channel_id: ChannelId, _port_id: PortId, _seqs: Vec<Sequence>) -> Result<Vec<Packet>, Self::Error> {
+    async fn query_packets(
+        &self,
+        _channel_id: ChannelId,
+        _port_id: PortId,
+        _seqs: Vec<Sequence>,
+    ) -> Result<Vec<Packet>, Self::Error> {
         todo!()
     }
 }

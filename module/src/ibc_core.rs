@@ -18,9 +18,8 @@ use ibc::{Height as ICSHeight, Height};
 use ibc_proto::google::protobuf::Any;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 use jsonrpsee::rpc_params;
+use serde::{Deserialize, Serialize};
 use sp_core::H256;
-use serde::{Serialize,Deserialize};
-
 
 pub mod ics02_client;
 pub mod ics03_connection;
@@ -28,10 +27,13 @@ pub mod ics04_channel;
 pub mod ics26_router;
 
 pub use crate::events::*;
+use crate::primitive::{
+    IdentifiedClientState, IdentifiedConnection, QueryChannelsResponse, QueryClientStateResponse,
+    QueryConsensusStateResponse, QueryDenomTraceResponse, QueryDenomTracesResponse,
+};
 pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
-use crate::primitive::{IdentifiedClientState, IdentifiedConnection, QueryChannelsResponse, QueryClientStateResponse, QueryConsensusStateResponse, QueryDenomTraceResponse, QueryDenomTracesResponse};
 
 #[async_trait]
 pub trait ClientRpc {
@@ -130,16 +132,28 @@ pub trait ClientRpc {
     ) -> Result<Vec<ConnectionId>, Self::Error>;
 
     /// Query local chain consensus state
-    fn query_consensus_state(&self, height: Height) -> Result<QueryConsensusStateResponse, Self::Error>;
+    fn query_consensus_state(
+        &self,
+        height: Height,
+    ) -> Result<QueryConsensusStateResponse, Self::Error>;
 
     /// Query upgraded client state
-    fn query_upgraded_client(&self, height: Height) -> Result<QueryClientStateResponse, Self::Error>;
+    fn query_upgraded_client(
+        &self,
+        height: Height,
+    ) -> Result<QueryClientStateResponse, Self::Error>;
 
     /// Query upgraded consensus state for client
-    fn query_upgraded_cons_state(&self, height: Height) -> Result<QueryConsensusStateResponse, Self::Error>;
+    fn query_upgraded_cons_state(
+        &self,
+        height: Height,
+    ) -> Result<QueryConsensusStateResponse, Self::Error>;
 
     /// Query newly created clients in block
-    fn query_newly_created_clients(&self, block_hash: Hash) -> Result<Vec<IdentifiedClientState>, Self::Error>;
+    fn query_newly_created_clients(
+        &self,
+        block_hash: Hash,
+    ) -> Result<Vec<IdentifiedClientState>, Self::Error>;
 }
 
 #[async_trait]
@@ -181,7 +195,6 @@ pub trait ChannelRpc {
         channel_id: ChannelId,
     ) -> Result<ChannelEnd, Self::Error>;
 
-
     // TODO
     // /// Query client state for channel and port id
     // #[method(name = "ibc_queryChannelClient")]
@@ -192,13 +205,12 @@ pub trait ChannelRpc {
     //     port_id: String,
     // ) -> Result<IdentifiedClientState>;
 
-
     /// Query all channel states for associated connection
     fn query_connection_channels(
         &self,
         height: Height,
         connection_id: ConnectionId,
-    ) -> Result<QueryChannelsResponse,Self::Error>;
+    ) -> Result<QueryChannelsResponse, Self::Error>;
 
     /// query packet receipt by port_id, channel_id and sequence
     ///
@@ -366,7 +378,6 @@ pub trait ChannelRpc {
     /// ```
     async fn query_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
 
-
     /// Query unreceived packet commitments
     fn query_unreceived_packets(
         &self,
@@ -376,7 +387,6 @@ pub trait ChannelRpc {
         seqs: Vec<Sequence>,
     ) -> Result<Vec<Sequence>, Self::Error>;
 
-
     /// Query the unreceived acknowledgements
     fn query_unreceived_acknowledgements(
         &self,
@@ -385,8 +395,6 @@ pub trait ChannelRpc {
         port_id: PortId,
         seqs: Vec<Sequence>,
     ) -> Result<Vec<Sequence>, Self::Error>;
-
-
 }
 
 #[async_trait]
@@ -453,14 +461,12 @@ pub trait ConnectionRpc {
         connection_id: ConnectionId,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
-
     /// Query all connection states for associated client
     fn query_connection_using_client(
         &self,
         height: Height,
         client_id: ClientId,
     ) -> Result<Vec<IdentifiedConnection>, Self::Error>;
-
 
     /// Generate proof for connection handshake
     fn generate_conn_handshake_proof(
@@ -521,7 +527,6 @@ pub trait PacketRpc {
         sequence: Sequence,
     ) -> Result<Vec<u8>, Self::Error>;
 
-
     /// Query packet data
     async fn query_packets(
         &self,
@@ -553,7 +558,6 @@ pub trait Router {
     /// return block_hash, extrinsic_hash, and event
     async fn deliver(&self, msg: Vec<Any>) -> Result<H256, Self::Error>;
 }
-
 
 pub trait Transfer {
     type Error;
@@ -756,12 +760,13 @@ impl OctopusxtClient {
 
     /// Query balance of an address on chain, addr should be a valid hexadecimal or SS58 string,
     /// representing the account id.
-    pub fn query_balance_with_address(&self, _addr: String) -> anyhow::Result<ibc_proto::cosmos::base::v1beta1::Coin> {
+    pub fn query_balance_with_address(
+        &self,
+        _addr: String,
+    ) -> anyhow::Result<ibc_proto::cosmos::base::v1beta1::Coin> {
         todo!()
     }
-
 }
-
 
 /// Proof for a set of keys
 #[derive(Serialize, Deserialize)]
@@ -771,7 +776,6 @@ pub struct Proof {
     /// Height at which proof was recovered
     pub height: ibc_proto::ibc::core::client::v1::Height,
 }
-
 
 /// Connection handshake proof
 #[derive(Serialize, Deserialize)]

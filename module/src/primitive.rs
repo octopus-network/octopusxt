@@ -1,7 +1,7 @@
+use codec::{Decode, Encode};
 use prost_types::Any;
+use serde::{Deserialize, Serialize};
 use std::str::FromStr;
-use codec::{Encode, Decode};
-use serde::{Serialize, Deserialize};
 
 use crate::ibc_node::runtime_types::pallet_ibc::{
     event::primitive::{
@@ -119,7 +119,6 @@ impl Clone for OctopusxtHeight {
         }
     }
 }
-
 
 #[derive(Clone, Encode, Decode, PartialEq, Eq, Ord, PartialOrd)]
 pub struct IdentifiedChannel {
@@ -257,4 +256,3 @@ pub struct ConnectionHandshake {
     pub trie_keys: Vec<Vec<u8>>,
     pub height: u64,
 }
-

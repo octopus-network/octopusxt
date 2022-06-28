@@ -12,10 +12,12 @@ use ibc::{
 };
 use tendermint_proto::Protobuf;
 
-use core::str::FromStr;
+use crate::primitive::{
+    IdentifiedClientState, QueryClientStateResponse, QueryConsensusStateResponse,
+};
 use beefy_merkle_tree::Hash;
+use core::str::FromStr;
 use sp_core::H256;
-use crate::primitive::{IdentifiedClientState, QueryClientStateResponse, QueryConsensusStateResponse};
 
 #[async_trait]
 impl ClientRpc for OctopusxtClient {
@@ -225,19 +227,31 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    fn query_consensus_state(&self, _height: ICSHeight) -> Result<QueryConsensusStateResponse, Self::Error> {
+    fn query_consensus_state(
+        &self,
+        _height: ICSHeight,
+    ) -> Result<QueryConsensusStateResponse, Self::Error> {
         todo!()
     }
 
-    fn query_upgraded_client(&self, _height: ICSHeight) -> Result<QueryClientStateResponse, Self::Error> {
+    fn query_upgraded_client(
+        &self,
+        _height: ICSHeight,
+    ) -> Result<QueryClientStateResponse, Self::Error> {
         todo!()
     }
 
-    fn query_upgraded_cons_state(&self, _height: ICSHeight) -> Result<QueryConsensusStateResponse, Self::Error> {
+    fn query_upgraded_cons_state(
+        &self,
+        _height: ICSHeight,
+    ) -> Result<QueryConsensusStateResponse, Self::Error> {
         todo!()
     }
 
-    fn query_newly_created_clients(&self, _block_hash: Hash) -> Result<Vec<IdentifiedClientState>, Self::Error> {
+    fn query_newly_created_clients(
+        &self,
+        _block_hash: Hash,
+    ) -> Result<Vec<IdentifiedClientState>, Self::Error> {
         todo!()
     }
 }

@@ -5,10 +5,10 @@ use subxt::{Config, DefaultConfig};
 
 pub mod events;
 pub mod ibc_core;
+pub mod ics20_transfer;
 pub mod primitive;
 pub mod update_client_state;
 pub mod utils;
-pub mod ics20_transfer;
 
 pub use ibc_core::*;
 pub use update_client_state::*;

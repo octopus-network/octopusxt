@@ -1,17 +1,17 @@
-use crate::{ChannelRpc, ConnectionRpc, ConnHandshakeProof, OctopusxtClient};
+use crate::{ChannelRpc, ConnHandshakeProof, ConnectionRpc, OctopusxtClient};
 use ibc::core::{
     ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd},
     ics04_channel::channel::IdentifiedChannelEnd,
     ics24_host::identifier::{ChannelId, ConnectionId, PortId},
 };
 
+use crate::primitive::IdentifiedConnection;
 use async_trait::async_trait;
 use core::str::FromStr;
 use ibc::core::ics24_host::identifier::ClientId;
 use ibc::Height;
 use sp_core::H256;
 use tendermint_proto::Protobuf;
-use crate::primitive::IdentifiedConnection;
 
 #[async_trait]
 impl ConnectionRpc for OctopusxtClient {
@@ -151,11 +151,20 @@ impl ConnectionRpc for OctopusxtClient {
         Ok(result)
     }
 
-    fn query_connection_using_client(&self, _height: Height, _client_id: ClientId) -> Result<Vec<IdentifiedConnection>, Self::Error> {
+    fn query_connection_using_client(
+        &self,
+        _height: Height,
+        _client_id: ClientId,
+    ) -> Result<Vec<IdentifiedConnection>, Self::Error> {
         todo!()
     }
 
-    fn generate_conn_handshake_proof(&self, _height: Height, _client_id: ClientId, _conn_id: ConnectionId) -> Result<ConnHandshakeProof, Self::Error> {
+    fn generate_conn_handshake_proof(
+        &self,
+        _height: Height,
+        _client_id: ClientId,
+        _conn_id: ConnectionId,
+    ) -> Result<ConnHandshakeProof, Self::Error> {
         todo!()
     }
 }
