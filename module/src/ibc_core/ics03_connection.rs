@@ -5,7 +5,6 @@ use ibc::core::{
     ics24_host::identifier::{ChannelId, ConnectionId, PortId},
 };
 
-use anyhow::Result;
 use async_trait::async_trait;
 use core::str::FromStr;
 use sp_core::H256;
@@ -13,10 +12,12 @@ use tendermint_proto::Protobuf;
 
 #[async_trait]
 impl ConnectionRpc for OctopusxtClient {
+    type Error = anyhow::Error;
+
     async fn get_connection_end(
         &self,
         connection_identifier: ConnectionId,
-    ) -> Result<ConnectionEnd> {
+    ) -> Result<ConnectionEnd, Self::Error> {
         tracing::info!("in call_ibc: [get_connection_end]");
 
         let api = self.to_runtime_api();
@@ -45,7 +46,7 @@ impl ConnectionRpc for OctopusxtClient {
         Ok(connection_end)
     }
 
-    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>> {
+    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_connections]");
 
         let api = self.to_runtime_api();
@@ -100,7 +101,7 @@ impl ConnectionRpc for OctopusxtClient {
     async fn get_connection_channels(
         &self,
         connection_id: ConnectionId,
-    ) -> Result<Vec<IdentifiedChannelEnd>> {
+    ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_connection_channels]");
 
         let api = self.to_runtime_api();

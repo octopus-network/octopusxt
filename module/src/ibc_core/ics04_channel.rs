@@ -9,7 +9,6 @@ use ibc::core::{
 };
 use tendermint_proto::Protobuf;
 
-use anyhow::Result;
 use async_trait::async_trait;
 use codec::Decode;
 use core::str::FromStr;
@@ -18,7 +17,9 @@ use sp_core::H256;
 
 #[async_trait]
 impl ChannelRpc for OctopusxtClient {
-    async fn get_channels(&self) -> Result<Vec<IdentifiedChannelEnd>> {
+    type Error = anyhow::Error;
+
+    async fn get_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_channels]");
 
         let api = self.to_runtime_api();
@@ -67,7 +68,11 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_channel_end(&self, port_id: PortId, channel_id: ChannelId) -> Result<ChannelEnd> {
+    async fn get_channel_end(
+        &self,
+        port_id: PortId,
+        channel_id: ChannelId,
+    ) -> Result<ChannelEnd, Self::Error> {
         tracing::info!("in call_ibc: [get_channel_end]");
 
         let api = self.to_runtime_api();
@@ -106,7 +111,7 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Receipt> {
+    ) -> Result<Receipt, Self::Error> {
         tracing::info!("in call_ibc : [get_packet_receipt]");
 
         let packet_receipt_vec = self
@@ -125,7 +130,7 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>> {
+    ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc : [get_packet_receipt]");
 
         let api = self.to_runtime_api();
@@ -165,7 +170,7 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
-    ) -> Result<Vec<u64>> {
+    ) -> Result<Vec<u64>, Self::Error> {
         tracing::info!("in call_ibc: [get_receipt_packet]");
 
         let api = self.to_runtime_api();
@@ -199,7 +204,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_commitment_packet_state(&self) -> Result<Vec<PacketState>> {
+    async fn get_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
         tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
         let api = self.to_runtime_api();
@@ -253,7 +258,7 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>> {
+    ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_packet_commitment]");
 
         let api = self.to_runtime_api();
@@ -293,7 +298,7 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>> {
+    ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_packet_ack]");
 
         let api = self.to_runtime_api();
@@ -332,7 +337,7 @@ impl ChannelRpc for OctopusxtClient {
         &self,
         port_id: PortId,
         channel_id: ChannelId,
-    ) -> Result<Vec<u8>> {
+    ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
         let api = self.to_runtime_api();
@@ -374,7 +379,7 @@ impl ChannelRpc for OctopusxtClient {
         }
     }
 
-    async fn get_acknowledge_packet_state(&self) -> Result<Vec<PacketState>> {
+    async fn get_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
         tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
         let api = self.to_runtime_api();
@@ -424,12 +429,14 @@ impl ChannelRpc for OctopusxtClient {
 
 #[async_trait]
 impl PacketRpc for OctopusxtClient {
+    type Error = anyhow::Error;
+
     async fn get_send_packet_event(
         &self,
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Packet> {
+    ) -> Result<Packet, Self::Error> {
         tracing::info!("in call_ibc: [get_send_packet_event]");
 
         let api = self.to_runtime_api();
@@ -470,7 +477,7 @@ impl PacketRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>> {
+    ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_write_ack_packet_event]");
 
         let api = self.to_runtime_api();

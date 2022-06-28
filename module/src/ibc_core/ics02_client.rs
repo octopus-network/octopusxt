@@ -12,13 +12,14 @@ use ibc::{
 };
 use tendermint_proto::Protobuf;
 
-use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;
 
 #[async_trait]
 impl ClientRpc for OctopusxtClient {
-    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState> {
+    type Error = anyhow::Error;
+
+    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error> {
         tracing::info!("in call_ibc : [get_client_state]");
 
         let api = self.to_runtime_api();
@@ -51,7 +52,7 @@ impl ClientRpc for OctopusxtClient {
         &self,
         client_id: ClientId,
         height: ICSHeight,
-    ) -> Result<AnyConsensusState> {
+    ) -> Result<AnyConsensusState, Self::Error> {
         tracing::info!("in call_ibc: [get_client_consensus]");
 
         let api = self.to_runtime_api();
@@ -99,7 +100,7 @@ impl ClientRpc for OctopusxtClient {
     async fn get_consensus_state_with_height(
         &self,
         client_id: ClientId,
-    ) -> Result<Vec<(ICSHeight, AnyConsensusState)>> {
+    ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error> {
         tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
         let api = self.to_runtime_api();
@@ -134,7 +135,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>> {
+    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error> {
         tracing::info!("in call_ibc: [get_clients]");
 
         let api = self.to_runtime_api();
@@ -184,7 +185,10 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn get_client_connections(&self, client_id: ClientId) -> Result<Vec<ConnectionId>> {
+    async fn get_client_connections(
+        &self,
+        client_id: ClientId,
+    ) -> Result<Vec<ConnectionId>, Self::Error> {
         tracing::info!("in call_ibc: [get_client_connections]");
 
         let api = self.to_runtime_api();

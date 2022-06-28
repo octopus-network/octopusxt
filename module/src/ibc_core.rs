@@ -6,7 +6,6 @@ use ibc::core::{
 
 use subxt::{rpc::ClientT, BlockNumber, Client, SignedCommitment};
 
-use anyhow::Result;
 use async_trait::async_trait;
 use ibc::core::ics02_client::client_consensus::AnyConsensusState;
 use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
@@ -32,6 +31,8 @@ pub use ics04_channel::*;
 
 #[async_trait]
 pub trait ClientRpc {
+    type Error;
+
     /// get client_state according by client_id, and read ClientStates StoraageMap
     ///
     /// # Usage example
@@ -46,7 +47,7 @@ pub trait ClientRpc {
     /// let client_id = ClientId::default();
     /// let result = get_client_state(&client_id, client).await?;
     /// ```
-    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState>;
+    async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error>;
 
     /// get appoint height consensus_state according by client_identifier and height
     /// and read ConsensusStates StoreageMap
@@ -68,7 +69,7 @@ pub trait ClientRpc {
         &self,
         client_id: ClientId,
         height: ICSHeight,
-    ) -> Result<AnyConsensusState>;
+    ) -> Result<AnyConsensusState, Self::Error>;
 
     /// get consensus state with height
     ///
@@ -87,7 +88,7 @@ pub trait ClientRpc {
     async fn get_consensus_state_with_height(
         &self,
         client_id: ClientId,
-    ) -> Result<Vec<(ICSHeight, AnyConsensusState)>>;
+    ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error>;
 
     /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
     ///
@@ -101,7 +102,7 @@ pub trait ClientRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_clients(client).await?;
     /// ```
-    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>>;
+    async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
 
     /// get connection_identifier vector according by client_identifier
     ///
@@ -118,11 +119,15 @@ pub trait ClientRpc {
     /// let client_id = ClientId::default();
     /// let result = get_client_connections(&client_id, client).await?;
     /// ```
-    async fn get_client_connections(&self, client_id: ClientId) -> Result<Vec<ConnectionId>>;
+    async fn get_client_connections(
+        &self,
+        client_id: ClientId,
+    ) -> Result<Vec<ConnectionId>, Self::Error>;
 }
 
 #[async_trait]
 pub trait ChannelRpc {
+    type Error;
     /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
     ///
     /// # Usage example
@@ -134,7 +139,7 @@ pub trait ChannelRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_channels(client).await?;
     /// ```
-    async fn get_channels(&self) -> Result<Vec<IdentifiedChannelEnd>>;
+    async fn get_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
     /// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
     ///
@@ -151,7 +156,11 @@ pub trait ChannelRpc {
     /// let channel_id = ChannelId::default();
     /// let result = get_channel_end(&port_id, &channel_id, client).await?;
     /// ```
-    async fn get_channel_end(&self, port_id: PortId, channel_id: ChannelId) -> Result<ChannelEnd>;
+    async fn get_channel_end(
+        &self,
+        port_id: PortId,
+        channel_id: ChannelId,
+    ) -> Result<ChannelEnd, Self::Error>;
 
     /// get packet receipt by port_id, channel_id and sequence
     ///
@@ -175,7 +184,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Receipt>;
+    ) -> Result<Receipt, Self::Error>;
 
     /// get packet receipt by port_id, channel_id and sequence
     /// # Usage example
@@ -198,7 +207,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>>;
+    ) -> Result<Vec<u8>, Self::Error>;
 
     /// get  unreceipt packet
     ///  # Usage example
@@ -221,7 +230,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
-    ) -> Result<Vec<u64>>;
+    ) -> Result<Vec<u64>, Self::Error>;
 
     /// get get_commitment_packet_state
     ///
@@ -235,7 +244,7 @@ pub trait ChannelRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_commitment_packet_state(client).await?;
     /// ```
-    async fn get_commitment_packet_state(&self) -> Result<Vec<PacketState>>;
+    async fn get_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
 
     /// get packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
     ///
@@ -259,7 +268,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>>;
+    ) -> Result<Vec<u8>, Self::Error>;
 
     /// get packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
     ///
@@ -283,7 +292,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>>;
+    ) -> Result<Vec<u8>, Self::Error>;
 
     /// get packet receipt by port_id, channel_id and sequence
     ///  # Usage example
@@ -303,7 +312,7 @@ pub trait ChannelRpc {
         &self,
         port_id: PortId,
         channel_id: ChannelId,
-    ) -> Result<Vec<u8>>;
+    ) -> Result<Vec<u8>, Self::Error>;
 
     /// get get_commitment_packet_state
     ///
@@ -317,11 +326,12 @@ pub trait ChannelRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_acknowledge_packet_state(client).await?;
     /// ```
-    async fn get_acknowledge_packet_state(&self) -> Result<Vec<PacketState>>;
+    async fn get_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
 }
 
 #[async_trait]
 pub trait ConnectionRpc {
+    type Error;
     /// get connectionEnd according by connection_identifier and read Connections StorageMaps
     ///
     /// # Usage example
@@ -339,7 +349,7 @@ pub trait ConnectionRpc {
     async fn get_connection_end(
         &self,
         connection_identifier: ConnectionId,
-    ) -> Result<ConnectionEnd>;
+    ) -> Result<ConnectionEnd, Self::Error>;
 
     /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
     ///
@@ -353,7 +363,7 @@ pub trait ConnectionRpc {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_connections(client).await?;
     /// ```
-    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>>;
+    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
 
     ///  # Usage example
     ///
@@ -370,11 +380,12 @@ pub trait ConnectionRpc {
     async fn get_connection_channels(
         &self,
         connection_id: ConnectionId,
-    ) -> Result<Vec<IdentifiedChannelEnd>>;
+    ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 }
 
 #[async_trait]
 pub trait PacketRpc {
+    type Error;
     /// get send packet event by port_id, channel_id and sequence
     /// (port_id, channel_id, sequence), packet)
     ///
@@ -397,7 +408,7 @@ pub trait PacketRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Packet>;
+    ) -> Result<Packet, Self::Error>;
 
     /// (port_id, channel_id, sequence), ackHash)
     ///
@@ -420,11 +431,12 @@ pub trait PacketRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
-    ) -> Result<Vec<u8>>;
+    ) -> Result<Vec<u8>, Self::Error>;
 }
 
 #[async_trait]
 pub trait Router {
+    type Error;
     /// ibc protocol core function, ics26 deliver function
     /// this function will dispatch msg to process
     ///
@@ -442,7 +454,7 @@ pub trait Router {
     /// let result = octopus_client.deliver(msg).await?;
     /// ```
     /// return block_hash, extrinsic_hash, and event
-    async fn deliver(&self, msg: Vec<Any>) -> Result<H256>;
+    async fn deliver(&self, msg: Vec<Any>) -> Result<H256, Self::Error>;
 }
 
 #[async_trait]
@@ -473,7 +485,7 @@ impl OctopusxtClient {
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = subscribe_beefy(client).await?;
     /// ```
-    pub async fn subscribe_beefy(&self) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
+    pub async fn subscribe_beefy(&self) -> anyhow::Result<SignedCommitment> {
         tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
 
         let api = self.to_runtime_api();
@@ -498,7 +510,7 @@ impl OctopusxtClient {
     /// let result = get_latest_height(api).await?;
     /// ```
     ///
-    pub async fn get_latest_height(&self) -> Result<u64> {
+    pub async fn get_latest_height(&self) -> anyhow::Result<u64> {
         tracing::info!("In call_ibc: [get_latest_height]");
 
         let api = self.to_runtime_api();
@@ -547,7 +559,7 @@ impl OctopusxtClient {
         &self,
         block_number: Option<BlockNumber>,
         block_hash: Option<H256>,
-    ) -> Result<(String, Vec<u8>, Vec<u8>)> {
+    ) -> anyhow::Result<(String, Vec<u8>, Vec<u8>)> {
         tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
         let api = self.to_runtime_api();
@@ -585,7 +597,7 @@ impl OctopusxtClient {
     pub async fn get_header_by_block_hash(
         &self,
         block_hash: Option<H256>,
-    ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
+    ) -> anyhow::Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
         let api = self.to_runtime_api();
 
         let header = api.client.rpc().header(block_hash).await?.unwrap();
@@ -612,7 +624,7 @@ impl OctopusxtClient {
     pub async fn get_header_by_block_number(
         &self,
         block_number: Option<BlockNumber>,
-    ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
+    ) -> anyhow::Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
         let api = self.to_runtime_api();
 
         let block_hash = api.client.rpc().block_hash(block_number).await?;

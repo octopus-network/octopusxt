@@ -1,6 +1,5 @@
 use crate::ibc_core::Router;
 use crate::{ibc_node, OctopusxtClient};
-use anyhow::Result;
 use async_trait::async_trait;
 use ibc_proto::google::protobuf::Any;
 use sp_core::H256;
@@ -9,7 +8,9 @@ use subxt::PairSigner;
 
 #[async_trait]
 impl Router for OctopusxtClient {
-    async fn deliver(&self, msg: Vec<Any>) -> Result<H256> {
+    type Error = anyhow::Error;
+
+    async fn deliver(&self, msg: Vec<Any>) -> Result<H256, Self::Error> {
         tracing::info!("in call_ibc: [deliver]");
 
         let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
