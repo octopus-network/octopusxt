@@ -32,21 +32,92 @@ pub use ics04_channel::*;
 
 #[async_trait]
 pub trait ClientRpc {
+    /// get client_state according by client_id, and read ClientStates StoraageMap
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use octopusxt::get_client_state;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let client_id = ClientId::default();
+    /// let result = get_client_state(&client_id, client).await?;
+    /// ```
     async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState>;
 
+    /// get appoint height consensus_state according by client_identifier and height
+    /// and read ConsensusStates StoreageMap
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use octopusxt::get_client_consensus;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let client_id = ClientId::default();
+    /// let height = ICSHeight::default();
+    /// let result = get_client_consensus(&client_id, &height, client).await?;
+    /// ```
     async fn get_client_consensus(
         &self,
         client_id: ClientId,
         height: ICSHeight,
     ) -> Result<AnyConsensusState>;
 
+    /// get consensus state with height
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use octopusxt::get_consensus_state_with_height;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let client_id = ClientId::default();
+    /// let result = get_consensus_state_with_height(&client_id, client).await?;
+    /// ```
     async fn get_consensus_state_with_height(
         &self,
         client_id: ClientId,
     ) -> Result<Vec<(ICSHeight, AnyConsensusState)>>;
 
+    /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use octopusxt::get_clients;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let result = get_clients(client).await?;
+    /// ```
     async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>>;
 
+    /// get connection_identifier vector according by client_identifier
+    ///
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use octopusxt::get_client_connections;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let client_id = ClientId::default();
+    /// let result = get_client_connections(&client_id, client).await?;
+    /// ```
     async fn get_client_connections(&self, client_id: ClientId) -> Result<Vec<ConnectionId>>;
 }
 
@@ -58,6 +129,7 @@ pub trait ChannelRpc {
     /// ```rust
     /// use subxt::ClientBuilder;
     /// use octopusxt::get_channels;
+    /// use octopusxt::MyConfig;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
     /// let result = get_channels(client).await?;
@@ -86,6 +158,7 @@ pub trait ChannelRpc {
     /// # Usage example
     ///
     /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     /// use octopusxt::MyConfig;
     /// use subxt::ClientBuilder;
@@ -108,7 +181,8 @@ pub trait ChannelRpc {
     /// # Usage example
     ///
     /// ```rust
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+    /// use ibc::core::ics04_channel::packet::Sequence;
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
     /// use octopusxt::MyConfig;
     /// use subxt::ClientBuilder;
     /// use octopusxt::get_packet_receipt_vec;
@@ -130,6 +204,7 @@ pub trait ChannelRpc {
     ///  # Usage example
     ///
     /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     /// use octopusxt::MyConfig;
     /// use subxt::ClientBuilder;
@@ -167,7 +242,8 @@ pub trait ChannelRpc {
     ///  # Usage example
     ///
     /// ```rust
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+    /// use ibc::core::ics04_channel::packet::Sequence;
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
     /// use octopusxt::MyConfig;
     /// use subxt::ClientBuilder;
     /// use octopusxt::get_packet_commitment;
@@ -190,6 +266,7 @@ pub trait ChannelRpc {
     ///  # Usage example
     ///
     /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     /// use octopusxt::MyConfig;
     /// use subxt::ClientBuilder;
@@ -244,7 +321,9 @@ pub trait ChannelRpc {
 }
 
 #[async_trait]
-pub trait ConnectionRpc {}
+pub trait ConnectionRpc {
+
+}
 
 #[async_trait]
 pub trait PacketRpc {
@@ -254,9 +333,9 @@ pub trait PacketRpc {
     /// # Usage example
     ///
     /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
     /// use subxt::ClientBuilder;
-    /// use subxt::MyConfig;
-    /// use octopusxt::get_send_packet_event;
+    /// use octopusxt::{get_send_packet_event, MyConfig};
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
@@ -277,9 +356,9 @@ pub trait PacketRpc {
     /// # Usage example
     ///
     /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
     /// use subxt::ClientBuilder;
-    /// use subxt::MyConfig;
-    /// use octopusxt::get_write_ack_packet_event;
+    /// use octopusxt::{get_write_ack_packet_event, MyConfig};
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
@@ -298,6 +377,23 @@ pub trait PacketRpc {
 
 #[async_trait]
 pub trait Router {
+    /// ibc protocol core function, ics26 deliver function
+    /// this function will dispatch msg to process
+    ///
+    ///  # Usage example
+    ///
+    /// ```rust
+    /// use ibc::core::ics26_routing::handler::deliver;
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{MyConfig, OctopusxtClient, Router};
+    /// use ibc_proto::google::protobuf::Any;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let msg = vec![Any::default()];
+    /// let octopus_client = OctopusxtClient::new(client);
+    /// let result = octopus_client.deliver(msg).await?;
+    /// ```
+    /// return block_hash, extrinsic_hash, and event
     async fn deliver(&self, msg: Vec<Any>) -> Result<H256>;
 }
 

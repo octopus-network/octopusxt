@@ -19,21 +19,7 @@ use std::future::Future;
 
 #[async_trait]
 impl ClientRpc for OctopusxtClient {
-    /// get client_state according by client_id, and read ClientStates StoraageMap
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_client_state;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let client_id = ClientId::default();
-    /// let result = get_client_state(&client_id, client).await?;
-    /// ```
-    ///
+
     async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState> {
         tracing::info!("in call_ibc : [get_client_state]");
 
@@ -63,23 +49,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(client_state)
     }
 
-    /// get appoint height consensus_state according by client_identifier and height
-    /// and read ConsensusStates StoreageMap
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_client_consensus;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let client_id = ClientId::default();
-    /// let height = ICSHeight::default();
-    /// let result = get_client_consensus(&client_id, &height, client).await?;
-    /// ```
-    ///
+
     async fn get_client_consensus(
         &self,
         client_id: ClientId,
@@ -129,21 +99,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(consensus_state)
     }
 
-    /// get consensus state with height
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_consensus_state_with_height;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let client_id = ClientId::default();
-    /// let result = get_consensus_state_with_height(&client_id, client).await?;
-    /// ```
-    ///
+
     async fn get_consensus_state_with_height(
         &self,
         client_id: ClientId,
@@ -182,19 +138,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_clients;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_clients(client).await?;
-    /// ```
-    ///
+
     async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>> {
         tracing::info!("in call_ibc: [get_clients]");
 
@@ -245,22 +189,7 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    /// get connection_identifier vector according by client_identifier
-    ///
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_client_connections;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let client_id = ClientId::default();
-    /// let result = get_client_connections(&client_id, client).await?;
-    /// ```
-    ///
+
     async fn get_client_connections(&self, client_id: ClientId) -> Result<Vec<ConnectionId>> {
         tracing::info!("in call_ibc: [get_client_connections]");
 
