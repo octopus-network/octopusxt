@@ -7,7 +7,7 @@ use ibc::core::{
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
-use crate::channel::get_channel_end;
+use crate::ics04_channel::get_channel_end;
 use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;

@@ -1,8 +1,9 @@
 use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use crate::ibc_core::{OctopusxtClient, PacketRpc};
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
-        packet::{Receipt, Sequence},
+        packet::{Packet, Receipt, Sequence},
     },
     ics24_host::identifier::{ChannelId, PortId},
 };
@@ -12,6 +13,7 @@ use tendermint_proto::Protobuf;
 use codec::Decode;
 use core::str::FromStr;
 use ibc_proto::ibc::core::channel::v1::PacketState;
+use std::future::Future;
 
 use anyhow::Result;
 use sp_core::H256;
@@ -608,3 +610,127 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
 
     Ok(result)
 }
+
+impl PacketRpc for OctopusxtClient {
+    /// get send packet event by port_id, channel_id and sequence
+    /// (port_id, channel_id, sequence), packet)
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use subxt::MyConfig;
+    /// use octopusxt::get_send_packet_event;
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let prot_id =PortId::default();
+    /// let channel_id = ChannelId::default();
+    /// let sequence = Sequence::from(0);
+    /// let result = get_send_packet_event(&port_id, &channel_id, &sequence, client).await?;
+    ///
+    /// ```
+    fn get_send_packet_event(
+        &self,
+        port_id: PortId,
+        channel_id: ChannelId,
+        sequence: Sequence,
+    ) -> Box<dyn Future<Output = Result<Packet>>> {
+        tracing::info!("in call_ibc: [get_send_packet_event]");
+
+        let api = self.client.clone()
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+
+        let result = async move {
+            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+            let block_header = block.next().await.unwrap().unwrap();
+
+            let block_hash: H256 = block_header.hash();
+
+            let data: Vec<u8> = api
+                .storage()
+                .ibc()
+                .send_packet_event(
+                    port_id.as_bytes(),
+                    format!("{}", channel_id).as_bytes(),
+                    &u64::from(sequence),
+                    Some(block_hash),
+                )
+                .await?;
+
+            if data.is_empty() {
+                return Err(anyhow::anyhow!(
+            "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id,
+            channel_id,
+            sequence
+        ));
+            }
+
+            let packet = Packet::decode_vec(&*data).unwrap();
+            Ok(packet)
+        };
+
+        Box::new(result)
+    }
+
+    /// (port_id, channel_id, sequence), ackHash)
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use subxt::MyConfig;
+    /// use octopusxt::get_write_ack_packet_event;
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let prot_id = PortId::default();
+    /// let channel_id = ChannelId::default();
+    /// let sequence = Sequence::from(0);
+    /// let result = get_write_ack_packet_event(&port_id, &channel_id, &sequence, client).await?;
+    /// ```
+    ///
+    fn get_write_ack_packet_event(
+        &self,
+        port_id: PortId,
+        channel_id: ChannelId,
+        sequence: Sequence,
+    ) -> Box<dyn Future<Output = Result<Vec<u8>>>> {
+        tracing::info!("in call_ibc: [get_write_ack_packet_event]");
+        let api = self.client.clone()
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+
+        let result = async move {
+            let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+            let block_header = block.next().await.unwrap().unwrap();
+
+            let block_hash: H256 = block_header.hash();
+
+            let data: Vec<u8> = api
+                .storage()
+                .ibc()
+                .write_ack_packet_event(
+                    port_id.as_bytes(),
+                    format!("{}", channel_id).as_bytes(),
+                    &u64::from(sequence),
+                    Some(block_hash),
+                )
+                .await?;
+
+            if data.is_empty() {
+                return Err(anyhow::anyhow!(
+            "get_write_ack_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id, channel_id, sequence
+        ));
+            }
+
+            Ok(data)
+        };
+
+        Box::new(result)
+    }
+}
+

@@ -1,6 +1,6 @@
 use crate::ibc_node::RuntimeApi;
-use crate::ibc_rpc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
-use crate::{get_latest_height, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use crate::ibc_core::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
+use crate::{MyConfig, OctopusxtClient, SubstrateNodeTemplateExtrinsicParams};
 
 use anyhow::Result;
 use beefy_light_client::{
@@ -107,13 +107,15 @@ pub async fn build_validator_proof(
 
 /// build mmr proof
 pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) -> Result<MmrProof> {
+    let octopusxt_client = OctopusxtClient::new(src_client.clone());
+
     let api = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     // asset block block number < get laset height
     {
-        let latest_height = get_latest_height(src_client.clone()).await?;
+        let latest_height = octopusxt_client.get_latest_height().await?;
         println!("[build_mmr_proof] latest height = {:?}", latest_height);
         assert!(
             u64::from(block_number) <= latest_height,
