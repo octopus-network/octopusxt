@@ -1,4 +1,3 @@
-use crate::ibc_core::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::ibc_node::RuntimeApi;
 use crate::{MyConfig, OctopusxtClient, SubstrateNodeTemplateExtrinsicParams};
 
@@ -138,10 +137,9 @@ pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) ->
     //get mmr leaf and proof
     // Note: target_height = signed_commitment.commitment.block_number-1
     let target_height = BlockNumber::from(block_number - 1);
-    let (block_hash, mmr_leaf, mmr_leaf_proof) = get_mmr_leaf_and_mmr_proof(
+    let (block_hash, mmr_leaf, mmr_leaf_proof) = octopusxt_client.get_mmr_leaf_and_mmr_proof(
         Some(target_height),
         Some(block_hash.unwrap()),
-        src_client.clone(),
     )
     .await?;
     println!("generate_proof block hash : {:?}", block_hash);
@@ -191,6 +189,9 @@ pub async fn update_client_state(
     let api_a = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+
+    let octopusxt_src_client =  OctopusxtClient::new(src_client.clone());
+
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap().0;
@@ -211,7 +212,7 @@ pub async fn update_client_state(
 
     // get block header by block number
     let block_header =
-        get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
+        octopusxt_src_client.get_header_by_block_number(Some(BlockNumber::from(block_number)))
             .await
             .unwrap();
     println!("header = {:?}", block_header);
@@ -263,11 +264,13 @@ pub async fn update_client_state_service(
     src_client: Client<MyConfig>,
     target_client: Client<MyConfig>,
 ) -> Result<()> {
-    // subscribe beefy justification for src chain
     let api_a = src_client
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
+    let octpusxt_src_client = OctopusxtClient::new(src_client.clone());
+
+    // subscribe beefy justification for src chain
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     // msg loop for handle the beefy SignedCommitment
@@ -296,7 +299,7 @@ pub async fn update_client_state_service(
 
         // get block header by block number
         let block_header =
-            get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
+            octpusxt_src_client.get_header_by_block_number(Some(BlockNumber::from(block_number)))
                 .await
                 .unwrap();
         println!("header = {:?}", block_header);

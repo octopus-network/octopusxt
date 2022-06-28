@@ -100,7 +100,7 @@ impl OctopusxtClient {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use subxt::MyConfig;
+    /// use octopusxt::MyConfig;
     /// use octopusxt::get_latest_height;
     ///
     /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
@@ -129,112 +129,114 @@ impl OctopusxtClient {
         self.client.clone()
             .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>()
     }
+
+    /// # get_mmr_leaf_and_mmr_proof
+    ///
+    /// This get_mmr_leaf_and_mmr_proof api generate form generateProof api
+    /// generateProof(leafIndex: u64, at?: BlockHash): MmrLeafProof
+    /// interface: api.rpc.mmr.generateProof
+    /// json_rpc: mmr_generateProof
+    /// summary: Generate MMR proof for given leaf index.
+    ///
+    /// Return value a tuple (mmr_leaf, mmr_proof)
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::{ClientBuilder, BlockNumber};
+    /// use octopusxt::MyConfig;
+    /// use octopusxt::get_mmr_leaf_and_mmr_proof;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let block_number = Some(BlockNumber::from(12));
+    /// let block_hash = None;
+    /// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
+    /// ```
+    pub async fn get_mmr_leaf_and_mmr_proof(
+        &self,
+        block_number: Option<BlockNumber>,
+        block_hash: Option<H256>,
+    ) -> Result<(String, Vec<u8>, Vec<u8>)> {
+        tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
+
+        let api = self.to_runtime_api();
+
+        let params = rpc_params![block_number, block_hash];
+
+        let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
+            .client
+            .rpc()
+            .client
+            .request("mmr_generateProof", params)
+            .await?;
+
+        Ok((
+            generate_proof.block_hash,
+            generate_proof.leaf.0,
+            generate_proof.proof.0,
+        ))
+    }
+
+    /// get header by block hash
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use octopusxt::get_header_by_block_hash;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let block_hash = None;
+    /// let result = get_header_by_block_hash(block_hash, client).await?;
+    /// ```
+    ///
+    pub async fn get_header_by_block_hash(
+        &self,
+        block_hash: Option<H256>,
+    ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
+        let api = self.to_runtime_api();
+
+        let header = api.client.rpc().header(block_hash).await?.unwrap();
+
+        let header = crate::utils::convert_substrate_header_to_ibc_header(header);
+
+        Ok(header.into())
+    }
+
+
+    /// get header by block number
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::{ClientBuilder, BlockNumber};
+    /// use octopusxt::MyConfig;
+    /// use octopusxt::get_header_by_block_number;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let block_number = Some(BlockNumber::from(2));
+    /// let result = get_header_by_block_number(block_number, client).await?;
+    /// ```
+    ///
+    pub async fn get_header_by_block_number(
+        &self,
+        block_number: Option<BlockNumber>,
+    ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
+        let api = self.to_runtime_api();
+
+        let block_hash = api.client.rpc().block_hash(block_number).await?;
+
+        let header = api.client.rpc().header(block_hash).await?.unwrap();
+
+        let header = crate::utils::convert_substrate_header_to_ibc_header(header);
+
+        Ok(header.into())
+    }
+
 }
 
-/// # get_mmr_leaf_and_mmr_proof
-///
-/// This get_mmr_leaf_and_mmr_proof api generate form generateProof api
-/// generateProof(leafIndex: u64, at?: BlockHash): MmrLeafProof
-/// interface: api.rpc.mmr.generateProof
-/// json_rpc: mmr_generateProof
-/// summary: Generate MMR proof for given leaf index.
-///
-/// Return value a tuple (mmr_leaf, mmr_proof)
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::{ClientBuilder, BlockNumber};
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_mmr_leaf_and_mmr_proof;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let block_number = Some(BlockNumber::from(12));
-/// let block_hash = None;
-/// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
-/// ```
-///
-pub async fn get_mmr_leaf_and_mmr_proof(
-    block_number: Option<BlockNumber>,
-    block_hash: Option<H256>,
-    client: Client<MyConfig>,
-) -> Result<(String, Vec<u8>, Vec<u8>)> {
-    tracing::info!("in call_ibc [get_mmr_leaf_and_mmr_proof]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
-    let params = rpc_params![block_number, block_hash];
 
-    let generate_proof: pallet_mmr_rpc::LeafProof<String> = api
-        .client
-        .rpc()
-        .client
-        .request("mmr_generateProof", params)
-        .await?;
 
-    Ok((
-        generate_proof.block_hash,
-        generate_proof.leaf.0,
-        generate_proof.proof.0,
-    ))
-}
-
-/// get header by block hash
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_header_by_block_hash;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let block_hash = None;
-/// let result = get_header_by_block_hash(block_hash, client).await?;
-/// ```
-///
-pub async fn get_header_by_block_hash(
-    block_hash: Option<H256>,
-    client: Client<MyConfig>,
-) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
-
-    let header = api.client.rpc().header(block_hash).await?.unwrap();
-
-    let header = crate::utils::convert_substrate_header_to_ibc_header(header);
-
-    Ok(header.into())
-}
-
-/// get header by block number
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::{ClientBuilder, BlockNumber};
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_header_by_block_number;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let block_number = Some(BlockNumber::from(2));
-/// let result = get_header_by_block_number(block_number, client).await?;
-/// ```
-///
-pub async fn get_header_by_block_number(
-    block_number: Option<BlockNumber>,
-    client: Client<MyConfig>,
-) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
-
-    let block_hash = api.client.rpc().block_hash(block_number).await?;
-
-    let header = api.client.rpc().header(block_hash).await?.unwrap();
-
-    let header = crate::utils::convert_substrate_header_to_ibc_header(header);
-
-    Ok(header.into())
-}
