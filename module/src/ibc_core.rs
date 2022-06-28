@@ -4,12 +4,14 @@ use ibc::core::{
     ics24_host::identifier::{ChannelId, PortId},
 };
 use std::future::Future;
-use subxt::{
-    rpc::ClientT,
-    BlockNumber, Client, SignedCommitment,
-};
+use subxt::{rpc::ClientT, BlockNumber, Client, SignedCommitment};
 
 use anyhow::Result;
+use codec::Output;
+use ibc::core::ics02_client::client_consensus::AnyConsensusState;
+use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
+use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+use ibc::Height as ICSHeight;
 use ibc_proto::google::protobuf::Any;
 use jsonrpsee::rpc_params;
 use sp_core::H256;
@@ -24,7 +26,30 @@ pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
 
-pub trait ClientRpc {}
+pub trait ClientRpc {
+    fn get_client_state(
+        &self,
+        client_id: ClientId,
+    ) -> Box<dyn Future<Output = Result<AnyClientState>>>;
+
+    fn get_client_consensus(
+        &self,
+        client_id: ClientId,
+        height: ICSHeight,
+    ) -> Box<dyn Future<Output = Result<AnyConsensusState>>>;
+
+    fn get_consensus_state_with_height(
+        &self,
+        client_id: ClientId,
+    ) -> Box<dyn Future<Output = Result<Vec<(ICSHeight, AnyConsensusState)>>>>;
+
+    fn get_clients(&self) -> Box<dyn Future<Output = Result<Vec<IdentifiedAnyClientState>>>>;
+
+    fn get_client_connections(
+        &self,
+        client_id: ClientId,
+    ) -> Box<dyn Future<Output = Result<Vec<ConnectionId>>>>;
+}
 
 pub trait ChannelRpc {}
 
@@ -56,8 +81,6 @@ pub trait OctopusxtRpc: ClientRpc + ChannelRpc + ConnectionRpc + PacketRpc {}
 pub struct OctopusxtClient {
     client: Client<MyConfig>,
 }
-
-impl ClientRpc for OctopusxtClient {}
 
 impl ChannelRpc for OctopusxtClient {}
 
@@ -204,7 +227,6 @@ impl OctopusxtClient {
         Ok(header.into())
     }
 
-
     /// get header by block number
     ///
     /// # Usage example
@@ -233,10 +255,4 @@ impl OctopusxtClient {
 
         Ok(header.into())
     }
-
 }
-
-
-
-
-

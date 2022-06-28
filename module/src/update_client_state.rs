@@ -137,11 +137,9 @@ pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) ->
     //get mmr leaf and proof
     // Note: target_height = signed_commitment.commitment.block_number-1
     let target_height = BlockNumber::from(block_number - 1);
-    let (block_hash, mmr_leaf, mmr_leaf_proof) = octopusxt_client.get_mmr_leaf_and_mmr_proof(
-        Some(target_height),
-        Some(block_hash.unwrap()),
-    )
-    .await?;
+    let (block_hash, mmr_leaf, mmr_leaf_proof) = octopusxt_client
+        .get_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash.unwrap()))
+        .await?;
     println!("generate_proof block hash : {:?}", block_hash);
 
     let mmr_proof = MmrProof {
@@ -190,7 +188,7 @@ pub async fn update_client_state(
         .clone()
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
-    let octopusxt_src_client =  OctopusxtClient::new(src_client.clone());
+    let octopusxt_src_client = OctopusxtClient::new(src_client.clone());
 
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
@@ -211,10 +209,10 @@ pub async fn update_client_state(
     println!("signed commitment payload : {:?}", payload);
 
     // get block header by block number
-    let block_header =
-        octopusxt_src_client.get_header_by_block_number(Some(BlockNumber::from(block_number)))
-            .await
-            .unwrap();
+    let block_header = octopusxt_src_client
+        .get_header_by_block_number(Some(BlockNumber::from(block_number)))
+        .await
+        .unwrap();
     println!("header = {:?}", block_header);
 
     // build validator proof
@@ -298,10 +296,10 @@ pub async fn update_client_state_service(
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header =
-            octpusxt_src_client.get_header_by_block_number(Some(BlockNumber::from(block_number)))
-                .await
-                .unwrap();
+        let block_header = octpusxt_src_client
+            .get_header_by_block_number(Some(BlockNumber::from(block_number)))
+            .await
+            .unwrap();
         println!("header = {:?}", block_header);
 
         // build validator proof
