@@ -1,5 +1,5 @@
 use crate::ibc_core::{OctopusxtClient, PacketRpc};
-use crate::{ibc_node, ChannelRpc, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use crate::ChannelRpc;
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
@@ -7,15 +7,13 @@ use ibc::core::{
     },
     ics24_host::identifier::{ChannelId, PortId},
 };
-use subxt::Client;
 use tendermint_proto::Protobuf;
 
+use anyhow::Result;
+use async_trait::async_trait;
 use codec::Decode;
 use core::str::FromStr;
 use ibc_proto::ibc::core::channel::v1::PacketState;
-use std::future::Future;
-use async_trait::async_trait;
-use anyhow::Result;
 use sp_core::H256;
 
 #[async_trait]
@@ -110,8 +108,6 @@ impl ChannelRpc for OctopusxtClient {
         sequence: Sequence,
     ) -> Result<Receipt> {
         tracing::info!("in call_ibc : [get_packet_receipt]");
-
-        let api = self.to_runtime_api();
 
         let packet_receipt_vec = self
             .get_packet_receipt_vec(port_id, channel_id, sequence)

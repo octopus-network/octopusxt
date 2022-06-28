@@ -3,14 +3,14 @@ use ibc::core::{
     ics04_channel::packet::{Packet, Sequence},
     ics24_host::identifier::{ChannelId, PortId},
 };
-use std::future::Future;
+
 use subxt::{rpc::ClientT, BlockNumber, Client, SignedCommitment};
 
 use anyhow::Result;
 use async_trait::async_trait;
-use codec::Output;
 use ibc::core::ics02_client::client_consensus::AnyConsensusState;
 use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
+use ibc::core::ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd};
 use ibc::core::ics04_channel::channel::{ChannelEnd, IdentifiedChannelEnd};
 use ibc::core::ics04_channel::packet::Receipt;
 use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
@@ -322,7 +322,55 @@ pub trait ChannelRpc {
 
 #[async_trait]
 pub trait ConnectionRpc {
+    /// get connectionEnd according by connection_identifier and read Connections StorageMaps
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use octopusxt::get_connection_end;
+    ///
+    /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let conection_id = ConnectionId::default();
+    /// let result = get_connection_end(&conection_id, api).await?;
+    /// ```
+    async fn get_connection_end(
+        &self,
+        connection_identifier: ConnectionId,
+    ) -> Result<ConnectionEnd>;
 
+    /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use octopusxt::get_connections;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let result = get_connections(client).await?;
+    /// ```
+    async fn get_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>>;
+
+    ///  # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::MyConfig;
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use octopusxt::get_connection_channels;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let connection = ConnectionId::default();
+    /// let result = get_connection_channels(&connection, client).await?;
+    /// ```
+    async fn get_connection_channels(
+        &self,
+        connection_id: ConnectionId,
+    ) -> Result<Vec<IdentifiedChannelEnd>>;
 }
 
 #[async_trait]
@@ -404,9 +452,6 @@ pub trait OctopusxtRpc: ClientRpc + ChannelRpc + ConnectionRpc + PacketRpc {}
 pub struct OctopusxtClient {
     client: Client<MyConfig>,
 }
-
-#[async_trait]
-impl ConnectionRpc for OctopusxtClient {}
 
 #[async_trait]
 impl OctopusxtRpc for OctopusxtClient {}

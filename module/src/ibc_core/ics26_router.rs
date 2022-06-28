@@ -1,16 +1,14 @@
 use crate::ibc_core::Router;
 use crate::{ibc_node, OctopusxtClient};
 use anyhow::Result;
+use async_trait::async_trait;
 use ibc_proto::google::protobuf::Any;
 use sp_core::H256;
 use sp_keyring::AccountKeyring;
-use std::future::Future;
 use subxt::PairSigner;
-use async_trait::async_trait;
 
 #[async_trait]
 impl Router for OctopusxtClient {
-
     async fn deliver(&self, msg: Vec<Any>) -> Result<H256> {
         tracing::info!("in call_ibc: [deliver]");
 

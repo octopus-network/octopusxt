@@ -1,4 +1,5 @@
 use crate::{ClientRpc, OctopusxtClient};
+use async_trait::async_trait;
 use ibc::{
     core::{
         ics02_client::{
@@ -10,16 +11,13 @@ use ibc::{
     Height as ICSHeight,
 };
 use tendermint_proto::Protobuf;
-use async_trait::async_trait;
 
 use anyhow::Result;
 use core::str::FromStr;
 use sp_core::H256;
-use std::future::Future;
 
 #[async_trait]
 impl ClientRpc for OctopusxtClient {
-
     async fn get_client_state(&self, client_id: ClientId) -> Result<AnyClientState> {
         tracing::info!("in call_ibc : [get_client_state]");
 
@@ -48,7 +46,6 @@ impl ClientRpc for OctopusxtClient {
 
         Ok(client_state)
     }
-
 
     async fn get_client_consensus(
         &self,
@@ -99,7 +96,6 @@ impl ClientRpc for OctopusxtClient {
         Ok(consensus_state)
     }
 
-
     async fn get_consensus_state_with_height(
         &self,
         client_id: ClientId,
@@ -137,7 +133,6 @@ impl ClientRpc for OctopusxtClient {
 
         Ok(result)
     }
-
 
     async fn get_clients(&self) -> Result<Vec<IdentifiedAnyClientState>> {
         tracing::info!("in call_ibc: [get_clients]");
@@ -188,7 +183,6 @@ impl ClientRpc for OctopusxtClient {
 
         Ok(result)
     }
-
 
     async fn get_client_connections(&self, client_id: ClientId) -> Result<Vec<ConnectionId>> {
         tracing::info!("in call_ibc: [get_client_connections]");
