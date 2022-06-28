@@ -56,6 +56,15 @@ pub struct OctopusxtClient {
     client: Client<MyConfig>,
 }
 
+
+impl ClientRpc for OctopusxtClient {}
+
+impl ChannelRpc for OctopusxtClient {}
+
+impl ConnectionRpc for OctopusxtClient {}
+
+impl OctopusxtRpc for OctopusxtClient {}
+
 impl OctopusxtClient {
     pub fn new(client: Client<MyConfig>) -> Self {
         Self { client }
@@ -75,10 +84,8 @@ impl OctopusxtClient {
     /// ```
     pub async fn subscribe_beefy(&self) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
         tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
-        let api = self
-            .client
-            .clone()
-            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+        
+        let api = self.to_runtime_api();
 
         let mut sub = api.client.rpc().subscribe_beefy_justifications().await?;
 
@@ -103,8 +110,7 @@ impl OctopusxtClient {
     pub async fn get_latest_height(&self) -> Result<u64> {
         tracing::info!("In call_ibc: [get_latest_height]");
 
-        let api = self.client.clone()
-            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+        let api = self.to_runtime_api();
 
         let mut blocks = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -115,6 +121,11 @@ impl OctopusxtClient {
         };
 
         Ok(height)
+    }
+
+    pub fn to_runtime_api(&self) -> ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>> {
+        self.client.clone()
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>()
     }
 }
 
@@ -165,7 +176,7 @@ pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
 /// This get_mmr_leaf_and_mmr_proof api generate form generateProof api
 /// generateProof(leafIndex: u64, at?: BlockHash): MmrLeafProof
 /// interface: api.rpc.mmr.generateProof
-/// jsonrpc: mmr_generateProof
+/// json_rpc: mmr_generateProof
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
