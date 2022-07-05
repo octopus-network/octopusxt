@@ -173,7 +173,7 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
-    ) -> Result<Vec<u64>, Self::Error> {
+    ) -> Result<Vec<Sequence>, Self::Error> {
         tracing::info!("in call_ibc: [get_receipt_packet]");
 
         let api = self.to_runtime_api();
@@ -200,7 +200,7 @@ impl ChannelRpc for OctopusxtClient {
                 .packet_receipt(&port_id, &channel_id, &sequence, Some(block_hash))
                 .await?;
             if data.is_empty() {
-                result.push(sequence);
+                result.push(Sequence::from(sequence));
             }
         }
 
@@ -429,13 +429,13 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    fn query_connection_channels(
-        &self,
-        _height: Height,
-        _connection_id: ConnectionId,
-    ) -> Result<QueryChannelsResponse, Self::Error> {
-        todo!()
-    }
+    // fn query_connection_channels(
+    //     &self,
+    //     _height: Height,
+    //     _connection_id: ConnectionId,
+    // ) -> Result<QueryChannelsResponse, Self::Error> {
+    //     todo!()
+    // }
 
     fn query_unreceived_packets(
         &self,

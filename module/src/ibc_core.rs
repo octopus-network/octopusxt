@@ -205,12 +205,12 @@ pub trait ChannelRpc {
     //     port_id: String,
     // ) -> Result<IdentifiedClientState>;
 
-    /// Query all channel states for associated connection
-    fn query_connection_channels(
-        &self,
-        height: Height,
-        connection_id: ConnectionId,
-    ) -> Result<QueryChannelsResponse, Self::Error>;
+    // /// Query all channel states for associated connection
+    // fn query_connection_channels(
+    //     &self,
+    //     height: Height,
+    //     connection_id: ConnectionId,
+    // ) -> Result<QueryChannelsResponse, Self::Error>;
 
     /// query packet receipt by port_id, channel_id and sequence
     ///
@@ -280,7 +280,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
-    ) -> Result<Vec<u64>, Self::Error>;
+    ) -> Result<Vec<Sequence>, Self::Error>;
 
     /// query get_commitment_packet_state
     ///

@@ -4,7 +4,6 @@ use futures::StreamExt;
 use ibc::events::IbcEvent;
 use subxt::RawEventDetails;
 
-
 impl OctopusxtClient {
     /// Subscribe ibc events
     /// Maybe in the future call ocw
@@ -52,7 +51,7 @@ impl OctopusxtClient {
                         let event = <ibc_node::ibc::events::CreateClient as codec::Decode>::decode(
                             &mut &raw_event.data[..],
                         )
-                            .unwrap();
+                        .unwrap();
 
                         println!("In call_ibc: [subscribe_events] >> CreateClient Event");
 
@@ -76,7 +75,7 @@ impl OctopusxtClient {
                         let event = <ibc_node::ibc::events::UpdateClient as codec::Decode>::decode(
                             &mut &raw_event.data[..],
                         )
-                            .unwrap();
+                        .unwrap();
                         println!("In call_ibc: [subscribe_events] >> UpdateClient Event");
 
                         let height = event.0;
@@ -104,7 +103,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::ClientMisbehaviour as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
 
                         let height = event.0;
@@ -128,7 +127,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::OpenInitConnection as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
 
                         let height = event.0;
@@ -154,7 +153,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::OpenTryConnection as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
 
                         let height = event.0;
@@ -180,7 +179,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::OpenAckConnection as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
 
                         let height = event.0;
@@ -228,9 +227,10 @@ impl OctopusxtClient {
                         break 'outer;
                     }
                     "OpenInitChannel" => {
-                        let event = <ibc_node::ibc::events::OpenInitChannel as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
+                        let event =
+                            <ibc_node::ibc::events::OpenInitChannel as codec::Decode>::decode(
+                                &mut &raw_event.data[..],
+                            )
                             .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
 
@@ -254,9 +254,10 @@ impl OctopusxtClient {
                         break 'outer;
                     }
                     "OpenTryChannel" => {
-                        let event = <ibc_node::ibc::events::OpenTryChannel as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
+                        let event =
+                            <ibc_node::ibc::events::OpenTryChannel as codec::Decode>::decode(
+                                &mut &raw_event.data[..],
+                            )
                             .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
 
@@ -280,9 +281,10 @@ impl OctopusxtClient {
                         break 'outer;
                     }
                     "OpenAckChannel" => {
-                        let event = <ibc_node::ibc::events::OpenAckChannel as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
+                        let event =
+                            <ibc_node::ibc::events::OpenAckChannel as codec::Decode>::decode(
+                                &mut &raw_event.data[..],
+                            )
                             .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
 
@@ -310,7 +312,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::OpenConfirmChannel as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
 
                         let height = event.0;
@@ -333,9 +335,10 @@ impl OctopusxtClient {
                         break 'outer;
                     }
                     "CloseInitChannel" => {
-                        let event = <ibc_node::ibc::events::CloseInitChannel as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
+                        let event =
+                            <ibc_node::ibc::events::CloseInitChannel as codec::Decode>::decode(
+                                &mut &raw_event.data[..],
+                            )
                             .unwrap();
                         println!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
 
@@ -363,7 +366,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::CloseConfirmChannel as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
 
                         println!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
 
@@ -390,7 +393,7 @@ impl OctopusxtClient {
                         let event = <ibc_node::ibc::events::SendPacket as codec::Decode>::decode(
                             &mut &raw_event.data[..],
                         )
-                            .unwrap();
+                        .unwrap();
                         println!("In call_ibc: [substrate_events] >> SendPacket Event");
 
                         let send_packet = ibc::core::ics04_channel::events::SendPacket {
@@ -402,9 +405,10 @@ impl OctopusxtClient {
                         break 'outer;
                     }
                     "ReceivePacket" => {
-                        let event = <ibc_node::ibc::events::ReceivePacket as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
+                        let event =
+                            <ibc_node::ibc::events::ReceivePacket as codec::Decode>::decode(
+                                &mut &raw_event.data[..],
+                            )
                             .unwrap();
 
                         println!("In call_ibc: [substrate_events] >> ReceivePacket Event");
@@ -423,7 +427,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::WriteAcknowledgement as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [substrate_events] >> WriteAcknowledgement Event");
 
                         let write_acknowledgement =
@@ -442,22 +446,24 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::AcknowledgePacket as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
 
-                        let acknowledge_packet = ibc::core::ics04_channel::events::AcknowledgePacket {
-                            height: event.0.into(),
-                            packet: event.1.into(),
-                        };
+                        let acknowledge_packet =
+                            ibc::core::ics04_channel::events::AcknowledgePacket {
+                                height: event.0.into(),
+                                packet: event.1.into(),
+                            };
 
                         result_events.push(IbcEvent::AcknowledgePacket(acknowledge_packet));
 
                         break 'outer;
                     }
                     "TimeoutPacket" => {
-                        let event = <ibc_node::ibc::events::TimeoutPacket as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
+                        let event =
+                            <ibc_node::ibc::events::TimeoutPacket as codec::Decode>::decode(
+                                &mut &raw_event.data[..],
+                            )
                             .unwrap();
                         println!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
 
@@ -475,7 +481,7 @@ impl OctopusxtClient {
                             <ibc_node::ibc::events::TimeoutOnClosePacket as codec::Decode>::decode(
                                 &mut &raw_event.data[..],
                             )
-                                .unwrap();
+                            .unwrap();
                         println!("In call_ibc: [substrate_events] >> TimeoutOnClosePacket Event");
 
                         let timeout_on_close_packet =
@@ -492,7 +498,7 @@ impl OctopusxtClient {
                         let event = <ibc_node::ibc::events::Empty as codec::Decode>::decode(
                             &mut &raw_event.data[..],
                         )
-                            .unwrap();
+                        .unwrap();
 
                         println!("in call_ibc: [substrate_events] >> Empty Event");
 
@@ -505,7 +511,7 @@ impl OctopusxtClient {
                         let event = <ibc_node::ibc::events::ChainError as codec::Decode>::decode(
                             &mut &raw_event.data[..],
                         )
-                            .unwrap();
+                        .unwrap();
                         println!("in call_ibc: [substrate_events] >> ChainError Event");
 
                         let data = String::from_utf8(event.0).unwrap();
@@ -529,7 +535,6 @@ impl OctopusxtClient {
 
         Ok(result_events)
     }
-
 }
 
 fn inner_convert_event(raw_events: Vec<RawEventDetails>, module: &str) -> Vec<RawEventDetails> {

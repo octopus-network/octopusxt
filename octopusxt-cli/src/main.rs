@@ -28,7 +28,6 @@ pub enum Command {
     // #[structopt(name = "denom-trace")]
     // Contruct Denom Trace will display ibc_denom
     // DenomTrace(CliDenomTrace),
-
     #[structopt(name = "balance")]
     /// substrate balance module
     Balance(Balance),
@@ -44,7 +43,6 @@ pub enum Command {
     // #[structopt(name = "ibc-transfer")]
     // ibc protocol for corss chain transfer
     // IbcModule(IbcModule),
-
     #[structopt(name = "query")]
     /// basic query
     Query(Query),
