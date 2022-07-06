@@ -51,13 +51,13 @@ pub trait ClientRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
     /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_client_state;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let client_id = ClientId::default();
-    /// let result = get_client_state(&client_id, client).await?;
+    /// let result = octopusxt_client.query_client_state(client_id).await?;
     /// ```
     async fn query_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error>;
 
@@ -68,14 +68,14 @@ pub trait ClientRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
     /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_client_consensus;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let client_id = ClientId::default();
     /// let height = ICSHeight::default();
-    /// let result = get_client_consensus(&client_id, &height, client).await?;
+    /// let result = octopusxt_client.query_client_consensus_state(client_id, height).await?;
     /// ```
     async fn query_client_consensus_state(
         &self,
@@ -89,13 +89,13 @@ pub trait ClientRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
     /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_consensus_state_with_height;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let client_id = ClientId::default();
-    /// let result = get_consensus_state_with_height(&client_id, client).await?;
+    /// let result = octopusxt_client.query_consensus_state_with_height(client_i).await?;
     /// ```
     async fn query_consensus_state_with_height(
         &self,
@@ -108,11 +108,11 @@ pub trait ClientRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_clients;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_clients(client).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_clients().await?;
     /// ```
     async fn query_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
 
@@ -123,13 +123,13 @@ pub trait ClientRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
     /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_client_connections;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let client_id = ClientId::default();
-    /// let result = get_client_connections(&client_id, client).await?;
+    /// let result = octopusxt_client.query_client_connections(client_id).await?;
     /// ```
     async fn query_client_connections(
         &self,
@@ -137,24 +137,78 @@ pub trait ClientRpc {
     ) -> Result<Vec<ConnectionId>, Self::Error>;
 
     /// Query local chain consensus state
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use ibc::Height;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::new(0, 12);
+    /// let result = octopusxt_client.query_consensus_state(height).await?;
+    /// ```
     fn query_consensus_state(
         &self,
         height: Height,
     ) -> Result<QueryConsensusStateResponse, Self::Error>;
 
     /// Query upgraded client state
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use ibc::Height;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::new(0, 12);
+    /// let result = octopusxt_client.query_upgraded_client(height).await?;
+    /// ```
     fn query_upgraded_client(
         &self,
         height: Height,
     ) -> Result<QueryClientStateResponse, Self::Error>;
 
     /// Query upgraded consensus state for client
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use ibc::Height;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::new(0, 12);
+    /// let result = octopusxt_client.query_upgraded_cons_state(height).await?;
+    /// ```
     fn query_upgraded_cons_state(
         &self,
         height: Height,
     ) -> Result<QueryConsensusStateResponse, Self::Error>;
 
     /// Query newly created clients in block
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient};
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use ibc::Height;
+    /// use sp_core::H256;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let hash = H256::default();
+    /// let result = octopusxt_client.query_newly_created_clients(hash.into()).await?;
+    /// ```
     fn query_newly_created_clients(
         &self,
         block_hash: Hash,
@@ -171,11 +225,12 @@ pub trait ChannelRpc {
     /// # Usage example
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_channels;
+    /// use octopusxt::{ChannelRpc, get_channels, OctopusxtClient};
     /// use octopusxt::MyConfig;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_channels(client).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_channels().await?;
     /// ```
     async fn query_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
@@ -185,14 +240,14 @@ pub trait ChannelRpc {
     ///
     /// ```rust
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_channel_end;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let prot_id = PortId::default();
     /// let channel_id = ChannelId::default();
-    /// let result = get_channel_end(&port_id, &channel_id, client).await?;
+    /// let result = octopusxt_client.query_channel_end(port_id, channel_id).await?;
     /// ```
     async fn query_channel_end(
         &self,
@@ -224,15 +279,15 @@ pub trait ChannelRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_packet_receipt;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let prot_id = PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = Sequence::from(0);
-    /// let result = get_packet_receipt(&port_id, &channel_id, &sequence, client).await?;
+    /// let result = octopusxt_client.query_packet_receipt(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_packet_receipt(
         &self,
@@ -247,15 +302,15 @@ pub trait ChannelRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_packet_receipt_vec;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let prot_id = PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = Sequence::from(0);
-    /// let result = get_packet_receipt_vec(&port_id, &channel_id, &sequence, client).await?;
+    /// let result = octopusxt_client.query_packet_receipt_vec(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_packet_receipt_vec(
         &self,
@@ -270,15 +325,15 @@ pub trait ChannelRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_unreceipt_packet;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let port_id = PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = vec![Sequence::from(12),Sequence::from(13)];
-    /// let result = get_unreceipt_packet(&port_id, &channel_id, sequence, client).await?;
+    /// let result = octopusxt_client.query_unreceipt_packet(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_unreceipt_packet(
         &self,
@@ -292,12 +347,12 @@ pub trait ChannelRpc {
     /// # Usage example
     ///
     /// ```rust
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_commitment_packet_state;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_commitment_packet_state(client).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_commitment_packet_state().await?;
     /// ```
     async fn query_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
 
@@ -308,15 +363,15 @@ pub trait ChannelRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_packet_commitment;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let port_id = PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = Sequence::from(23);
-    /// let result = get_packet_commitment(&port_id, &channel_id, &sequence, client).await?;
+    /// let result = octopusxt_client.query_packet_commitment(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_packet_commitment(
         &self,
@@ -332,15 +387,15 @@ pub trait ChannelRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_packet_ack;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let port_id = PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = Sequence::from(12);
-    /// let result = get_packet_ack(&port_id, &channel_id, &sequence, client).await?;
+    /// let result = octopusxt_client.query_packet_acknowledgements(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_packet_acknowledgements(
         &self,
@@ -355,13 +410,13 @@ pub trait ChannelRpc {
     /// ```rust
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_next_sequence_recv;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let prot_id = PortId::default();
     /// let channel_id = ChannelId::default();
-    /// let result = get_next_sequence_recv(&prot_id, &channel_id, client).await?;
+    /// let result = octopusxt_client.query_next_sequence_recv(prot_id, channel_id).await?;
     /// ```
     async fn query_next_sequence_recv(
         &self,
@@ -375,15 +430,35 @@ pub trait ChannelRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::get_acknowledge_packet_state;
+    /// use octopusxt::{ChannelRpc, get_acknowledge_packet_state, OctopusxtClient};
     /// use octopusxt::MyConfig;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_acknowledge_packet_state(client).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_acknowledge_packet_state().await?;
     /// ```
     async fn query_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
 
     /// Query unreceived packet commitments
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
+    /// use ibc::Height;
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ChannelRpc, OctopusxtClient};
+    /// use octopusxt::MyConfig;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::zero();
+    /// let channel_id= ChannelId::new(12);
+    /// let port_id = PortId::default();
+    /// let seqs = vec![Sequence::from(10)];
+    /// let result = octopusxt_client.query_unreceived_packets(height, channel_id, port_id, seqs).await?;
+    /// ```
     fn query_unreceived_packets(
         &self,
         height: Height,
@@ -393,6 +468,25 @@ pub trait ChannelRpc {
     ) -> Result<Vec<Sequence>, Self::Error>;
 
     /// Query the unreceived acknowledgements
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
+    /// use ibc::Height;
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ChannelRpc, OctopusxtClient};
+    /// use octopusxt::MyConfig;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::zero();
+    /// let channel_id= ChannelId::new(12);
+    /// let port_id = PortId::default();
+    /// let seqs = vec![Sequence::from(10)];
+    /// let result = octopusxt_client.query_unreceived_acknowledgements(height, channel_id, port_id, seqs).await?;
+    /// ```
     fn query_unreceived_acknowledgements(
         &self,
         height: Height,
@@ -411,13 +505,13 @@ pub trait ConnectionRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient};
     /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_connection_end;
     ///
-    /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let conection_id = ConnectionId::default();
-    /// let result = get_connection_end(&conection_id, api).await?;
+    /// let result = octopusxt_client.query_connection_end(conection_id).await?;
     /// ```
     async fn query_connection_end(
         &self,
@@ -439,11 +533,11 @@ pub trait ConnectionRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_connections;
+    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_connections(client).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_connections().await?;
     /// ```
     async fn query_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
 
@@ -453,13 +547,13 @@ pub trait ConnectionRpc {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
+    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient};
     /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use octopusxt::get_connection_channels;
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let connection = ConnectionId::default();
-    /// let result = get_connection_channels(&connection, client).await?;
+    /// let result = octopusxt_client.query_connection_channels(connection).await?;
     /// ```
     async fn query_connection_channels(
         &self,
@@ -467,6 +561,21 @@ pub trait ConnectionRpc {
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
     /// Query all connection states for associated client
+    ///
+    /// ## Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient};
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use ibc::Height;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::default();
+    /// let client_id = ClientId::default();
+    /// let result = octopusxt_client.query_connection_using_client(height, client_id).await?;
+    /// ```
     fn query_connection_using_client(
         &self,
         height: Height,
@@ -474,6 +583,22 @@ pub trait ConnectionRpc {
     ) -> Result<Vec<IdentifiedConnection>, Self::Error>;
 
     /// Generate proof for connection handshake
+    ///
+    /// ## Usage example
+    ///
+    /// ```rust
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient};
+    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+    /// use ibc::Height;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let height = Height::default();
+    /// let client_id = ClientId::default();
+    /// let conn_id = ConnectionId::default();
+    /// let result = octopusxt_client.generate_conn_handshake_proof(height, client_id, conn_id).await?;
+    /// ```
     fn generate_conn_handshake_proof(
         &self,
         height: Height,
@@ -493,14 +618,15 @@ pub trait PacketRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use subxt::ClientBuilder;
-    /// use octopusxt::{get_send_packet_event, MyConfig};
+    /// use octopusxt::{MyConfig, OctopusxtClient, PacketRpc};
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let prot_id =PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = Sequence::from(0);
-    /// let result = get_send_packet_event(&port_id, &channel_id, &sequence, client).await?;
+    /// let result = octopusxt_client.query_send_packet_event(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_send_packet_event(
         &self,
@@ -516,14 +642,15 @@ pub trait PacketRpc {
     /// ```rust
     /// use ibc::core::ics04_channel::packet::Sequence;
     /// use subxt::ClientBuilder;
-    /// use octopusxt::{get_write_ack_packet_event, MyConfig};
+    /// use octopusxt::{MyConfig, OctopusxtClient, PacketRpc};
     /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let prot_id = PortId::default();
     /// let channel_id = ChannelId::default();
     /// let sequence = Sequence::from(0);
-    /// let result = get_write_ack_packet_event(&port_id, &channel_id, &sequence, client).await?;
+    /// let result = octopusxt_client.query_write_ack_packet_event(port_id, channel_id, sequence).await?;
     /// ```
     async fn query_write_ack_packet_event(
         &self,
@@ -533,6 +660,22 @@ pub trait PacketRpc {
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// Query packet data
+    ///
+    /// # Usage example
+    ///
+    /// ```rust
+    /// use ibc::core::ics04_channel::packet::Sequence;
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{MyConfig, OctopusxtClient, PacketRpc};
+    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let prot_id = PortId::default();
+    /// let channel_id = ChannelId::default();
+    /// let sequences = vec![Sequence::from(0)];
+    /// let result = octopusxt_client.query_packets(channel_id, prot_id, sequences).await?;
+    /// ```
     async fn query_packets(
         &self,
         channel_id: ChannelId,
@@ -568,9 +711,40 @@ pub trait Transfer {
     type Error;
 
     /// Query the denom trace for an ibc denom
+    ///
+    ///  # Usage example
+    ///
+    /// ```rust
+    /// use ibc::core::ics26_routing::handler::deliver;
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{MyConfig, OctopusxtClient, Router, Transfer};
+    /// use ibc_proto::google::protobuf::Any;
+    /// use sp_core::crypto::AccountId32;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopus_client = OctopusxtClient::new(client);
+    /// let msg = AccountId32::default().to_string();
+    /// let result = octopus_client.query_denom_trace(msg).await?;
+    /// ```
     fn query_denom_trace(&self, denom: String) -> Result<QueryDenomTraceResponse, Self::Error>;
 
     /// Query the denom traces for ibc denoms matching offset
+    ///
+    /// ```rust
+    /// use ibc::core::ics26_routing::handler::deliver;
+    /// use ibc::Height;
+    /// use subxt::ClientBuilder;
+    /// use octopusxt::{MyConfig, OctopusxtClient, Router, Transfer};
+    /// use ibc_proto::google::protobuf::Any;
+    /// use sp_core::crypto::AccountId32;
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopus_client = OctopusxtClient::new(client);
+    /// let offset = "1".to_string();
+    /// let limit = 23;
+    /// let height = Height::default();
+    /// let result = octopus_client.query_denom_traces(offset, limit, height).await?;
+    /// ```
     fn query_denom_traces(
         &self,
         offset: String,
@@ -601,11 +775,11 @@ impl OctopusxtClient {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::subscribe_beefy;
+    /// use octopusxt::{MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = subscribe_beefy(client).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.subscribe_beefy().await?;
     /// ```
     pub async fn subscribe_beefy(&self) -> anyhow::Result<SignedCommitment> {
         tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
@@ -625,13 +799,12 @@ impl OctopusxtClient {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_latest_height;
+    /// use octopusxt::{MyConfig, OctopusxtClient};
     ///
     /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let result = get_latest_height(api).await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_latest_height().await?;
     /// ```
-    ///
     pub async fn query_latest_height(&self) -> anyhow::Result<u64> {
         tracing::info!("In call_ibc: [get_latest_height]");
 
@@ -648,6 +821,7 @@ impl OctopusxtClient {
         Ok(height)
     }
 
+    /// return RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>> struct
     pub fn to_runtime_api(
         &self,
     ) -> ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>> {
@@ -669,13 +843,13 @@ impl OctopusxtClient {
     ///
     /// ```rust
     /// use subxt::{ClientBuilder, BlockNumber};
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_mmr_leaf_and_mmr_proof;
+    /// use octopusxt::{MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let block_number = Some(BlockNumber::from(12));
     /// let block_hash = None;
-    /// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
+    /// let result = octopusxt_client.query_mmr_leaf_and_mmr_proof(block_number, block_hash).await?;
     /// ```
     pub async fn query_mmr_leaf_and_mmr_proof(
         &self,
@@ -708,14 +882,13 @@ impl OctopusxtClient {
     ///
     /// ```rust
     /// use subxt::ClientBuilder;
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_header_by_block_hash;
+    /// use octopusxt::{MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let block_hash = None;
-    /// let result = get_header_by_block_hash(block_hash, client).await?;
+    /// let result = octopusxt_client.query_header_by_block_hash(block_hash).await?;
     /// ```
-    ///
     pub async fn query_header_by_block_hash(
         &self,
         block_hash: Option<H256>,
@@ -735,14 +908,13 @@ impl OctopusxtClient {
     ///
     /// ```rust
     /// use subxt::{ClientBuilder, BlockNumber};
-    /// use octopusxt::MyConfig;
-    /// use octopusxt::get_header_by_block_number;
+    /// use octopusxt::{MyConfig, OctopusxtClient};
     ///
     /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
     /// let block_number = Some(BlockNumber::from(2));
-    /// let result = get_header_by_block_number(block_number, client).await?;
+    /// let result = octopusxt_client.query_header_by_block_number(block_number).await?;
     /// ```
-    ///
     pub async fn query_header_by_block_number(
         &self,
         block_number: Option<BlockNumber>,
@@ -759,6 +931,15 @@ impl OctopusxtClient {
     }
 
     /// query block hash by block number
+    ///
+    /// ```rust
+    /// use subxt::{ClientBuilder, BlockNumber};
+    /// use octopusxt::{MyConfig, OctopusxtClient};
+    ///
+    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+    /// let octopusxt_client = OctopusxtClient::new(client);
+    /// let result = octopusxt_client.query_block_hash_by_block_number(Some(BlockNumber::from(2))).await?;
+    /// ```
     pub async fn query_block_hash_by_block_number(
         &self,
         block_number: Option<BlockNumber>,
