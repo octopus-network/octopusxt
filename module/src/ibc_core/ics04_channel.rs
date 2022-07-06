@@ -9,11 +9,11 @@ use ibc::core::{
 };
 use tendermint_proto::Protobuf;
 
-use crate::primitive::QueryChannelsResponse;
+// use crate::primitive::QueryChannelsResponse;
 use async_trait::async_trait;
 use codec::Decode;
 use core::str::FromStr;
-use ibc::core::ics24_host::identifier::ConnectionId;
+// use ibc::core::ics24_host::identifier::ConnectionId;
 use ibc::Height;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 use sp_core::H256;

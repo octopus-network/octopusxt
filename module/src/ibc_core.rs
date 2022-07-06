@@ -28,8 +28,9 @@ pub mod ics26_router;
 
 pub use crate::events::*;
 use crate::primitive::{
-    IdentifiedClientState, IdentifiedConnection, QueryChannelsResponse, QueryClientStateResponse,
-    QueryConsensusStateResponse, QueryDenomTraceResponse, QueryDenomTracesResponse,
+    IdentifiedClientState, IdentifiedConnection,
+    /*QueryChannelsResponse,*/ QueryClientStateResponse, QueryConsensusStateResponse,
+    QueryDenomTraceResponse, QueryDenomTracesResponse,
 };
 pub use ics02_client::*;
 pub use ics03_connection::*;

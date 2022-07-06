@@ -1,4 +1,4 @@
-use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use crate::{ibc_node, MyConfig};
 use octopusxt::update_client_state::MmrProof;
 use octopusxt::*;
 
@@ -32,14 +32,18 @@ use tokio::{self, task, time};
 // test API get_block_header
 // use `cargo test -- --captuer` can print content
 #[tokio::test]
-async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_header_by_block_number() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client);
+
     let block_number = Some(BlockNumber::from(NumberOrHex::Number(3)));
-    let header = get_header_by_block_number(block_number, client).await?;
+    let header = octopusxt_client
+        .query_header_by_block_number(block_number)
+        .await?;
 
     println!("convert header = {:?}", header);
 
@@ -47,18 +51,20 @@ async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::test]
-async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_client_consensus_state() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
 
-    let result = get_client_consensus(
-        &ClientId::new(ClientType::Grandpa, 0).unwrap(),
-        &Height::new(0, 320),
-        client,
-    )
-    .await?;
+    let octopusxt_client = OctopusxtClient::new(client);
+
+    let result = octopusxt_client
+        .query_client_consensus_state(
+            ClientId::new(ClientType::Grandpa, 0).unwrap(),
+            Height::new(0, 320),
+        )
+        .await?;
 
     println!("result = {:?}", result);
 
@@ -75,15 +81,15 @@ async fn test_get_key() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::test]
-async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
 
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let octopusxt_client = OctopusxtClient::new(client);
+
+    let api = octopusxt_client.to_runtime_api();
 
     let block_number = 22;
 
@@ -96,12 +102,12 @@ async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Err
 
     println!("block_hash = {:?}", block_hash);
 
-    let result = get_mmr_leaf_and_mmr_proof(
-        Some(BlockNumber::from(NumberOrHex::Number(block_number))),
-        Some(block_hash),
-        client,
-    )
-    .await?;
+    let result = octopusxt_client
+        .query_mmr_leaf_and_mmr_proof(
+            Some(BlockNumber::from(NumberOrHex::Number(block_number))),
+            Some(block_hash),
+        )
+        .await?;
 
     println!("result = {:?}", result);
 
@@ -109,16 +115,19 @@ async fn test_get_mmr_leaf_and_mmr_proof() -> Result<(), Box<dyn std::error::Err
 }
 
 #[tokio::test]
-async fn test_get_packet_commitment() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_packet_commitment() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client);
+
     let client_id = PortId::from_str("transfer").unwrap();
     let channel_id = ChannelId::from_str("channel-0").unwrap();
 
-    let result = get_packet_commitment(&client_id, &channel_id, &Sequence::from(1), client)
+    let result = octopusxt_client
+        .query_packet_commitment(client_id, channel_id, Sequence::from(1))
         .await
         .unwrap();
     println!("packet_commitment = {:?}", result);
@@ -142,14 +151,16 @@ fn test_get_storage_key() {
 }
 
 #[tokio::test]
-async fn test_get_latest_height() {
+async fn test_query_latest_height() {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await
         .unwrap();
 
-    let height = get_latest_height(client).await.unwrap();
+    let octopusxt_client = OctopusxtClient::new(client);
+
+    let height = octopusxt_client.query_latest_height().await.unwrap();
     println!("height = {:?}", height);
 }
 
@@ -160,8 +171,10 @@ async fn test_subscribe_beefy_justification() -> Result<(), Box<dyn std::error::
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client);
+
     // subscribe beefy justification
-    let signed_commitment_raw = subscribe_beefy(client.clone()).await.unwrap().0 .0;
+    let signed_commitment_raw = octopusxt_client.subscribe_beefy().await.unwrap().0 .0;
     println!(
         "signed_commitment = {:?}",
         HexDisplay::from(&signed_commitment_raw)
@@ -274,6 +287,8 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client.clone());
+
     let block_number = 100;
 
     let validator_proofs = build_validator_proof(client.clone(), block_number).await?;
@@ -307,6 +322,7 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
     let public_keys = vec![
         "0x020a1091341fe5664bfa1782d5e04779689068c916b04cb365ec3153755684d9a1".to_string(), // Alice
     ];
+
     let light_client = beefy_light_client::new(public_keys);
     println!("init beefy light client: {:?}", light_client);
     println!(
@@ -315,7 +331,7 @@ async fn test_build_and_verify_signature() -> Result<(), Box<dyn std::error::Err
     );
 
     // subscribe beefy justification
-    let signed_commitment = subscribe_beefy(client.clone()).await.unwrap().0;
+    let signed_commitment = octopusxt_client.subscribe_beefy().await.unwrap().0;
     // decode
     let signed_commitment =
         commitment::SignedCommitment::decode(&mut &signed_commitment[..]).unwrap();
@@ -441,8 +457,10 @@ async fn verify_leaf_proof_works_2() -> Result<(), Box<dyn std::error::Error>> {
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client);
+
     // subscribe beefy justification
-    let signed_commitment_raw = subscribe_beefy(client.clone()).await.unwrap().0 .0;
+    let signed_commitment_raw = octopusxt_client.subscribe_beefy().await.unwrap().0 .0;
     println!(
         "signed_commitment = {:?}",
         HexDisplay::from(&signed_commitment_raw)
@@ -469,9 +487,7 @@ signed commitment validator_set_id : {}",
         validator_set_id
     );
 
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let api = octopusxt_client.to_runtime_api();
 
     //get block hash by block_number
     let block_hash: sp_core::H256 = api
@@ -490,8 +506,9 @@ signed commitment validator_set_id : {}",
     //get mmr leaf and proof
     // Note: target height=block_number - 1
     let target_height = Some(BlockNumber::from(NumberOrHex::Number(block_number as u64)));
-    let (block_hash, mmr_leaf, mmr_leaf_proof) =
-        get_mmr_leaf_and_mmr_proof(target_height, Some(block_hash), client.clone()).await?;
+    let (block_hash, mmr_leaf, mmr_leaf_proof) = octopusxt_client
+        .query_mmr_leaf_and_mmr_proof(target_height, Some(block_hash))
+        .await?;
     println!("generate_proof block hash : {:?}", block_hash);
 
     // mmr leaf proof
@@ -573,8 +590,10 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client.clone());
+
     // subscribe beefy justification
-    let signed_commitment_raw = subscribe_beefy(client.clone()).await.unwrap().0;
+    let signed_commitment_raw = octopusxt_client.subscribe_beefy().await.unwrap().0;
 
     let signed_commitment =
         commitment::SignedCommitment::decode(&mut &signed_commitment_raw.clone()[..]).unwrap();
@@ -719,7 +738,8 @@ async fn verify_leaf_proof_works_3() -> Result<(), Box<dyn std::error::Error>> {
         "beefy light client validators set root = {}",
         hex::encode(&light_client2.validator_set.root)
     );
-    let signed_commitment_raw2 = subscribe_beefy(client.clone()).await.unwrap().0 .0;
+
+    let signed_commitment_raw2 = octopusxt_client.subscribe_beefy().await.unwrap().0 .0;
 
     let signed_commitment2 =
         commitment::SignedCommitment::decode(&mut &signed_commitment_raw2.clone()[..]).unwrap();
@@ -784,9 +804,10 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
         .build::<MyConfig>()
         .await?;
 
-    let api_a = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let octopusxt_client = OctopusxtClient::new(client.clone());
+
+    let api_a = octopusxt_client.to_runtime_api();
+
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
     let raw_signed_commitment = sub.next().await.unwrap().unwrap();
@@ -818,12 +839,12 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     println!("signature :  {:?}", signatures);
 
     // get block header by block number
-    let block_header = get_header_by_block_number(
-        Some(BlockNumber::from(NumberOrHex::Number(block_number as u64))),
-        client.clone(),
-    )
-    .await
-    .unwrap();
+    let block_header = octopusxt_client
+        .query_header_by_block_number(Some(BlockNumber::from(NumberOrHex::Number(
+            block_number as u64,
+        ))))
+        .await
+        .unwrap();
     println!("header = {:?}", block_header);
 
     // build validator proof
@@ -838,7 +859,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let mmr_root = help::MmrRoot {
         block_header,
         signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
-        validator_merkle_proofs: validator_merkle_proofs,
+        validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
     };
@@ -974,9 +995,9 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         .build::<MyConfig>()
         .await?;
 
-    let api_a = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let octopusxt_client = OctopusxtClient::new(client.clone());
+
+    let api_a = octopusxt_client.to_runtime_api();
 
     let mut sub = api_a.client.rpc().subscribe_beefy_justifications().await?;
 
@@ -1012,12 +1033,12 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header = get_header_by_block_number(
-            Some(BlockNumber::from(NumberOrHex::Number(block_number as u64))),
-            client.clone(),
-        )
-        .await
-        .unwrap();
+        let block_header = octopusxt_client
+            .query_header_by_block_number(Some(BlockNumber::from(NumberOrHex::Number(
+                block_number as u64,
+            ))))
+            .await
+            .unwrap();
         println!("header = {:?}", block_header);
 
         // build validator proof
@@ -1032,7 +1053,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         let mmr_root = help::MmrRoot {
             block_header,
             signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
-            validator_merkle_proofs: validator_merkle_proofs,
+            validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
         };
@@ -1200,24 +1221,30 @@ async fn test_update_client_state_service() -> Result<(), Box<dyn std::error::Er
 }
 
 #[tokio::test]
-async fn test_get_clients() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_clients() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
-    let clients = get_clients(client).await.unwrap();
+
+    let octopusxt_client = OctopusxtClient::new(client);
+
+    let clients = octopusxt_client.query_clients().await.unwrap();
     println!("{:?}", clients);
 
     Ok(())
 }
 
 #[tokio::test]
-async fn test_get_client_state() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_client_state() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:8844")
         .build::<MyConfig>()
         .await?;
-    let client_state = get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
+    let octopusxt_client = OctopusxtClient::new(client);
+
+    let client_state = octopusxt_client
+        .query_client_state(ClientId::new(ClientType::Grandpa, 0).unwrap())
         .await
         .unwrap();
 
@@ -1232,9 +1259,10 @@ async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let octopusxt_client = OctopusxtClient::new(client.clone());
+
+    let api = octopusxt_client.to_runtime_api();
+
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
     let block_header = block.next().await.unwrap().unwrap();
@@ -1369,17 +1397,20 @@ fn test_mmr_root_codec() {
 }
 
 #[tokio::test]
-async fn test_get_send_packet_event() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_send_packet_event() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client);
+
     let port_id = PortId::from_str("transfer").unwrap();
     let channel_id = ChannelId::from_str("channel-0").unwrap();
     let seq = Sequence::from(2);
 
-    let send_packet_event = get_send_packet_event(&port_id, &channel_id, &seq, client)
+    let send_packet_event = octopusxt_client
+        .query_send_packet_event(port_id, channel_id, seq)
         .await
         .unwrap();
 
@@ -1389,16 +1420,19 @@ async fn test_get_send_packet_event() -> Result<(), Box<dyn std::error::Error>> 
 }
 
 #[tokio::test]
-async fn test_get_packet_ack() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_packet_acknowledgements() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
         .build::<MyConfig>()
         .await?;
 
+    let octopusxt_client = OctopusxtClient::new(client);
+
     let port_id = PortId::from_str("transfer").unwrap();
     let channel_id = ChannelId::from_str("channel-0").unwrap();
 
-    let result = get_packet_ack(&port_id, &channel_id, &Sequence::from(1), client)
+    let result = octopusxt_client
+        .query_packet_acknowledgements(port_id, channel_id, Sequence::from(1))
         .await
         .unwrap();
     println!("packet_ack = {:?}", result);
@@ -1407,16 +1441,18 @@ async fn test_get_packet_ack() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 #[tokio::test]
-async fn test_get_packet_receipt() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_query_packet_receipt() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:8844")
         .build::<MyConfig>()
         .await?;
+    let octopusxt_client = OctopusxtClient::new(client);
 
     let port_id = PortId::from_str("transfer").unwrap();
     let channel_id = ChannelId::from_str("channel-0").unwrap();
 
-    let result = get_packet_receipt(&port_id, &channel_id, &Sequence::from(2), client)
+    let result = octopusxt_client
+        .query_packet_receipt(port_id, channel_id, Sequence::from(2))
         .await
         .unwrap();
     println!("packet_receipt = {:?}", result);
