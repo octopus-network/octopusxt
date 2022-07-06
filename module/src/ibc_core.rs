@@ -7,16 +7,22 @@ use ibc::core::{
 use subxt::{rpc::ClientT, BlockNumber, Client, SignedCommitment};
 
 use async_trait::async_trait;
-use beefy_merkle_tree::Hash;
-use ibc::core::ics02_client::client_consensus::AnyConsensusState;
+
+use ibc::core::ics02_client::client_consensus::{AnyConsensusState, AnyConsensusStateWithHeight};
 use ibc::core::ics02_client::client_state::{AnyClientState, IdentifiedAnyClientState};
 use ibc::core::ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd};
 use ibc::core::ics04_channel::channel::{ChannelEnd, IdentifiedChannelEnd};
-use ibc::core::ics04_channel::packet::Receipt;
-use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
+
+use ibc::clients::ics10_grandpa::client_state::ClientState;
+use ibc::clients::ics10_grandpa::consensus_state::ConsensusState;
+use ibc::clients::ics10_grandpa::header::Header;
+use ibc::core::ics03_connection::version::Version;
+use ibc::core::ics23_commitment::commitment::CommitmentPrefix;
+use ibc::core::ics24_host::identifier::ConnectionId;
+use ibc::timestamp::Timestamp;
 use ibc::{Height as ICSHeight, Height};
 use ibc_proto::google::protobuf::Any;
-use ibc_proto::ibc::core::channel::v1::PacketState;
+
 use jsonrpsee::rpc_params;
 use serde::{Deserialize, Serialize};
 use sp_core::H256;
@@ -27,20 +33,27 @@ pub mod ics04_channel;
 pub mod ics26_router;
 
 pub use crate::events::*;
-use crate::primitive::{
-    IdentifiedClientState, IdentifiedConnection,
-    /*QueryChannelsResponse,*/ QueryClientStateResponse, QueryConsensusStateResponse,
-    QueryDenomTraceResponse, QueryDenomTracesResponse,
+use crate::primitive::IdentifiedClientState;
+use ibc::core::ics23_commitment::merkle::MerkleProof;
+use ibc::events::IbcEvent;
+use ibc_proto::cosmos::base::abci::v1beta1::TxResponse;
+use ibc_relayer::chain::requests::{
+    IncludeProof, QueryBlockRequest, QueryHeight, QueryPacketAcknowledgementRequest,
+    QueryPacketCommitmentRequest, QueryPacketReceiptRequest, QueryTxRequest,
 };
+use ibc_relayer::chain::requests::{
+    QueryChannelClientStateRequest, QueryChannelRequest, QueryChannelsRequest,
+    QueryClientConnectionsRequest, QueryClientStateRequest, QueryClientStatesRequest,
+    QueryConnectionChannelsRequest, QueryConnectionRequest, QueryConnectionsRequest,
+    QueryConsensusStateRequest, QueryConsensusStatesRequest, QueryHostConsensusStateRequest,
+    QueryNextSequenceReceiveRequest, QueryPacketAcknowledgementsRequest,
+    QueryPacketCommitmentsRequest, QueryUnreceivedAcksRequest, QueryUnreceivedPacketsRequest,
+    QueryUpgradedClientStateRequest, QueryUpgradedConsensusStateRequest,
+};
+use ibc_relayer::chain::tracking::TrackedMsgs;
 pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
-
-#[derive(Debug, Clone)]
-pub enum QueryHeight {
-    Latest,
-    Specific(Height),
-}
 
 #[async_trait]
 pub trait ClientRpc {
@@ -48,596 +61,191 @@ pub trait ClientRpc {
 
     /// Query a client state
     /// query client_state according by client_id, and read ClientStates StorageMap
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let client_id = ClientId::default();
-    /// let result = octopusxt_client.query_client_state(client_id, QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve the state of the specified light client. A
+    /// proof can optionally be returned along with the result.
     async fn query_client_state(
         &self,
-        client_id: ClientId,
-        height: QueryHeight,
-    ) -> Result<AnyClientState, Self::Error>;
-
-    /// query appoint height consensus_state according by client_identifier and height
-    /// and read ConsensusStates StorageMap
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let client_id = ClientId::default();
-    /// let height = ICSHeight::default();
-    /// let result = octopusxt_client.query_client_consensus_state(client_id, QueryHeight::Specific(height)).await?;
-    /// ```
-    async fn query_client_consensus_state(
-        &self,
-        client_id: ClientId,
-        height: QueryHeight,
-    ) -> Result<AnyConsensusState, Self::Error>;
-
-    /// query consensus state with height
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let client_id = ClientId::default();
-    /// let result = octopusxt_client.query_consensus_state_with_height(client_id, QueryHeight::Latest).await?;
-    /// ```
-    async fn query_consensus_state_with_height(
-        &self,
-        client_id: ClientId,
-        height: QueryHeight,
-    ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error>;
+        request: QueryClientStateRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(AnyClientState, Option<MerkleProof>), Self::Error>;
 
     /// query key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_clients(QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve the state of all clients that a chain hosts.
     async fn query_clients(
         &self,
-        height: QueryHeight,
+        request: QueryClientStatesRequest,
     ) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
 
     /// get connection_identifier vector according by client_identifier
-    ///
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let client_id = ClientId::default();
-    /// let result = octopusxt_client.query_client_connections(client_id, QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve the identifiers of all connections.
     async fn query_client_connections(
         &self,
-        client_id: ClientId,
-        height: QueryHeight,
+        request: QueryClientConnectionsRequest,
     ) -> Result<Vec<ConnectionId>, Self::Error>;
 
     /// Query local chain consensus state
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use ibc::Height;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::new(0, 12);
-    /// let result = octopusxt_client.query_consensus_state(QueryHeight::Specific(height)).await?;
-    /// ```
-    fn query_consensus_state(
+    async fn query_consensus_state(
         &self,
-        height: QueryHeight,
-    ) -> Result<QueryConsensusStateResponse, Self::Error>;
+        request: QueryConsensusStateRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(AnyConsensusState, Option<MerkleProof>), Self::Error>;
 
-    /// Query upgraded client state
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use ibc::Height;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::new(0, 12);
-    /// let result = octopusxt_client.query_upgraded_client(QueryHeight::Specific(height)).await?;
-    /// ```
-    fn query_upgraded_client(
+    /// Performs a query to retrieve all the consensus states that the specified
+    /// light client stores.
+    async fn query_consensus_states(
         &self,
-        height: QueryHeight,
-    ) -> Result<QueryClientStateResponse, Self::Error>;
+        request: QueryConsensusStatesRequest,
+    ) -> Result<Vec<AnyConsensusStateWithHeight>, Self::Error>;
 
-    /// Query upgraded consensus state for client
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use ibc::Height;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::new(0, 12);
-    /// let result = octopusxt_client.query_upgraded_cons_state(QueryHeight::Specific(height)).await?;
-    /// ```
-    fn query_upgraded_cons_state(
+    async fn query_upgraded_client_state(
         &self,
-        height: QueryHeight,
-    ) -> Result<QueryConsensusStateResponse, Self::Error>;
+        request: QueryUpgradedClientStateRequest,
+    ) -> Result<(AnyClientState, MerkleProof), Self::Error>;
 
-    /// Query newly created clients in block
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ClientRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use ibc::Height;
-    /// use sp_core::H256;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let hash = H256::default();
-    /// let result = octopusxt_client.query_newly_created_clients(hash.into(), QueryHeight::Latest).await?;
-    /// ```
-    fn query_newly_created_clients(
+    async fn query_upgraded_consensus_state(
         &self,
-        block_hash: Hash,
-        height: QueryHeight,
-    ) -> Result<Vec<IdentifiedClientState>, Self::Error>;
+        request: QueryUpgradedConsensusStateRequest,
+    ) -> Result<(AnyConsensusState, MerkleProof), Self::Error>;
 }
 
 #[async_trait]
 pub trait ChannelRpc {
     type Error;
 
+    /// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
+    /// Performs a query to retrieve the channel associated with a given channel
+    /// identifier. A proof can optionally be returned along with the result.
+    async fn query_channel(
+        &self,
+        request: QueryChannelRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(ChannelEnd, Option<MerkleProof>), Self::Error>;
+
     /// Query all channel states
     /// query key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
-    ///
-    /// # Usage example
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ChannelRpc, get_channels, OctopusxtClient, QueryHeight};
-    /// use octopusxt::MyConfig;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_channels(QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve all the channels of a chain.
     async fn query_channels(
         &self,
-        height: QueryHeight,
+        request: QueryChannelsRequest,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
-    /// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let result = octopusxt_client.query_channel_end(port_id, channel_id, QueryHeight::Latest).await?;
-    /// ```
-    async fn query_channel_end(
+    /// Performs a query to retrieve the client state for the channel associated
+    /// with a given channel identifier.
+    fn query_channel_client_state(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        height: QueryHeight,
-    ) -> Result<ChannelEnd, Self::Error>;
-
-    // TODO
-    // /// Query client state for channel and port id
-    // #[method(name = "ibc_queryChannelClient")]
-    // fn query_channel_client(
-    //     &self,
-    //     height: u32,
-    //     channel_id: String,
-    //     port_id: String,
-    // ) -> Result<IdentifiedClientState>;
-
-    // /// Query all channel states for associated connection
-    // fn query_connection_channels(
-    //     &self,
-    //     height: Height,
-    //     connection_id: ConnectionId,
-    // ) -> Result<QueryChannelsResponse, Self::Error>;
+        request: QueryChannelClientStateRequest,
+    ) -> Result<Option<IdentifiedAnyClientState>, Self::Error>;
 
     /// query packet receipt by port_id, channel_id and sequence
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = Sequence::from(0);
-    /// let result = octopusxt_client.query_packet_receipt(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve a given packet receipt, stored on the chain at path
+    /// `path::CommitmentsPath`. A proof can optionally be returned along with the result.
     async fn query_packet_receipt(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Receipt, Self::Error>;
-
-    /// query packet receipt by port_id, channel_id and sequence
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = Sequence::from(0);
-    /// let result = octopusxt_client.query_packet_receipt_vec(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
-    async fn query_packet_receipt_vec(
-        &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error>;
-
-    /// query  unreceipt packet
-    ///  # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let port_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = vec![Sequence::from(12),Sequence::from(13)];
-    /// let result = octopusxt_client.query_unreceipt_packet(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
-    async fn query_unreceipt_packet(
-        &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequences: Vec<Sequence>,
-        height: QueryHeight,
-    ) -> Result<Vec<Sequence>, Self::Error>;
-
-    /// query get_commitment_packet_state
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_commitment_packet_state(QueryHeight::Latest).await?;
-    /// ```
-    async fn query_commitment_packet_state(
-        &self,
-        height: QueryHeight,
-    ) -> Result<Vec<PacketState>, Self::Error>;
+        request: QueryPacketReceiptRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Vec<u8>, Option<MerkleProof>), Self::Error>;
 
     /// query packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
-    ///
-    ///  # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let port_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = Sequence::from(23);
-    /// let result = octopusxt_client.query_packet_commitment(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve a stored packet commitment hash, stored on
+    /// the chain at path `path::CommitmentsPath`. A proof can optionally be
+    /// returned along with the result.
     async fn query_packet_commitment(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error>;
+        request: QueryPacketCommitmentRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Vec<u8>, Option<MerkleProof>), Self::Error>;
+
+    /// Performs a query to retrieve all the packet commitments hashes
+    /// associated with a channel. Returns the corresponding packet sequence
+    /// numbers and the height at which they were retrieved.
+    async fn query_packet_commitments(
+        &self,
+        request: QueryPacketCommitmentsRequest,
+    ) -> Result<(Vec<Sequence>, ICSHeight), Self::Error>;
 
     /// query packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
-    ///
-    ///  # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use subxt::ClientBuilder;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let port_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = Sequence::from(12);
-    /// let result = octopusxt_client.query_packet_acknowledgements(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve a stored packet acknowledgement hash,
+    /// stored on the chain at path `path::AcksPath`. A proof can optionally be
+    /// returned along with the result.
+    async fn query_packet_acknowledgement(
+        &self,
+        request: QueryPacketAcknowledgementRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Vec<u8>, Option<MerkleProof>), Self::Error>;
+
+    /// Performs a query to retrieve all the packet acknowledgements associated
+    /// with a channel. Returns the corresponding packet sequence numbers and
+    /// the height at which they were retrieved.
     async fn query_packet_acknowledgements(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error>;
+        request: QueryPacketAcknowledgementsRequest,
+    ) -> Result<(Vec<Sequence>, ICSHeight), Self::Error>;
 
     /// get packet receipt by port_id, channel_id and sequence
-    ///  # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ChannelRpc, MyConfig, OctopusxtClient, QueryHeight};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let result = octopusxt_client.query_next_sequence_recv(prot_id, channel_id, QueryHeight::Latest).await?;
-    /// ```
-    async fn query_next_sequence_recv(
+    /// Performs a query to retrieve `nextSequenceRecv` stored at path
+    /// `path::SeqRecvsPath` as defined in ICS-4. A proof can optionally be
+    /// returned along with the result.
+    async fn query_next_sequence_receive(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error>;
-
-    /// query get_commitment_packet_state
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ChannelRpc, get_acknowledge_packet_state, OctopusxtClient, QueryHeight};
-    /// use octopusxt::MyConfig;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_acknowledge_packet_state(QueryHeight::Latest).await?;
-    /// ```
-    async fn query_acknowledge_packet_state(
-        &self,
-        height: QueryHeight,
-    ) -> Result<Vec<PacketState>, Self::Error>;
+        request: QueryNextSequenceReceiveRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Sequence, Option<MerkleProof>), Self::Error>;
 
     /// Query unreceived packet commitments
+    /// Performs a query about which IBC packets in the specified list has not
+    /// been received. Returns the sequence numbers of the packets that were not
+    /// received.
     ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use ibc::Height;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ChannelRpc, OctopusxtClient, QueryHeight};
-    /// use octopusxt::MyConfig;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::zero();
-    /// let channel_id= ChannelId::new(12);
-    /// let port_id = PortId::default();
-    /// let seqs = vec![Sequence::from(10)];
-    /// let result = octopusxt_client.query_unreceived_packets(QueryHeight::Specific(height), channel_id, port_id, seqs).await?;
-    /// ```
-    fn query_unreceived_packets(
+    /// For example, given a request with the sequence numbers `[5,6,7,8]`, a
+    /// response of `[7,8]` would indicate that packets 5 & 6 were received,
+    /// while packets 7, 8 were not.
+    async fn query_unreceived_packets(
         &self,
-        height: QueryHeight,
-        channel_id: ChannelId,
-        port_id: PortId,
-        seqs: Vec<Sequence>,
+        request: QueryUnreceivedPacketsRequest,
     ) -> Result<Vec<Sequence>, Self::Error>;
 
     /// Query the unreceived acknowledgements
+    /// Performs a query about which IBC packets in the specified list has not
+    /// been acknowledged. Returns the sequence numbers of the packets that were not
+    /// acknowledged.
     ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-    /// use ibc::Height;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ChannelRpc, OctopusxtClient, QueryHeight};
-    /// use octopusxt::MyConfig;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::zero();
-    /// let channel_id= ChannelId::new(12);
-    /// let port_id = PortId::default();
-    /// let seqs = vec![Sequence::from(10)];
-    /// let result = octopusxt_client.query_unreceived_acknowledgements(QueryHeight::Specific(height), channel_id, port_id, seqs).await?;
-    /// ```
-    fn query_unreceived_acknowledgements(
+    /// For example, given a request with the sequence numbers `[5,6,7,8]`, a
+    /// response of `[7,8]` would indicate that packets 5 & 6 were acknowledged,
+    /// while packets 7, 8 were not.
+    async fn query_unreceived_acknowledgements(
         &self,
-        height: QueryHeight,
-        channel_id: ChannelId,
-        port_id: PortId,
-        seqs: Vec<Sequence>,
+        request: QueryUnreceivedAcksRequest,
     ) -> Result<Vec<Sequence>, Self::Error>;
 }
 
 #[async_trait]
 pub trait ConnectionRpc {
     type Error;
-    /// query connectionEnd according by connection_identifier and read Connections StorageMaps
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let conection_id = ConnectionId::default();
-    /// let result = octopusxt_client.query_connection_end(conection_id, QueryHeight::Latest).await?;
-    /// ```
-    async fn query_connection_end(
-        &self,
-        connection_identifier: ConnectionId,
-        height: QueryHeight,
-    ) -> Result<ConnectionEnd, Self::Error>;
 
-    // TODO
-    // /// Query a connection state
-    // fn query_connection(
-    //     &self,
-    //     height: u32,
-    //     connection_id: String,
-    // ) -> Result<QueryConnectionResponse>;
+    /// query connectionEnd according by connection_identifier and read Connections StorageMaps
+    /// Performs a query to retrieve the connection associated with a given
+    /// connection identifier. A proof can optionally be returned along with the
+    /// result.
+    async fn query_connection(
+        &self,
+        request: QueryConnectionRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(ConnectionEnd, Option<MerkleProof>), Self::Error>;
 
     /// Query all connection states
     /// query key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient, QueryHeight};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_connections(QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve the identifiers of all connections.
     async fn query_connections(
         &self,
-        height: QueryHeight,
+        request: QueryConnectionsRequest,
     ) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
 
     /// # Query IdentifiedChannelEnd by connection_identifier
-    ///
-    /// ## Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let connection = ConnectionId::default();
-    /// let result = octopusxt_client.query_connection_channels(connection, QueryHeight::Latest).await?;
-    /// ```
+    /// Performs a query to retrieve all channels associated with a connection.
     async fn query_connection_channels(
         &self,
-        connection_id: ConnectionId,
-        height: QueryHeight,
+        request: QueryConnectionChannelsRequest,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
-
-    /// Query all connection states for associated client
-    ///
-    /// ## Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use ibc::Height;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::default();
-    /// let client_id = ClientId::default();
-    /// let result = octopusxt_client.query_connection_using_client(QueryHeight::Specific(height), client_id).await?;
-    /// ```
-    fn query_connection_using_client(
-        &self,
-        height: QueryHeight,
-        client_id: ClientId,
-    ) -> Result<Vec<IdentifiedConnection>, Self::Error>;
-
-    /// Generate proof for connection handshake
-    ///
-    /// ## Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{ConnectionRpc, MyConfig, OctopusxtClient, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-    /// use ibc::Height;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let height = Height::default();
-    /// let client_id = ClientId::default();
-    /// let conn_id = ConnectionId::default();
-    /// let result = octopusxt_client.generate_conn_handshake_proof(QueryHeight::Specific(height), client_id, conn_id).await?;
-    /// ```
-    fn generate_conn_handshake_proof(
-        &self,
-        height: QueryHeight,
-        client_id: ClientId,
-        conn_id: ConnectionId,
-    ) -> Result<ConnHandshakeProof, Self::Error>;
 }
 
 #[async_trait]
@@ -645,22 +253,6 @@ pub trait PacketRpc {
     type Error;
     /// Query send packet event by port_id, channel_id and sequence
     /// (port_id, channel_id, sequence), packet)
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient, PacketRpc, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id =PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = Sequence::from(0);
-    /// let result = octopusxt_client.query_send_packet_event(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
     async fn query_send_packet_event(
         &self,
         port_id: PortId,
@@ -670,22 +262,6 @@ pub trait PacketRpc {
     ) -> Result<Packet, Self::Error>;
 
     /// (port_id, channel_id, sequence), ackHash)
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient, PacketRpc, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequence = Sequence::from(0);
-    /// let result = octopusxt_client.query_write_ack_packet_event(port_id, channel_id, sequence, QueryHeight::Latest).await?;
-    /// ```
     async fn query_write_ack_packet_event(
         &self,
         port_id: PortId,
@@ -695,22 +271,6 @@ pub trait PacketRpc {
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// Query packet data
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics04_channel::packet::Sequence;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient, PacketRpc, QueryHeight};
-    /// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let prot_id = PortId::default();
-    /// let channel_id = ChannelId::default();
-    /// let sequences = vec![Sequence::from(0)];
-    /// let result = octopusxt_client.query_packets(channel_id, prot_id, sequences, QueryHeight::Latest).await?;
-    /// ```
     async fn query_packets(
         &self,
         channel_id: ChannelId,
@@ -725,72 +285,8 @@ pub trait Router {
     type Error;
     /// ibc protocol core function, ics26 deliver function
     /// this function will dispatch msg to process
-    ///
-    ///  # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics26_routing::handler::deliver;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient, Router};
-    /// use ibc_proto::google::protobuf::Any;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let msg = vec![Any::default()];
-    /// let octopus_client = OctopusxtClient::new(client);
-    /// let result = octopus_client.deliver(msg).await?;
-    /// ```
     /// return block_hash, extrinsic_hash, and event
     async fn deliver(&self, msg: Vec<Any>) -> Result<H256, Self::Error>;
-}
-
-pub trait Transfer {
-    type Error;
-
-    /// Query the denom trace for an ibc denom
-    ///
-    ///  # Usage example
-    ///
-    /// ```rust
-    /// use ibc::core::ics26_routing::handler::deliver;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient, QueryHeight, Router, Transfer};
-    /// use ibc_proto::google::protobuf::Any;
-    /// use sp_core::crypto::AccountId32;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopus_client = OctopusxtClient::new(client);
-    /// let msg = AccountId32::default().to_string();
-    /// let result = octopus_client.query_denom_trace(msg, QueryHeight::Latest).await?;
-    /// ```
-    fn query_denom_trace(
-        &self,
-        denom: String,
-        height: QueryHeight,
-    ) -> Result<QueryDenomTraceResponse, Self::Error>;
-
-    /// Query the denom traces for ibc denoms matching offset
-    ///
-    /// ```rust
-    /// use ibc::core::ics26_routing::handler::deliver;
-    /// use ibc::Height;
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient, QueryHeight, Router, Transfer};
-    /// use ibc_proto::google::protobuf::Any;
-    /// use sp_core::crypto::AccountId32;
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopus_client = OctopusxtClient::new(client);
-    /// let offset = "1".to_string();
-    /// let limit = 23;
-    /// let height = Height::default();
-    /// let result = octopus_client.query_denom_traces(offset, limit, QueryHeight::Specific(height)).await?;
-    /// ```
-    fn query_denom_traces(
-        &self,
-        offset: String,
-        limit: u64,
-        height: QueryHeight,
-    ) -> Result<QueryDenomTracesResponse, Self::Error>;
 }
 
 #[async_trait]
@@ -810,17 +306,6 @@ impl OctopusxtClient {
     }
 
     /// Subscribe beefy justifiactions
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.subscribe_beefy().await?;
-    /// ```
     pub async fn subscribe_beefy(&self) -> anyhow::Result<SignedCommitment> {
         tracing::info!("In call_ibc: [subscribe_beefy_justifications]");
 
@@ -834,17 +319,6 @@ impl OctopusxtClient {
     }
 
     /// get latest height used by subscribe_blocks
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient};
-    ///
-    /// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_latest_height().await?;
-    /// ```
     pub async fn query_latest_height(&self) -> anyhow::Result<u64> {
         tracing::info!("In call_ibc: [get_latest_height]");
 
@@ -926,19 +400,6 @@ impl OctopusxtClient {
     /// summary: Generate MMR proof for given leaf index.
     ///
     /// Return value a tuple (mmr_leaf, mmr_proof)
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::{ClientBuilder, BlockNumber};
-    /// use octopusxt::{MyConfig, OctopusxtClient};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let block_number = Some(BlockNumber::from(12));
-    /// let block_hash = None;
-    /// let result = octopusxt_client.query_mmr_leaf_and_mmr_proof(block_number, block_hash).await?;
-    /// ```
     pub async fn query_mmr_leaf_and_mmr_proof(
         &self,
         block_number: Option<BlockNumber>,
@@ -965,18 +426,6 @@ impl OctopusxtClient {
     }
 
     /// get header by block hash
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::ClientBuilder;
-    /// use octopusxt::{MyConfig, OctopusxtClient};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let block_hash = None;
-    /// let result = octopusxt_client.query_header_by_block_hash(block_hash).await?;
-    /// ```
     pub async fn query_header_by_block_hash(
         &self,
         block_hash: Option<H256>,
@@ -991,18 +440,6 @@ impl OctopusxtClient {
     }
 
     /// get header by block number
-    ///
-    /// # Usage example
-    ///
-    /// ```rust
-    /// use subxt::{ClientBuilder, BlockNumber};
-    /// use octopusxt::{MyConfig, OctopusxtClient};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let block_number = Some(BlockNumber::from(2));
-    /// let result = octopusxt_client.query_header_by_block_number(block_number).await?;
-    /// ```
     pub async fn query_header_by_block_number(
         &self,
         block_number: Option<BlockNumber>,
@@ -1019,15 +456,6 @@ impl OctopusxtClient {
     }
 
     /// query block hash by block number
-    ///
-    /// ```rust
-    /// use subxt::{ClientBuilder, BlockNumber};
-    /// use octopusxt::{MyConfig, OctopusxtClient};
-    ///
-    /// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-    /// let octopusxt_client = OctopusxtClient::new(client);
-    /// let result = octopusxt_client.query_block_hash_by_block_number(Some(BlockNumber::from(2))).await?;
-    /// ```
     pub async fn query_block_hash_by_block_number(
         &self,
         block_number: Option<BlockNumber>,
@@ -1049,14 +477,126 @@ impl OctopusxtClient {
         todo!()
     }
 
-    /// Query balance of an address on chain, addr should be a valid hexadecimal or SS58 string,
-    /// representing the account id.
-    pub fn query_balance_with_address(
-        &self,
-        _addr: String,
-    ) -> anyhow::Result<ibc_proto::cosmos::base::v1beta1::Coin> {
+    /// Sends one or more transactions with `msgs` to chain and
+    /// synchronously wait for it to be committed.
+    fn send_messages_and_wait_commit(
+        &mut self,
+        _tracked_msgs: TrackedMsgs,
+    ) -> anyhow::Result<Vec<IbcEvent>> {
         todo!()
     }
+
+    // TODO(davirain) TxResponse
+    /// Sends one or more transactions with `msgs` to chain.
+    /// Non-blocking alternative to `send_messages_and_wait_commit` interface.
+    fn send_messages_and_wait_check_tx(
+        &mut self,
+        _tracked_msgs: TrackedMsgs,
+    ) -> anyhow::Result<Vec<TxResponse>> {
+        todo!()
+    }
+
+    /// Query balance of an address on chain, addr should be a valid hexadecimal or SS58 string,
+    /// representing the account id.
+    /// Query the balance of the given account for the denom used to pay tx fees.
+    /// If no account is given, behavior must be specified, e.g. retrieve it from configuration file.
+    fn query_balance(&self, _key_name: Option<String>) -> anyhow::Result<Balance> {
+        todo!()
+    }
+
+    /// Query the denomination trace given a trace hash.
+    fn query_denom_trace(&self, _hash: String) -> anyhow::Result<DenomTrace> {
+        todo!()
+    }
+
+    fn query_commitment_prefix(&self) -> anyhow::Result<CommitmentPrefix> {
+        todo!()
+    }
+
+    fn query_compatible_versions(&self) -> anyhow::Result<Vec<Version>> {
+        todo!()
+    }
+
+    /// Query the latest height and timestamp the application is at
+    fn query_application_status(&self) -> anyhow::Result<ChainStatus> {
+        todo!()
+    }
+
+    fn query_txs(&self, _request: QueryTxRequest) -> anyhow::Result<Vec<IbcEvent>> {
+        todo!()
+    }
+
+    fn query_blocks(
+        &self,
+        _request: QueryBlockRequest,
+    ) -> anyhow::Result<(Vec<IbcEvent>, Vec<IbcEvent>)> {
+        todo!()
+    }
+
+    fn query_host_consensus_state(
+        &self,
+        _request: QueryHostConsensusStateRequest,
+    ) -> anyhow::Result<ConsensusState> {
+        todo!()
+    }
+
+    // TODO (davirian) client settings
+    fn build_client_state(
+        &self,
+        _height: ICSHeight,
+        // settings: ClientSettings,
+    ) -> anyhow::Result<ClientState> {
+        todo!()
+    }
+
+    // TODO(Davirain) lightblock
+    fn build_consensus_state(
+        &self,
+        // light_block: Self::LightBlock,
+    ) -> anyhow::Result<ConsensusState> {
+        todo!()
+    }
+
+    // TODO(davirian) lightblock
+    /// Fetch, and verify the header at `target_height`, assuming we trust the
+    /// header at `trusted_height` with the given `client_state`.
+    ///
+    /// Returns all the supporting headers that were need to verify the target
+    /// header, for use when building a `ClientUpdate` message.
+    fn build_header(
+        &self,
+        _trusted_height: ICSHeight,
+        _target_height: ICSHeight,
+        _client_state: &AnyClientState,
+        // light_client: &mut Self::LightClient,
+    ) -> anyhow::Result<(Header, Vec<Header>)> {
+        todo!()
+    }
+}
+
+/// The result of the application status query.
+#[derive(Clone, Debug)]
+pub struct ChainStatus {
+    pub height: ICSHeight,
+    pub timestamp: Timestamp,
+}
+
+/// The balance for a specific denom
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Balance {
+    /// The amount of coins in the account, as a string to allow for large amounts
+    pub amount: String,
+    /// The denomination for that coin
+    pub denom: String,
+}
+
+/// The denom trace
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DenomTrace {
+    /// The chain of port/channel identifiers used for tracing the source of the coin.
+    pub path: String,
+    /// The base denomination for that coin
+    pub base_denom: String,
 }
 
 /// Proof for a set of keys

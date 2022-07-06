@@ -1,9 +1,9 @@
 use crate::ibc_core::{OctopusxtClient, PacketRpc};
-use crate::{ChannelRpc, QueryHeight};
+use crate::ChannelRpc;
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
-        packet::{Packet, Receipt, Sequence},
+        packet::{Packet, Sequence},
     },
     ics24_host::identifier::{ChannelId, PortId},
 };
@@ -11,24 +11,83 @@ use tendermint_proto::Protobuf;
 
 // use crate::primitive::QueryChannelsResponse;
 use async_trait::async_trait;
-use codec::Decode;
+
 use core::str::FromStr;
+use ibc::core::ics02_client::client_state::IdentifiedAnyClientState;
+use ibc::core::ics23_commitment::merkle::MerkleProof;
+use ibc::Height as ICSHeight;
 // use ibc::core::ics24_host::identifier::ConnectionId;
-use ibc_proto::ibc::core::channel::v1::PacketState;
+
+use ibc_relayer::chain::requests::{
+    IncludeProof, QueryChannelClientStateRequest, QueryChannelRequest, QueryChannelsRequest,
+    QueryHeight, QueryNextSequenceReceiveRequest, QueryPacketAcknowledgementRequest,
+    QueryPacketAcknowledgementsRequest, QueryPacketCommitmentRequest,
+    QueryPacketCommitmentsRequest, QueryPacketReceiptRequest, QueryUnreceivedAcksRequest,
+    QueryUnreceivedPacketsRequest,
+};
 
 #[async_trait]
 impl ChannelRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn query_channels(
+    async fn query_channel(
         &self,
-        height: QueryHeight,
-    ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
-        tracing::info!("in call_ibc: [get_channels]");
+        request: QueryChannelRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(ChannelEnd, Option<MerkleProof>), Self::Error> {
+        tracing::info!("in call_ibc: [get_channel_end]");
+
+        let QueryChannelRequest {
+            port_id,
+            channel_id,
+            height,
+        } = request;
 
         let api = self.to_runtime_api();
 
         let block_hash = self.query_block_hash_by_query_height(height).await?;
+
+        let data: Vec<u8> = api
+            .storage()
+            .ibc()
+            .channels(
+                port_id.as_bytes(),
+                channel_id.to_string().as_bytes(),
+                Some(block_hash),
+            )
+            .await?;
+
+        if data.is_empty() {
+            return Err(anyhow::anyhow!(
+                "get_channel_end is empty by port_id = ({}), channel_id = ({})",
+                port_id,
+                channel_id
+            ));
+        }
+
+        let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
+
+        match include_proof {
+            IncludeProof::Yes => todo!(),
+            IncludeProof::No => Ok((channel_end, None)),
+        }
+    }
+
+    async fn query_channels(
+        &self,
+        request: QueryChannelsRequest,
+    ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
+        tracing::info!("in call_ibc: [get_channels]");
+
+        let QueryChannelsRequest {
+            pagination: _pagination,
+        } = request;
+
+        let api = self.to_runtime_api();
+
+        let block_hash = self
+            .query_block_hash_by_query_height(QueryHeight::Latest)
+            .await?;
 
         // vector key-value
         let mut ret = vec![];
@@ -68,69 +127,26 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn query_channel_end(
+    fn query_channel_client_state(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        height: QueryHeight,
-    ) -> Result<ChannelEnd, Self::Error> {
-        tracing::info!("in call_ibc: [get_channel_end]");
-
-        let api = self.to_runtime_api();
-
-        let block_hash = self.query_block_hash_by_query_height(height).await?;
-
-        let data: Vec<u8> = api
-            .storage()
-            .ibc()
-            .channels(
-                port_id.as_bytes(),
-                format!("{}", channel_id).as_bytes(),
-                Some(block_hash),
-            )
-            .await?;
-
-        if data.is_empty() {
-            return Err(anyhow::anyhow!(
-                "get_channel_end is empty by port_id = ({}), channel_id = ({})",
-                port_id,
-                channel_id
-            ));
-        }
-
-        let channel_end = ChannelEnd::decode_vec(&*data).unwrap();
-
-        Ok(channel_end)
+        _request: QueryChannelClientStateRequest,
+    ) -> Result<Option<IdentifiedAnyClientState>, Self::Error> {
+        todo!()
     }
 
     async fn query_packet_receipt(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Receipt, Self::Error> {
+        request: QueryPacketReceiptRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Vec<u8>, Option<MerkleProof>), Self::Error> {
         tracing::info!("in call_ibc : [get_packet_receipt]");
 
-        let packet_receipt_vec = self
-            .query_packet_receipt_vec(port_id, channel_id, sequence, height)
-            .await?;
-        let data = String::decode(&mut packet_receipt_vec.as_slice()).unwrap();
-        if data.eq("Ok") {
-            Ok(Receipt::Ok)
-        } else {
-            Err(anyhow::anyhow!("unrecognized packet receipt: {:?}", data))
-        }
-    }
-
-    async fn query_packet_receipt_vec(
-        &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error> {
-        tracing::info!("in call_ibc : [get_packet_receipt]");
+        let QueryPacketReceiptRequest {
+            port_id,
+            channel_id,
+            sequence,
+            height,
+        } = request;
 
         let api = self.to_runtime_api();
 
@@ -143,7 +159,7 @@ impl ChannelRpc for OctopusxtClient {
             .ibc()
             .packet_receipt(
                 port_id.as_bytes(),
-                format!("{}", channel_id).as_bytes(),
+                channel_id.to_string().as_bytes(),
                 &sequence,
                 Some(block_hash),
             )
@@ -157,28 +173,203 @@ impl ChannelRpc for OctopusxtClient {
             ));
         }
 
-        Ok(data)
+        match include_proof {
+            IncludeProof::Yes => todo!(),
+            IncludeProof::No => Ok((data, None)),
+        }
     }
 
-    async fn query_unreceipt_packet(
+    async fn query_packet_commitment(
         &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequences: Vec<Sequence>,
-        height: QueryHeight,
-    ) -> Result<Vec<Sequence>, Self::Error> {
-        tracing::info!("in call_ibc: [get_receipt_packet]");
+        request: QueryPacketCommitmentRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Vec<u8>, Option<MerkleProof>), Self::Error> {
+        tracing::info!("in call_ibc: [get_packet_commitment]");
+
+        let QueryPacketCommitmentRequest {
+            port_id,
+            channel_id,
+            sequence,
+            height,
+        } = request;
 
         let api = self.to_runtime_api();
 
         let block_hash = self.query_block_hash_by_query_height(height).await?;
 
+        let data: Vec<u8> = api
+            .storage()
+            .ibc()
+            .packet_commitment(
+                port_id.as_bytes(),
+                channel_id.to_string().as_bytes(),
+                &u64::from(sequence),
+                Some(block_hash),
+            )
+            .await?;
+
+        if data.is_empty() {
+            return Err(anyhow::anyhow!(
+            "get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+            port_id,
+            channel_id,
+            sequence
+        ));
+        }
+
+        match include_proof {
+            IncludeProof::Yes => todo!(),
+            IncludeProof::No => Ok((data, None)),
+        }
+    }
+
+    async fn query_packet_commitments(
+        &self,
+        request: QueryPacketCommitmentsRequest,
+    ) -> Result<(Vec<Sequence>, ICSHeight), Self::Error> {
+        tracing::info!("in call_ibc: [get_commitment_packet_state]");
+        let QueryPacketCommitmentsRequest {
+            port_id,
+            channel_id,
+            pagination: _pagination,
+        } = request;
+
+        let api = self.to_runtime_api();
+
+        let height = self.query_latest_height().await?;
+
+        let block_hash = self
+            .query_block_hash_by_query_height(QueryHeight::Latest)
+            .await?;
+
+        let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
+            .storage()
+            .ibc()
+            .packet_commitment_keys(Some(block_hash))
+            .await?;
+
+        let mut sequences = vec![];
+
+        for (port_id_tmp, channel_id_tmp, sequence) in packet_commitments_keys.into_iter() {
+            if port_id_tmp == port_id.as_bytes()
+                && channel_id_tmp == channel_id.to_string().as_bytes()
+            {
+                sequences.push(Sequence::from(sequence));
+            }
+        }
+
+        // TODO height revision number not is zero.
+        Ok((sequences, ICSHeight::new(0, height)))
+    }
+
+    async fn query_packet_acknowledgement(
+        &self,
+        request: QueryPacketAcknowledgementRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Vec<u8>, Option<MerkleProof>), Self::Error> {
+        tracing::info!("in call_ibc: [get_packet_ack]");
+
+        let QueryPacketAcknowledgementRequest {
+            port_id,
+            channel_id,
+            sequence,
+            height,
+        } = request;
+
+        let api = self.to_runtime_api();
+
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
+
+        let data: Vec<u8> = api
+            .storage()
+            .ibc()
+            .acknowledgements(
+                port_id.as_bytes(),
+                channel_id.to_string().as_bytes(),
+                &u64::from(sequence),
+                Some(block_hash),
+            )
+            .await?;
+
+        if data.is_empty() {
+            return Err(anyhow::anyhow!(
+                "get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
+                port_id,
+                channel_id,
+                sequence
+            ));
+        }
+
+        match include_proof {
+            IncludeProof::Yes => todo!(),
+            IncludeProof::No => Ok((data, None)),
+        }
+    }
+
+    async fn query_packet_acknowledgements(
+        &self,
+        _request: QueryPacketAcknowledgementsRequest,
+    ) -> Result<(Vec<Sequence>, ICSHeight), Self::Error> {
+        todo!()
+    }
+
+    async fn query_next_sequence_receive(
+        &self,
+        request: QueryNextSequenceReceiveRequest,
+        include_proof: IncludeProof,
+    ) -> Result<(Sequence, Option<MerkleProof>), Self::Error> {
+        tracing::info!("in call_ibc: [get_next_sequence_recv]");
+
+        let QueryNextSequenceReceiveRequest {
+            port_id,
+            channel_id,
+            height,
+        } = request;
+
+        let api = self.to_runtime_api();
+
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
+
+        let sequence: u64 = api
+            .storage()
+            .ibc()
+            .next_sequence_recv(
+                port_id.as_bytes(),
+                channel_id.to_string().as_bytes(),
+                Some(block_hash),
+            )
+            .await?;
+
+        match include_proof {
+            IncludeProof::Yes => todo!(),
+            IncludeProof::No => Ok((Sequence::from(sequence), None)),
+        }
+    }
+
+    async fn query_unreceived_packets(
+        &self,
+        request: QueryUnreceivedPacketsRequest,
+    ) -> Result<Vec<Sequence>, Self::Error> {
+        tracing::info!("in call_ibc: [get_receipt_packet]");
+
+        let QueryUnreceivedPacketsRequest {
+            port_id,
+            channel_id,
+            packet_commitment_sequences,
+        } = request;
+
+        let api = self.to_runtime_api();
+
+        let block_hash = self
+            .query_block_hash_by_query_height(QueryHeight::Latest)
+            .await?;
+
         let mut result = Vec::new();
 
-        let pair = sequences.into_iter().map(|sequence| {
+        let pair = packet_commitment_sequences.into_iter().map(|sequence| {
             (
                 port_id.clone().as_bytes().to_vec(),
-                format!("{}", channel_id).as_bytes().to_vec(),
+                channel_id.to_string().as_bytes().to_vec(),
                 u64::from(sequence),
             )
         });
@@ -197,239 +388,9 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn query_commitment_packet_state(
+    async fn query_unreceived_acknowledgements(
         &self,
-        height: QueryHeight,
-    ) -> Result<Vec<PacketState>, Self::Error> {
-        tracing::info!("in call_ibc: [get_commitment_packet_state]");
-
-        let api = self.to_runtime_api();
-
-        let block_hash = self.query_block_hash_by_query_height(height).await?;
-
-        let mut ret = vec![];
-
-        let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
-            .storage()
-            .ibc()
-            .packet_commitment_keys(Some(block_hash))
-            .await?;
-
-        for key in packet_commitments_keys {
-            // get value
-            let value: Vec<u8> = api
-                .storage()
-                .ibc()
-                .packet_commitment(&key.0, &key.1, &key.2, Some(block_hash))
-                .await?;
-
-            // store key-value
-            ret.push((key.0.clone(), key.1.clone(), key.2, value));
-        }
-
-        let mut result = vec![];
-
-        for (port_id, channel_id, sequence, data) in ret.into_iter() {
-            let port_id = String::from_utf8(port_id).unwrap();
-            let channel_id = String::from_utf8(channel_id).unwrap();
-
-            let packet_state = PacketState {
-                port_id,
-                channel_id,
-                sequence,
-                data,
-            };
-            result.push(packet_state);
-        }
-
-        Ok(result)
-    }
-
-    async fn query_packet_commitment(
-        &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error> {
-        tracing::info!("in call_ibc: [get_packet_commitment]");
-
-        let api = self.to_runtime_api();
-
-        let block_hash = self.query_block_hash_by_query_height(height).await?;
-
-        let data: Vec<u8> = api
-            .storage()
-            .ibc()
-            .packet_commitment(
-                port_id.as_bytes(),
-                format!("{}", channel_id).as_bytes(),
-                &u64::from(sequence),
-                Some(block_hash),
-            )
-            .await?;
-
-        if data.is_empty() {
-            Err(anyhow::anyhow!(
-            "get_packet_commitment is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id,
-            channel_id,
-            sequence
-        ))
-        } else {
-            Ok(data)
-        }
-    }
-
-    async fn query_packet_acknowledgements(
-        &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        sequence: Sequence,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error> {
-        tracing::info!("in call_ibc: [get_packet_ack]");
-
-        let api = self.to_runtime_api();
-
-        let block_hash = self.query_block_hash_by_query_height(height).await?;
-
-        let data: Vec<u8> = api
-            .storage()
-            .ibc()
-            .acknowledgements(
-                port_id.as_bytes(),
-                format!("{}", channel_id).as_bytes(),
-                &u64::from(sequence),
-                Some(block_hash),
-            )
-            .await?;
-
-        if data.is_empty() {
-            Err(anyhow::anyhow!(
-                "get_packet_ack is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-                port_id,
-                channel_id,
-                sequence
-            ))
-        } else {
-            Ok(data)
-        }
-    }
-
-    async fn query_next_sequence_recv(
-        &self,
-        port_id: PortId,
-        channel_id: ChannelId,
-        height: QueryHeight,
-    ) -> Result<Vec<u8>, Self::Error> {
-        tracing::info!("in call_ibc: [get_next_sequence_recv]");
-
-        let api = self.to_runtime_api();
-
-        let block_hash = self.query_block_hash_by_query_height(height).await?;
-
-        let sequence: u64 = api
-            .storage()
-            .ibc()
-            .next_sequence_recv(
-                port_id.as_bytes(),
-                format!("{}", channel_id).as_bytes(),
-                Some(block_hash),
-            )
-            .await?;
-
-        let data: Vec<u8> = api
-            .storage()
-            .ibc()
-            .packet_commitment(
-                port_id.as_bytes(),
-                format!("{}", channel_id).as_bytes(),
-                &sequence,
-                Some(block_hash),
-            )
-            .await?;
-
-        if data.is_empty() {
-            Err(anyhow::anyhow!(
-            "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, sequence
-        ))
-        } else {
-            Ok(data)
-        }
-    }
-
-    async fn query_acknowledge_packet_state(
-        &self,
-        height: QueryHeight,
-    ) -> Result<Vec<PacketState>, Self::Error> {
-        tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
-
-        let api = self.to_runtime_api();
-
-        let block_hash = self.query_block_hash_by_query_height(height).await?;
-
-        let mut ret = vec![];
-
-        let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
-            .storage()
-            .ibc()
-            .acknowledgements_keys(Some(block_hash))
-            .await?;
-
-        for key in acknowledgements_keys {
-            let value: Vec<u8> = api
-                .storage()
-                .ibc()
-                .acknowledgements(&key.0, &key.1, &key.2, Some(block_hash))
-                .await?;
-
-            ret.push((key.0.clone(), key.1.clone(), key.2, value));
-        }
-
-        let mut result = vec![];
-
-        for (port_id, channel_id, sequence, data) in ret.into_iter() {
-            let port_id = String::from_utf8(port_id).unwrap();
-            let channel_id = String::from_utf8(channel_id).unwrap();
-
-            let packet_state = PacketState {
-                port_id,
-                channel_id,
-                sequence,
-                data,
-            };
-            result.push(packet_state);
-        }
-
-        Ok(result)
-    }
-
-    // fn query_connection_channels(
-    //     &self,
-    //     _height: Height,
-    //     _connection_id: ConnectionId,
-    // ) -> Result<QueryChannelsResponse, Self::Error> {
-    //     todo!()
-    // }
-
-    fn query_unreceived_packets(
-        &self,
-        _height: QueryHeight,
-        _channel_id: ChannelId,
-        _port_id: PortId,
-        _seqs: Vec<Sequence>,
-    ) -> Result<Vec<Sequence>, Self::Error> {
-        todo!()
-    }
-
-    fn query_unreceived_acknowledgements(
-        &self,
-        _height: QueryHeight,
-        _channel_id: ChannelId,
-        _port_id: PortId,
-        _seqs: Vec<Sequence>,
+        _request: QueryUnreceivedAcksRequest,
     ) -> Result<Vec<Sequence>, Self::Error> {
         todo!()
     }

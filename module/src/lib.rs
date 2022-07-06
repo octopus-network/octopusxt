@@ -1,11 +1,11 @@
 // mod codegen;
 #![allow(clippy::too_many_arguments)]
+#![allow(dead_code)]
 
 use subxt::{Config, DefaultConfig};
 
 pub mod events;
 pub mod ibc_core;
-pub mod ics20_transfer;
 pub mod primitive;
 pub mod update_client_state;
 pub mod utils;
