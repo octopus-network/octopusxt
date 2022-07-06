@@ -35,6 +35,11 @@ pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
 
+pub enum QueryHeight {
+    Latest,
+    Specific(Height),
+}
+
 #[async_trait]
 pub trait ClientRpc {
     type Error;
@@ -751,6 +756,23 @@ impl OctopusxtClient {
         let header = crate::utils::convert_substrate_header_to_ibc_header(header);
 
         Ok(header.into())
+    }
+
+    /// query block hash by block number
+    pub async fn query_block_hash_by_block_number(
+        &self,
+        block_number: Option<BlockNumber>,
+    ) -> anyhow::Result<H256> {
+        let api = self.to_runtime_api();
+
+        let block_hash: H256 = api
+            .client
+            .rpc()
+            .block_hash(block_number)
+            .await?
+            .ok_or(anyhow::anyhow!("query block hash error"))?;
+
+        Ok(block_hash)
     }
 
     /// Generate proof for given key
