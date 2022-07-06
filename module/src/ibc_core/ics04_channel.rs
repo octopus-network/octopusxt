@@ -1,5 +1,5 @@
 use crate::ibc_core::{OctopusxtClient, PacketRpc};
-use crate::ChannelRpc;
+use crate::{ChannelRpc, QueryHeight};
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
@@ -14,24 +14,21 @@ use async_trait::async_trait;
 use codec::Decode;
 use core::str::FromStr;
 // use ibc::core::ics24_host::identifier::ConnectionId;
-use ibc::Height;
 use ibc_proto::ibc::core::channel::v1::PacketState;
-use sp_core::H256;
 
 #[async_trait]
 impl ChannelRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn query_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
+    async fn query_channels(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_channels]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         // vector key-value
         let mut ret = vec![];
@@ -75,16 +72,13 @@ impl ChannelRpc for OctopusxtClient {
         &self,
         port_id: PortId,
         channel_id: ChannelId,
+        height: QueryHeight,
     ) -> Result<ChannelEnd, Self::Error> {
         tracing::info!("in call_ibc: [get_channel_end]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -114,11 +108,12 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Receipt, Self::Error> {
         tracing::info!("in call_ibc : [get_packet_receipt]");
 
         let packet_receipt_vec = self
-            .query_packet_receipt_vec(port_id, channel_id, sequence)
+            .query_packet_receipt_vec(port_id, channel_id, sequence, height)
             .await?;
         let data = String::decode(&mut packet_receipt_vec.as_slice()).unwrap();
         if data.eq("Ok") {
@@ -133,16 +128,13 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc : [get_packet_receipt]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let sequence = u64::from(sequence);
 
@@ -173,15 +165,13 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
+        height: QueryHeight,
     ) -> Result<Vec<Sequence>, Self::Error> {
         tracing::info!("in call_ibc: [get_receipt_packet]");
 
         let api = self.to_runtime_api();
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let mut result = Vec::new();
 
@@ -207,16 +197,15 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn query_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
+    async fn query_commitment_packet_state(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<PacketState>, Self::Error> {
         tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let mut ret = vec![];
 
@@ -261,17 +250,13 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_packet_commitment]");
 
         let api = self.to_runtime_api();
 
-        // let result = async move {
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -301,17 +286,13 @@ impl ChannelRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_packet_ack]");
 
         let api = self.to_runtime_api();
 
-        // let result = async move {
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -340,16 +321,13 @@ impl ChannelRpc for OctopusxtClient {
         &self,
         port_id: PortId,
         channel_id: ChannelId,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let sequence: u64 = api
             .storage()
@@ -382,16 +360,15 @@ impl ChannelRpc for OctopusxtClient {
         }
     }
 
-    async fn query_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error> {
+    async fn query_acknowledge_packet_state(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<PacketState>, Self::Error> {
         tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let mut ret = vec![];
 
@@ -439,7 +416,7 @@ impl ChannelRpc for OctopusxtClient {
 
     fn query_unreceived_packets(
         &self,
-        _height: Height,
+        _height: QueryHeight,
         _channel_id: ChannelId,
         _port_id: PortId,
         _seqs: Vec<Sequence>,
@@ -449,7 +426,7 @@ impl ChannelRpc for OctopusxtClient {
 
     fn query_unreceived_acknowledgements(
         &self,
-        _height: Height,
+        _height: QueryHeight,
         _channel_id: ChannelId,
         _port_id: PortId,
         _seqs: Vec<Sequence>,
@@ -467,16 +444,13 @@ impl PacketRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Packet, Self::Error> {
         tracing::info!("in call_ibc: [get_send_packet_event]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -508,16 +482,13 @@ impl PacketRpc for OctopusxtClient {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error> {
         tracing::info!("in call_ibc: [get_write_ack_packet_event]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -545,6 +516,7 @@ impl PacketRpc for OctopusxtClient {
         _channel_id: ChannelId,
         _port_id: PortId,
         _seqs: Vec<Sequence>,
+        _height: QueryHeight,
     ) -> Result<Vec<Packet>, Self::Error> {
         todo!()
     }

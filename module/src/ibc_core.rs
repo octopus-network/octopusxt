@@ -36,6 +36,7 @@ pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
 
+#[derive(Debug, Clone)]
 pub enum QueryHeight {
     Latest,
     Specific(Height),
@@ -60,7 +61,11 @@ pub trait ClientRpc {
     /// let client_id = ClientId::default();
     /// let result = octopusxt_client.query_client_state(client_id).await?;
     /// ```
-    async fn query_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error>;
+    async fn query_client_state(
+        &self,
+        client_id: ClientId,
+        height: QueryHeight,
+    ) -> Result<AnyClientState, Self::Error>;
 
     /// query appoint height consensus_state according by client_identifier and height
     /// and read ConsensusStates StorageMap
@@ -81,7 +86,7 @@ pub trait ClientRpc {
     async fn query_client_consensus_state(
         &self,
         client_id: ClientId,
-        height: ICSHeight,
+        height: QueryHeight,
     ) -> Result<AnyConsensusState, Self::Error>;
 
     /// query consensus state with height
@@ -101,6 +106,7 @@ pub trait ClientRpc {
     async fn query_consensus_state_with_height(
         &self,
         client_id: ClientId,
+        height: QueryHeight,
     ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error>;
 
     /// query key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
@@ -115,7 +121,10 @@ pub trait ClientRpc {
     /// let octopusxt_client = OctopusxtClient::new(client);
     /// let result = octopusxt_client.query_clients().await?;
     /// ```
-    async fn query_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
+    async fn query_clients(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<IdentifiedAnyClientState>, Self::Error>;
 
     /// get connection_identifier vector according by client_identifier
     ///
@@ -135,6 +144,7 @@ pub trait ClientRpc {
     async fn query_client_connections(
         &self,
         client_id: ClientId,
+        height: QueryHeight,
     ) -> Result<Vec<ConnectionId>, Self::Error>;
 
     /// Query local chain consensus state
@@ -154,7 +164,7 @@ pub trait ClientRpc {
     /// ```
     fn query_consensus_state(
         &self,
-        height: Height,
+        height: QueryHeight,
     ) -> Result<QueryConsensusStateResponse, Self::Error>;
 
     /// Query upgraded client state
@@ -173,7 +183,7 @@ pub trait ClientRpc {
     /// ```
     fn query_upgraded_client(
         &self,
-        height: Height,
+        height: QueryHeight,
     ) -> Result<QueryClientStateResponse, Self::Error>;
 
     /// Query upgraded consensus state for client
@@ -192,7 +202,7 @@ pub trait ClientRpc {
     /// ```
     fn query_upgraded_cons_state(
         &self,
-        height: Height,
+        height: QueryHeight,
     ) -> Result<QueryConsensusStateResponse, Self::Error>;
 
     /// Query newly created clients in block
@@ -213,6 +223,7 @@ pub trait ClientRpc {
     fn query_newly_created_clients(
         &self,
         block_hash: Hash,
+        height: QueryHeight,
     ) -> Result<Vec<IdentifiedClientState>, Self::Error>;
 }
 
@@ -233,7 +244,10 @@ pub trait ChannelRpc {
     /// let octopusxt_client = OctopusxtClient::new(client);
     /// let result = octopusxt_client.query_channels().await?;
     /// ```
-    async fn query_channels(&self) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
+    async fn query_channels(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
     /// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
     ///
@@ -254,6 +268,7 @@ pub trait ChannelRpc {
         &self,
         port_id: PortId,
         channel_id: ChannelId,
+        height: QueryHeight,
     ) -> Result<ChannelEnd, Self::Error>;
 
     // TODO
@@ -295,6 +310,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Receipt, Self::Error>;
 
     /// query packet receipt by port_id, channel_id and sequence
@@ -318,6 +334,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// query  unreceipt packet
@@ -341,6 +358,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequences: Vec<Sequence>,
+        height: QueryHeight,
     ) -> Result<Vec<Sequence>, Self::Error>;
 
     /// query get_commitment_packet_state
@@ -355,7 +373,10 @@ pub trait ChannelRpc {
     /// let octopusxt_client = OctopusxtClient::new(client);
     /// let result = octopusxt_client.query_commitment_packet_state().await?;
     /// ```
-    async fn query_commitment_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
+    async fn query_commitment_packet_state(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<PacketState>, Self::Error>;
 
     /// query packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
     ///
@@ -379,6 +400,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// query packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
@@ -403,6 +425,7 @@ pub trait ChannelRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// get packet receipt by port_id, channel_id and sequence
@@ -423,6 +446,7 @@ pub trait ChannelRpc {
         &self,
         port_id: PortId,
         channel_id: ChannelId,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// query get_commitment_packet_state
@@ -438,7 +462,10 @@ pub trait ChannelRpc {
     /// let octopusxt_client = OctopusxtClient::new(client);
     /// let result = octopusxt_client.query_acknowledge_packet_state().await?;
     /// ```
-    async fn query_acknowledge_packet_state(&self) -> Result<Vec<PacketState>, Self::Error>;
+    async fn query_acknowledge_packet_state(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<PacketState>, Self::Error>;
 
     /// Query unreceived packet commitments
     ///
@@ -462,7 +489,7 @@ pub trait ChannelRpc {
     /// ```
     fn query_unreceived_packets(
         &self,
-        height: Height,
+        height: QueryHeight,
         channel_id: ChannelId,
         port_id: PortId,
         seqs: Vec<Sequence>,
@@ -490,7 +517,7 @@ pub trait ChannelRpc {
     /// ```
     fn query_unreceived_acknowledgements(
         &self,
-        height: Height,
+        height: QueryHeight,
         channel_id: ChannelId,
         port_id: PortId,
         seqs: Vec<Sequence>,
@@ -517,6 +544,7 @@ pub trait ConnectionRpc {
     async fn query_connection_end(
         &self,
         connection_identifier: ConnectionId,
+        height: QueryHeight,
     ) -> Result<ConnectionEnd, Self::Error>;
 
     // TODO
@@ -540,7 +568,10 @@ pub trait ConnectionRpc {
     /// let octopusxt_client = OctopusxtClient::new(client);
     /// let result = octopusxt_client.query_connections().await?;
     /// ```
-    async fn query_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
+    async fn query_connections(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error>;
 
     /// # Query IdentifiedChannelEnd by connection_identifier
     ///
@@ -559,6 +590,7 @@ pub trait ConnectionRpc {
     async fn query_connection_channels(
         &self,
         connection_id: ConnectionId,
+        height: QueryHeight,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error>;
 
     /// Query all connection states for associated client
@@ -579,7 +611,7 @@ pub trait ConnectionRpc {
     /// ```
     fn query_connection_using_client(
         &self,
-        height: Height,
+        height: QueryHeight,
         client_id: ClientId,
     ) -> Result<Vec<IdentifiedConnection>, Self::Error>;
 
@@ -602,7 +634,7 @@ pub trait ConnectionRpc {
     /// ```
     fn generate_conn_handshake_proof(
         &self,
-        height: Height,
+        height: QueryHeight,
         client_id: ClientId,
         conn_id: ConnectionId,
     ) -> Result<ConnHandshakeProof, Self::Error>;
@@ -634,6 +666,7 @@ pub trait PacketRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Packet, Self::Error>;
 
     /// (port_id, channel_id, sequence), ackHash)
@@ -658,6 +691,7 @@ pub trait PacketRpc {
         port_id: PortId,
         channel_id: ChannelId,
         sequence: Sequence,
+        height: QueryHeight,
     ) -> Result<Vec<u8>, Self::Error>;
 
     /// Query packet data
@@ -682,6 +716,7 @@ pub trait PacketRpc {
         channel_id: ChannelId,
         port_id: PortId,
         seqs: Vec<Sequence>,
+        height: QueryHeight,
     ) -> Result<Vec<Packet>, Self::Error>;
 }
 
@@ -727,7 +762,11 @@ pub trait Transfer {
     /// let msg = AccountId32::default().to_string();
     /// let result = octopus_client.query_denom_trace(msg).await?;
     /// ```
-    fn query_denom_trace(&self, denom: String) -> Result<QueryDenomTraceResponse, Self::Error>;
+    fn query_denom_trace(
+        &self,
+        denom: String,
+        height: QueryHeight,
+    ) -> Result<QueryDenomTraceResponse, Self::Error>;
 
     /// Query the denom traces for ibc denoms matching offset
     ///
@@ -750,7 +789,7 @@ pub trait Transfer {
         &self,
         offset: String,
         limit: u64,
-        height: Height,
+        height: QueryHeight,
     ) -> Result<QueryDenomTracesResponse, Self::Error>;
 }
 
@@ -820,6 +859,54 @@ impl OctopusxtClient {
         };
 
         Ok(height)
+    }
+
+    pub async fn query_height(&self, height: QueryHeight) -> anyhow::Result<Height> {
+        let h = match height {
+            QueryHeight::Latest => {
+                let h = self.query_latest_height().await?;
+                Height::new(0, h)
+            }
+            QueryHeight::Specific(h) => h,
+        };
+
+        Ok(h)
+    }
+
+    /// Query latest block hash
+    pub async fn query_latest_block_hash(&self) -> anyhow::Result<H256> {
+        let api = self.to_runtime_api();
+
+        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+        let block_header = block
+            .next()
+            .await
+            .ok_or(anyhow::anyhow!("query_block_header error"))??;
+
+        let block_hash: H256 = block_header.hash();
+
+        Ok(block_hash)
+    }
+
+    pub async fn query_block_hash_by_query_height(
+        &self,
+        height: QueryHeight,
+    ) -> anyhow::Result<H256> {
+        let block_hash = match height {
+            QueryHeight::Latest => {
+                let block_hash = self.query_latest_block_hash().await?;
+                block_hash
+            }
+            QueryHeight::Specific(h) => {
+                let block_hash = self
+                    .query_block_hash_by_block_number(Some(BlockNumber::from(h.revision_height)))
+                    .await?;
+                block_hash
+            }
+        };
+
+        Ok(block_hash)
     }
 
     /// return RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>> struct

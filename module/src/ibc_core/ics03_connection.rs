@@ -1,4 +1,4 @@
-use crate::{ChannelRpc, ConnHandshakeProof, ConnectionRpc, OctopusxtClient};
+use crate::{ChannelRpc, ConnHandshakeProof, ConnectionRpc, OctopusxtClient, QueryHeight};
 use ibc::core::{
     ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd},
     ics04_channel::channel::IdentifiedChannelEnd,
@@ -9,8 +9,6 @@ use crate::primitive::IdentifiedConnection;
 use async_trait::async_trait;
 use core::str::FromStr;
 use ibc::core::ics24_host::identifier::ClientId;
-use ibc::Height;
-use sp_core::H256;
 use tendermint_proto::Protobuf;
 
 #[async_trait]
@@ -20,16 +18,13 @@ impl ConnectionRpc for OctopusxtClient {
     async fn query_connection_end(
         &self,
         connection_identifier: ConnectionId,
+        height: QueryHeight,
     ) -> Result<ConnectionEnd, Self::Error> {
         tracing::info!("in call_ibc: [get_connection_end]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -49,19 +44,19 @@ impl ConnectionRpc for OctopusxtClient {
         Ok(connection_end)
     }
 
-    async fn query_connections(&self) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error> {
+    async fn query_connections(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<IdentifiedConnectionEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_connections]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let mut ret = vec![];
 
+        // TODO
         // get connection_keys
         let connection_keys: Vec<Vec<u8>> = api
             .storage()
@@ -104,16 +99,15 @@ impl ConnectionRpc for OctopusxtClient {
     async fn query_connection_channels(
         &self,
         connection_id: ConnectionId,
+        height: QueryHeight,
     ) -> Result<Vec<IdentifiedChannelEnd>, Self::Error> {
         tracing::info!("in call_ibc: [get_connection_channels]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self
+            .query_block_hash_by_query_height(height.clone())
+            .await?;
 
         // connection_id <-> Ve<(port_id, channel_id)>
         let channel_id_and_port_id: Vec<(Vec<u8>, Vec<u8>)> = api
@@ -142,7 +136,7 @@ impl ConnectionRpc for OctopusxtClient {
 
             // get channel_end
             let channel_end = self
-                .query_channel_end(port_id.clone(), channel_id.clone())
+                .query_channel_end(port_id.clone(), channel_id.clone(), height.clone())
                 .await?;
 
             result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
@@ -153,7 +147,7 @@ impl ConnectionRpc for OctopusxtClient {
 
     fn query_connection_using_client(
         &self,
-        _height: Height,
+        _height: QueryHeight,
         _client_id: ClientId,
     ) -> Result<Vec<IdentifiedConnection>, Self::Error> {
         todo!()
@@ -161,7 +155,7 @@ impl ConnectionRpc for OctopusxtClient {
 
     fn generate_conn_handshake_proof(
         &self,
-        _height: Height,
+        _height: QueryHeight,
         _client_id: ClientId,
         _conn_id: ConnectionId,
     ) -> Result<ConnHandshakeProof, Self::Error> {

@@ -1,12 +1,15 @@
 use crate::primitive::{QueryDenomTraceResponse, QueryDenomTracesResponse};
-use crate::{OctopusxtClient, Transfer};
-use ibc::Height;
+use crate::{OctopusxtClient, QueryHeight, Transfer};
 
 impl Transfer for OctopusxtClient {
     type Error = anyhow::Error;
 
     /// Query the denom trace for an ibc denom
-    fn query_denom_trace(&self, _denom: String) -> Result<QueryDenomTraceResponse, Self::Error> {
+    fn query_denom_trace(
+        &self,
+        _denom: String,
+        _height: QueryHeight,
+    ) -> Result<QueryDenomTraceResponse, Self::Error> {
         todo!()
     }
 
@@ -14,7 +17,7 @@ impl Transfer for OctopusxtClient {
         &self,
         _offset: String,
         _limit: u64,
-        _height: Height,
+        _height: QueryHeight,
     ) -> Result<QueryDenomTracesResponse, Self::Error> {
         todo!()
     }

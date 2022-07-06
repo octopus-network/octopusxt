@@ -1,4 +1,4 @@
-use crate::{ClientRpc, OctopusxtClient};
+use crate::{ClientRpc, OctopusxtClient, QueryHeight};
 use async_trait::async_trait;
 use ibc::{
     core::{
@@ -17,22 +17,21 @@ use crate::primitive::{
 };
 use beefy_merkle_tree::Hash;
 use core::str::FromStr;
-use sp_core::H256;
 
 #[async_trait]
 impl ClientRpc for OctopusxtClient {
     type Error = anyhow::Error;
 
-    async fn query_client_state(&self, client_id: ClientId) -> Result<AnyClientState, Self::Error> {
+    async fn query_client_state(
+        &self,
+        client_id: ClientId,
+        height: QueryHeight,
+    ) -> Result<AnyClientState, Self::Error> {
         tracing::info!("in call_ibc : [get_client_state]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         let data: Vec<u8> = api
             .storage()
@@ -55,17 +54,15 @@ impl ClientRpc for OctopusxtClient {
     async fn query_client_consensus_state(
         &self,
         client_id: ClientId,
-        height: ICSHeight,
+        height: QueryHeight,
     ) -> Result<AnyConsensusState, Self::Error> {
         tracing::info!("in call_ibc: [get_client_consensus]");
 
+        let h = self.query_height(height.clone()).await?;
+
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
+
         let api = self.to_runtime_api();
-
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
 
         let data: Vec<(Vec<u8>, Vec<u8>)> = api
             .storage()
@@ -75,16 +72,16 @@ impl ClientRpc for OctopusxtClient {
 
         if data.is_empty() {
             return Err(anyhow::anyhow!(
-                "get_client_consensus is empty! by client_id = ({}), height = ({})",
+                "get_client_consensus is empty! by client_id = ({}), height = ({:?})",
                 client_id,
-                height
+                h
             ));
         }
 
         // get the height consensus_state
         let mut consensus_state = vec![];
         for item in data.iter() {
-            if item.0 == height.encode_vec().unwrap() {
+            if item.0 == h.encode_vec().unwrap() {
                 consensus_state = item.1.clone();
             }
         }
@@ -104,16 +101,13 @@ impl ClientRpc for OctopusxtClient {
     async fn query_consensus_state_with_height(
         &self,
         client_id: ClientId,
+        height: QueryHeight,
     ) -> Result<Vec<(ICSHeight, AnyConsensusState)>, Self::Error> {
         tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         // vector<height, consensus_state>
         let data: Vec<(Vec<u8>, Vec<u8>)> = api
@@ -139,20 +133,20 @@ impl ClientRpc for OctopusxtClient {
         Ok(result)
     }
 
-    async fn query_clients(&self) -> Result<Vec<IdentifiedAnyClientState>, Self::Error> {
+    async fn query_clients(
+        &self,
+        height: QueryHeight,
+    ) -> Result<Vec<IdentifiedAnyClientState>, Self::Error> {
         tracing::info!("in call_ibc: [get_clients]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         // vector key-value
         let mut ret = vec![];
 
+        // TODO
         // get client_state Keys
         let client_states_keys: Vec<Vec<u8>> = api
             .storage()
@@ -192,16 +186,13 @@ impl ClientRpc for OctopusxtClient {
     async fn query_client_connections(
         &self,
         client_id: ClientId,
+        height: QueryHeight,
     ) -> Result<Vec<ConnectionId>, Self::Error> {
         tracing::info!("in call_ibc: [get_client_connections]");
 
         let api = self.to_runtime_api();
 
-        let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-        let block_header = block.next().await.unwrap().unwrap();
-
-        let block_hash: H256 = block_header.hash();
+        let block_hash = self.query_block_hash_by_query_height(height).await?;
 
         // client_id <-> connection_id
         let connection_id: Vec<u8> = api
@@ -229,21 +220,21 @@ impl ClientRpc for OctopusxtClient {
 
     fn query_consensus_state(
         &self,
-        _height: ICSHeight,
+        _height: QueryHeight,
     ) -> Result<QueryConsensusStateResponse, Self::Error> {
         todo!()
     }
 
     fn query_upgraded_client(
         &self,
-        _height: ICSHeight,
+        _height: QueryHeight,
     ) -> Result<QueryClientStateResponse, Self::Error> {
         todo!()
     }
 
     fn query_upgraded_cons_state(
         &self,
-        _height: ICSHeight,
+        _height: QueryHeight,
     ) -> Result<QueryConsensusStateResponse, Self::Error> {
         todo!()
     }
@@ -251,6 +242,7 @@ impl ClientRpc for OctopusxtClient {
     fn query_newly_created_clients(
         &self,
         _block_hash: Hash,
+        _height: QueryHeight,
     ) -> Result<Vec<IdentifiedClientState>, Self::Error> {
         todo!()
     }
