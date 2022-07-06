@@ -478,7 +478,7 @@ impl OctopusxtClient {
     /// representing the account id.
     /// Query the balance of the given account for the denom used to pay tx fees.
     /// If no account is given, behavior must be specified, e.g. retrieve it from configuration file.
-    fn query_balance(
+    pub fn query_balance(
         &self,
         _key_name: Option<String>,
     ) -> anyhow::Result<Balance> {
@@ -486,34 +486,34 @@ impl OctopusxtClient {
     }
 
     /// Query the denomination trace given a trace hash.
-    fn query_denom_trace(&self, _hash: String) -> anyhow::Result<DenomTrace> {
+    pub fn query_denom_trace(&self, _hash: String) -> anyhow::Result<DenomTrace> {
         todo!()
     }
 
-    fn query_commitment_prefix(&self) -> anyhow::Result<CommitmentPrefix> {
+    pub fn query_commitment_prefix(&self) -> anyhow::Result<CommitmentPrefix> {
         todo!()
     }
 
-    fn query_compatible_versions(&self) -> anyhow::Result<Vec<Version>> {
+    pub fn query_compatible_versions(&self) -> anyhow::Result<Vec<Version>> {
         todo!()
     }
 
     /// Query the latest height and timestamp the application is at
-    fn query_application_status(
+    pub fn query_application_status(
         &self,
     ) -> anyhow::Result<ChainStatus> {
         todo!()
     }
 
 
-    fn query_blocks(
+    pub fn query_blocks(
         &self,
         _request: QueryBlockRequest,
     ) -> anyhow::Result<(Vec<IbcEvent>, Vec<IbcEvent>)> {
         todo!()
     }
 
-    fn query_host_consensus_state(
+    pub fn query_host_consensus_state(
         &self,
         _request: QueryHostConsensusStateRequest,
     ) -> anyhow::Result<ConsensusState> {
@@ -521,7 +521,7 @@ impl OctopusxtClient {
     }
 
     // TODO (davirian) client settings
-    fn build_client_state(
+    pub fn build_client_state(
         &self,
         _height: ICSHeight,
         // settings: ClientSettings,
@@ -530,7 +530,7 @@ impl OctopusxtClient {
     }
 
     // TODO(Davirain) lightblock
-    fn build_consensus_state(
+    pub fn build_consensus_state(
         &self,
         // light_block: Self::LightBlock,
     ) -> anyhow::Result<ConsensusState> {
@@ -543,7 +543,7 @@ impl OctopusxtClient {
     ///
     /// Returns all the supporting headers that were need to verify the target
     /// header, for use when building a `ClientUpdate` message.
-    fn build_header(
+    pub fn build_header(
         &self,
         _trusted_height: ICSHeight,
         _target_height: ICSHeight,
