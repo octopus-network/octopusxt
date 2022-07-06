@@ -9,6 +9,7 @@ pub mod ibc_core;
 pub mod primitive;
 pub mod update_client_state;
 pub mod utils;
+pub mod requests;
 
 pub use ibc_core::*;
 pub use update_client_state::*;

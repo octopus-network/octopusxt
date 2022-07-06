@@ -25,6 +25,7 @@ use ibc_proto::google::protobuf::Any;
 use jsonrpsee::rpc_params;
 use serde::{Deserialize, Serialize};
 use sp_core::H256;
+use ibc::timestamp::Timestamp;
 
 pub mod ics02_client;
 pub mod ics03_connection;
@@ -34,12 +35,11 @@ pub mod ics26_router;
 pub use crate::events::*;
 use ibc::core::ics23_commitment::merkle::MerkleProof;
 use ibc::events::IbcEvent;
-use ibc_proto::cosmos::base::abci::v1beta1::TxResponse;
-use ibc_relayer::chain::requests::{
+use crate::requests::{
     IncludeProof, QueryBlockRequest, QueryHeight, QueryPacketAcknowledgementRequest,
-    QueryPacketCommitmentRequest, QueryPacketReceiptRequest, QueryTxRequest,
+    QueryPacketCommitmentRequest, QueryPacketReceiptRequest,
 };
-use ibc_relayer::chain::requests::{
+use crate::requests::{
     QueryChannelClientStateRequest, QueryChannelRequest, QueryChannelsRequest,
     QueryClientConnectionsRequest, QueryClientStateRequest, QueryClientStatesRequest,
     QueryConnectionChannelsRequest, QueryConnectionRequest, QueryConnectionsRequest,
@@ -48,7 +48,6 @@ use ibc_relayer::chain::requests::{
     QueryPacketCommitmentsRequest, QueryUnreceivedAcksRequest, QueryUnreceivedPacketsRequest,
     QueryUpgradedClientStateRequest, QueryUpgradedConsensusStateRequest,
 };
-use ibc_relayer::chain::tracking::TrackedMsgs;
 pub use ics02_client::*;
 pub use ics03_connection::*;
 pub use ics04_channel::*;
@@ -475,25 +474,6 @@ impl OctopusxtClient {
         todo!()
     }
 
-    /// Sends one or more transactions with `msgs` to chain and
-    /// synchronously wait for it to be committed.
-    fn send_messages_and_wait_commit(
-        &mut self,
-        _tracked_msgs: TrackedMsgs,
-    ) -> anyhow::Result<Vec<IbcEvent>> {
-        todo!()
-    }
-
-    // TODO(davirain) TxResponse
-    /// Sends one or more transactions with `msgs` to chain.
-    /// Non-blocking alternative to `send_messages_and_wait_commit` interface.
-    fn send_messages_and_wait_check_tx(
-        &mut self,
-        _tracked_msgs: TrackedMsgs,
-    ) -> anyhow::Result<Vec<TxResponse>> {
-        todo!()
-    }
-
     /// Query balance of an address on chain, addr should be a valid hexadecimal or SS58 string,
     /// representing the account id.
     /// Query the balance of the given account for the denom used to pay tx fees.
@@ -501,12 +481,12 @@ impl OctopusxtClient {
     fn query_balance(
         &self,
         _key_name: Option<String>,
-    ) -> anyhow::Result<ibc_relayer::account::Balance> {
+    ) -> anyhow::Result<Balance> {
         todo!()
     }
 
     /// Query the denomination trace given a trace hash.
-    fn query_denom_trace(&self, _hash: String) -> anyhow::Result<ibc_relayer::denom::DenomTrace> {
+    fn query_denom_trace(&self, _hash: String) -> anyhow::Result<DenomTrace> {
         todo!()
     }
 
@@ -521,13 +501,10 @@ impl OctopusxtClient {
     /// Query the latest height and timestamp the application is at
     fn query_application_status(
         &self,
-    ) -> anyhow::Result<ibc_relayer::chain::endpoint::ChainStatus> {
+    ) -> anyhow::Result<ChainStatus> {
         todo!()
     }
 
-    fn query_txs(&self, _request: QueryTxRequest) -> anyhow::Result<Vec<IbcEvent>> {
-        todo!()
-    }
 
     fn query_blocks(
         &self,
@@ -584,4 +561,31 @@ pub struct Proof {
     pub proof: Vec<u8>,
     /// Height at which proof was recovered
     pub height: ibc_proto::ibc::core::client::v1::Height,
+}
+
+
+/// The denom trace
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DenomTrace {
+    /// The chain of port/channel identifiers used for tracing the source of the coin.
+    pub path: String,
+    /// The base denomination for that coin
+    pub base_denom: String,
+}
+
+
+/// The balance for a specific denom
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct Balance {
+    /// The amount of coins in the account, as a string to allow for large amounts
+    pub amount: String,
+    /// The denomination for that coin
+    pub denom: String,
+}
+
+/// The result of the application status query.
+#[derive(Clone, Debug)]
+pub struct ChainStatus {
+    pub height: ICSHeight,
+    pub timestamp: Timestamp,
 }

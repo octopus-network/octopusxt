@@ -15,7 +15,7 @@ use core::str::FromStr;
 use ibc::core::ics02_client::client_state::IdentifiedAnyClientState;
 use ibc::core::ics23_commitment::merkle::MerkleProof;
 use ibc::Height as ICSHeight;
-use ibc_relayer::chain::requests::{
+use crate::requests::{
     IncludeProof, QueryChannelClientStateRequest, QueryChannelRequest, QueryChannelsRequest,
     QueryHeight, QueryNextSequenceReceiveRequest, QueryPacketAcknowledgementRequest,
     QueryPacketAcknowledgementsRequest, QueryPacketCommitmentRequest,

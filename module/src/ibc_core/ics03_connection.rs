@@ -9,7 +9,7 @@ use async_trait::async_trait;
 use core::str::FromStr;
 use ibc::core::ics23_commitment::merkle::MerkleProof;
 
-use ibc_relayer::chain::requests::{
+use crate::requests::{
     IncludeProof, QueryChannelRequest, QueryConnectionChannelsRequest, QueryConnectionRequest,
     QueryConnectionsRequest, QueryHeight,
 };

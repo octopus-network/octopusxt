@@ -15,7 +15,7 @@ use tendermint_proto::Protobuf;
 use core::str::FromStr;
 use ibc::core::ics02_client::client_consensus::AnyConsensusStateWithHeight;
 use ibc::core::ics23_commitment::merkle::MerkleProof;
-use ibc_relayer::chain::requests::{
+use crate::requests::{
     IncludeProof, QueryClientConnectionsRequest, QueryClientStateRequest, QueryClientStatesRequest,
     QueryConsensusStateRequest, QueryConsensusStatesRequest, QueryHeight,
     QueryUpgradedClientStateRequest, QueryUpgradedConsensusStateRequest,
