@@ -9,15 +9,12 @@ use ibc::core::{
 };
 use tendermint_proto::Protobuf;
 
-// use crate::primitive::QueryChannelsResponse;
 use async_trait::async_trait;
 
 use core::str::FromStr;
 use ibc::core::ics02_client::client_state::IdentifiedAnyClientState;
 use ibc::core::ics23_commitment::merkle::MerkleProof;
 use ibc::Height as ICSHeight;
-// use ibc::core::ics24_host::identifier::ConnectionId;
-
 use ibc_relayer::chain::requests::{
     IncludeProof, QueryChannelClientStateRequest, QueryChannelRequest, QueryChannelsRequest,
     QueryHeight, QueryNextSequenceReceiveRequest, QueryPacketAcknowledgementRequest,

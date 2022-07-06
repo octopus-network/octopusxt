@@ -19,7 +19,6 @@ use ibc::clients::ics10_grandpa::header::Header;
 use ibc::core::ics03_connection::version::Version;
 use ibc::core::ics23_commitment::commitment::CommitmentPrefix;
 use ibc::core::ics24_host::identifier::ConnectionId;
-use ibc::timestamp::Timestamp;
 use ibc::{Height as ICSHeight, Height};
 use ibc_proto::google::protobuf::Any;
 
@@ -33,7 +32,6 @@ pub mod ics04_channel;
 pub mod ics26_router;
 
 pub use crate::events::*;
-use crate::primitive::IdentifiedClientState;
 use ibc::core::ics23_commitment::merkle::MerkleProof;
 use ibc::events::IbcEvent;
 use ibc_proto::cosmos::base::abci::v1beta1::TxResponse;
@@ -500,12 +498,15 @@ impl OctopusxtClient {
     /// representing the account id.
     /// Query the balance of the given account for the denom used to pay tx fees.
     /// If no account is given, behavior must be specified, e.g. retrieve it from configuration file.
-    fn query_balance(&self, _key_name: Option<String>) -> anyhow::Result<Balance> {
+    fn query_balance(
+        &self,
+        _key_name: Option<String>,
+    ) -> anyhow::Result<ibc_relayer::account::Balance> {
         todo!()
     }
 
     /// Query the denomination trace given a trace hash.
-    fn query_denom_trace(&self, _hash: String) -> anyhow::Result<DenomTrace> {
+    fn query_denom_trace(&self, _hash: String) -> anyhow::Result<ibc_relayer::denom::DenomTrace> {
         todo!()
     }
 
@@ -518,7 +519,9 @@ impl OctopusxtClient {
     }
 
     /// Query the latest height and timestamp the application is at
-    fn query_application_status(&self) -> anyhow::Result<ChainStatus> {
+    fn query_application_status(
+        &self,
+    ) -> anyhow::Result<ibc_relayer::chain::endpoint::ChainStatus> {
         todo!()
     }
 
@@ -574,47 +577,11 @@ impl OctopusxtClient {
     }
 }
 
-/// The result of the application status query.
-#[derive(Clone, Debug)]
-pub struct ChainStatus {
-    pub height: ICSHeight,
-    pub timestamp: Timestamp,
-}
-
-/// The balance for a specific denom
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct Balance {
-    /// The amount of coins in the account, as a string to allow for large amounts
-    pub amount: String,
-    /// The denomination for that coin
-    pub denom: String,
-}
-
-/// The denom trace
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct DenomTrace {
-    /// The chain of port/channel identifiers used for tracing the source of the coin.
-    pub path: String,
-    /// The base denomination for that coin
-    pub base_denom: String,
-}
-
 /// Proof for a set of keys
 #[derive(Serialize, Deserialize)]
 pub struct Proof {
     /// Trie proof
     pub proof: Vec<u8>,
     /// Height at which proof was recovered
-    pub height: ibc_proto::ibc::core::client::v1::Height,
-}
-
-/// Connection handshake proof
-#[derive(Serialize, Deserialize)]
-pub struct ConnHandshakeProof {
-    /// Protobuf encoded client state
-    pub client_state: IdentifiedClientState,
-    /// Trie proof for connection state, client state and consensus state
-    pub proof: Vec<u8>,
-    /// Proof height
     pub height: ibc_proto::ibc::core::client::v1::Height,
 }
