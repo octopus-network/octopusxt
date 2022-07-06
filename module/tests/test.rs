@@ -1,4 +1,4 @@
-use crate::{ibc_node, MyConfig};
+use crate::{ibc_core::QueryHeight, ibc_node, MyConfig};
 use octopusxt::update_client_state::MmrProof;
 use octopusxt::*;
 
@@ -62,7 +62,7 @@ async fn test_query_client_consensus_state() -> Result<(), Box<dyn std::error::E
     let result = octopusxt_client
         .query_client_consensus_state(
             ClientId::new(ClientType::Grandpa, 0).unwrap(),
-            Height::new(0, 320),
+            QueryHeight::Specific(Height::new(0, 320)),
         )
         .await?;
 
@@ -127,7 +127,12 @@ async fn test_query_packet_commitment() -> Result<(), Box<dyn std::error::Error>
     let channel_id = ChannelId::from_str("channel-0").unwrap();
 
     let result = octopusxt_client
-        .query_packet_commitment(client_id, channel_id, Sequence::from(1))
+        .query_packet_commitment(
+            client_id,
+            channel_id,
+            Sequence::from(1),
+            QueryHeight::Latest,
+        )
         .await
         .unwrap();
     println!("packet_commitment = {:?}", result);
@@ -1229,7 +1234,10 @@ async fn test_query_clients() -> Result<(), Box<dyn std::error::Error>> {
 
     let octopusxt_client = OctopusxtClient::new(client);
 
-    let clients = octopusxt_client.query_clients().await.unwrap();
+    let clients = octopusxt_client
+        .query_clients(QueryHeight::Latest)
+        .await
+        .unwrap();
     println!("{:?}", clients);
 
     Ok(())
@@ -1244,7 +1252,10 @@ async fn test_query_client_state() -> Result<(), Box<dyn std::error::Error>> {
     let octopusxt_client = OctopusxtClient::new(client);
 
     let client_state = octopusxt_client
-        .query_client_state(ClientId::new(ClientType::Grandpa, 0).unwrap())
+        .query_client_state(
+            ClientId::new(ClientType::Grandpa, 0).unwrap(),
+            QueryHeight::Latest,
+        )
         .await
         .unwrap();
 
@@ -1410,7 +1421,7 @@ async fn test_query_send_packet_event() -> Result<(), Box<dyn std::error::Error>
     let seq = Sequence::from(2);
 
     let send_packet_event = octopusxt_client
-        .query_send_packet_event(port_id, channel_id, seq)
+        .query_send_packet_event(port_id, channel_id, seq, QueryHeight::Latest)
         .await
         .unwrap();
 
@@ -1432,7 +1443,7 @@ async fn test_query_packet_acknowledgements() -> Result<(), Box<dyn std::error::
     let channel_id = ChannelId::from_str("channel-0").unwrap();
 
     let result = octopusxt_client
-        .query_packet_acknowledgements(port_id, channel_id, Sequence::from(1))
+        .query_packet_acknowledgements(port_id, channel_id, Sequence::from(1), QueryHeight::Latest)
         .await
         .unwrap();
     println!("packet_ack = {:?}", result);
@@ -1452,7 +1463,7 @@ async fn test_query_packet_receipt() -> Result<(), Box<dyn std::error::Error>> {
     let channel_id = ChannelId::from_str("channel-0").unwrap();
 
     let result = octopusxt_client
-        .query_packet_receipt(port_id, channel_id, Sequence::from(2))
+        .query_packet_receipt(port_id, channel_id, Sequence::from(2), QueryHeight::Latest)
         .await
         .unwrap();
     println!("packet_receipt = {:?}", result);
