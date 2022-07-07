@@ -124,7 +124,7 @@ impl ChannelRpc for OctopusxtClient {
         Ok(result)
     }
 
-    fn query_channel_client_state(
+    async fn query_channel_client_state(
         &self,
         _request: QueryChannelClientStateRequest,
     ) -> Result<Option<IdentifiedAnyClientState>, Self::Error> {

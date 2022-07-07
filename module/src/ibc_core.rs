@@ -128,7 +128,7 @@ pub trait ChannelRpc {
 
     /// Performs a query to retrieve the client state for the channel associated
     /// with a given channel identifier.
-    fn query_channel_client_state(
+    async fn query_channel_client_state(
         &self,
         request: QueryChannelClientStateRequest,
     ) -> Result<Option<IdentifiedAnyClientState>, Self::Error>;
