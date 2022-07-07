@@ -494,19 +494,6 @@ impl OctopusxtClient {
 
                         break 'outer;
                     }
-                    "Empty" => {
-                        let event = <ibc_node::ibc::events::Empty as codec::Decode>::decode(
-                            &mut &raw_event.data[..],
-                        )
-                        .unwrap();
-
-                        println!("in call_ibc: [substrate_events] >> Empty Event");
-
-                        let data = String::from_utf8(event.0).unwrap();
-                        result_events.push(IbcEvent::Empty(data));
-
-                        break 'outer;
-                    }
                     "ChainError" => {
                         let event = <ibc_node::ibc::events::ChainError as codec::Decode>::decode(
                             &mut &raw_event.data[..],
@@ -516,7 +503,7 @@ impl OctopusxtClient {
 
                         let data = String::from_utf8(event.0).unwrap();
 
-                        result_events.push(IbcEvent::Empty(data));
+                        result_events.push(IbcEvent::ChainError(data));
                         break 'outer;
                     }
                     _ => {
@@ -950,15 +937,6 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
 
                     IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet)
                 }
-                "Empty" => {
-                    let event = <ibc_node::ibc::events::Empty as codec::Decode>::decode(
-                        &mut &raw_event.data[..],
-                    )
-                    .unwrap();
-                    println!("in call_ibc: [substrate_events] >> Empty Event");
-                    let data = String::from_utf8(event.0).unwrap();
-                    IbcEvent::Empty(data)
-                }
                 "ChainError" => {
                     let event = <ibc_node::ibc::events::ChainError as codec::Decode>::decode(
                         &mut &raw_event.data[..],
@@ -969,7 +947,7 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
 
                     let data = String::from_utf8(event.0).unwrap();
 
-                    IbcEvent::Empty(data)
+                    IbcEvent::ChainError(data)
                 }
                 _ => unimplemented!(),
             };

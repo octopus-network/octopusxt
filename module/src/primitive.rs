@@ -23,6 +23,7 @@ use ibc::{
     timestamp::Timestamp as IbcTimestamp,
     Height as IbcHeight,
 };
+use ibc::core::ics04_channel::timeout::TimeoutHeight;
 
 impl From<OctopusxtClientType> for IbcClientType {
     fn from(octopus_client_type: OctopusxtClientType) -> Self {
@@ -35,10 +36,11 @@ impl From<OctopusxtClientType> for IbcClientType {
 
 impl From<OctopusxtHeight> for IbcHeight {
     fn from(height: OctopusxtHeight) -> Self {
-        Self {
-            revision_number: height.revision_number,
-            revision_height: height.revision_height,
+        if height.revision_number == 0 {
+            return IbcHeight::new(1, height.revision_height).unwrap();
         }
+
+        IbcHeight::new(height.revision_number, height.revision_height).unwrap()
     }
 }
 
@@ -51,7 +53,7 @@ impl From<OctopusxtPacket> for IbcPacket {
             destination_port: octopus_packet.destination_port.into(),
             destination_channel: octopus_packet.destination_channel.into(),
             data: octopus_packet.data,
-            timeout_height: octopus_packet.timeout_height.into(),
+            timeout_height: TimeoutHeight::At(octopus_packet.timeout_height.into()),
             timeout_timestamp: octopus_packet.timeout_timestamp.into(),
         }
     }

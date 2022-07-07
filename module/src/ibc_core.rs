@@ -336,7 +336,8 @@ impl OctopusxtClient {
         let h = match height {
             QueryHeight::Latest => {
                 let h = self.query_latest_height().await?;
-                Height::new(0, h)
+                // TODO need handle revision number is not set zero number.
+                Height::new(1, h).unwrap()
             }
             QueryHeight::Specific(h) => h,
         };
@@ -371,7 +372,7 @@ impl OctopusxtClient {
             }
             QueryHeight::Specific(h) => {
                 let block_hash = self
-                    .query_block_hash_by_block_number(Some(BlockNumber::from(h.revision_height)))
+                    .query_block_hash_by_block_number(Some(BlockNumber::from(h.revision_height())))
                     .await?;
                 block_hash
             }

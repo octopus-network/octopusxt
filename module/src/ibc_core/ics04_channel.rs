@@ -256,7 +256,7 @@ impl ChannelRpc for OctopusxtClient {
         }
 
         // TODO height revision number not is zero.
-        Ok((sequences, ICSHeight::new(0, height)))
+        Ok((sequences, ICSHeight::new(1, height).unwrap()))
     }
 
     async fn query_packet_acknowledgement(
@@ -430,8 +430,8 @@ impl PacketRpc for OctopusxtClient {
         ));
         }
 
-        let packet = Packet::decode_vec(&*data).unwrap();
-
+        // use serde_json to decode packet
+        let packet: Packet = serde_json::from_slice(&data)?;
         Ok(packet)
     }
 
