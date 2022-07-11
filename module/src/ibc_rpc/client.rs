@@ -6,6 +6,7 @@ use ibc::{
             client_state::{AnyClientState, IdentifiedAnyClientState},
         },
         ics24_host::identifier::{ClientId, ConnectionId},
+        ics24_host::path::ClientStatePath,
     },
     Height as ICSHeight,
 };
@@ -45,10 +46,12 @@ pub async fn get_client_state(
 
     let block_hash: H256 = block_header.hash();
 
+    let client_state_path = ClientStatePath(client_id.clone()).to_string().as_bytes().to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .client_states(client_id.as_bytes(), Some(block_hash))
+        .client_states(&client_state_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -222,7 +225,7 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
         return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
     }
 
-    // enumate every item get client_state value
+    // enumerate every item get client_state value
     for key in client_states_keys {
         // get client_state value
         let client_states_value: Vec<u8> = api
