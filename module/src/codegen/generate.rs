@@ -13030,25 +13030,16 @@ pub mod api {
                     ])
                 }
             }
-            pub struct ConsensusStates<'a>(
-                pub &'a [::core::primitive::u8],
-                pub &'a [::core::primitive::u8],
-            );
+            pub struct ConsensusStates<'a>(pub &'a [::core::primitive::u8]);
             impl ::subxt::StorageEntry for ConsensusStates<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "ConsensusStates";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
                 fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(
-                            &self.0,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                        ::subxt::StorageMapKey::new(
-                            &self.1,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                    ])
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
                 }
             }
             pub struct ConsensusStatesKeys;
@@ -13647,11 +13638,10 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " (client_id, Height) => ConsensusState"]
+                #[doc = " ClientConsensusStatePath(client_id, Height) => ConsensusState"]
                 pub async fn consensus_states(
                     &self,
                     _0: &[::core::primitive::u8],
-                    _1: &[::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -13659,13 +13649,13 @@ pub mod api {
                 > {
                     if self.client.metadata().storage_hash::<ConsensusStates>()?
                         == [
-                            255u8, 39u8, 86u8, 121u8, 77u8, 241u8, 148u8, 132u8, 156u8, 123u8,
-                            194u8, 169u8, 175u8, 214u8, 138u8, 191u8, 68u8, 235u8, 182u8, 236u8,
-                            190u8, 8u8, 89u8, 40u8, 41u8, 128u8, 115u8, 182u8, 149u8, 16u8, 247u8,
-                            4u8,
+                            249u8, 84u8, 86u8, 26u8, 68u8, 70u8, 245u8, 236u8, 213u8, 72u8, 162u8,
+                            47u8, 13u8, 158u8, 147u8, 129u8, 241u8, 182u8, 52u8, 149u8, 156u8,
+                            241u8, 212u8, 252u8, 29u8, 127u8, 184u8, 60u8, 228u8, 138u8, 103u8,
+                            221u8,
                         ]
                     {
-                        let entry = ConsensusStates(_0, _1);
+                        let entry = ConsensusStates(_0);
                         self.client
                             .storage()
                             .fetch_or_default(&entry, block_hash)
@@ -13674,7 +13664,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " (client_id, Height) => ConsensusState"]
+                #[doc = " ClientConsensusStatePath(client_id, Height) => ConsensusState"]
                 pub async fn consensus_states_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13684,10 +13674,10 @@ pub mod api {
                 > {
                     if self.client.metadata().storage_hash::<ConsensusStates>()?
                         == [
-                            255u8, 39u8, 86u8, 121u8, 77u8, 241u8, 148u8, 132u8, 156u8, 123u8,
-                            194u8, 169u8, 175u8, 214u8, 138u8, 191u8, 68u8, 235u8, 182u8, 236u8,
-                            190u8, 8u8, 89u8, 40u8, 41u8, 128u8, 115u8, 182u8, 149u8, 16u8, 247u8,
-                            4u8,
+                            249u8, 84u8, 86u8, 26u8, 68u8, 70u8, 245u8, 236u8, 213u8, 72u8, 162u8,
+                            47u8, 13u8, 158u8, 147u8, 129u8, 241u8, 182u8, 52u8, 149u8, 156u8,
+                            241u8, 212u8, 252u8, 29u8, 127u8, 184u8, 60u8, 228u8, 138u8, 103u8,
+                            221u8,
                         ]
                     {
                         self.client.storage().iter(block_hash).await
@@ -13726,6 +13716,7 @@ pub mod api {
                     }
                 }
                 #[doc = " connection_id => ConnectionEnd"]
+                #[doc = " Need ConnectionsPath"]
                 pub async fn connections(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13752,6 +13743,7 @@ pub mod api {
                     }
                 }
                 #[doc = " connection_id => ConnectionEnd"]
+                #[doc = " Need ConnectionsPath"]
                 pub async fn connections_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13798,6 +13790,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_identifier, channel_identifier) => ChannelEnd"]
+                #[doc = " Need ChannelEndPath"]
                 pub async fn channels(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13825,6 +13818,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_identifier, channel_identifier) => ChannelEnd"]
+                #[doc = " Need ChannelEndPath"]
                 pub async fn channels_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13874,6 +13868,7 @@ pub mod api {
                     }
                 }
                 #[doc = " connection_id => Vec<(port_id, channel_id)>"]
+                #[doc = " Need ConnectionsPath <-> ChannelEndPath"]
                 pub async fn channels_connection(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13905,6 +13900,7 @@ pub mod api {
                     }
                 }
                 #[doc = " connection_id => Vec<(port_id, channel_id)>"]
+                #[doc = " Need ConnectionsPath <-> ChannelEndPath"]
                 pub async fn channels_connection_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13928,6 +13924,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id) => sequence"]
+                #[doc = " Maybe Need SeqSendsPath"]
                 pub async fn next_sequence_send(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13952,6 +13949,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id) => sequence"]
+                #[doc = " Maybe Need SeqSendsPath"]
                 pub async fn next_sequence_send_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13972,6 +13970,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id) => sequence"]
+                #[doc = " Need SeqRecvsPath"]
                 pub async fn next_sequence_recv(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13996,6 +13995,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id) => sequence"]
+                #[doc = " Need SeqRecvsPath"]
                 pub async fn next_sequence_recv_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -14016,6 +14016,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id) => sequence"]
+                #[doc = " Maybe Ned SeqAcksPath"]
                 pub async fn next_sequence_ack(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14041,6 +14042,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id) => sequence"]
+                #[doc = " Maybe Ned SeqAcksPath"]
                 pub async fn next_sequence_ack_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -14062,6 +14064,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id, sequence) => hash of acknowledgement"]
+                #[doc = " Need AcksPath"]
                 pub async fn acknowledgements(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14089,6 +14092,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id, sequence) => hash of acknowledgement"]
+                #[doc = " Need AcksPath"]
                 pub async fn acknowledgements_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -14250,6 +14254,7 @@ pub mod api {
                     }
                 }
                 #[doc = " client_id => connection_id"]
+                #[doc = " ClientsStatePath <-> ConnectionEndPath"]
                 pub async fn connection_client(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14275,6 +14280,7 @@ pub mod api {
                     }
                 }
                 #[doc = " client_id => connection_id"]
+                #[doc = " ClientsStatePath <-> ConnectionEndPath"]
                 pub async fn connection_client_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -14295,6 +14301,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id, sequence) => receipt"]
+                #[doc = " Need ReceiptsPath"]
                 pub async fn packet_receipt(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14323,6 +14330,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id, sequence) => receipt"]
+                #[doc = " Need ReceiptsPath"]
                 pub async fn packet_receipt_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -14344,6 +14352,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id, sequence) => hash of (timestamp, height, packet)"]
+                #[doc = " Need CommitmentsPath"]
                 pub async fn packet_commitment(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14372,6 +14381,7 @@ pub mod api {
                     }
                 }
                 #[doc = " (port_id, channel_id, sequence) => hash of (timestamp, height, packet)"]
+                #[doc = " Need CommitmentsPath"]
                 pub async fn packet_commitment_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -19415,9 +19425,9 @@ pub mod api {
         pub fn validate_metadata(&'a self) -> Result<(), ::subxt::MetadataError> {
             if self.client.metadata().metadata_hash(&PALLETS)
                 != [
-                    22u8, 204u8, 144u8, 94u8, 54u8, 119u8, 82u8, 114u8, 21u8, 164u8, 78u8, 63u8,
-                    54u8, 0u8, 80u8, 49u8, 24u8, 166u8, 98u8, 166u8, 174u8, 139u8, 9u8, 237u8,
-                    50u8, 146u8, 57u8, 229u8, 64u8, 51u8, 232u8, 45u8,
+                    229u8, 239u8, 188u8, 5u8, 106u8, 80u8, 79u8, 136u8, 181u8, 252u8, 151u8, 125u8,
+                    105u8, 252u8, 229u8, 137u8, 45u8, 102u8, 232u8, 158u8, 67u8, 44u8, 162u8,
+                    238u8, 91u8, 205u8, 162u8, 117u8, 225u8, 240u8, 41u8, 102u8,
                 ]
             {
                 Err(::subxt::MetadataError::IncompatibleMetadata)
