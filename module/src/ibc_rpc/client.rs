@@ -131,8 +131,9 @@ pub async fn get_consensus_state_with_height(
     // Obtain the storage client wrapper from the API.
     let storage: StorageClient<_> = api.client.storage();
 
+    // Read Store ConsensusStates
     let mut iter = storage
-        .iter::<ibc_node::ibc::storage::ClientStates>(Some(block_hash))
+        .iter::<ibc_node::ibc::storage::ConsensusStates>(Some(block_hash))
         .await?;
 
     let mut result = vec![];
@@ -144,6 +145,7 @@ pub async fn get_consensus_state_with_height(
         let client_state_path = String::from_utf8(raw_key)?;
         // decode key
         let path = Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        // println!("[get_consensus_state_with_height] >> path: {:?}", path);
         match path {
             Path::ClientConsensusState(client_consensus_state) => {
                 let ClientConsensusStatePath {
@@ -162,50 +164,8 @@ pub async fn get_consensus_state_with_height(
             _ => unimplemented!(),
 
         }
-        println!("  Value: {:?}", value);
+        // println!("[get_consensus_state_with_height]>>  Value: {:?}", value);
     }
-
-    // vector key-value
-    // let mut result = vec![];
-    //
-    // get client_state Keys
-    // let consensus_state_keys: Vec<(Vec<u8>, Vec<u8>)> = api
-    //     .storage()
-    //     .ibc()
-    //     .consensus_states_keys(Some(block_hash))
-    //     .await?;
-
-    // if consensus_state_keys.is_empty() {
-    //     return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
-    // }
-
-    // enumerate every item get client_state value
-    // for key in consensus_state_keys {
-    //     // assert store consensus_state_keys first key is client_id equal to query client_id
-    //     if key.0 == client_id.as_bytes().to_vec() {
-    //         let height = ICSHeight::decode_vec(&*key.1).unwrap();
-    //         // search key
-    //         let client_consensus_state_path = ClientConsensusStatePath {
-    //             client_id: client_id.clone(),
-    //             epoch: height.revision_number,
-    //             height: height.revision_height,
-    //         }
-    //         .to_string()
-    //         .as_bytes()
-    //         .to_vec();
-    //
-    //         // get client_state value
-    //         let consensus_state_value: Vec<u8> = api
-    //             .storage()
-    //             .ibc()
-    //             .consensus_states(&client_consensus_state_path, Some(block_hash))
-    //             .await?;
-    //
-    //         let consensus_state = AnyConsensusState::decode_vec(&*consensus_state_value).unwrap();
-    //         // store key-value
-    //         result.push((height, consensus_state));
-    //     }
-    // }
 
     Ok(result)
 }
