@@ -17,18 +17,6 @@ use anyhow::Result;
 use sp_core::H256;
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
-///
-/// # Usage example
-///
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_channels;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_channels(client).await?;
-/// ```
-///
 pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChannelEnd>> {
     tracing::info!("in call_ibc: [get_channels]");
 
@@ -79,22 +67,7 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
     Ok(result)
 }
 
-/// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
-///
-/// # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_channel_end;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let result = get_channel_end(&port_id, &channel_id, client).await?;
-/// ```
-///
+/// get channelEnd according by port_identifier, channel_identifier and read Channel StorageMaps
 pub async fn get_channel_end(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -135,22 +108,6 @@ pub async fn get_channel_end(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
-///
-/// # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_receipt;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(0);
-/// let result = get_packet_receipt(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_receipt(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -197,21 +154,6 @@ pub async fn get_packet_receipt(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
-/// # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_receipt_vec;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(0);
-/// let result = get_packet_receipt_vec(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_receipt_vec(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -253,21 +195,6 @@ pub async fn get_packet_receipt_vec(
 }
 
 /// get  unreceipt packet
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_unreceipt_packet;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = vec![Sequence::from(12),Sequence::from(13)];
-/// let result = get_unreceipt_packet(&port_id, &channel_id, sequence, client).await?;
-/// ```
-///
 pub async fn get_unreceipt_packet(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -310,18 +237,6 @@ pub async fn get_unreceipt_packet(
 }
 
 /// get get_commitment_packet_state
-///
-/// # Usage example
-///
-/// ```rust
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_commitment_packet_state;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_commitment_packet_state(client).await?;
-/// ```
-///
 pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec<PacketState>> {
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
@@ -373,22 +288,6 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
 }
 
 /// get packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
-///
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_commitment;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(23);
-/// let result = get_packet_commitment(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_commitment(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -430,22 +329,6 @@ pub async fn get_packet_commitment(
 }
 
 /// get packet acknowlegement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
-///
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_ack;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(12);
-/// let result = get_packet_ack(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_ack(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -487,20 +370,6 @@ pub async fn get_packet_ack(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_next_sequence_recv;
-/// use octopusxt::MyConfig;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let result = get_next_sequence_recv(&prot_id, &channel_id, client).await?;
-/// ```
-///
 pub async fn get_next_sequence_recv(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -549,18 +418,6 @@ pub async fn get_next_sequence_recv(
 }
 
 /// get get_commitment_packet_state
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_acknowledge_packet_state;
-/// use octopusxt::MyConfig;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_acknowledge_packet_state(client).await?;
-/// ```
-///
 pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Vec<PacketState>> {
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 

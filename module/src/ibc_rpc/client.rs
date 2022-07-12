@@ -1,12 +1,15 @@
 use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
-use ibc::{core::{
-    ics02_client::{
-        client_consensus::AnyConsensusState,
-        client_state::{AnyClientState, IdentifiedAnyClientState},
+use ibc::{
+    core::{
+        ics02_client::{
+            client_consensus::AnyConsensusState,
+            client_state::{AnyClientState, IdentifiedAnyClientState},
+        },
+        ics24_host::identifier::{ClientId, ConnectionId},
+        ics24_host::path::ClientStatePath,
     },
-    ics24_host::identifier::{ClientId, ConnectionId},
-    ics24_host::path::ClientStatePath,
-}, Height as ICSHeight};
+    Height as ICSHeight,
+};
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
@@ -16,20 +19,6 @@ use ibc::core::ics24_host::path::ClientConsensusStatePath;
 use sp_core::H256;
 
 /// get client_state according by client_id, and read ClientStates StoraageMap
-///  
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_client_state;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let result = get_client_state(&client_id, client).await?;
-/// ```
-///
 pub async fn get_client_state(
     client_id: &ClientId,
     client: Client<MyConfig>,
@@ -44,7 +33,10 @@ pub async fn get_client_state(
 
     let block_hash: H256 = block_header.hash();
 
-    let client_state_path = ClientStatePath(client_id.clone()).to_string().as_bytes().to_vec();
+    let client_state_path = ClientStatePath(client_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
     let data: Vec<u8> = api
         .storage()
@@ -65,22 +57,7 @@ pub async fn get_client_state(
 }
 
 /// get appoint height consensus_state according by client_identifier and height
-/// and read ConsensusStates StoreageMap
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_client_consensus;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let height = ICSHeight::default();
-/// let result = get_client_consensus(&client_id, &height, client).await?;
-/// ```
-///
+/// and read ConsensusStates StorageMap
 pub async fn get_client_consensus(
     client_id: &ClientId,
     height: &ICSHeight,
@@ -102,7 +79,10 @@ pub async fn get_client_consensus(
         client_id: client_id.clone(),
         epoch: height.revision_number,
         height: height.revision_height,
-    }.to_string().as_bytes().to_vec();
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let consensus_state: Vec<u8> = api
         .storage()
@@ -110,11 +90,13 @@ pub async fn get_client_consensus(
         .consensus_states(&client_consensus_state_path, Some(block_hash))
         .await?;
 
-    tracing::info!("get_client_consensus is empty! by client_id = ({}), height = ({})", client_id, height);
-
+    tracing::info!(
+        "get_client_consensus is empty! by client_id = ({}), height = ({})",
+        client_id,
+        height
+    );
 
     let consensus_state = if consensus_state.is_empty() {
-
         // TODO
         AnyConsensusState::Grandpa(
             ibc::clients::ics10_grandpa::consensus_state::ConsensusState::default(),
@@ -127,20 +109,6 @@ pub async fn get_client_consensus(
 }
 
 /// get consensus state with height
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_consensus_state_with_height;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let result = get_consensus_state_with_height(&client_id, client).await?;
-/// ```
-///
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
     client: Client<MyConfig>,
@@ -172,18 +140,18 @@ pub async fn get_consensus_state_with_height(
 
     // enumerate every item get client_state value
     for key in consensus_state_keys {
-
         // assert store consensus_state_keys first key is client_id equal to query client_id
         if key.0 == client_id.as_bytes().to_vec() {
-
             let height = ICSHeight::decode_vec(&*key.1).unwrap();
             // search key
             let client_consensus_state_path = ClientConsensusStatePath {
                 client_id: client_id.clone(),
                 epoch: height.revision_number,
                 height: height.revision_height,
-            }.to_string().as_bytes().to_vec();
-
+            }
+            .to_string()
+            .as_bytes()
+            .to_vec();
 
             // get client_state value
             let consensus_state_value: Vec<u8> = api
@@ -201,19 +169,7 @@ pub async fn get_consensus_state_with_height(
     Ok(result)
 }
 
-/// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_clients;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_clients(client).await?;
-/// ```
-///
+/// get key-value pair (client_identifier, client_state) construct IdentifierAny Client state
 pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyClientState>> {
     tracing::info!("in call_ibc: [get_clients]");
 
@@ -266,21 +222,6 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
 }
 
 /// get connection_identifier vector according by client_identifier
-///
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_client_connections;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let result = get_client_connections(&client_id, client).await?;
-/// ```
-///
 pub async fn get_client_connections(
     client_id: &ClientId,
     client: Client<MyConfig>,

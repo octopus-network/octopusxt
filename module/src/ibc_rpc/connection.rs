@@ -13,20 +13,6 @@ use core::str::FromStr;
 use sp_core::H256;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_connection_end;
-///
-/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let conection_id = ConnectionId::default();
-/// let result = get_connection_end(&conection_id, api).await?;
-/// ```
-///
 pub async fn get_connection_end(
     connection_identifier: &ConnectionId,
     client: Client<MyConfig>,
@@ -60,18 +46,6 @@ pub async fn get_connection_end(
 }
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_connections;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_connections(client).await?;
-/// ```
-///
 pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedConnectionEnd>> {
     tracing::info!("in call_ibc: [get_connctions]");
     let api = client
@@ -124,19 +98,6 @@ pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedC
     Ok(result)
 }
 
-///  # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_connection_channels;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let connection = ConnectionId::default();
-/// let result = get_connection_channels(&connection, client).await?;
-/// ```
-///
 pub async fn get_connection_channels(
     connection_id: &ConnectionId,
     client: Client<MyConfig>,

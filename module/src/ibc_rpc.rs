@@ -28,18 +28,6 @@ pub use connection::*;
 pub use events::*;
 
 /// Subscribe beefy justifiactions
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use octopusxt::subscribe_beefy;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = subscribe_beefy(client).await?;
-/// ```
-///
 pub async fn subscribe_beefy(
     client: Client<MyConfig>,
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
@@ -55,18 +43,6 @@ pub async fn subscribe_beefy(
 }
 
 /// get latest height used by subscribe_blocks
-///  
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use subxt::MyConfig;
-/// use octopusxt::get_latest_height;
-///
-/// let api = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_latest_height(api).await?;
-/// ```
-///
 pub async fn get_latest_height(client: Client<MyConfig>) -> Result<u64> {
     tracing::info!("In call_ibc: [get_latest_height]");
 
@@ -86,22 +62,6 @@ pub async fn get_latest_height(client: Client<MyConfig>) -> Result<u64> {
 
 /// get send packet event by port_id, channel_id and sequence
 /// (port_id, channel_id, sequence), packet)
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use subxt::MyConfig;
-/// use octopusxt::get_send_packet_event;
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id =PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(0);
-/// let result = get_send_packet_event(&port_id, &channel_id, &sequence, client).await?;
-///
-/// ```
 pub async fn get_send_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -143,22 +103,6 @@ pub async fn get_send_packet_event(
 }
 
 /// (port_id, channel_id, sequence), ackHash)
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use subxt::MyConfig;
-/// use octopusxt::get_write_ack_packet_event;
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(0);
-/// let result = get_write_ack_packet_event(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_write_ack_packet_event(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -198,19 +142,6 @@ pub async fn get_write_ack_packet_event(
 
 /// ibc protocol core function, ics26 deliver function
 /// this function will dispatch msg to process
-///
-///  # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc_proto::google::protobuf::Any;
-/// use octopusxt::deliver;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let msg = vec![Any::default()];
-/// let result = deliver(msg, client).await?;
-/// ```
 /// return block_hash, extrinsic_hash, and event
 pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [deliver]");
@@ -283,20 +214,6 @@ pub async fn delete_write_packet_event(client: Client<MyConfig>) -> Result<H256>
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::{ClientBuilder, BlockNumber};
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_mmr_leaf_and_mmr_proof;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let block_number = Some(BlockNumber::from(12));
-/// let block_hash = None;
-/// let result = get_mmr_leaf_and_mmr_proof(block_number, block_hash, client).await?;
-/// ```
-///
 pub async fn get_mmr_leaf_and_mmr_proof(
     block_number: Option<BlockNumber>,
     block_hash: Option<H256>,
@@ -324,19 +241,6 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 }
 
 /// get header by block hash
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_header_by_block_hash;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let block_hash = None;
-/// let result = get_header_by_block_hash(block_hash, client).await?;
-/// ```
-///
 pub async fn get_header_by_block_hash(
     block_hash: Option<H256>,
     client: Client<MyConfig>,
@@ -352,19 +256,6 @@ pub async fn get_header_by_block_hash(
 }
 
 /// get header by block number
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::{ClientBuilder, BlockNumber};
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_header_by_block_number;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let block_number = Some(BlockNumber::from(2));
-/// let result = get_header_by_block_number(block_number, client).await?;
-/// ```
-///
 pub async fn get_header_by_block_number(
     block_number: Option<BlockNumber>,
     client: Client<MyConfig>,
@@ -429,16 +320,6 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
     }
 }
 
-/// # Usage example
-///
-/// ```rust
-///  use octopusxt::ibc_node;
-///  use octopusxt::get_storage_key;
-///
-///  let storage_entry = ibc_node::ibc::storage::ClientStates("10-grandpa-0".as_bytes().to_vec());
-///  let storage_key = get_storage_key(&storage_entry);
-///  println!("key = {:?}", storage_key);
-/// ```
 pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
     let prefix = StorageKeyPrefix::new::<F>();
     store.key().final_key(prefix)
