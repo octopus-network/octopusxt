@@ -99,29 +99,34 @@ pub async fn get_client_consensus(
 
     let block_hash: H256 = block_header.hash();
 
-    let data: Vec<(Vec<u8>, Vec<u8>)> = api
+    let raw_height = height.encode_vec().unwrap();
+
+    let consensus_state: Vec<u8> = api
         .storage()
         .ibc()
-        .consensus_states(client_id.as_bytes(), Some(block_hash))
+        .consensus_states(client_id.as_bytes(), &raw_height, Some(block_hash))
         .await?;
 
-    if data.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_client_consensus is empty! by client_id = ({}), height = ({})",
-            client_id,
-            height
-        ));
-    }
+    tracing::info!("get_client_consensus is empty! by client_id = ({}), height = ({})", client_id, height);
 
-    // get the height consensus_state
-    let mut consensus_state = vec![];
-    for item in data.iter() {
-        if item.0 == height.encode_vec().unwrap() {
-            consensus_state = item.1.clone();
-        }
-    }
+    // if consensus_state.is_empty() {
+    //     return Err(anyhow::anyhow!(
+    //         "get_client_consensus is empty! by client_id = ({}), height = ({})",
+    //         client_id,
+    //         height
+    //     ));
+    // }
+
+    // // get the height consensus_state
+    // let mut consensus_state = vec![];
+    // for item in data.iter() {
+    //     if item.0 == height.encode_vec().unwrap() {
+    //         consensus_state = item.1.clone();
+    //     }
+    // }
 
     let consensus_state = if consensus_state.is_empty() {
+
         // TODO
         AnyConsensusState::Grandpa(
             ibc::clients::ics10_grandpa::consensus_state::ConsensusState::default(),
@@ -163,28 +168,67 @@ pub async fn get_consensus_state_with_height(
 
     let block_hash: H256 = block_header.hash();
 
-    // vector<height, consensus_state>
-    let data: Vec<(Vec<u8>, Vec<u8>)> = api
+    // vector key-value
+    let mut ret = vec![];
+
+    // get client_state Keys
+    let consensus_state_keys: Vec<(Vec<u8>, Vec<u8>)> = api
         .storage()
         .ibc()
-        .consensus_states(client_id.as_bytes(), Some(block_hash))
+        .consensus_states_keys(Some(block_hash))
         .await?;
 
-    if data.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_consensus_state_with_height is empty! by client_id = ({})",
-            client_id
-        ));
+    if consensus_state_keys.is_empty() {
+        return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
     }
 
+    // enumerate every item get client_state value
+    for key in consensus_state_keys {
+        // assert store consensus_state_keys first key is client_id equal to query client_id
+        if key.0 == client_id.as_bytes().to_vec() {
+            // get client_state value
+            let consensus_state_value: Vec<u8> = api
+                .storage()
+                .ibc()
+                .consensus_states(&key.0, &key.1, Some(block_hash))
+                .await?;
+            // store key-value
+            ret.push((key.1, consensus_state_value));
+        }
+    }
+
+
     let mut result = vec![];
-    for (height, consensus_state) in data.iter() {
+    for (height, consensus_state) in ret.iter() {
         let height = ICSHeight::decode_vec(height).unwrap();
         let consensus_state = AnyConsensusState::decode_vec(consensus_state).unwrap();
         result.push((height, consensus_state));
     }
 
     Ok(result)
+
+    // // vector<height, consensus_state>
+    // let data: Vec<(Vec<u8>, Vec<u8>)> = api
+    //     .storage()
+    //     .ibc()
+    //     .consensus_states(client_id.as_bytes(), Some(block_hash))
+    //     .await?;
+    //
+    // if data.is_empty() {
+    //     return Err(anyhow::anyhow!(
+    //         "get_consensus_state_with_height is empty! by client_id = ({})",
+    //         client_id
+    //     ));
+    // }
+    //
+    // let mut result = vec![];
+    // for (height, consensus_state) in data.iter() {
+    //     let height = ICSHeight::decode_vec(height).unwrap();
+    //     let consensus_state = AnyConsensusState::decode_vec(consensus_state).unwrap();
+    //     result.push((height, consensus_state));
+    // }
+    //
+    // Ok(result)
 }
 
 /// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate

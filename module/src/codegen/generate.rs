@@ -13030,19 +13030,37 @@ pub mod api {
                     ])
                 }
             }
-            pub struct ConsensusStates<'a>(pub &'a [::core::primitive::u8]);
+            pub struct ConsensusStates<'a>(
+                pub &'a [::core::primitive::u8],
+                pub &'a [::core::primitive::u8],
+            );
             impl ::subxt::StorageEntry for ConsensusStates<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "ConsensusStates";
+                type Value = ::std::vec::Vec<::core::primitive::u8>;
+                fn key(&self) -> ::subxt::StorageEntryKey {
+                    ::subxt::StorageEntryKey::Map(vec![
+                        ::subxt::StorageMapKey::new(
+                            &self.0,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                        ::subxt::StorageMapKey::new(
+                            &self.1,
+                            ::subxt::StorageHasher::Blake2_128Concat,
+                        ),
+                    ])
+                }
+            }
+            pub struct ConsensusStatesKeys;
+            impl ::subxt::StorageEntry for ConsensusStatesKeys {
+                const PALLET: &'static str = "Ibc";
+                const STORAGE: &'static str = "ConsensusStatesKeys";
                 type Value = ::std::vec::Vec<(
                     ::std::vec::Vec<::core::primitive::u8>,
                     ::std::vec::Vec<::core::primitive::u8>,
                 )>;
                 fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
+                    ::subxt::StorageEntryKey::Plain
                 }
             }
             pub struct Connections<'a>(pub &'a [::core::primitive::u8]);
@@ -13454,7 +13472,7 @@ pub mod api {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self { client }
                 }
-                #[doc = " client_id => ClientState"]
+                #[doc = " ClientStatePath(client_id) => ClientState"]
                 pub async fn client_states(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13480,7 +13498,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " client_id => ClientState"]
+                #[doc = " ClientStatePath(client_id) => ClientState"]
                 pub async fn client_states_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13501,7 +13519,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " vector client id for rpc"]
+                #[doc = " vector client_id for rpc"]
                 pub async fn client_states_keys(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13629,27 +13647,25 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " client_id => Vector<(Height, ConsensusState)>"]
+                #[doc = " (client_id, Height) => ConsensusState"]
                 pub async fn consensus_states(
                     &self,
                     _0: &[::core::primitive::u8],
+                    _1: &[::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                    )>,
+                    ::std::vec::Vec<::core::primitive::u8>,
                     ::subxt::BasicError,
                 > {
                     if self.client.metadata().storage_hash::<ConsensusStates>()?
                         == [
-                            5u8, 199u8, 234u8, 141u8, 64u8, 21u8, 118u8, 63u8, 252u8, 250u8, 128u8,
-                            44u8, 126u8, 104u8, 182u8, 141u8, 64u8, 171u8, 234u8, 166u8, 192u8,
-                            105u8, 35u8, 188u8, 207u8, 73u8, 63u8, 154u8, 219u8, 254u8, 241u8,
-                            216u8,
+                            255u8, 39u8, 86u8, 121u8, 77u8, 241u8, 148u8, 132u8, 156u8, 123u8,
+                            194u8, 169u8, 175u8, 214u8, 138u8, 191u8, 68u8, 235u8, 182u8, 236u8,
+                            190u8, 8u8, 89u8, 40u8, 41u8, 128u8, 115u8, 182u8, 149u8, 16u8, 247u8,
+                            4u8,
                         ]
                     {
-                        let entry = ConsensusStates(_0);
+                        let entry = ConsensusStates(_0, _1);
                         self.client
                             .storage()
                             .fetch_or_default(&entry, block_hash)
@@ -13658,7 +13674,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " client_id => Vector<(Height, ConsensusState)>"]
+                #[doc = " (client_id, Height) => ConsensusState"]
                 pub async fn consensus_states_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13668,13 +13684,43 @@ pub mod api {
                 > {
                     if self.client.metadata().storage_hash::<ConsensusStates>()?
                         == [
-                            5u8, 199u8, 234u8, 141u8, 64u8, 21u8, 118u8, 63u8, 252u8, 250u8, 128u8,
-                            44u8, 126u8, 104u8, 182u8, 141u8, 64u8, 171u8, 234u8, 166u8, 192u8,
-                            105u8, 35u8, 188u8, 207u8, 73u8, 63u8, 154u8, 219u8, 254u8, 241u8,
-                            216u8,
+                            255u8, 39u8, 86u8, 121u8, 77u8, 241u8, 148u8, 132u8, 156u8, 123u8,
+                            194u8, 169u8, 175u8, 214u8, 138u8, 191u8, 68u8, 235u8, 182u8, 236u8,
+                            190u8, 8u8, 89u8, 40u8, 41u8, 128u8, 115u8, 182u8, 149u8, 16u8, 247u8,
+                            4u8,
                         ]
                     {
                         self.client.storage().iter(block_hash).await
+                    } else {
+                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                    }
+                }
+                #[doc = " vector (client_id, height) for rpc"]
+                pub async fn consensus_states_keys(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> ::core::result::Result<
+                    ::std::vec::Vec<(
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::std::vec::Vec<::core::primitive::u8>,
+                    )>,
+                    ::subxt::BasicError,
+                > {
+                    if self
+                        .client
+                        .metadata()
+                        .storage_hash::<ConsensusStatesKeys>()?
+                        == [
+                            216u8, 230u8, 234u8, 85u8, 201u8, 228u8, 76u8, 236u8, 142u8, 53u8,
+                            28u8, 101u8, 245u8, 84u8, 33u8, 171u8, 187u8, 92u8, 28u8, 106u8, 43u8,
+                            212u8, 58u8, 64u8, 177u8, 244u8, 241u8, 32u8, 96u8, 42u8, 18u8, 115u8,
+                        ]
+                    {
+                        let entry = ConsensusStatesKeys;
+                        self.client
+                            .storage()
+                            .fetch_or_default(&entry, block_hash)
+                            .await
                     } else {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
@@ -14094,7 +14140,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " client_id => client_type"]
+                #[doc = " ClientTypePath(client_id) => client_type"]
                 pub async fn clients(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14119,7 +14165,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " client_id => client_type"]
+                #[doc = " ClientTypePath(client_id) => client_type"]
                 pub async fn clients_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -19369,9 +19415,9 @@ pub mod api {
         pub fn validate_metadata(&'a self) -> Result<(), ::subxt::MetadataError> {
             if self.client.metadata().metadata_hash(&PALLETS)
                 != [
-                    145u8, 252u8, 2u8, 117u8, 214u8, 150u8, 168u8, 223u8, 56u8, 179u8, 71u8, 71u8,
-                    241u8, 179u8, 68u8, 37u8, 172u8, 173u8, 213u8, 177u8, 103u8, 33u8, 22u8, 2u8,
-                    116u8, 7u8, 97u8, 100u8, 194u8, 164u8, 214u8, 161u8,
+                    22u8, 204u8, 144u8, 94u8, 54u8, 119u8, 82u8, 114u8, 21u8, 164u8, 78u8, 63u8,
+                    54u8, 0u8, 80u8, 49u8, 24u8, 166u8, 98u8, 166u8, 174u8, 139u8, 9u8, 237u8,
+                    50u8, 146u8, 57u8, 229u8, 64u8, 51u8, 232u8, 45u8,
                 ]
             {
                 Err(::subxt::MetadataError::IncompatibleMetadata)
