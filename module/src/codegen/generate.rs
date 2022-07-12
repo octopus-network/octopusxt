@@ -13075,25 +13075,16 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct Channels<'a>(
-                pub &'a [::core::primitive::u8],
-                pub &'a [::core::primitive::u8],
-            );
+            pub struct Channels<'a>(pub &'a [::core::primitive::u8]);
             impl ::subxt::StorageEntry for Channels<'_> {
                 const PALLET: &'static str = "Ibc";
                 const STORAGE: &'static str = "Channels";
                 type Value = ::std::vec::Vec<::core::primitive::u8>;
                 fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(
-                            &self.0,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                        ::subxt::StorageMapKey::new(
-                            &self.1,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                    ])
+                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
+                        &self.0,
+                        ::subxt::StorageHasher::Blake2_128Concat,
+                    )])
                 }
             }
             pub struct ChannelsKeys;
@@ -13715,8 +13706,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " connection_id => ConnectionEnd"]
-                #[doc = " Need ConnectionsPath"]
+                #[doc = " ConnectionsPath(connection_id) => ConnectionEnd"]
                 pub async fn connections(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -13742,8 +13732,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " connection_id => ConnectionEnd"]
-                #[doc = " Need ConnectionsPath"]
+                #[doc = " ConnectionsPath(connection_id) => ConnectionEnd"]
                 pub async fn connections_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13789,12 +13778,10 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " (port_identifier, channel_identifier) => ChannelEnd"]
-                #[doc = " Need ChannelEndPath"]
+                #[doc = " ChannelEndPath(port_id, channel_id) => ChannelEnd"]
                 pub async fn channels(
                     &self,
                     _0: &[::core::primitive::u8],
-                    _1: &[::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
                 ) -> ::core::result::Result<
                     ::std::vec::Vec<::core::primitive::u8>,
@@ -13802,13 +13789,12 @@ pub mod api {
                 > {
                     if self.client.metadata().storage_hash::<Channels>()?
                         == [
-                            132u8, 125u8, 252u8, 86u8, 67u8, 210u8, 214u8, 68u8, 117u8, 174u8,
-                            15u8, 92u8, 78u8, 54u8, 84u8, 180u8, 38u8, 63u8, 63u8, 157u8, 40u8,
-                            118u8, 53u8, 100u8, 155u8, 68u8, 117u8, 246u8, 215u8, 200u8, 109u8,
-                            96u8,
+                            155u8, 89u8, 67u8, 15u8, 71u8, 90u8, 108u8, 178u8, 66u8, 197u8, 189u8,
+                            188u8, 236u8, 254u8, 221u8, 110u8, 84u8, 47u8, 173u8, 148u8, 171u8,
+                            185u8, 3u8, 185u8, 35u8, 247u8, 69u8, 180u8, 196u8, 87u8, 139u8, 26u8,
                         ]
                     {
-                        let entry = Channels(_0, _1);
+                        let entry = Channels(_0);
                         self.client
                             .storage()
                             .fetch_or_default(&entry, block_hash)
@@ -13817,8 +13803,7 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " (port_identifier, channel_identifier) => ChannelEnd"]
-                #[doc = " Need ChannelEndPath"]
+                #[doc = " ChannelEndPath(port_id, channel_id) => ChannelEnd"]
                 pub async fn channels_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -13828,10 +13813,9 @@ pub mod api {
                 > {
                     if self.client.metadata().storage_hash::<Channels>()?
                         == [
-                            132u8, 125u8, 252u8, 86u8, 67u8, 210u8, 214u8, 68u8, 117u8, 174u8,
-                            15u8, 92u8, 78u8, 54u8, 84u8, 180u8, 38u8, 63u8, 63u8, 157u8, 40u8,
-                            118u8, 53u8, 100u8, 155u8, 68u8, 117u8, 246u8, 215u8, 200u8, 109u8,
-                            96u8,
+                            155u8, 89u8, 67u8, 15u8, 71u8, 90u8, 108u8, 178u8, 66u8, 197u8, 189u8,
+                            188u8, 236u8, 254u8, 221u8, 110u8, 84u8, 47u8, 173u8, 148u8, 171u8,
+                            185u8, 3u8, 185u8, 35u8, 247u8, 69u8, 180u8, 196u8, 87u8, 139u8, 26u8,
                         ]
                     {
                         self.client.storage().iter(block_hash).await
@@ -14254,7 +14238,7 @@ pub mod api {
                     }
                 }
                 #[doc = " client_id => connection_id"]
-                #[doc = " ClientsStatePath <-> ConnectionEndPath"]
+                #[doc = " Need ClientConnectionsPath"]
                 pub async fn connection_client(
                     &self,
                     _0: &[::core::primitive::u8],
@@ -14280,7 +14264,7 @@ pub mod api {
                     }
                 }
                 #[doc = " client_id => connection_id"]
-                #[doc = " ClientsStatePath <-> ConnectionEndPath"]
+                #[doc = " Need ClientConnectionsPath"]
                 pub async fn connection_client_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
@@ -19425,9 +19409,9 @@ pub mod api {
         pub fn validate_metadata(&'a self) -> Result<(), ::subxt::MetadataError> {
             if self.client.metadata().metadata_hash(&PALLETS)
                 != [
-                    229u8, 239u8, 188u8, 5u8, 106u8, 80u8, 79u8, 136u8, 181u8, 252u8, 151u8, 125u8,
-                    105u8, 252u8, 229u8, 137u8, 45u8, 102u8, 232u8, 158u8, 67u8, 44u8, 162u8,
-                    238u8, 91u8, 205u8, 162u8, 117u8, 225u8, 240u8, 41u8, 102u8,
+                    121u8, 124u8, 189u8, 28u8, 246u8, 223u8, 66u8, 215u8, 224u8, 20u8, 26u8, 167u8,
+                    133u8, 166u8, 58u8, 117u8, 234u8, 79u8, 94u8, 214u8, 105u8, 224u8, 151u8, 81u8,
+                    97u8, 16u8, 247u8, 254u8, 59u8, 146u8, 33u8, 116u8,
                 ]
             {
                 Err(::subxt::MetadataError::IncompatibleMetadata)

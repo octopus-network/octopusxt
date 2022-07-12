@@ -66,7 +66,7 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
     // }
 
     // vector key-value
-    let mut ret = vec![];
+    let mut result = vec![];
 
     let channels_keys: Vec<(Vec<u8>, Vec<u8>)> =
         api.storage().ibc().channels_keys(Some(block_hash)).await?;
@@ -75,27 +75,25 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
         return Err(anyhow::anyhow!("get_channels: get empty channels_keys",));
     }
 
-    for key in channels_keys {
-        // get value
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .channels(&key.0, &key.1, Some(block_hash))
-            .await?;
+    for (port_id, channel_id) in channels_keys {
 
-        // store key-value
-        ret.push((key.0.clone(), key.1.clone(), value));
-    }
-    let mut result = vec![];
-
-    for (port_id, channel_id, channel_end) in ret.iter() {
         let port_id_str = String::from_utf8(port_id.clone()).unwrap();
         let port_id = PortId::from_str(port_id_str.as_str()).unwrap();
 
         let channel_id_str = String::from_utf8(channel_id.clone()).unwrap();
         let channel_id = ChannelId::from_str(channel_id_str.as_str()).unwrap();
 
-        let channel_end = ChannelEnd::decode_vec(channel_end).unwrap();
+        let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone()).to_string().as_bytes().to_vec();
+
+        // get value
+        let value: Vec<u8> = api
+            .storage()
+            .ibc()
+            .channels(&channel_end_path, Some(block_hash))
+            .await?;
+
+        // store key-value
+        let channel_end = ChannelEnd::decode_vec(&*value).unwrap();
 
         result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
     }
@@ -120,12 +118,13 @@ pub async fn get_channel_end(
 
     let block_hash: H256 = block_header.hash();
 
+    let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone()).to_string().as_bytes().to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
         .channels(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
+            &channel_end_path,
             Some(block_hash),
         )
         .await?;
@@ -291,19 +290,19 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
     // let mut iter = storage
     //     .iter::<ibc_node::ibc::storage::PacketCommitment>(Some(block_hash))
     //     .await?;
-    // println!("in call_ibc: [get_channels] >> iter");
+    // println!("in call_ibc: [get_commitment_packet_state] >> iter");
     //
     // let mut result = vec![];
     //
     // // prefix(32) + hash(data)(16) + data
     // while let Some((key, value)) = iter.next().await? {
-    //     println!("in call_ibc: [get_channels] >> while");
+    //     println!("in call_ibc: [get_commitment_packet_state] >> while");
     //     let raw_key = key.0[48..].to_vec();
     //     let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
     //     let raw_path = String::from_utf8(raw_key)?;
     //     // decode key
     //     let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
-    //     println!("[get_channels] >> Path: {:?}", path);
+    //     println!("[get_commitment_packet_state] >> Path: {:?}", path);
     //     match path {
     //         Path::Commitments(commitments) => {
     //             let CommitmentsPath { port_id, channel_id, sequence }= commitments;
@@ -509,19 +508,19 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
     // let mut iter = storage
     //     .iter::<ibc_node::ibc::storage::Acknowledgements>(Some(block_hash))
     //     .await?;
-    // println!("in call_ibc: [get_channels] >> iter");
+    // println!("in call_ibc: [get_acknowledge_packet_state] >> iter");
     //
     // let mut result = vec![];
     //
     // // prefix(32) + hash(data)(16) + data
     // while let Some((key, value)) = iter.next().await? {
-    //     println!("in call_ibc: [get_channels] >> while");
+    //     println!("in call_ibc: [get_acknowledge_packet_state] >> while");
     //     let raw_key = key.0[48..].to_vec();
     //     let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
     //     let raw_path = String::from_utf8(raw_key)?;
     //     // decode key
     //     let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
-    //     println!("[get_channels] >> Path: {:?}", path);
+    //     println!("[get_acknowledge_packet_state] >> Path: {:?}", path);
     //     match path {
     //         Path::Acks(acks_path) => {
     //             let AcksPath { port_id, channel_id, sequence }= acks_path;
