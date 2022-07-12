@@ -20,6 +20,7 @@ use ibc::{
 use sp_core::{hexdisplay::HexDisplay, ByteArray};
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
+use ibc::core::ics24_host::path::ClientStatePath;
 use subxt::{BlockNumber, Client, PairSigner};
 use tendermint_proto::Protobuf;
 
@@ -424,14 +425,15 @@ pub async fn get_client_ids(
 
     let mut client_ids = vec![];
     for key in client_states_keys {
+        let client_id_str = String::from_utf8(key).unwrap();
+        let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+        let client_state_path = ClientStatePath(client_id.clone()).to_string().as_bytes().to_vec();
         // get client_state value
-        let client_states_value: Vec<u8> = api.storage().ibc().client_states(&key, None).await?;
+        let client_states_value: Vec<u8> = api.storage().ibc().client_states(&client_state_path, None).await?;
 
         let any_client_state = AnyClientState::decode_vec(&*client_states_value).unwrap();
         let client_type = any_client_state.client_type();
         if client_type == expect_client_type {
-            let client_id_str = String::from_utf8(key).unwrap();
-            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
             client_ids.push(client_id)
         }
     }
