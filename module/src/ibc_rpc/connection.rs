@@ -10,6 +10,7 @@ use tendermint_proto::Protobuf;
 use crate::channel::get_channel_end;
 use anyhow::Result;
 use core::str::FromStr;
+use ibc::core::ics24_host::path::ConnectionsPath;
 use sp_core::H256;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
@@ -27,10 +28,12 @@ pub async fn get_connection_end(
 
     let block_hash: H256 = block_header.hash();
 
+    let connections_path = ConnectionsPath(connection_identifier.clone()).to_string().as_bytes().to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .connections(connection_identifier.as_bytes(), Some(block_hash))
+        .connections(&connections_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -57,7 +60,7 @@ pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedC
 
     let block_hash: H256 = block_header.hash();
 
-    let mut ret = vec![];
+    let mut result = vec![];
 
     // get connection_keys
     let connection_keys: Vec<Vec<u8>> = api
@@ -73,26 +76,24 @@ pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedC
     }
 
     for key in connection_keys {
-        // get connectons value
+
+        let connection_id_str = String::from_utf8(key.clone()).unwrap();
+        let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
+
+        // read connection path key
+        let connections_path = ConnectionsPath(connection_id.clone()).to_string().as_bytes().to_vec();
+
+        // get connections value
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .connections(&key, Some(block_hash))
+            .connections(&connections_path, Some(block_hash))
             .await?;
 
         // store key-value
-        ret.push((key.clone(), value.clone()));
-    }
+        let connection_end = ConnectionEnd::decode_vec(&*value).unwrap();
 
-    let mut result = vec![];
-
-    for (connection_id, connection_end) in ret.iter() {
-        let connection_id_str = String::from_utf8(connection_id.clone()).unwrap();
-        let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
-
-        let connnection_end = ConnectionEnd::decode_vec(connection_end).unwrap();
-
-        result.push(IdentifiedConnectionEnd::new(connection_id, connnection_end));
+        result.push(IdentifiedConnectionEnd::new(connection_id, connection_end));
     }
 
     Ok(result)
