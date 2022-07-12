@@ -152,7 +152,7 @@ pub async fn get_consensus_state_with_height(
                     height,
                 } = client_consensus_state;
 
-                if read_client_id == client_id {
+                if read_client_id == client_id.clone() {
                     let height = ICSHeight::new(epoch, height);
                     let consensus_state = AnyConsensusState::decode_vec(&*value).unwrap();
                     // store key-value
