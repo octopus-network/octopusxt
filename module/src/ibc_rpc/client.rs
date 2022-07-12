@@ -15,8 +15,11 @@ use tendermint_proto::Protobuf;
 
 use anyhow::Result;
 use core::str::FromStr;
+use codec::Decode;
+use ibc::core::ics24_host::Path;
 use ibc::core::ics24_host::path::ClientConsensusStatePath;
 use sp_core::H256;
+use subxt::storage::StorageClient;
 
 /// get client_state according by client_id, and read ClientStates StoraageMap
 pub async fn get_client_state(
@@ -181,42 +184,70 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: H256 = block_header.hash();
+    //
+    // // vector key-value
+    // let mut ret = vec![];
+    //
+    // // get client_state Keys
+    // let client_states_keys: Vec<Vec<u8>> = api
+    //     .storage()
+    //     .ibc()
+    //     .client_states_keys(Some(block_hash))
+    //     .await?;
+    // if client_states_keys.is_empty() {
+    //     return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
+    // }
+    //
+    // // enumerate every item get client_state value
+    // for key in client_states_keys {
+    //     // get client_state value
+    //     let client_states_value: Vec<u8> = api
+    //         .storage()
+    //         .ibc()
+    //         .client_states(&key, Some(block_hash))
+    //         .await?;
+    //     // store key-value
+    //     ret.push((key.clone(), client_states_value));
+    // }
 
-    // vector key-value
-    let mut ret = vec![];
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
 
-    // get client_state Keys
-    let client_states_keys: Vec<Vec<u8>> = api
-        .storage()
-        .ibc()
-        .client_states_keys(Some(block_hash))
+    let mut iter = storage
+        .iter::<ibc_node::ibc::storage::ClientStates>(Some(block_hash))
         .await?;
-    if client_states_keys.is_empty() {
-        return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
-    }
-
-    // enumerate every item get client_state value
-    for key in client_states_keys {
-        // get client_state value
-        let client_states_value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .client_states(&key, Some(block_hash))
-            .await?;
-        // store key-value
-        ret.push((key.clone(), client_states_value));
-    }
 
     let mut result = vec![];
 
-    for (client_id, client_state) in ret.iter() {
-        let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-        let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let client_state_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path = Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        match path {
+            Path::ClientState(ClientStatePath(client_id)) =>  {
+                let client_state = AnyClientState::decode_vec(&*value).unwrap();
 
-        let client_state = AnyClientState::decode_vec(client_state).unwrap();
-
-        result.push(IdentifiedAnyClientState::new(client_id, client_state));
+                result.push(IdentifiedAnyClientState::new(client_id, client_state));
+            }
+            _=> unimplemented!(),
+        }
+        println!("  Value: {:?}", value);
     }
+
+
+    // let mut result = vec![];
+    //
+    // for (client_id, client_state) in ret.iter() {
+    //     let client_id_str = String::from_utf8(client_id.clone()).unwrap();
+    //     let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
+    //
+    //     let client_state = AnyClientState::decode_vec(client_state).unwrap();
+    //
+    //     result.push(IdentifiedAnyClientState::new(client_id, client_state));
+    // }
 
     Ok(result)
 }
