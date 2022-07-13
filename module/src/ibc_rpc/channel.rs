@@ -15,7 +15,7 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use anyhow::Result;
 use ibc::core::ics24_host::Path;
-use ibc::core::ics24_host::path::{AcksPath, ChannelEndsPath, CommitmentsPath};
+use ibc::core::ics24_host::path::{AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath};
 use sp_core::H256;
 use subxt::storage::StorageClient;
 
@@ -159,15 +159,17 @@ pub async fn get_packet_receipt(
 
     let block_hash: H256 = block_header.hash();
 
-    let sequence = u64::from(*sequence);
+    let packet_receipt_path = ReceiptsPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }.to_string().as_bytes().to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
         .packet_receipt(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &sequence,
+            &packet_receipt_path,
             Some(block_hash),
         )
         .await?;
@@ -180,11 +182,11 @@ pub async fn get_packet_receipt(
         ));
     }
 
-    let _data = String::decode(&mut data.as_slice()).unwrap();
-    if _data.eq("Ok") {
+    let receipt = String::from_utf8(data)?;
+    if receipt.eq("Ok") {
         Ok(Receipt::Ok)
     } else {
-        Err(anyhow::anyhow!("unrecognized packet receipt: {:?}", _data))
+        Err(anyhow::anyhow!("unrecognized packet receipt: {:?}", receipt))
     }
 }
 
@@ -205,15 +207,17 @@ pub async fn get_packet_receipt_vec(
 
     let block_hash: H256 = block_header.hash();
 
-    let sequence = u64::from(*sequence);
+    let packet_receipt_path = ReceiptsPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }.to_string().as_bytes().to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
         .packet_receipt(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &sequence,
+            &packet_receipt_path,
             Some(block_hash),
         )
         .await?;
@@ -251,20 +255,28 @@ pub async fn get_unreceipt_packet(
 
     let pair = sequences.into_iter().map(|sequence| {
         (
-            port_id.clone().as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            u64::from(sequence),
+            port_id.clone(),
+            channel_id.clone(),
+            sequence.clone(),
         )
     });
 
     for (port_id, channel_id, sequence) in pair {
+
+
+        let packet_receipt_path = ReceiptsPath {
+            port_id: port_id.clone(),
+            channel_id: channel_id.clone(),
+            sequence: sequence.clone(),
+        }.to_string().as_bytes().to_vec();
+
         let data: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_receipt(&port_id, &channel_id, &sequence, Some(block_hash))
+            .packet_receipt(&packet_receipt_path, Some(block_hash))
             .await?;
         if data.is_empty() {
-            result.push(sequence);
+            result.push(u64::from(sequence));
         }
     }
 
