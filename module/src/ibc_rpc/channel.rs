@@ -15,7 +15,7 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use anyhow::Result;
 use ibc::core::ics24_host::Path;
-use ibc::core::ics24_host::path::{AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath};
+use ibc::core::ics24_host::path::{AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath};
 use serde::de::Unexpected::Seq;
 use sp_core::H256;
 use subxt::storage::StorageClient;
@@ -484,12 +484,13 @@ pub async fn get_next_sequence_recv(
 
     let block_hash: H256 = block_header.hash();
 
+    let seq_recvs_path = SeqRecvsPath(port_id.clone(), channel_id.clone()).to_string().as_bytes().to_vec();
+
     let sequence: u64 = api
         .storage()
         .ibc()
         .next_sequence_recv(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
+            &seq_recvs_path,
             Some(block_hash),
         )
         .await?;
