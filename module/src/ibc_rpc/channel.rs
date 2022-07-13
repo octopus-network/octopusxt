@@ -16,6 +16,7 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 use anyhow::Result;
 use ibc::core::ics24_host::Path;
 use ibc::core::ics24_host::path::{AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath};
+use serde::de::Unexpected::Seq;
 use sp_core::H256;
 use subxt::storage::StorageClient;
 
@@ -439,13 +440,17 @@ pub async fn get_packet_ack(
 
     let block_hash: H256 = block_header.hash();
 
+    let acks_path = AcksPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }.to_string().as_bytes().to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
         .acknowledgements(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &u64::from(*sequence),
+            &acks_path,
             Some(block_hash),
         )
         .await?;
@@ -564,7 +569,7 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
     //     println!("  Value: {:?}", value);
     // }
 
-    let mut ret = vec![];
+    let mut result = vec![];
 
     let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
         .storage()
@@ -573,29 +578,33 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
         .await?;
 
     for key in acknowledgements_keys {
+        let port_id_str = String::from_utf8(key.0).unwrap();
+        let port_id = PortId::from_str(&port_id_str).unwrap();
+        let channel_id_str = String::from_utf8(key.1).unwrap();
+        let channel_id = ChannelId::from_str(&channel_id_str).unwrap();
+
+        let acks_path = AcksPath {
+            port_id: port_id.clone(),
+            channel_id: channel_id.clone(),
+            sequence: Sequence::from(key.2),
+        }.to_string().as_bytes().to_vec();
+
         let value: Vec<u8> = api
             .storage()
             .ibc()
-            .acknowledgements(&key.0, &key.1, &key.2, Some(block_hash))
+            .acknowledgements(&acks_path, Some(block_hash))
             .await?;
 
-        ret.push((key.0.clone(), key.1.clone(), key.2, value));
-    }
-
-    let mut result = vec![];
-
-    for (port_id, channel_id, sequence, data) in ret.into_iter() {
-        let port_id = String::from_utf8(port_id).unwrap();
-        let channel_id = String::from_utf8(channel_id).unwrap();
 
         let packet_state = PacketState {
-            port_id,
-            channel_id,
-            sequence,
-            data,
+            port_id: port_id_str,
+            channel_id: channel_id_str,
+            sequence: key.2,
+            data: value,
         };
         result.push(packet_state);
     }
+
 
     Ok(result)
 }
