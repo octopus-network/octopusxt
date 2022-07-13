@@ -12979,15 +12979,6 @@ pub mod api {
                     )])
                 }
             }
-            pub struct ClientStatesKeys;
-            impl ::subxt::StorageEntry for ClientStatesKeys {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "ClientStatesKeys";
-                type Value = ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
             pub struct ClientProcessedTimes<'a>(
                 pub &'a [::core::primitive::u8],
                 pub &'a [::core::primitive::u8],
@@ -13042,18 +13033,6 @@ pub mod api {
                     )])
                 }
             }
-            pub struct ConsensusStatesKeys;
-            impl ::subxt::StorageEntry for ConsensusStatesKeys {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "ConsensusStatesKeys";
-                type Value = ::std::vec::Vec<(
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::std::vec::Vec<::core::primitive::u8>,
-                )>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
             pub struct Connections<'a>(pub &'a [::core::primitive::u8]);
             impl ::subxt::StorageEntry for Connections<'_> {
                 const PALLET: &'static str = "Ibc";
@@ -13066,15 +13045,6 @@ pub mod api {
                     )])
                 }
             }
-            pub struct ConnectionsKeys;
-            impl ::subxt::StorageEntry for ConnectionsKeys {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "ConnectionsKeys";
-                type Value = ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
-                }
-            }
             pub struct Channels<'a>(pub &'a [::core::primitive::u8]);
             impl ::subxt::StorageEntry for Channels<'_> {
                 const PALLET: &'static str = "Ibc";
@@ -13085,18 +13055,6 @@ pub mod api {
                         &self.0,
                         ::subxt::StorageHasher::Blake2_128Concat,
                     )])
-                }
-            }
-            pub struct ChannelsKeys;
-            impl ::subxt::StorageEntry for ChannelsKeys {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "ChannelsKeys";
-                type Value = ::std::vec::Vec<(
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::std::vec::Vec<::core::primitive::u8>,
-                )>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
                 }
             }
             pub struct ChannelsConnection<'a>(pub &'a [::core::primitive::u8]);
@@ -13157,19 +13115,6 @@ pub mod api {
                         &self.0,
                         ::subxt::StorageHasher::Blake2_128Concat,
                     )])
-                }
-            }
-            pub struct AcknowledgementsKeys;
-            impl ::subxt::StorageEntry for AcknowledgementsKeys {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "AcknowledgementsKeys";
-                type Value = ::std::vec::Vec<(
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::core::primitive::u64,
-                )>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
                 }
             }
             pub struct Clients<'a>(pub &'a [::core::primitive::u8]);
@@ -13245,19 +13190,6 @@ pub mod api {
                         &self.0,
                         ::subxt::StorageHasher::Blake2_128Concat,
                     )])
-                }
-            }
-            pub struct PacketCommitmentKeys;
-            impl ::subxt::StorageEntry for PacketCommitmentKeys {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "PacketCommitmentKeys";
-                type Value = ::std::vec::Vec<(
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::core::primitive::u64,
-                )>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Plain
                 }
             }
             pub struct SendPacketEvent<'a>(
@@ -13429,30 +13361,6 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " vector client_id for rpc"]
-                pub async fn client_states_keys(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ClientStatesKeys>()?
-                        == [
-                            186u8, 115u8, 117u8, 47u8, 245u8, 8u8, 9u8, 61u8, 249u8, 242u8, 110u8,
-                            237u8, 220u8, 76u8, 229u8, 45u8, 234u8, 58u8, 129u8, 139u8, 84u8, 71u8,
-                            56u8, 124u8, 38u8, 198u8, 209u8, 3u8, 159u8, 197u8, 11u8, 214u8,
-                        ]
-                    {
-                        let entry = ClientStatesKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
                 #[doc = " (client_id, height) => timestamp"]
                 pub async fn client_processed_times(
                     &self,
@@ -13604,36 +13512,6 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " vector (client_id, height) for rpc"]
-                pub async fn consensus_states_keys(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ConsensusStatesKeys>()?
-                        == [
-                            216u8, 230u8, 234u8, 85u8, 201u8, 228u8, 76u8, 236u8, 142u8, 53u8,
-                            28u8, 101u8, 245u8, 84u8, 33u8, 171u8, 187u8, 92u8, 28u8, 106u8, 43u8,
-                            212u8, 58u8, 64u8, 177u8, 244u8, 241u8, 32u8, 96u8, 42u8, 18u8, 115u8,
-                        ]
-                    {
-                        let entry = ConsensusStatesKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
                 #[doc = " ConnectionsPath(connection_id) => ConnectionEnd"]
                 pub async fn connections(
                     &self,
@@ -13681,31 +13559,6 @@ pub mod api {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
                 }
-                #[doc = " vector connection id for rpc"]
-                pub async fn connections_keys(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ConnectionsKeys>()?
-                        == [
-                            236u8, 255u8, 13u8, 166u8, 147u8, 14u8, 61u8, 139u8, 94u8, 219u8,
-                            235u8, 218u8, 31u8, 242u8, 202u8, 174u8, 22u8, 144u8, 174u8, 16u8,
-                            144u8, 66u8, 243u8, 12u8, 34u8, 140u8, 242u8, 97u8, 236u8, 52u8, 105u8,
-                            169u8,
-                        ]
-                    {
-                        let entry = ConnectionsKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
                 #[doc = " ChannelEndPath(port_id, channel_id) => ChannelEnd"]
                 pub async fn channels(
                     &self,
@@ -13747,34 +13600,6 @@ pub mod api {
                         ]
                     {
                         self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " vector of (port id, channel id) for rpc"]
-                pub async fn channels_keys(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ChannelsKeys>()?
-                        == [
-                            165u8, 91u8, 121u8, 209u8, 83u8, 253u8, 157u8, 207u8, 194u8, 152u8,
-                            190u8, 144u8, 109u8, 196u8, 200u8, 6u8, 148u8, 163u8, 80u8, 61u8, 14u8,
-                            216u8, 95u8, 56u8, 140u8, 48u8, 209u8, 201u8, 189u8, 228u8, 192u8,
-                            159u8,
-                        ]
-                    {
-                        let entry = ChannelsKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
                     } else {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
@@ -14008,38 +13833,6 @@ pub mod api {
                         ]
                     {
                         self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " vector of (port_identifier, channel_identifier, sequence) for rpc"]
-                pub async fn acknowledgements_keys(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::core::primitive::u64,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<AcknowledgementsKeys>()?
-                        == [
-                            136u8, 99u8, 130u8, 194u8, 222u8, 150u8, 83u8, 22u8, 125u8, 123u8,
-                            24u8, 247u8, 123u8, 252u8, 247u8, 106u8, 60u8, 251u8, 26u8, 41u8, 32u8,
-                            98u8, 192u8, 234u8, 225u8, 122u8, 224u8, 232u8, 248u8, 121u8, 159u8,
-                            42u8,
-                        ]
-                    {
-                        let entry = AcknowledgementsKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
                     } else {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
@@ -14286,37 +14079,6 @@ pub mod api {
                         ]
                     {
                         self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " vector of (port_id, channel_id, sequence) for rpc"]
-                pub async fn packet_commitment_keys(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                        ::core::primitive::u64,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<PacketCommitmentKeys>()?
-                        == [
-                            78u8, 154u8, 86u8, 207u8, 4u8, 156u8, 201u8, 146u8, 12u8, 22u8, 231u8,
-                            206u8, 71u8, 205u8, 39u8, 232u8, 165u8, 214u8, 154u8, 96u8, 99u8, 9u8,
-                            183u8, 25u8, 49u8, 43u8, 34u8, 238u8, 54u8, 198u8, 248u8, 178u8,
-                        ]
-                    {
-                        let entry = PacketCommitmentKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
                     } else {
                         Err(::subxt::MetadataError::IncompatibleMetadata.into())
                     }
@@ -19313,9 +19075,9 @@ pub mod api {
         pub fn validate_metadata(&'a self) -> Result<(), ::subxt::MetadataError> {
             if self.client.metadata().metadata_hash(&PALLETS)
                 != [
-                    24u8, 209u8, 72u8, 188u8, 185u8, 38u8, 9u8, 74u8, 214u8, 96u8, 145u8, 232u8,
-                    31u8, 242u8, 249u8, 81u8, 221u8, 96u8, 235u8, 57u8, 62u8, 81u8, 234u8, 214u8,
-                    137u8, 175u8, 246u8, 41u8, 172u8, 202u8, 130u8, 30u8,
+                    179u8, 43u8, 7u8, 218u8, 143u8, 185u8, 11u8, 161u8, 36u8, 225u8, 34u8, 134u8,
+                    219u8, 3u8, 204u8, 79u8, 231u8, 87u8, 110u8, 26u8, 24u8, 89u8, 108u8, 74u8,
+                    112u8, 165u8, 173u8, 111u8, 62u8, 64u8, 63u8, 228u8,
                 ]
             {
                 Err(::subxt::MetadataError::IncompatibleMetadata)
