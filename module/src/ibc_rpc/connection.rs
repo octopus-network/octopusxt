@@ -10,7 +10,8 @@ use tendermint_proto::Protobuf;
 use crate::channel::get_channel_end;
 use anyhow::Result;
 use core::str::FromStr;
-use ibc::core::ics24_host::path::ConnectionsPath;
+use ibc::core::ics24_host::Path;
+use ibc::core::ics24_host::path::{ChannelEndsPath, ConnectionsPath};
 use sp_core::H256;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
@@ -115,14 +116,16 @@ pub async fn get_connection_channels(
 
     let block_hash: H256 = block_header.hash();
 
-    // connection_id <-> Ve<(port_id, channel_id)>
-    let channel_id_and_port_id: Vec<(Vec<u8>, Vec<u8>)> = api
+    let connections_path = ConnectionsPath(connection_id.clone()).to_string().as_bytes().to_vec();
+
+    // ConnectionsPath(connection_id) <-> Vec<ChannelEndsPath(port_id, channel_id)>
+    let connections_paths: Vec<Vec<u8>> = api
         .storage()
         .ibc()
-        .channels_connection(connection_id.as_bytes(), Some(block_hash))
+        .channels_connection(&connections_path, Some(block_hash))
         .await?;
 
-    if channel_id_and_port_id.is_empty() {
+    if connections_paths.is_empty() {
         return Err(anyhow::anyhow!(
             "get_connection_channels is empty! by connection_id = ({})",
             connection_id
@@ -131,19 +134,23 @@ pub async fn get_connection_channels(
 
     let mut result = vec![];
 
-    for (port_id, channel_id) in channel_id_and_port_id.iter() {
-        // get port_id
-        let port_id = String::from_utf8(port_id.clone()).unwrap();
-        let port_id = PortId::from_str(port_id.as_str()).unwrap();
+    for connections_path in connections_paths.into_iter() {
 
-        // get channel_id
-        let channel_id = String::from_utf8(channel_id.clone()).unwrap();
-        let channel_id = ChannelId::from_str(channel_id.as_str()).unwrap();
+        let raw_path = String::from_utf8(connections_path)?;
+        // decode key
+        let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
 
-        // get channel_end
-        let channel_end = get_channel_end(&port_id, &channel_id, client.clone()).await?;
+        match path {
+            Path::ChannelEnds(channel_ends_path) => {
+                let ChannelEndsPath(port_id, channel_id)= channel_ends_path;
 
-        result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
+                // get channel_end
+                let channel_end = get_channel_end(&port_id, &channel_id, client.clone()).await?;
+
+                result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
+            },
+            _=> unimplemented!(),
+        }
     }
 
     Ok(result)
