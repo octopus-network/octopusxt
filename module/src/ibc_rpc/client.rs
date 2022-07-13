@@ -17,7 +17,7 @@ use anyhow::Result;
 use core::str::FromStr;
 use codec::Decode;
 use ibc::core::ics24_host::Path;
-use ibc::core::ics24_host::path::ClientConsensusStatePath;
+use ibc::core::ics24_host::path::{ClientConsensusStatePath, ClientConnectionsPath};
 use sp_core::H256;
 use subxt::storage::StorageClient;
 
@@ -229,11 +229,13 @@ pub async fn get_client_connections(
 
     let block_hash: H256 = block_header.hash();
 
+    let client_connection_paths = ClientConnectionsPath(client_id.clone()).to_string().as_bytes().to_vec();
+
     // client_id <-> connection_id
     let connection_id: Vec<u8> = api
         .storage()
         .ibc()
-        .connection_client(client_id.as_bytes(), Some(block_hash))
+        .connection_client(&client_connection_paths, Some(block_hash))
         .await?;
 
     if connection_id.is_empty() {
