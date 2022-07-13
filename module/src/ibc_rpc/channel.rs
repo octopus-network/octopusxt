@@ -9,20 +9,20 @@ use ibc::core::{
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
-use codec::Decode;
 use core::str::FromStr;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use anyhow::Result;
-use ibc::core::ics24_host::Path;
-use ibc::core::ics24_host::path::{AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath};
-use serde::de::Unexpected::Seq;
+use ibc::core::ics24_host::path::{
+    AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath,
+};
+
+
 use sp_core::H256;
-use subxt::storage::StorageClient;
+// use subxt::storage::StorageClient;
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
 pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChannelEnd>> {
-
     tracing::info!("in call_ibc: [get_channels]");
     println!("in call_ibc: [get_channels]");
 
@@ -77,14 +77,16 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
     }
 
     for (port_id, channel_id) in channels_keys {
-
         let port_id_str = String::from_utf8(port_id.clone()).unwrap();
         let port_id = PortId::from_str(port_id_str.as_str()).unwrap();
 
         let channel_id_str = String::from_utf8(channel_id.clone()).unwrap();
         let channel_id = ChannelId::from_str(channel_id_str.as_str()).unwrap();
 
-        let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone()).to_string().as_bytes().to_vec();
+        let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone())
+            .to_string()
+            .as_bytes()
+            .to_vec();
 
         // get value
         let value: Vec<u8> = api
@@ -119,15 +121,15 @@ pub async fn get_channel_end(
 
     let block_hash: H256 = block_header.hash();
 
-    let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone()).to_string().as_bytes().to_vec();
+    let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .channels(
-            &channel_end_path,
-            Some(block_hash),
-        )
+        .channels(&channel_end_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -164,15 +166,15 @@ pub async fn get_packet_receipt(
         port_id: port_id.clone(),
         channel_id: channel_id.clone(),
         sequence: sequence.clone(),
-    }.to_string().as_bytes().to_vec();
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_receipt(
-            &packet_receipt_path,
-            Some(block_hash),
-        )
+        .packet_receipt(&packet_receipt_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -187,7 +189,10 @@ pub async fn get_packet_receipt(
     if receipt.eq("Ok") {
         Ok(Receipt::Ok)
     } else {
-        Err(anyhow::anyhow!("unrecognized packet receipt: {:?}", receipt))
+        Err(anyhow::anyhow!(
+            "unrecognized packet receipt: {:?}",
+            receipt
+        ))
     }
 }
 
@@ -212,15 +217,15 @@ pub async fn get_packet_receipt_vec(
         port_id: port_id.clone(),
         channel_id: channel_id.clone(),
         sequence: sequence.clone(),
-    }.to_string().as_bytes().to_vec();
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_receipt(
-            &packet_receipt_path,
-            Some(block_hash),
-        )
+        .packet_receipt(&packet_receipt_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -254,22 +259,19 @@ pub async fn get_unreceipt_packet(
 
     let mut result = Vec::new();
 
-    let pair = sequences.into_iter().map(|sequence| {
-        (
-            port_id.clone(),
-            channel_id.clone(),
-            sequence.clone(),
-        )
-    });
+    let pair = sequences
+        .into_iter()
+        .map(|sequence| (port_id.clone(), channel_id.clone(), sequence.clone()));
 
     for (port_id, channel_id, sequence) in pair {
-
-
         let packet_receipt_path = ReceiptsPath {
             port_id: port_id.clone(),
             channel_id: channel_id.clone(),
             sequence: sequence.clone(),
-        }.to_string().as_bytes().to_vec();
+        }
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
         let data: Vec<u8> = api
             .storage()
@@ -342,7 +344,6 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
         .await?;
 
     for key in packet_commitments_keys {
-
         let port_id_str = String::from_utf8(key.0).unwrap();
         let port_id = PortId::from_str(&port_id_str).unwrap();
         let channel_id_str = String::from_utf8(key.1).unwrap();
@@ -352,8 +353,10 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
             port_id: port_id.clone(),
             channel_id: channel_id.clone(),
             sequence: Sequence::from(key.2),
-        }.to_string().as_bytes().to_vec();
-
+        }
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
         // get value
         let value: Vec<u8> = api
@@ -372,7 +375,6 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
         // store key-value
         result.push(packet_state);
     }
-
 
     Ok(result)
 }
@@ -399,15 +401,15 @@ pub async fn get_packet_commitment(
         port_id: port_id.clone(),
         channel_id: channel_id.clone(),
         sequence: sequence.clone(),
-    }.to_string().as_bytes().to_vec();
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_commitment(
-            &packet_commits_path,
-            Some(block_hash),
-        )
+        .packet_commitment(&packet_commits_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -444,15 +446,15 @@ pub async fn get_packet_ack(
         port_id: port_id.clone(),
         channel_id: channel_id.clone(),
         sequence: sequence.clone(),
-    }.to_string().as_bytes().to_vec();
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .acknowledgements(
-            &acks_path,
-            Some(block_hash),
-        )
+        .acknowledgements(&acks_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -484,30 +486,30 @@ pub async fn get_next_sequence_recv(
 
     let block_hash: H256 = block_header.hash();
 
-    let seq_recvs_path = SeqRecvsPath(port_id.clone(), channel_id.clone()).to_string().as_bytes().to_vec();
+    let seq_recvs_path = SeqRecvsPath(port_id.clone(), channel_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
     let sequence: u64 = api
         .storage()
         .ibc()
-        .next_sequence_recv(
-            &seq_recvs_path,
-            Some(block_hash),
-        )
+        .next_sequence_recv(&seq_recvs_path, Some(block_hash))
         .await?;
 
     let packet_commits_path = CommitmentsPath {
         port_id: port_id.clone(),
         channel_id: channel_id.clone(),
         sequence: Sequence::from(sequence),
-    }.to_string().as_bytes().to_vec();
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_commitment(
-            &packet_commits_path,
-            Some(block_hash),
-        )
+        .packet_commitment(&packet_commits_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -532,7 +534,6 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
     let block_header = block.next().await.unwrap().unwrap();
 
     let block_hash: H256 = block_header.hash();
-
 
     // // Obtain the storage client wrapper from the API.
     // let storage: StorageClient<_> = api.client.storage();
@@ -588,14 +589,16 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
             port_id: port_id.clone(),
             channel_id: channel_id.clone(),
             sequence: Sequence::from(key.2),
-        }.to_string().as_bytes().to_vec();
+        }
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
         let value: Vec<u8> = api
             .storage()
             .ibc()
             .acknowledgements(&acks_path, Some(block_hash))
             .await?;
-
 
         let packet_state = PacketState {
             port_id: port_id_str,
@@ -605,7 +608,6 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
         };
         result.push(packet_state);
     }
-
 
     Ok(result)
 }

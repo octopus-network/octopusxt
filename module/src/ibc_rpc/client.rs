@@ -14,10 +14,10 @@ use subxt::Client;
 use tendermint_proto::Protobuf;
 
 use anyhow::Result;
-use core::str::FromStr;
 use codec::Decode;
+use core::str::FromStr;
+use ibc::core::ics24_host::path::{ClientConnectionsPath, ClientConsensusStatePath};
 use ibc::core::ics24_host::Path;
-use ibc::core::ics24_host::path::{ClientConsensusStatePath, ClientConnectionsPath};
 use sp_core::H256;
 use subxt::storage::StorageClient;
 
@@ -127,7 +127,6 @@ pub async fn get_consensus_state_with_height(
 
     let block_hash: H256 = block_header.hash();
 
-
     // Obtain the storage client wrapper from the API.
     let storage: StorageClient<_> = api.client.storage();
 
@@ -144,7 +143,8 @@ pub async fn get_consensus_state_with_height(
         let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
         let client_state_path = String::from_utf8(raw_key)?;
         // decode key
-        let path = Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        let path =
+            Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
         // println!("[get_consensus_state_with_height] >> path: {:?}", path);
         match path {
             Path::ClientConsensusState(client_consensus_state) => {
@@ -160,9 +160,8 @@ pub async fn get_consensus_state_with_height(
                     // store key-value
                     result.push((height, consensus_state));
                 }
-            },
+            }
             _ => unimplemented!(),
-
         }
         // println!("[get_consensus_state_with_height]>>  Value: {:?}", value);
     }
@@ -198,14 +197,15 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
         let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
         let client_state_path = String::from_utf8(raw_key)?;
         // decode key
-        let path = Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        let path =
+            Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
         match path {
-            Path::ClientState(ClientStatePath(client_id)) =>  {
+            Path::ClientState(ClientStatePath(client_id)) => {
                 let client_state = AnyClientState::decode_vec(&*value).unwrap();
 
                 result.push(IdentifiedAnyClientState::new(client_id, client_state));
             }
-            _=> unimplemented!(),
+            _ => unimplemented!(),
         }
         println!("  Value: {:?}", value);
     }
@@ -229,7 +229,10 @@ pub async fn get_client_connections(
 
     let block_hash: H256 = block_header.hash();
 
-    let client_connection_paths = ClientConnectionsPath(client_id.clone()).to_string().as_bytes().to_vec();
+    let client_connection_paths = ClientConnectionsPath(client_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
 
     // client_id <-> connection_id
     let connection_id: Vec<u8> = api
