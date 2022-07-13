@@ -14,10 +14,10 @@ use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use anyhow::Result;
 use codec::Decode;
-use ibc::core::ics24_host::Path;
 use ibc::core::ics24_host::path::{
     AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath,
 };
+use ibc::core::ics24_host::Path;
 
 use sp_core::H256;
 use subxt::storage::StorageClient;
@@ -57,12 +57,12 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
         println!("[get_channels] >> Path: {:?}", path);
         match path {
             Path::ChannelEnds(channel_ends_path) => {
-                let ChannelEndsPath(port_id, channel_id)= channel_ends_path;
+                let ChannelEndsPath(port_id, channel_id) = channel_ends_path;
                 let channel_end = ChannelEnd::decode_vec(&*value).unwrap();
 
                 result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
-            },
-            _=> unimplemented!(),
+            }
+            _ => unimplemented!(),
         }
         println!("  Value: {:?}", value);
     }
@@ -287,7 +287,11 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
         println!("  Value: {:?}", value);
         match path {
             Path::Commitments(commitments) => {
-                let CommitmentsPath { port_id, channel_id, sequence }= commitments;
+                let CommitmentsPath {
+                    port_id,
+                    channel_id,
+                    sequence,
+                } = commitments;
 
                 let packet_state = PacketState {
                     port_id: port_id.to_string(),
@@ -296,12 +300,10 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
                     data: value,
                 };
                 result.push(packet_state);
-            },
-            _=> unimplemented!(),
+            }
+            _ => unimplemented!(),
         }
-
     }
-
 
     Ok(result)
 }
@@ -484,7 +486,11 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
         println!("  Value: {:?}", value);
         match path {
             Path::Acks(acks_path) => {
-                let AcksPath { port_id, channel_id, sequence }= acks_path;
+                let AcksPath {
+                    port_id,
+                    channel_id,
+                    sequence,
+                } = acks_path;
 
                 let packet_state = PacketState {
                     port_id: port_id.to_string(),
@@ -493,12 +499,10 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
                     data: value,
                 };
                 result.push(packet_state);
-            },
-            _=> unimplemented!(),
+            }
+            _ => unimplemented!(),
         }
-
     }
-
 
     Ok(result)
 }

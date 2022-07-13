@@ -9,8 +9,8 @@ use tendermint_proto::Protobuf;
 
 use crate::channel::get_channel_end;
 use anyhow::Result;
-use core::str::FromStr;
 use codec::Decode;
+use core::str::FromStr;
 use ibc::core::ics24_host::path::{ChannelEndsPath, ConnectionsPath};
 use ibc::core::ics24_host::Path;
 use sp_core::H256;
