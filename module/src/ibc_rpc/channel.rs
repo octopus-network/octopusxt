@@ -13,13 +13,14 @@ use core::str::FromStr;
 use ibc_proto::ibc::core::channel::v1::PacketState;
 
 use anyhow::Result;
+use codec::Decode;
+use ibc::core::ics24_host::Path;
 use ibc::core::ics24_host::path::{
     AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath,
 };
 
-
 use sp_core::H256;
-// use subxt::storage::StorageClient;
+use subxt::storage::StorageClient;
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
 pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChannelEnd>> {
@@ -35,70 +36,35 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
 
     let block_hash: H256 = block_header.hash();
 
-    // // Obtain the storage client wrapper from the API.
-    // let storage: StorageClient<_> = api.client.storage();
-    //
-    // let mut iter = storage
-    //     .iter::<ibc_node::ibc::storage::Channels>(Some(block_hash))
-    //     .await?;
-    // println!("in call_ibc: [get_channels] >> iter");
-    //
-    // let mut result = vec![];
-    //
-    // // prefix(32) + hash(data)(16) + data
-    // while let Some((key, value)) = iter.next().await? {
-    //     println!("in call_ibc: [get_channels] >> while");
-    //     let raw_key = key.0[48..].to_vec();
-    //     let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
-    //     let raw_path = String::from_utf8(raw_key)?;
-    //     // decode key
-    //     let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
-    //     println!("[get_channels] >> Path: {:?}", path);
-    //     match path {
-    //         Path::ChannelEnds(channel_ends_path) => {
-    //             let ChannelEndsPath(port_id, channel_id)= channel_ends_path;
-    //             let channel_end = ChannelEnd::decode_vec(&*value).unwrap();
-    //
-    //             result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
-    //         },
-    //         _=> unimplemented!(),
-    //     }
-    //     println!("  Value: {:?}", value);
-    // }
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
 
-    // vector key-value
+    let mut iter = storage
+        .iter::<ibc_node::ibc::storage::Channels>(Some(block_hash))
+        .await?;
+    println!("in call_ibc: [get_channels] >> iter");
+
     let mut result = vec![];
 
-    let channels_keys: Vec<(Vec<u8>, Vec<u8>)> =
-        api.storage().ibc().channels_keys(Some(block_hash)).await?;
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        println!("in call_ibc: [get_channels] >> while");
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let raw_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        println!("[get_channels] >> Path: {:?}", path);
+        match path {
+            Path::ChannelEnds(channel_ends_path) => {
+                let ChannelEndsPath(port_id, channel_id)= channel_ends_path;
+                let channel_end = ChannelEnd::decode_vec(&*value).unwrap();
 
-    if channels_keys.is_empty() {
-        return Err(anyhow::anyhow!("get_channels: get empty channels_keys",));
-    }
-
-    for (port_id, channel_id) in channels_keys {
-        let port_id_str = String::from_utf8(port_id.clone()).unwrap();
-        let port_id = PortId::from_str(port_id_str.as_str()).unwrap();
-
-        let channel_id_str = String::from_utf8(channel_id.clone()).unwrap();
-        let channel_id = ChannelId::from_str(channel_id_str.as_str()).unwrap();
-
-        let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone())
-            .to_string()
-            .as_bytes()
-            .to_vec();
-
-        // get value
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .channels(&channel_end_path, Some(block_hash))
-            .await?;
-
-        // store key-value
-        let channel_end = ChannelEnd::decode_vec(&*value).unwrap();
-
-        result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
+                result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
+            },
+            _=> unimplemented!(),
+        }
+        println!("  Value: {:?}", value);
     }
 
     Ok(result)
@@ -299,82 +265,43 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
 
     let block_hash: H256 = block_header.hash();
 
-    // // Obtain the storage client wrapper from the API.
-    // let storage: StorageClient<_> = api.client.storage();
-    //
-    // let mut iter = storage
-    //     .iter::<ibc_node::ibc::storage::PacketCommitment>(Some(block_hash))
-    //     .await?;
-    // println!("in call_ibc: [get_commitment_packet_state] >> iter");
-    //
-    // let mut result = vec![];
-    //
-    // // prefix(32) + hash(data)(16) + data
-    // while let Some((key, value)) = iter.next().await? {
-    //     println!("in call_ibc: [get_commitment_packet_state] >> while");
-    //     let raw_key = key.0[48..].to_vec();
-    //     let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
-    //     let raw_path = String::from_utf8(raw_key)?;
-    //     // decode key
-    //     let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
-    //     println!("[get_commitment_packet_state] >> Path: {:?}", path);
-    //     match path {
-    //         Path::Commitments(commitments) => {
-    //             let CommitmentsPath { port_id, channel_id, sequence }= commitments;
-    //
-    //             let packet_state = PacketState {
-    //                 port_id: port_id.to_string(),
-    //                 channel_id: channel_id.to_string(),
-    //                 sequence: u64::from(sequence),
-    //                 data: value,
-    //             };
-    //             result.push(packet_state);
-    //         },
-    //         _=> unimplemented!(),
-    //     }
-    //     println!("  Value: {:?}", value);
-    // }
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
+
+    let mut iter = storage
+        .iter::<ibc_node::ibc::storage::PacketCommitment>(Some(block_hash))
+        .await?;
+    println!("in call_ibc: [get_commitment_packet_state] >> iter");
 
     let mut result = vec![];
 
-    let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
-        .storage()
-        .ibc()
-        .packet_commitment_keys(Some(block_hash))
-        .await?;
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        println!("in call_ibc: [get_commitment_packet_state] >> while");
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let raw_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        println!("[get_commitment_packet_state] >> Path: {:?}", path);
+        println!("  Value: {:?}", value);
+        match path {
+            Path::Commitments(commitments) => {
+                let CommitmentsPath { port_id, channel_id, sequence }= commitments;
 
-    for key in packet_commitments_keys {
-        let port_id_str = String::from_utf8(key.0).unwrap();
-        let port_id = PortId::from_str(&port_id_str).unwrap();
-        let channel_id_str = String::from_utf8(key.1).unwrap();
-        let channel_id = ChannelId::from_str(&channel_id_str).unwrap();
-
-        let packet_commits_path = CommitmentsPath {
-            port_id: port_id.clone(),
-            channel_id: channel_id.clone(),
-            sequence: Sequence::from(key.2),
+                let packet_state = PacketState {
+                    port_id: port_id.to_string(),
+                    channel_id: channel_id.to_string(),
+                    sequence: u64::from(sequence),
+                    data: value,
+                };
+                result.push(packet_state);
+            },
+            _=> unimplemented!(),
         }
-        .to_string()
-        .as_bytes()
-        .to_vec();
 
-        // get value
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .packet_commitment(&packet_commits_path, Some(block_hash))
-            .await?;
-
-        let packet_state = PacketState {
-            port_id: port_id_str,
-            channel_id: channel_id_str,
-            sequence: key.2,
-            data: value,
-        };
-
-        // store key-value
-        result.push(packet_state);
     }
+
 
     Ok(result)
 }
@@ -535,79 +462,43 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
 
     let block_hash: H256 = block_header.hash();
 
-    // // Obtain the storage client wrapper from the API.
-    // let storage: StorageClient<_> = api.client.storage();
-    //
-    // let mut iter = storage
-    //     .iter::<ibc_node::ibc::storage::Acknowledgements>(Some(block_hash))
-    //     .await?;
-    // println!("in call_ibc: [get_acknowledge_packet_state] >> iter");
-    //
-    // let mut result = vec![];
-    //
-    // // prefix(32) + hash(data)(16) + data
-    // while let Some((key, value)) = iter.next().await? {
-    //     println!("in call_ibc: [get_acknowledge_packet_state] >> while");
-    //     let raw_key = key.0[48..].to_vec();
-    //     let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
-    //     let raw_path = String::from_utf8(raw_key)?;
-    //     // decode key
-    //     let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
-    //     println!("[get_acknowledge_packet_state] >> Path: {:?}", path);
-    //     match path {
-    //         Path::Acks(acks_path) => {
-    //             let AcksPath { port_id, channel_id, sequence }= acks_path;
-    //
-    //             let packet_state = PacketState {
-    //                 port_id: port_id.to_string(),
-    //                 channel_id: channel_id.to_string(),
-    //                 sequence: u64::from(sequence),
-    //                 data: value,
-    //             };
-    //             result.push(packet_state);
-    //         },
-    //         _=> unimplemented!(),
-    //     }
-    //     println!("  Value: {:?}", value);
-    // }
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
+
+    let mut iter = storage
+        .iter::<ibc_node::ibc::storage::Acknowledgements>(Some(block_hash))
+        .await?;
+    println!("in call_ibc: [get_acknowledge_packet_state] >> iter");
 
     let mut result = vec![];
 
-    let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
-        .storage()
-        .ibc()
-        .acknowledgements_keys(Some(block_hash))
-        .await?;
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        println!("in call_ibc: [get_acknowledge_packet_state] >> while");
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let raw_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path = Path::from_str(&raw_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        println!("[get_acknowledge_packet_state] >> Path: {:?}", path);
+        println!("  Value: {:?}", value);
+        match path {
+            Path::Acks(acks_path) => {
+                let AcksPath { port_id, channel_id, sequence }= acks_path;
 
-    for key in acknowledgements_keys {
-        let port_id_str = String::from_utf8(key.0).unwrap();
-        let port_id = PortId::from_str(&port_id_str).unwrap();
-        let channel_id_str = String::from_utf8(key.1).unwrap();
-        let channel_id = ChannelId::from_str(&channel_id_str).unwrap();
-
-        let acks_path = AcksPath {
-            port_id: port_id.clone(),
-            channel_id: channel_id.clone(),
-            sequence: Sequence::from(key.2),
+                let packet_state = PacketState {
+                    port_id: port_id.to_string(),
+                    channel_id: channel_id.to_string(),
+                    sequence: u64::from(sequence),
+                    data: value,
+                };
+                result.push(packet_state);
+            },
+            _=> unimplemented!(),
         }
-        .to_string()
-        .as_bytes()
-        .to_vec();
 
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .acknowledgements(&acks_path, Some(block_hash))
-            .await?;
-
-        let packet_state = PacketState {
-            port_id: port_id_str,
-            channel_id: channel_id_str,
-            sequence: key.2,
-            data: value,
-        };
-        result.push(packet_state);
     }
+
 
     Ok(result)
 }

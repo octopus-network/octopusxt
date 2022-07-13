@@ -10,9 +10,11 @@ use tendermint_proto::Protobuf;
 use crate::channel::get_channel_end;
 use anyhow::Result;
 use core::str::FromStr;
+use codec::Decode;
 use ibc::core::ics24_host::path::{ChannelEndsPath, ConnectionsPath};
 use ibc::core::ics24_host::Path;
 use sp_core::H256;
+use subxt::storage::StorageClient;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
 pub async fn get_connection_end(
@@ -54,7 +56,7 @@ pub async fn get_connection_end(
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
 pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedConnectionEnd>> {
-    tracing::info!("in call_ibc: [get_connctions]");
+    tracing::info!("in call_ibc: [get_connections]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
@@ -64,42 +66,34 @@ pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedC
 
     let block_hash: H256 = block_header.hash();
 
-    let mut result = vec![];
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
 
-    // get connection_keys
-    let connection_keys: Vec<Vec<u8>> = api
-        .storage()
-        .ibc()
-        .connections_keys(Some(block_hash))
+    let mut iter = storage
+        .iter::<ibc_node::ibc::storage::ClientStates>(Some(block_hash))
         .await?;
 
-    if connection_keys.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_connections: get empty connection_keys"
-        ));
-    }
+    let mut result = vec![];
 
-    for key in connection_keys {
-        let connection_id_str = String::from_utf8(key.clone()).unwrap();
-        let connection_id = ConnectionId::from_str(connection_id_str.as_str()).unwrap();
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let client_state_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path =
+            Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+        match path {
+            Path::Connections(connections_path) => {
+                let ConnectionsPath(connection_id) = connections_path;
+                // store key-value
+                let connection_end = ConnectionEnd::decode_vec(&*value).unwrap();
 
-        // read connection path key
-        let connections_path = ConnectionsPath(connection_id.clone())
-            .to_string()
-            .as_bytes()
-            .to_vec();
-
-        // get connections value
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .connections(&connections_path, Some(block_hash))
-            .await?;
-
-        // store key-value
-        let connection_end = ConnectionEnd::decode_vec(&*value).unwrap();
-
-        result.push(IdentifiedConnectionEnd::new(connection_id, connection_end));
+                result.push(IdentifiedConnectionEnd::new(connection_id, connection_end));
+            }
+            _ => unimplemented!(),
+        }
+        println!("  Value: {:?}", value);
     }
 
     Ok(result)

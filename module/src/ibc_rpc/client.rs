@@ -145,7 +145,6 @@ pub async fn get_consensus_state_with_height(
         // decode key
         let path =
             Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
-        // println!("[get_consensus_state_with_height] >> path: {:?}", path);
         match path {
             Path::ClientConsensusState(client_consensus_state) => {
                 let ClientConsensusStatePath {
@@ -163,7 +162,6 @@ pub async fn get_consensus_state_with_height(
             }
             _ => unimplemented!(),
         }
-        // println!("[get_consensus_state_with_height]>>  Value: {:?}", value);
     }
 
     Ok(result)
