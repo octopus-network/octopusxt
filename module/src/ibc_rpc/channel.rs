@@ -1,4 +1,10 @@
-use crate::{ibc_node, MyConfig, storage_iter, SubstrateNodeTemplateExtrinsicParams};
+use crate::{ibc_node, storage_iter, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use anyhow::Result;
+use ibc::core::ics24_host::identifier::ClientId;
+use ibc::core::ics24_host::path::{
+    AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath,
+};
+use ibc::core::ics24_host::Path;
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
@@ -6,22 +12,10 @@ use ibc::core::{
     },
     ics24_host::identifier::{ChannelId, PortId},
 };
+use ibc_proto::ibc::core::channel::v1::PacketState;
+use sp_core::H256;
 use subxt::Client;
 use tendermint_proto::Protobuf;
-
-
-use ibc_proto::ibc::core::channel::v1::PacketState;
-
-use anyhow::Result;
-
-use ibc::core::ics24_host::identifier::ClientId;
-use ibc::core::ics24_host::path::{
-    AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath,
-};
-use ibc::core::ics24_host::Path;
-
-use sp_core::H256;
-
 
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
 pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChannelEnd>> {
@@ -47,11 +41,13 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
 
     let mut result = vec![];
 
-    let _ret = storage_iter::<
-        IdentifiedChannelEnd,
-        ibc_node::ibc::storage::Channels,
-    >(client.clone(), &mut result, ClientId::default(), callback)
-        .await?;
+    let _ret = storage_iter::<IdentifiedChannelEnd, ibc_node::ibc::storage::Channels>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }
@@ -243,38 +239,36 @@ pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
     let callback = Box::new(
-        |path: Path,
-         result: &mut Vec<PacketState>,
-         value: Vec<u8>,
-         _client_id: ClientId| {
-            match path {
-                Path::Commitments(commitments) => {
-                    let CommitmentsPath {
-                        port_id,
-                        channel_id,
-                        sequence,
-                    } = commitments;
+        |path: Path, result: &mut Vec<PacketState>, value: Vec<u8>, _client_id: ClientId| match path
+        {
+            Path::Commitments(commitments) => {
+                let CommitmentsPath {
+                    port_id,
+                    channel_id,
+                    sequence,
+                } = commitments;
 
-                    let packet_state = PacketState {
-                        port_id: port_id.to_string(),
-                        channel_id: channel_id.to_string(),
-                        sequence: u64::from(sequence),
-                        data: value,
-                    };
-                    result.push(packet_state);
-                }
-                _ => unimplemented!(),
+                let packet_state = PacketState {
+                    port_id: port_id.to_string(),
+                    channel_id: channel_id.to_string(),
+                    sequence: u64::from(sequence),
+                    data: value,
+                };
+                result.push(packet_state);
             }
+            _ => unimplemented!(),
         },
     );
 
     let mut result = vec![];
 
-    let _ret = storage_iter::<
-        PacketState,
-        ibc_node::ibc::storage::PacketCommitment,
-    >(client.clone(), &mut result, ClientId::default(), callback)
-        .await?;
+    let _ret = storage_iter::<PacketState, ibc_node::ibc::storage::PacketCommitment>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }
@@ -427,39 +421,36 @@ pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Ve
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
     let callback = Box::new(
-        |path: Path,
-         result: &mut Vec<PacketState>,
-         value: Vec<u8>,
-         _client_id: ClientId| {
-            match path {
-                Path::Acks(acks_path) => {
-                    let AcksPath {
-                        port_id,
-                        channel_id,
-                        sequence,
-                    } = acks_path;
+        |path: Path, result: &mut Vec<PacketState>, value: Vec<u8>, _client_id: ClientId| match path
+        {
+            Path::Acks(acks_path) => {
+                let AcksPath {
+                    port_id,
+                    channel_id,
+                    sequence,
+                } = acks_path;
 
-                    let packet_state = PacketState {
-                        port_id: port_id.to_string(),
-                        channel_id: channel_id.to_string(),
-                        sequence: u64::from(sequence),
-                        data: value,
-                    };
-                    result.push(packet_state);
-                }
-                _ => unimplemented!(),
+                let packet_state = PacketState {
+                    port_id: port_id.to_string(),
+                    channel_id: channel_id.to_string(),
+                    sequence: u64::from(sequence),
+                    data: value,
+                };
+                result.push(packet_state);
             }
+            _ => unimplemented!(),
         },
     );
 
     let mut result = vec![];
 
-    let _ret = storage_iter::<
-        PacketState,
-        ibc_node::ibc::storage::Acknowledgements,
-    >(client.clone(), &mut result, ClientId::default(), callback)
-        .await?;
+    let _ret = storage_iter::<PacketState, ibc_node::ibc::storage::Acknowledgements>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
-
 }

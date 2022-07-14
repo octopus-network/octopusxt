@@ -1,21 +1,18 @@
-use crate::{ibc_node, MyConfig, storage_iter, SubstrateNodeTemplateExtrinsicParams};
+use crate::channel::get_channel_end;
+use crate::{ibc_node, storage_iter, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use anyhow::Result;
+use core::str::FromStr;
+use ibc::core::ics24_host::identifier::ClientId;
+use ibc::core::ics24_host::path::{ChannelEndsPath, ConnectionsPath};
+use ibc::core::ics24_host::Path;
 use ibc::core::{
     ics03_connection::connection::{ConnectionEnd, IdentifiedConnectionEnd},
     ics04_channel::channel::IdentifiedChannelEnd,
     ics24_host::identifier::ConnectionId,
 };
+use sp_core::H256;
 use subxt::Client;
 use tendermint_proto::Protobuf;
-
-use crate::channel::get_channel_end;
-use anyhow::Result;
-use codec::Decode;
-use core::str::FromStr;
-use ibc::core::ics24_host::identifier::ClientId;
-use ibc::core::ics24_host::path::{ChannelEndsPath, ConnectionsPath};
-use ibc::core::ics24_host::Path;
-use sp_core::H256;
-use subxt::storage::StorageClient;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
 pub async fn get_connection_end(
@@ -79,11 +76,13 @@ pub async fn get_connections(client: Client<MyConfig>) -> Result<Vec<IdentifiedC
 
     let mut result = vec![];
 
-    let _ret = storage_iter::<
-        IdentifiedConnectionEnd,
-        ibc_node::ibc::storage::Connections,
-    >(client.clone(), &mut result, ClientId::default(), callback)
-        .await?;
+    let _ret = storage_iter::<IdentifiedConnectionEnd, ibc_node::ibc::storage::Connections>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }

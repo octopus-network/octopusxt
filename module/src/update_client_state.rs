@@ -1,7 +1,6 @@
 use crate::ibc_node::RuntimeApi;
 use crate::ibc_rpc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
 use crate::{get_latest_height, ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
-
 use anyhow::Result;
 use beefy_light_client::{
     beefy_ecdsa_to_ethereum,

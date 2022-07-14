@@ -1,4 +1,9 @@
+use super::storage_iter;
 use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use anyhow::Result;
+use core::str::FromStr;
+use ibc::core::ics24_host::path::{ClientConnectionsPath, ClientConsensusStatePath};
+use ibc::core::ics24_host::Path;
 use ibc::{
     core::{
         ics02_client::{
@@ -10,15 +15,9 @@ use ibc::{
     },
     Height as ICSHeight,
 };
+use sp_core::H256;
 use subxt::Client;
 use tendermint_proto::Protobuf;
-
-use anyhow::Result;
-use core::str::FromStr;
-use ibc::core::ics24_host::path::{ClientConnectionsPath, ClientConsensusStatePath};
-use ibc::core::ics24_host::Path;
-use sp_core::H256;
-use super::storage_iter;
 
 /// get client_state according by client_id, and read ClientStates StorageMap
 pub async fn get_client_state(
@@ -175,11 +174,13 @@ pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyCl
 
     let mut result = vec![];
 
-    let _ret = storage_iter::<
-        IdentifiedAnyClientState,
-        ibc_node::ibc::storage::ClientStates,
-    >(client.clone(), &mut result, ClientId::default(), callback)
-        .await?;
+    let _ret = storage_iter::<IdentifiedAnyClientState, ibc_node::ibc::storage::ClientStates>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }
