@@ -21,7 +21,7 @@ use ibc::core::ics24_host::Path;
 use sp_core::H256;
 use subxt::storage::StorageClient;
 
-/// get client_state according by client_id, and read ClientStates StoraageMap
+/// get client_state according by client_id, and read ClientStates StorageMap
 pub async fn get_client_state(
     client_id: &ClientId,
     client: Client<MyConfig>,

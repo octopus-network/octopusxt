@@ -353,7 +353,7 @@ pub async fn get_packet_commitment(
     }
 }
 
-/// get packet acknowlegement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
+/// get packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
 pub async fn get_packet_ack(
     port_id: &PortId,
     channel_id: &ChannelId,

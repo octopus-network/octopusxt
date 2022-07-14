@@ -355,7 +355,7 @@ pub fn verify_commitment_signatures(
 ) -> core::result::Result<(), Error> {
     let msg =
         libsecp256k1::Message::parse_slice(&commitment_hash[..]).or(Err(Error::InvalidMessage))?;
-    println!("verify_commitment_signatures:commiment msg is {:?}", msg);
+    println!("verify_commitment_signatures:comment msg is {:?}", msg);
 
     for signature in signatures
         .iter()
@@ -408,7 +408,6 @@ pub fn verify_commitment_signatures(
         if !found {
             return Err(Error::ValidatorNotFound);
         }
-        // }
     }
 
     Ok(())

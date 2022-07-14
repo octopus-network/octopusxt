@@ -27,7 +27,7 @@ pub use client::*;
 pub use connection::*;
 pub use events::*;
 
-/// Subscribe beefy justifiactions
+/// Subscribe beefy justifications
 pub async fn subscribe_beefy(
     client: Client<MyConfig>,
 ) -> Result<SignedCommitment, Box<dyn std::error::Error>> {
@@ -210,7 +210,7 @@ pub async fn delete_write_packet_event(client: Client<MyConfig>) -> Result<H256>
 /// This get_mmr_leaf_and_mmr_proof api generate form generateProof api
 /// generateProof(leafIndex: u64, at?: BlockHash): MmrLeafProof
 /// interface: api.rpc.mmr.generateProof
-/// jsonrpc: mmr_generateProof
+/// json rpc: mmr_generateProof
 /// summary: Generate MMR proof for given leaf index.
 ///
 /// Return value a tuple (mmr_leaf, mmr_proof)
@@ -275,7 +275,7 @@ pub async fn get_header_by_block_number(
 
 /// convert substrate Header to Ibc Header
 fn convert_substrate_header_to_ibc_header(
-    header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
+    header: sp_runtime::generic::Header<u32, sp_runtime::traits::BlakeTwo256>,
 ) -> beefy_light_client::header::Header {
     beefy_light_client::header::Header {
         parent_hash: Hash::from(header.parent_hash),
