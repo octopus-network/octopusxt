@@ -1,3 +1,4 @@
+use core::str::FromStr;
 use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use ibc::core::{
     ics04_channel::packet::{Packet, Sequence},
@@ -12,10 +13,14 @@ use tendermint_proto::Protobuf;
 
 use anyhow::Result;
 use beefy_merkle_tree::Hash;
+use codec::Decode;
+use ibc::core::ics24_host::identifier::ClientId;
+use ibc::core::ics24_host::Path;
 use ibc_proto::google::protobuf::Any;
 use jsonrpsee::rpc_params;
 use sp_core::{storage::StorageKey, H256};
 use sp_keyring::AccountKeyring;
+use subxt::storage::StorageClient;
 
 pub mod channel;
 pub mod client;
@@ -323,4 +328,41 @@ fn convert_substrate_digest_item_to_beefy_light_client_digest_item(
 pub fn get_storage_key<F: StorageEntry>(store: &F) -> StorageKey {
     let prefix = StorageKeyPrefix::new::<F>();
     store.key().final_key(prefix)
+}
+
+
+pub async fn storage_iter<T, H: StorageEntry>(
+    client: Client<MyConfig>,
+    result: &mut Vec<T>,
+    client_id: ClientId,
+    mut callback: Box<dyn FnMut(Path, &mut Vec<T>, <H as StorageEntry>::Value, ClientId)>,
+) -> Result<()> {
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash: H256 = block_header.hash();
+
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
+
+    // Read Store
+    let mut iter = storage.iter::<H>(Some(block_hash)).await?;
+
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let client_state_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path =
+            Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+
+        let _ret = callback(path, result, value, client_id.clone());
+    }
+
+    Ok(())
 }
