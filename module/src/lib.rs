@@ -74,7 +74,7 @@ impl Config for MyConfig {
 }
 
 impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Height> for ibc::Height {
-    fn from(height : ibc_node::runtime_types::pallet_ibc::event::primitive::Height) -> Self {
+    fn from(height: ibc_node::runtime_types::pallet_ibc::event::primitive::Height) -> Self {
         Self {
             revision_number: height.revision_number,
             revision_height: height.revision_height,
@@ -82,7 +82,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Height> for ibc
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet> for  ibc::core::ics04_channel::packet::Packet {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet>
+    for ibc::core::ics04_channel::packet::Packet
+{
     fn from(packet: ibc_node::runtime_types::pallet_ibc::event::primitive::Packet) -> Self {
         Self {
             sequence: packet.sequence.into(),
@@ -97,42 +99,55 @@ impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet> for  ib
     }
 }
 
-impl From< ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId> for ibc::core::ics24_host::identifier::ConnectionId {
-    fn from(connection_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId) -> Self {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId>
+    for ibc::core::ics24_host::identifier::ConnectionId
+{
+    fn from(
+        connection_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId,
+    ) -> Self {
         let value = String::from_utf8(connection_id.0).unwrap();
         Self(value)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId> for ibc::core::ics24_host::identifier::ChannelId {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId>
+    for ibc::core::ics24_host::identifier::ChannelId
+{
     fn from(channel_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId) -> Self {
         let value = String::from_utf8(channel_id.0).unwrap();
         Self::from_str(&value).unwrap()
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::PortId> for ibc::core::ics24_host::identifier::PortId {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::PortId>
+    for ibc::core::ics24_host::identifier::PortId
+{
     fn from(port_id: ibc_node::runtime_types::pallet_ibc::event::primitive::PortId) -> Self {
         let value = String::from_utf8(port_id.0).unwrap();
         Self(value)
     }
 }
 
-
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId> for ibc::core::ics24_host::identifier::ClientId {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId>
+    for ibc::core::ics24_host::identifier::ClientId
+{
     fn from(client_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId) -> Self {
         let value = String::from_utf8(client_id.0).unwrap();
         Self(value)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence> for ibc::core::ics04_channel::packet::Sequence {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence>
+    for ibc::core::ics04_channel::packet::Sequence
+{
     fn from(sequence: ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence) -> Self {
         Self::from(sequence.0)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp> for ibc::timestamp::Timestamp {
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp>
+    for ibc::timestamp::Timestamp
+{
     fn from(time_stamp: ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp) -> Self {
         let value = String::from_utf8(time_stamp.time).unwrap();
         Self::from_str(&value).unwrap()
