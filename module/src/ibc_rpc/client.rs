@@ -78,8 +78,8 @@ pub async fn get_client_consensus(
     // search key
     let client_consensus_state_path = ClientConsensusStatePath {
         client_id: client_id.clone(),
-        epoch: height.revision_number,
-        height: height.revision_height,
+        epoch: height.revision_number(),
+        height: height.revision_height(),
     }
     .to_string()
     .as_bytes()
@@ -130,7 +130,7 @@ pub async fn get_consensus_state_with_height(
                     } = client_consensus_state;
 
                     if read_client_id == client_id.clone() {
-                        let height = ICSHeight::new(epoch, height);
+                        let height = ICSHeight::new(epoch, height).unwrap();
                         let consensus_state = AnyConsensusState::decode_vec(&*value).unwrap();
                         // store key-value
                         result.push((height, consensus_state));

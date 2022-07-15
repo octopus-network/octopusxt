@@ -13,6 +13,8 @@ pub mod update_client_state;
 pub use ibc_rpc::*;
 pub use update_client_state::*;
 
+pub const REVISION_NUMBER: u64 = 8888;
+
 /// A struct representing the signed extra and additional parameters required
 /// to construct a transaction for a substrate node template.
 pub type SubstrateNodeTemplateExtrinsicParams<T> =
@@ -40,7 +42,7 @@ impl From<ClientType> for ibc::core::ics02_client::client_type::ClientType {
 }
 
 #[derive(Encode, Decode)]
-pub struct MessageQueueChain(pub subxt::sp_core::H256);
+pub struct MessageQueueChain(pub sp_core::H256);
 
 #[subxt::subxt(runtime_metadata_path = "metadata_file/metadata.scale")]
 pub mod ibc_node {
@@ -75,10 +77,7 @@ impl Config for MyConfig {
 
 impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Height> for ibc::Height {
     fn from(height: ibc_node::runtime_types::pallet_ibc::event::primitive::Height) -> Self {
-        Self {
-            revision_number: height.revision_number,
-            revision_height: height.revision_height,
-        }
+        ibc::Height::new(REVISION_NUMBER, height.revision_height).expect("REVISION_NUMBER is 8888")
     }
 }
 
@@ -93,7 +92,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet>
             destination_port: packet.destination_port.into(),
             destination_channel: packet.destination_channel.into(),
             data: packet.data,
-            timeout_height: packet.timeout_height.into(),
+            timeout_height: ibc::core::ics04_channel::timeout::TimeoutHeight::At(
+                packet.timeout_height.into(),
+            ),
             timeout_timestamp: packet.timeout_timestamp.into(),
         }
     }
