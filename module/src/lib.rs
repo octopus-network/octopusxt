@@ -30,11 +30,11 @@ pub enum ClientType {
     Grandpa,
 }
 
-impl ClientType {
-    pub fn to_ibc_client_type(self) -> ibc::core::ics02_client::client_type::ClientType {
-        match self {
-            ClientType::Tendermint => ibc::core::ics02_client::client_type::ClientType::Tendermint,
-            ClientType::Grandpa => ibc::core::ics02_client::client_type::ClientType::Grandpa,
+impl From<ClientType> for ibc::core::ics02_client::client_type::ClientType {
+    fn from(client_type: ClientType) -> Self {
+        match client_type {
+            ClientType::Tendermint => Self::Tendermint,
+            ClientType::Grandpa => Self::Grandpa,
         }
     }
 }
@@ -73,68 +73,69 @@ impl Config for MyConfig {
     type Extrinsic = <DefaultConfig as Config>::Extrinsic;
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
-    pub fn to_ibc_height(self) -> ibc::Height {
-        ibc::Height {
-            revision_number: self.revision_number,
-            revision_height: self.revision_height,
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Height> for ibc::Height {
+    fn from(height : ibc_node::runtime_types::pallet_ibc::event::primitive::Height) -> Self {
+        Self {
+            revision_number: height.revision_number,
+            revision_height: height.revision_height,
         }
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Packet {
-    pub fn to_ibc_packet(self) -> ibc::core::ics04_channel::packet::Packet {
-        ibc::core::ics04_channel::packet::Packet {
-            sequence: self.sequence.to_ibc_sequence(),
-            source_port: self.source_port.to_ibc_port_id(),
-            source_channel: self.source_channel.to_ibc_channel_id(),
-            destination_port: self.destination_port.to_ibc_port_id(),
-            destination_channel: self.destination_channel.to_ibc_channel_id(),
-            data: self.data,
-            timeout_height: self.timeout_height.to_ibc_height(),
-            timeout_timestamp: self.timeout_timestamp.to_ibc_timestamp(),
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet> for  ibc::core::ics04_channel::packet::Packet {
+    fn from(packet: ibc_node::runtime_types::pallet_ibc::event::primitive::Packet) -> Self {
+        Self {
+            sequence: packet.sequence.into(),
+            source_port: packet.source_port.into(),
+            source_channel: packet.source_channel.into(),
+            destination_port: packet.destination_port.into(),
+            destination_channel: packet.destination_channel.into(),
+            data: packet.data,
+            timeout_height: packet.timeout_height.into(),
+            timeout_timestamp: packet.timeout_timestamp.into(),
         }
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId {
-    pub fn to_ibc_connection_id(self) -> ibc::core::ics24_host::identifier::ConnectionId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::ConnectionId(value)
+impl From< ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId> for ibc::core::ics24_host::identifier::ConnectionId {
+    fn from(connection_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId) -> Self {
+        let value = String::from_utf8(connection_id.0).unwrap();
+        Self(value)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId {
-    pub fn to_ibc_channel_id(self) -> ibc::core::ics24_host::identifier::ChannelId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::ChannelId::from_str(&value).unwrap()
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId> for ibc::core::ics24_host::identifier::ChannelId {
+    fn from(channel_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId) -> Self {
+        let value = String::from_utf8(channel_id.0).unwrap();
+        Self::from_str(&value).unwrap()
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::PortId {
-    pub fn to_ibc_port_id(self) -> ibc::core::ics24_host::identifier::PortId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::PortId(value)
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::PortId> for ibc::core::ics24_host::identifier::PortId {
+    fn from(port_id: ibc_node::runtime_types::pallet_ibc::event::primitive::PortId) -> Self {
+        let value = String::from_utf8(port_id.0).unwrap();
+        Self(value)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId {
-    pub fn to_ibc_client_id(self) -> ibc::core::ics24_host::identifier::ClientId {
-        let value = String::from_utf8(self.0).unwrap();
-        ibc::core::ics24_host::identifier::ClientId(value)
+
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId> for ibc::core::ics24_host::identifier::ClientId {
+    fn from(client_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId) -> Self {
+        let value = String::from_utf8(client_id.0).unwrap();
+        Self(value)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence {
-    pub fn to_ibc_sequence(self) -> ibc::core::ics04_channel::packet::Sequence {
-        ibc::core::ics04_channel::packet::Sequence::from(self.0)
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence> for ibc::core::ics04_channel::packet::Sequence {
+    fn from(sequence: ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence) -> Self {
+        Self::from(sequence.0)
     }
 }
 
-impl ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp {
-    pub fn to_ibc_timestamp(self) -> ibc::timestamp::Timestamp {
-        let value = String::from_utf8(self.time).unwrap();
-        ibc::timestamp::Timestamp::from_str(&value).unwrap()
+impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp> for ibc::timestamp::Timestamp {
+    fn from(time_stamp: ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp) -> Self {
+        let value = String::from_utf8(time_stamp.time).unwrap();
+        Self::from_str(&value).unwrap()
     }
 }
 
