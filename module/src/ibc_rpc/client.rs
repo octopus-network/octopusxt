@@ -59,9 +59,11 @@ pub async fn get_client_state(
 
 /// get appoint height consensus_state according by client_identifier and height
 /// and read ConsensusStates StorageMap
-pub async fn get_client_consensus(
+/// Performs a query to retrieve the consensus state for a specified height
+/// `consensus_height` that the specified light client stores.
+pub async fn query_client_consensus(
     client_id: &ClientId,
-    height: &ICSHeight,
+    consensus_height: &ICSHeight,
     client: Client<MyConfig>,
 ) -> Result<AnyConsensusState> {
     tracing::info!("in call_ibc: [get_client_consensus]");
@@ -78,8 +80,8 @@ pub async fn get_client_consensus(
     // search key
     let client_consensus_state_path = ClientConsensusStatePath {
         client_id: client_id.clone(),
-        epoch: height.revision_number(),
-        height: height.revision_height(),
+        epoch: consensus_height.revision_number(),
+        height: consensus_height.revision_height(),
     }
     .to_string()
     .as_bytes()
@@ -92,9 +94,9 @@ pub async fn get_client_consensus(
         .await?;
 
     tracing::info!(
-        "get_client_consensus is empty! by client_id = ({}), height = ({})",
+        "query_client_consensus is empty! by client_id = ({}), consensus_height = ({})",
         client_id,
-        height
+        consensus_height
     );
 
     let consensus_state = if consensus_state.is_empty() {
