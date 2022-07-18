@@ -52,8 +52,8 @@ pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChan
     Ok(result)
 }
 
-/// get channelEnd according by port_identifier, channel_identifier and read Channel StorageMaps
-pub async fn get_channel_end(
+/// query channelEnd according by port_identifier, channel_identifier and read Channel StorageMaps
+pub async fn query_channel_end(
     port_id: &PortId,
     channel_id: &ChannelId,
     client: Client<MyConfig>,

@@ -1,4 +1,4 @@
-use crate::channel::get_channel_end;
+use crate::channel::query_channel_end;
 use crate::{ibc_node, storage_iter, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use anyhow::Result;
 use core::str::FromStr;
@@ -134,7 +134,7 @@ pub async fn get_connection_channels(
                 let ChannelEndsPath(port_id, channel_id) = channel_ends_path;
 
                 // get channel_end
-                let channel_end = get_channel_end(&port_id, &channel_id, client.clone()).await?;
+                let channel_end = query_channel_end(&port_id, &channel_id, client.clone()).await?;
 
                 result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
             }
