@@ -16,7 +16,7 @@ use subxt::sp_core::Public;
 use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
 use beefy_merkle_tree::Hash;
-use subxt::{BeefySubscription, BlockNumber, Client, PairSigner};
+use subxt::{SignedCommitment, BeefySubscription, BlockNumber, Client, PairSigner};
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -53,7 +53,7 @@ pub async fn build_validator_proof(
             )
         })
         .collect();
-    println!("get authorities strs : {:?}", authority_strs);
+    // println!("get authorities strs : {:?}", authority_strs);
 
     // Convert BEEFY secp256k1 public keys into Ethereum addresses
     let validators: Vec<Vec<u8>> = authority_strs
@@ -64,7 +64,7 @@ pub async fn build_validator_proof(
                 .unwrap_or_default()
         })
         .collect();
-    println!("get validators : {:?}", validators);
+    // println!("get validators : {:?}", validators);
 
     // let eth_addresss_merkle_root = merkle_root::<Keccak256, _, _>(eth_addresss.clone());
     // println!(
@@ -76,22 +76,22 @@ pub async fn build_validator_proof(
     for l in 0..validators.len() {
         // when
         let proof = merkle_proof::<Keccak256, _, _>(validators.clone(), l);
-        println!("get validator proof root = {}", hex::encode(&proof.root));
+        // println!("get validator proof root = {}", hex::encode(&proof.root));
         // assert_eq!(
         //     hex::encode(&proof.root),
         //     hex::encode(&eth_addresss_merkle_root)
         // );
 
-        println!("get validator proof  = {:?}", proof.proof);
-        println!(
-            "get validator number_of_leaves = {}",
-            proof.number_of_leaves
-        );
+        // println!("get validator proof  = {:?}", proof.proof);
+        // println!(
+        //     "get validator number_of_leaves = {}",
+        //     proof.number_of_leaves
+        // );
 
-        println!("get validator leaf_index = {}", proof.leaf_index);
+        // println!("get validator leaf_index = {}", proof.leaf_index);
         // assert_eq!(proof.leaf_index, l);
 
-        println!("get validator leaf = {}", hex::encode(&proof.leaf));
+        // println!("get validator leaf = {}", hex::encode(&proof.leaf));
         // assert_eq!(&proof.leaf, &eth_addresss[l]);
 
         let validator_merkle_proof =
@@ -102,14 +102,14 @@ pub async fn build_validator_proof(
                 leaf: proof.leaf,
             });
 
-        println!("get validator merkle proof = {:?}", validator_merkle_proof);
+        // println!("get validator merkle proof = {:?}", validator_merkle_proof);
         validator_merkle_proofs.push(validator_merkle_proof);
     }
 
-    println!(
-        "all of the validator_merkle_proof is : {:?}",
-        validator_merkle_proofs
-    );
+    // println!(
+    //     "all of the validator_merkle_proof is : {:?}",
+    //     validator_merkle_proofs
+    // );
 
     Ok(validator_merkle_proofs)
 }
@@ -129,10 +129,10 @@ pub async fn build_mmr_proof(
         .block_hash(Some(BlockNumber::from(block_number)))
         .await?
         .unwrap();
-    println!(
-        "block number : {} -> block hash : {:?}",
-        block_number, block_hash
-    );
+    // println!(
+    //     "block number : {} -> block hash : {:?}",
+    //     block_number, block_hash
+    // );
 
     //get mmr leaf and proof
     // Note: target_height = signed_commitment.commitment.block_number-1
@@ -140,17 +140,68 @@ pub async fn build_mmr_proof(
     let (block_hash, mmr_leaf, mmr_leaf_proof) =
         get_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash), src_client.clone())
             .await?;
-    println!("generate_proof block hash : {:?}", block_hash);
+    // println!("generate_proof block hash : {:?}", block_hash);
 
     let mmr_proof = MmrProof {
         mmr_leaf,
         mmr_leaf_proof,
     };
-    println!("get mmr proof = {:?}", mmr_proof);
+    // println!("get mmr proof = {:?}", mmr_proof);
 
     Ok(mmr_proof)
 }
 
+/// build mmr root
+pub async fn build_mmr_root(
+    src_client: Client<DefaultConfig>,
+    raw_signed_commitment: SignedCommitment,
+) -> Result<help::MmrRoot, Box<dyn std::error::Error>> {
+    // decode signed commitment
+    let signed_commmitment: commitment::SignedCommitment =
+        <commitment::SignedCommitment as codec::Decode>::decode(
+            &mut &raw_signed_commitment.0.clone()[..],
+        )
+        .unwrap();
+
+    // get commitment
+    let commitment::Commitment {
+        payload,
+        block_number,
+        validator_set_id,
+    } = signed_commmitment.clone().commitment;
+    // println!("signed commitment block_number : {}", block_number);
+    // println!("signed commitment validator_set_id : {}", validator_set_id);
+    let payload = format!("{}", HexDisplay::from(&payload));
+    // println!("signed commitment payload : {:?}", payload);
+
+    // get block header by block number
+    let block_header =
+        get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
+            .await
+            .unwrap();
+    // println!("header = {:?}", block_header);
+
+    // build validator proof
+    let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
+        .await
+        .unwrap();
+
+    // build mmr proof
+    let mmr_proof = build_mmr_proof(src_client.clone(), block_number)
+        .await
+        .unwrap();
+
+    // build mmr root
+    let mmr_root = help::MmrRoot {
+        block_header,
+        signed_commitment: help::SignedCommitment::from(signed_commmitment),
+        validator_merkle_proofs,
+        mmr_leaf: mmr_proof.mmr_leaf,
+        mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
+    };
+    // println!("build mmr_root = {:?}", mmr_root);
+    Ok(mmr_root)
+}
 /// send Update client state request
 pub async fn send_update_state_request(
     client: Client<DefaultConfig>,
@@ -355,6 +406,7 @@ pub async fn update_client_state_service(
             }
         }
     }
+    
 }
 
 // verify commitment signatures,copy from beefy light client

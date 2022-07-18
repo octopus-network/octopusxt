@@ -18,7 +18,7 @@ use codec::{Decode, Encode};
 use core::str::FromStr;
 use prost_types::Any;
 pub use update_client_state::{
-    build_mmr_proof, build_validator_proof, get_client_ids, send_update_state_request,
+    build_mmr_proof, build_validator_proof, build_mmr_root,get_client_ids, send_update_state_request,
     update_client_state, update_client_state_service, verify_commitment_signatures,
 };
 

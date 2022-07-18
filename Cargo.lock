@@ -1936,7 +1936,6 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std 4.0.0-dev",
- "sp-timestamp",
  "sp-trie",
  "subtle-encoding",
  "tendermint",
@@ -5967,22 +5966,6 @@ dependencies = [
  "sp-io",
  "sp-runtime-interface",
  "sp-std 4.0.0-dev",
-]
-
-[[package]]
-name = "sp-timestamp"
-version = "4.0.0-dev"
-source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
-dependencies = [
- "async-trait",
- "futures-timer 3.0.2",
- "log",
- "parity-scale-codec",
- "sp-api",
- "sp-inherents",
- "sp-runtime",
- "sp-std 4.0.0-dev",
- "thiserror",
 ]
 
 [[package]]
