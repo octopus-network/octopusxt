@@ -15,7 +15,7 @@ use subxt::Client;
 use tendermint_proto::Protobuf;
 
 /// get connectionEnd according by connection_identifier and read Connections StorageMaps
-pub async fn get_connection_end(
+pub async fn query_connection_end(
     connection_identifier: &ConnectionId,
     client: Client<MyConfig>,
 ) -> Result<ConnectionEnd> {
