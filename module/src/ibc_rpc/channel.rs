@@ -368,7 +368,7 @@ pub async fn get_next_sequence_recv(
     port_id: &PortId,
     channel_id: &ChannelId,
     client: Client<MyConfig>,
-) -> Result<Vec<u8>> {
+) -> Result<Sequence> {
     tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
     let api = client
@@ -391,29 +391,7 @@ pub async fn get_next_sequence_recv(
         .next_sequence_recv(&seq_recvs_path, Some(block_hash))
         .await?;
 
-    let packet_commits_path = CommitmentsPath {
-        port_id: port_id.clone(),
-        channel_id: channel_id.clone(),
-        sequence: Sequence::from(sequence),
-    }
-    .to_string()
-    .as_bytes()
-    .to_vec();
-
-    let data: Vec<u8> = api
-        .storage()
-        .ibc()
-        .packet_commitment(&packet_commits_path, Some(block_hash))
-        .await?;
-
-    if data.is_empty() {
-        Err(anyhow::anyhow!(
-            "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, sequence
-        ))
-    } else {
-        Ok(data)
-    }
+    Ok(Sequence::from(sequence))
 }
 
 /// get get_commitment_packet_state
