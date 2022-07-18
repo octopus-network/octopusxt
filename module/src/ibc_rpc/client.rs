@@ -19,8 +19,8 @@ use sp_core::H256;
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
-/// get client_state according by client_id, and read ClientStates StorageMap
-pub async fn get_client_state(
+/// query client_state according by client_id, and read ClientStates StorageMap
+pub async fn query_client_state(
     client_id: &ClientId,
     client: Client<MyConfig>,
 ) -> Result<AnyClientState> {
