@@ -25,7 +25,9 @@ pub type SubstrateNodeTemplateExtrinsicParams<T> =
 pub type SubstrateNodeTemplateExtrinsicParamsBuilder<T> =
     subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
 
-impl From<ibc::core::ics02_client::client_type::ClientType> for ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType {
+impl From<ibc::core::ics02_client::client_type::ClientType>
+    for ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType
+{
     fn from(client_type: ibc::core::ics02_client::client_type::ClientType) -> Self {
         match client_type {
             ibc::core::ics02_client::client_type::ClientType::Tendermint => Self::Tendermint,
@@ -34,8 +36,12 @@ impl From<ibc::core::ics02_client::client_type::ClientType> for ibc_node::runtim
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType> for ibc::core::ics02_client::client_type::ClientType {
-    fn from(client_type: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType) -> Self {
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType>
+    for ibc::core::ics02_client::client_type::ClientType
+{
+    fn from(
+        client_type: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+    ) -> Self {
         match client_type {
             ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType::Tendermint => Self::Tendermint,
             ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType::Grandpa => Self::Grandpa,
@@ -116,7 +122,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Connect
 impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ChannelId>
     for ibc::core::ics24_host::identifier::ChannelId
 {
-    fn from(channel_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ChannelId) -> Self {
+    fn from(
+        channel_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+    ) -> Self {
         let value = String::from_utf8(channel_id.0).unwrap();
         Self::from_str(&value).unwrap()
     }
@@ -125,7 +133,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Channel
 impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::PortId>
     for ibc::core::ics24_host::identifier::PortId
 {
-    fn from(port_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::PortId) -> Self {
+    fn from(
+        port_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+    ) -> Self {
         let value = String::from_utf8(port_id.0).unwrap();
         Self(value)
     }
@@ -134,7 +144,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::PortId>
 impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientId>
     for ibc::core::ics24_host::identifier::ClientId
 {
-    fn from(client_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientId) -> Self {
+    fn from(
+        client_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+    ) -> Self {
         let value = String::from_utf8(client_id.0).unwrap();
         Self(value)
     }
@@ -143,7 +155,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientI
 impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Sequence>
     for ibc::core::ics04_channel::packet::Sequence
 {
-    fn from(sequence: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Sequence) -> Self {
+    fn from(
+        sequence: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Sequence,
+    ) -> Self {
         Self::from(sequence.0)
     }
 }
@@ -151,7 +165,9 @@ impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Sequenc
 impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Timestamp>
     for ibc::timestamp::Timestamp
 {
-    fn from(time_stamp: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Timestamp) -> Self {
+    fn from(
+        time_stamp: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Timestamp,
+    ) -> Self {
         let value = String::from_utf8(time_stamp.time).unwrap();
         Self::from_str(&value).unwrap()
     }

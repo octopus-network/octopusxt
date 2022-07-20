@@ -122,9 +122,9 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
-
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenInitConnection(
@@ -149,9 +149,9 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
-
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenTryConnection(
@@ -176,9 +176,9 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
-
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenAckConnection(
@@ -203,7 +203,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
@@ -230,7 +231,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenInitChannel(
                         ibc::core::ics04_channel::events::OpenInit {
@@ -256,7 +258,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenTryChannel(
                         ibc::core::ics04_channel::events::OpenTry {
@@ -282,7 +285,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenAckChannel(
                         ibc::core::ics04_channel::events::OpenAck {
@@ -309,7 +313,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenConfirmChannel(
                         ibc::core::ics04_channel::events::OpenConfirm {
@@ -335,7 +340,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::CloseInitChannel(
                         ibc::core::ics04_channel::events::CloseInit {
@@ -363,7 +369,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::CloseConfirmChannel(
                         ibc::core::ics04_channel::events::CloseConfirm {
@@ -600,7 +607,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
@@ -625,7 +633,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
@@ -650,7 +659,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
@@ -675,7 +685,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let height = event.height;
                     let connection_id = event.connection_id.map(|val| val.into());
                     let client_id = event.client_id;
-                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_connection_id =
+                        event.counterparty_connection_id.map(|val| val.into());
                     let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
@@ -701,7 +712,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenInitChannel(ibc::core::ics04_channel::events::OpenInit {
                         height: height.into(),
@@ -724,7 +736,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenTryChannel(ibc::core::ics04_channel::events::OpenTry {
                         height: height.into(),
@@ -747,7 +760,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenAckChannel(ibc::core::ics04_channel::events::OpenAck {
                         height: height.into(),
@@ -771,7 +785,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenConfirmChannel(ibc::core::ics04_channel::events::OpenConfirm {
                         height: height.into(),
@@ -794,7 +809,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::CloseInitChannel(ibc::core::ics04_channel::events::CloseInit {
                         height: height.into(),
@@ -819,7 +835,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     let channel_id = event.channel_id.map(|val| val.into());
                     let connection_id = event.connection_id;
                     let counterparty_port_id = event.counterparty_port_id;
-                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
+                    let counterparty_channel_id =
+                        event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::CloseConfirmChannel(ibc::core::ics04_channel::events::CloseConfirm {
                         height: height.into(),
