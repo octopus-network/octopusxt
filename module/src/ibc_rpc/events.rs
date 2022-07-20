@@ -44,10 +44,10 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
 
                     println!("In call_ibc: [subscribe_events] >> CreateClient Event");
 
-                    let height = event.0;
-                    let client_id = event.1;
-                    let client_type = event.2;
-                    let consensus_height = event.3;
+                    let height = event.height;
+                    let client_id = event.client_id;
+                    let client_type = event.client_type;
+                    let consensus_height = event.consensus_height;
 
                     use ibc::core::ics02_client::events::Attributes;
                     result_events.push(IbcEvent::CreateClient(
@@ -67,10 +67,10 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> UpdateClient Event");
 
-                    let height = event.0;
-                    let client_id = event.1;
-                    let client_type = event.2;
-                    let consensus_height = event.3;
+                    let height = event.height;
+                    let client_id = event.client_id;
+                    let client_type = event.client_type;
+                    let consensus_height = event.consensus_height;
 
                     use ibc::core::ics02_client::events::Attributes;
                     result_events.push(IbcEvent::UpdateClient(
@@ -95,10 +95,10 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
 
-                    let height = event.0;
-                    let client_id = event.1;
-                    let client_type = event.2;
-                    let consensus_height = event.3;
+                    let height = event.height;
+                    let client_id = event.client_id;
+                    let client_type = event.client_type;
+                    let consensus_height = event.consensus_height;
 
                     use ibc::core::ics02_client::events::Attributes;
                     result_events.push(IbcEvent::ClientMisbehaviour(
@@ -119,11 +119,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
+
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenInitConnection(
@@ -145,11 +146,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
+
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenTryConnection(
@@ -171,11 +173,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
+
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenAckConnection(
@@ -197,11 +200,11 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenConfirmConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
                     result_events.push(IbcEvent::OpenConfirmConnection(
@@ -222,12 +225,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenInitChannel(
                         ibc::core::ics04_channel::events::OpenInit {
@@ -248,12 +251,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenTryChannel(
                         ibc::core::ics04_channel::events::OpenTry {
@@ -274,12 +277,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenAckChannel(
                         ibc::core::ics04_channel::events::OpenAck {
@@ -301,12 +304,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::OpenConfirmChannel(
                         ibc::core::ics04_channel::events::OpenConfirm {
@@ -327,12 +330,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::CloseInitChannel(
                         ibc::core::ics04_channel::events::CloseInit {
@@ -355,12 +358,12 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
 
                     println!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     result_events.push(IbcEvent::CloseConfirmChannel(
                         ibc::core::ics04_channel::events::CloseConfirm {
@@ -382,8 +385,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     println!("In call_ibc: [substrate_events] >> SendPacket Event");
 
                     let send_packet = ibc::core::ics04_channel::events::SendPacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     result_events.push(IbcEvent::SendPacket(send_packet));
@@ -398,8 +401,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     println!("In call_ibc: [substrate_events] >> ReceivePacket Event");
 
                     let receive_packet = ibc::core::ics04_channel::events::ReceivePacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     result_events.push(IbcEvent::ReceivePacket(receive_packet));
@@ -416,9 +419,9 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
 
                     let write_acknowledgement =
                         ibc::core::ics04_channel::events::WriteAcknowledgement {
-                            height: event.0.into(),
-                            packet: event.1.into(),
-                            ack: event.2,
+                            height: event.height.into(),
+                            packet: event.packet.into(),
+                            ack: event.ack,
                         };
 
                     result_events.push(IbcEvent::WriteAcknowledgement(write_acknowledgement));
@@ -434,8 +437,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     println!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
 
                     let acknowledge_packet = ibc::core::ics04_channel::events::AcknowledgePacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     result_events.push(IbcEvent::AcknowledgePacket(acknowledge_packet));
@@ -450,8 +453,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
                     println!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
 
                     let timeout_packet = ibc::core::ics04_channel::events::TimeoutPacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     result_events.push(IbcEvent::TimeoutPacket(timeout_packet));
@@ -468,8 +471,8 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
 
                     let timeout_on_close_packet =
                         ibc::core::ics04_channel::events::TimeoutOnClosePacket {
-                            height: event.0.into(),
-                            packet: event.1.into(),
+                            height: event.height.into(),
+                            packet: event.packet.into(),
                         };
 
                     result_events.push(IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet));
@@ -526,10 +529,10 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> CreateClient Event");
 
-                    let height = event.0;
-                    let client_id = event.1;
-                    let client_type = event.2;
-                    let consensus_height = event.3;
+                    let height = event.height;
+                    let client_id = event.client_id;
+                    let client_type = event.client_type;
+                    let consensus_height = event.consensus_height;
 
                     use ibc::core::ics02_client::events::Attributes;
                     IbcEvent::CreateClient(ibc::core::ics02_client::events::CreateClient::from(
@@ -548,10 +551,10 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> UpdateClient Event");
 
-                    let height = event.0;
-                    let client_id = event.1;
-                    let client_type = event.2;
-                    let consensus_height = event.3;
+                    let height = event.height;
+                    let client_id = event.client_id;
+                    let client_type = event.client_type;
+                    let consensus_height = event.consensus_height;
 
                     use ibc::core::ics02_client::events::Attributes;
                     IbcEvent::UpdateClient(ibc::core::ics02_client::events::UpdateClient::from(
@@ -571,10 +574,10 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> ClientMisbehaviour Event");
 
-                    let height = event.0;
-                    let client_id = event.1;
-                    let client_type = event.2;
-                    let consensus_height = event.3;
+                    let height = event.height;
+                    let client_id = event.client_id;
+                    let client_type = event.client_type;
+                    let consensus_height = event.consensus_height;
 
                     use ibc::core::ics02_client::events::Attributes;
                     IbcEvent::ClientMisbehaviour(
@@ -594,11 +597,11 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenInitConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
                     IbcEvent::OpenInitConnection(
@@ -619,11 +622,11 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenTryConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
                     IbcEvent::OpenTryConnection(ibc::core::ics03_connection::events::OpenTry::from(
@@ -644,11 +647,11 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenAckConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
                     IbcEvent::OpenAckConnection(ibc::core::ics03_connection::events::OpenAck::from(
@@ -669,11 +672,11 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenConfirmConnection Event");
 
-                    let height = event.0;
-                    let connection_id = event.1.map(|val| val.into());
-                    let client_id = event.2;
-                    let counterparty_connection_id = event.3.map(|val| val.into());
-                    let counterparty_client_id = event.4;
+                    let height = event.height;
+                    let connection_id = event.connection_id.map(|val| val.into());
+                    let client_id = event.client_id;
+                    let counterparty_connection_id = event.counterparty_connection_id.map(|val| val.into());
+                    let counterparty_client_id = event.counterparty_client_id;
 
                     use ibc::core::ics03_connection::events::Attributes;
                     IbcEvent::OpenConfirmConnection(
@@ -693,12 +696,12 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenInitChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenInitChannel(ibc::core::ics04_channel::events::OpenInit {
                         height: height.into(),
@@ -716,12 +719,12 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenTryChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenTryChannel(ibc::core::ics04_channel::events::OpenTry {
                         height: height.into(),
@@ -739,12 +742,12 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenAckChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenAckChannel(ibc::core::ics04_channel::events::OpenAck {
                         height: height.into(),
@@ -763,12 +766,12 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                         .unwrap();
                     println!("In call_ibc: [subscribe_events] >> OpenConfirmChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::OpenConfirmChannel(ibc::core::ics04_channel::events::OpenConfirm {
                         height: height.into(),
@@ -786,12 +789,12 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     .unwrap();
                     println!("In call_ibc: [subscribe_events] >> CloseInitChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::CloseInitChannel(ibc::core::ics04_channel::events::CloseInit {
                         height: height.into(),
@@ -811,12 +814,12 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
 
                     println!("In call_ibc: [subscribe_events] >> CloseConfirmChannel Event");
 
-                    let height = event.0;
-                    let port_id = event.1;
-                    let channel_id = event.2.map(|val| val.into());
-                    let connection_id = event.3;
-                    let counterparty_port_id = event.4;
-                    let counterparty_channel_id = event.5.map(|val| val.into());
+                    let height = event.height;
+                    let port_id = event.port_id;
+                    let channel_id = event.channel_id.map(|val| val.into());
+                    let connection_id = event.connection_id;
+                    let counterparty_port_id = event.counterparty_port_id;
+                    let counterparty_channel_id = event.counterparty_channel_id.map(|val| val.into());
 
                     IbcEvent::CloseConfirmChannel(ibc::core::ics04_channel::events::CloseConfirm {
                         height: height.into(),
@@ -835,8 +838,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     println!("In call_ibc: [substrate_events] >> SendPacket Event");
 
                     let send_packet = ibc::core::ics04_channel::events::SendPacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     IbcEvent::SendPacket(send_packet)
@@ -849,8 +852,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     println!("In call_ibc: [substrate_events] >> ReceivePacket Event");
 
                     let receive_packet = ibc::core::ics04_channel::events::ReceivePacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     IbcEvent::ReceivePacket(receive_packet)
@@ -865,9 +868,9 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
 
                     let write_acknowledgement =
                         ibc::core::ics04_channel::events::WriteAcknowledgement {
-                            height: event.0.into(),
-                            packet: event.1.into(),
-                            ack: event.2,
+                            height: event.height.into(),
+                            packet: event.packet.into(),
+                            ack: event.ack,
                         };
 
                     IbcEvent::WriteAcknowledgement(write_acknowledgement)
@@ -881,8 +884,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     println!("In call_ibc: [substrate_events] >> AcknowledgePacket Event");
 
                     let acknowledge_packet = ibc::core::ics04_channel::events::AcknowledgePacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     IbcEvent::AcknowledgePacket(acknowledge_packet)
@@ -895,8 +898,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
                     println!("In call_ibc: [substrate_events] >> TimeoutPacket Event");
 
                     let timeout_packet = ibc::core::ics04_channel::events::TimeoutPacket {
-                        height: event.0.into(),
-                        packet: event.1.into(),
+                        height: event.height.into(),
+                        packet: event.packet.into(),
                     };
 
                     IbcEvent::TimeoutPacket(timeout_packet)
@@ -911,8 +914,8 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
 
                     let timeout_on_close_packet =
                         ibc::core::ics04_channel::events::TimeoutOnClosePacket {
-                            height: event.0.into(),
-                            packet: event.1.into(),
+                            height: event.height.into(),
+                            packet: event.packet.into(),
                         };
 
                     IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet)

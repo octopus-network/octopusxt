@@ -57,6 +57,7 @@ pub mod api {
     pub mod system {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -172,7 +173,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<FillBlock>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<FillBlock>()?
+                    };
+                    if runtime_call_hash
                         == [
                             228u8, 117u8, 251u8, 95u8, 47u8, 56u8, 32u8, 177u8, 191u8, 72u8, 75u8,
                             23u8, 193u8, 175u8, 227u8, 218u8, 127u8, 94u8, 114u8, 110u8, 215u8,
@@ -197,7 +203,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Remark, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Remark>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Remark>()?
+                    };
+                    if runtime_call_hash
                         == [
                             186u8, 79u8, 33u8, 199u8, 216u8, 115u8, 19u8, 146u8, 220u8, 174u8,
                             98u8, 61u8, 179u8, 230u8, 40u8, 70u8, 22u8, 251u8, 77u8, 62u8, 133u8,
@@ -226,7 +237,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetHeapPages>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetHeapPages>()?
+                    };
+                    if runtime_call_hash
                         == [
                             77u8, 138u8, 122u8, 55u8, 179u8, 101u8, 60u8, 137u8, 173u8, 39u8, 28u8,
                             36u8, 237u8, 243u8, 232u8, 162u8, 76u8, 176u8, 135u8, 58u8, 60u8,
@@ -265,7 +281,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetCode>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetCode>()?
+                    };
+                    if runtime_call_hash
                         == [
                             35u8, 75u8, 103u8, 203u8, 91u8, 141u8, 77u8, 95u8, 37u8, 157u8, 107u8,
                             240u8, 54u8, 242u8, 245u8, 205u8, 104u8, 165u8, 177u8, 37u8, 86u8,
@@ -302,7 +323,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetCodeWithoutChecks>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetCodeWithoutChecks>()?
+                    };
+                    if runtime_call_hash
                         == [
                             150u8, 148u8, 119u8, 129u8, 77u8, 216u8, 135u8, 187u8, 127u8, 24u8,
                             238u8, 15u8, 227u8, 229u8, 191u8, 217u8, 106u8, 129u8, 149u8, 79u8,
@@ -334,7 +360,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetStorage>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetStorage>()?
+                    };
+                    if runtime_call_hash
                         == [
                             197u8, 12u8, 119u8, 205u8, 152u8, 103u8, 211u8, 170u8, 146u8, 253u8,
                             25u8, 56u8, 180u8, 146u8, 74u8, 75u8, 38u8, 108u8, 212u8, 154u8, 23u8,
@@ -363,7 +394,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<KillStorage>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<KillStorage>()?
+                    };
+                    if runtime_call_hash
                         == [
                             154u8, 115u8, 185u8, 20u8, 126u8, 90u8, 222u8, 131u8, 199u8, 57u8,
                             184u8, 226u8, 43u8, 245u8, 161u8, 176u8, 194u8, 123u8, 139u8, 97u8,
@@ -396,7 +432,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<KillPrefix>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<KillPrefix>()?
+                    };
+                    if runtime_call_hash
                         == [
                             214u8, 101u8, 191u8, 241u8, 1u8, 241u8, 144u8, 116u8, 246u8, 199u8,
                             159u8, 249u8, 155u8, 164u8, 220u8, 221u8, 75u8, 33u8, 204u8, 3u8,
@@ -425,7 +466,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<RemarkWithEvent>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<RemarkWithEvent>()?
+                    };
+                    if runtime_call_hash
                         == [
                             171u8, 82u8, 75u8, 237u8, 69u8, 197u8, 223u8, 125u8, 123u8, 51u8,
                             241u8, 35u8, 202u8, 210u8, 227u8, 109u8, 1u8, 241u8, 255u8, 63u8, 33u8,
@@ -440,6 +486,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "Event for the System pallet."]
         pub type Event = runtime_types::frame_system::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -673,332 +720,494 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " The full account information for a particular account ID."]
-                pub async fn account(
+                pub fn account(
                     &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_system::AccountInfo<
-                        ::core::primitive::u32,
-                        runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_system::AccountInfo<
+                            ::core::primitive::u32,
+                            runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            224u8, 184u8, 2u8, 14u8, 38u8, 177u8, 223u8, 98u8, 223u8, 15u8, 130u8,
-                            23u8, 212u8, 69u8, 61u8, 165u8, 171u8, 61u8, 171u8, 57u8, 88u8, 71u8,
-                            168u8, 172u8, 54u8, 91u8, 109u8, 231u8, 169u8, 167u8, 195u8, 46u8,
-                        ]
-                    {
-                        let entry = Account(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                224u8, 184u8, 2u8, 14u8, 38u8, 177u8, 223u8, 98u8, 223u8, 15u8,
+                                130u8, 23u8, 212u8, 69u8, 61u8, 165u8, 171u8, 61u8, 171u8, 57u8,
+                                88u8, 71u8, 168u8, 172u8, 54u8, 91u8, 109u8, 231u8, 169u8, 167u8,
+                                195u8, 46u8,
+                            ]
+                        {
+                            let entry = Account(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The full account information for a particular account ID."]
-                pub async fn account_iter(
+                pub fn account_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            224u8, 184u8, 2u8, 14u8, 38u8, 177u8, 223u8, 98u8, 223u8, 15u8, 130u8,
-                            23u8, 212u8, 69u8, 61u8, 165u8, 171u8, 61u8, 171u8, 57u8, 88u8, 71u8,
-                            168u8, 172u8, 54u8, 91u8, 109u8, 231u8, 169u8, 167u8, 195u8, 46u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Account<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                224u8, 184u8, 2u8, 14u8, 38u8, 177u8, 223u8, 98u8, 223u8, 15u8,
+                                130u8, 23u8, 212u8, 69u8, 61u8, 165u8, 171u8, 61u8, 171u8, 57u8,
+                                88u8, 71u8, 168u8, 172u8, 54u8, 91u8, 109u8, 231u8, 169u8, 167u8,
+                                195u8, 46u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Total extrinsics count for the current block."]
-                pub async fn extrinsic_count(
+                pub fn extrinsic_count(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ExtrinsicCount>()?
-                        == [
-                            223u8, 60u8, 201u8, 120u8, 36u8, 44u8, 180u8, 210u8, 242u8, 53u8,
-                            222u8, 154u8, 123u8, 176u8, 249u8, 8u8, 225u8, 28u8, 232u8, 4u8, 136u8,
-                            41u8, 151u8, 82u8, 189u8, 149u8, 49u8, 166u8, 139u8, 9u8, 163u8, 231u8,
-                        ]
-                    {
-                        let entry = ExtrinsicCount;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ExtrinsicCount>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                223u8, 60u8, 201u8, 120u8, 36u8, 44u8, 180u8, 210u8, 242u8, 53u8,
+                                222u8, 154u8, 123u8, 176u8, 249u8, 8u8, 225u8, 28u8, 232u8, 4u8,
+                                136u8, 41u8, 151u8, 82u8, 189u8, 149u8, 49u8, 166u8, 139u8, 9u8,
+                                163u8, 231u8,
+                            ]
+                        {
+                            let entry = ExtrinsicCount;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The current weight for the block."]
-                pub async fn block_weight(
+                pub fn block_weight(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::weights::PerDispatchClass<::core::primitive::u64>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<BlockWeight>()?
-                        == [
-                            2u8, 236u8, 190u8, 174u8, 244u8, 98u8, 194u8, 168u8, 89u8, 208u8, 7u8,
-                            45u8, 175u8, 171u8, 177u8, 121u8, 215u8, 190u8, 184u8, 195u8, 49u8,
-                            133u8, 44u8, 1u8, 181u8, 215u8, 89u8, 84u8, 255u8, 16u8, 57u8, 152u8,
-                        ]
-                    {
-                        let entry = BlockWeight;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::weights::PerDispatchClass<
+                            ::core::primitive::u64,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<BlockWeight>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                2u8, 236u8, 190u8, 174u8, 244u8, 98u8, 194u8, 168u8, 89u8, 208u8,
+                                7u8, 45u8, 175u8, 171u8, 177u8, 121u8, 215u8, 190u8, 184u8, 195u8,
+                                49u8, 133u8, 44u8, 1u8, 181u8, 215u8, 89u8, 84u8, 255u8, 16u8,
+                                57u8, 152u8,
+                            ]
+                        {
+                            let entry = BlockWeight;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Total length (in bytes) for all extrinsics put together, for the current block."]
-                pub async fn all_extrinsics_len(
+                pub fn all_extrinsics_len(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<AllExtrinsicsLen>()?
-                        == [
-                            202u8, 145u8, 209u8, 225u8, 40u8, 220u8, 174u8, 74u8, 93u8, 164u8,
-                            254u8, 248u8, 254u8, 192u8, 32u8, 117u8, 96u8, 149u8, 53u8, 145u8,
-                            219u8, 64u8, 234u8, 18u8, 217u8, 200u8, 203u8, 141u8, 145u8, 28u8,
-                            134u8, 60u8,
-                        ]
-                    {
-                        let entry = AllExtrinsicsLen;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AllExtrinsicsLen>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                202u8, 145u8, 209u8, 225u8, 40u8, 220u8, 174u8, 74u8, 93u8, 164u8,
+                                254u8, 248u8, 254u8, 192u8, 32u8, 117u8, 96u8, 149u8, 53u8, 145u8,
+                                219u8, 64u8, 234u8, 18u8, 217u8, 200u8, 203u8, 141u8, 145u8, 28u8,
+                                134u8, 60u8,
+                            ]
+                        {
+                            let entry = AllExtrinsicsLen;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Map of block numbers to block hashes."]
-                pub async fn block_hash(
+                pub fn block_hash(
                     &self,
-                    _0: &::core::primitive::u32,
+                    _0: &'a ::core::primitive::u32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<BlockHash>()?
-                        == [
-                            24u8, 99u8, 146u8, 142u8, 205u8, 166u8, 4u8, 32u8, 218u8, 213u8, 24u8,
-                            236u8, 45u8, 116u8, 145u8, 204u8, 27u8, 141u8, 169u8, 249u8, 111u8,
-                            141u8, 37u8, 136u8, 45u8, 73u8, 167u8, 217u8, 118u8, 206u8, 246u8,
-                            120u8,
-                        ]
-                    {
-                        let entry = BlockHash(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<BlockHash>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                24u8, 99u8, 146u8, 142u8, 205u8, 166u8, 4u8, 32u8, 218u8, 213u8,
+                                24u8, 236u8, 45u8, 116u8, 145u8, 204u8, 27u8, 141u8, 169u8, 249u8,
+                                111u8, 141u8, 37u8, 136u8, 45u8, 73u8, 167u8, 217u8, 118u8, 206u8,
+                                246u8, 120u8,
+                            ]
+                        {
+                            let entry = BlockHash(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Map of block numbers to block hashes."]
-                pub async fn block_hash_iter(
+                pub fn block_hash_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, BlockHash<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<BlockHash>()?
-                        == [
-                            24u8, 99u8, 146u8, 142u8, 205u8, 166u8, 4u8, 32u8, 218u8, 213u8, 24u8,
-                            236u8, 45u8, 116u8, 145u8, 204u8, 27u8, 141u8, 169u8, 249u8, 111u8,
-                            141u8, 37u8, 136u8, 45u8, 73u8, 167u8, 217u8, 118u8, 206u8, 246u8,
-                            120u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, BlockHash<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<BlockHash>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                24u8, 99u8, 146u8, 142u8, 205u8, 166u8, 4u8, 32u8, 218u8, 213u8,
+                                24u8, 236u8, 45u8, 116u8, 145u8, 204u8, 27u8, 141u8, 169u8, 249u8,
+                                111u8, 141u8, 37u8, 136u8, 45u8, 73u8, 167u8, 217u8, 118u8, 206u8,
+                                246u8, 120u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Extrinsics data for the current block (maps an extrinsic's index to its data)."]
-                pub async fn extrinsic_data(
+                pub fn extrinsic_data(
                     &self,
-                    _0: &::core::primitive::u32,
+                    _0: &'a ::core::primitive::u32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ExtrinsicData>()?
-                        == [
-                            210u8, 224u8, 211u8, 186u8, 118u8, 210u8, 185u8, 194u8, 238u8, 211u8,
-                            254u8, 73u8, 67u8, 184u8, 31u8, 229u8, 168u8, 125u8, 98u8, 23u8, 241u8,
-                            59u8, 49u8, 86u8, 126u8, 9u8, 114u8, 163u8, 160u8, 62u8, 50u8, 67u8,
-                        ]
-                    {
-                        let entry = ExtrinsicData(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ExtrinsicData>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                210u8, 224u8, 211u8, 186u8, 118u8, 210u8, 185u8, 194u8, 238u8,
+                                211u8, 254u8, 73u8, 67u8, 184u8, 31u8, 229u8, 168u8, 125u8, 98u8,
+                                23u8, 241u8, 59u8, 49u8, 86u8, 126u8, 9u8, 114u8, 163u8, 160u8,
+                                62u8, 50u8, 67u8,
+                            ]
+                        {
+                            let entry = ExtrinsicData(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Extrinsics data for the current block (maps an extrinsic's index to its data)."]
-                pub async fn extrinsic_data_iter(
+                pub fn extrinsic_data_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ExtrinsicData<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ExtrinsicData>()?
-                        == [
-                            210u8, 224u8, 211u8, 186u8, 118u8, 210u8, 185u8, 194u8, 238u8, 211u8,
-                            254u8, 73u8, 67u8, 184u8, 31u8, 229u8, 168u8, 125u8, 98u8, 23u8, 241u8,
-                            59u8, 49u8, 86u8, 126u8, 9u8, 114u8, 163u8, 160u8, 62u8, 50u8, 67u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ExtrinsicData<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ExtrinsicData>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                210u8, 224u8, 211u8, 186u8, 118u8, 210u8, 185u8, 194u8, 238u8,
+                                211u8, 254u8, 73u8, 67u8, 184u8, 31u8, 229u8, 168u8, 125u8, 98u8,
+                                23u8, 241u8, 59u8, 49u8, 86u8, 126u8, 9u8, 114u8, 163u8, 160u8,
+                                62u8, 50u8, 67u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The current block number being processed. Set by `execute_block`."]
-                pub async fn number(
+                pub fn number(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Number>()?
-                        == [
-                            228u8, 96u8, 102u8, 190u8, 252u8, 130u8, 239u8, 172u8, 126u8, 235u8,
-                            246u8, 139u8, 208u8, 15u8, 88u8, 245u8, 141u8, 232u8, 43u8, 204u8,
-                            36u8, 87u8, 211u8, 141u8, 187u8, 68u8, 236u8, 70u8, 193u8, 235u8,
-                            164u8, 191u8,
-                        ]
-                    {
-                        let entry = Number;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Number>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                228u8, 96u8, 102u8, 190u8, 252u8, 130u8, 239u8, 172u8, 126u8,
+                                235u8, 246u8, 139u8, 208u8, 15u8, 88u8, 245u8, 141u8, 232u8, 43u8,
+                                204u8, 36u8, 87u8, 211u8, 141u8, 187u8, 68u8, 236u8, 70u8, 193u8,
+                                235u8, 164u8, 191u8,
+                            ]
+                        {
+                            let entry = Number;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Hash of the previous block."]
-                pub async fn parent_hash(
+                pub fn parent_hash(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ParentHash>()?
-                        == [
-                            194u8, 221u8, 147u8, 22u8, 68u8, 141u8, 32u8, 6u8, 202u8, 39u8, 164u8,
-                            184u8, 69u8, 126u8, 190u8, 101u8, 215u8, 27u8, 127u8, 157u8, 200u8,
-                            69u8, 170u8, 139u8, 232u8, 27u8, 254u8, 181u8, 183u8, 105u8, 111u8,
-                            177u8,
-                        ]
-                    {
-                        let entry = ParentHash;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ParentHash>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                194u8, 221u8, 147u8, 22u8, 68u8, 141u8, 32u8, 6u8, 202u8, 39u8,
+                                164u8, 184u8, 69u8, 126u8, 190u8, 101u8, 215u8, 27u8, 127u8, 157u8,
+                                200u8, 69u8, 170u8, 139u8, 232u8, 27u8, 254u8, 181u8, 183u8, 105u8,
+                                111u8, 177u8,
+                            ]
+                        {
+                            let entry = ParentHash;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Digest of the current block, also part of the block header."]
-                pub async fn digest(
+                pub fn digest(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::sp_runtime::generic::digest::Digest,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Digest>()?
-                        == [
-                            10u8, 176u8, 13u8, 228u8, 226u8, 42u8, 210u8, 151u8, 107u8, 212u8,
-                            136u8, 15u8, 38u8, 182u8, 225u8, 12u8, 250u8, 56u8, 193u8, 243u8,
-                            219u8, 113u8, 95u8, 233u8, 21u8, 229u8, 125u8, 146u8, 92u8, 250u8,
-                            32u8, 168u8,
-                        ]
-                    {
-                        let entry = Digest;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::sp_runtime::generic::digest::Digest,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Digest>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                10u8, 176u8, 13u8, 228u8, 226u8, 42u8, 210u8, 151u8, 107u8, 212u8,
+                                136u8, 15u8, 38u8, 182u8, 225u8, 12u8, 250u8, 56u8, 193u8, 243u8,
+                                219u8, 113u8, 95u8, 233u8, 21u8, 229u8, 125u8, 146u8, 92u8, 250u8,
+                                32u8, 168u8,
+                            ]
+                        {
+                            let entry = Digest;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Events deposited for the current block."]
                 #[doc = ""]
                 #[doc = " NOTE: This storage item is explicitly unbounded since it is never intended to be read"]
                 #[doc = " from within the runtime."]
-                pub async fn events(
+                pub fn events(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<
-                        runtime_types::frame_system::EventRecord<
-                            runtime_types::node_template_runtime::Event,
-                            ::subxt::sp_core::H256,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<
+                            runtime_types::frame_system::EventRecord<
+                                runtime_types::node_template_runtime::Event,
+                                ::subxt::sp_core::H256,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Events>()?
-                        == [
-                            196u8, 76u8, 9u8, 244u8, 10u8, 252u8, 170u8, 176u8, 79u8, 80u8, 193u8,
-                            37u8, 19u8, 144u8, 173u8, 151u8, 242u8, 30u8, 142u8, 52u8, 9u8, 167u8,
-                            247u8, 236u8, 53u8, 130u8, 173u8, 138u8, 61u8, 122u8, 5u8, 42u8,
-                        ]
-                    {
-                        let entry = Events;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Events>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                30u8, 33u8, 205u8, 95u8, 123u8, 57u8, 57u8, 240u8, 27u8, 138u8,
+                                145u8, 181u8, 99u8, 239u8, 132u8, 108u8, 24u8, 79u8, 217u8, 237u8,
+                                62u8, 245u8, 226u8, 199u8, 72u8, 234u8, 95u8, 99u8, 133u8, 225u8,
+                                198u8, 231u8,
+                            ]
+                        {
+                            let entry = Events;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The number of events in the `Events<T>` list."]
-                pub async fn event_count(
+                pub fn event_count(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<EventCount>()?
-                        == [
-                            236u8, 93u8, 90u8, 177u8, 250u8, 211u8, 138u8, 187u8, 26u8, 208u8,
-                            203u8, 113u8, 221u8, 233u8, 227u8, 9u8, 249u8, 25u8, 202u8, 185u8,
-                            161u8, 144u8, 167u8, 104u8, 127u8, 187u8, 38u8, 18u8, 52u8, 61u8, 66u8,
-                            112u8,
-                        ]
-                    {
-                        let entry = EventCount;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EventCount>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                236u8, 93u8, 90u8, 177u8, 250u8, 211u8, 138u8, 187u8, 26u8, 208u8,
+                                203u8, 113u8, 221u8, 233u8, 227u8, 9u8, 249u8, 25u8, 202u8, 185u8,
+                                161u8, 144u8, 167u8, 104u8, 127u8, 187u8, 38u8, 18u8, 52u8, 61u8,
+                                66u8, 112u8,
+                            ]
+                        {
+                            let entry = EventCount;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Mapping between a topic (represented by T::Hash) and a vector of indexes"]
@@ -1011,28 +1220,39 @@ pub mod api {
                 #[doc = " The value has the type `(T::BlockNumber, EventIndex)` because if we used only just"]
                 #[doc = " the `EventIndex` then in case if the topic has the same contents on the next block"]
                 #[doc = " no notification will be triggered thus the event might be lost."]
-                pub async fn event_topics(
+                pub fn event_topics(
                     &self,
-                    _0: &::subxt::sp_core::H256,
+                    _0: &'a ::subxt::sp_core::H256,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<EventTopics>()?
-                        == [
-                            231u8, 73u8, 172u8, 223u8, 210u8, 145u8, 151u8, 102u8, 73u8, 23u8,
-                            140u8, 55u8, 97u8, 40u8, 219u8, 239u8, 229u8, 177u8, 72u8, 41u8, 93u8,
-                            178u8, 7u8, 209u8, 57u8, 86u8, 153u8, 252u8, 86u8, 152u8, 245u8, 179u8,
-                        ]
-                    {
-                        let entry = EventTopics(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EventTopics>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                231u8, 73u8, 172u8, 223u8, 210u8, 145u8, 151u8, 102u8, 73u8, 23u8,
+                                140u8, 55u8, 97u8, 40u8, 219u8, 239u8, 229u8, 177u8, 72u8, 41u8,
+                                93u8, 178u8, 7u8, 209u8, 57u8, 86u8, 153u8, 252u8, 86u8, 152u8,
+                                245u8, 179u8,
+                            ]
+                        {
+                            let entry = EventTopics(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Mapping between a topic (represented by T::Hash) and a vector of indexes"]
@@ -1045,122 +1265,172 @@ pub mod api {
                 #[doc = " The value has the type `(T::BlockNumber, EventIndex)` because if we used only just"]
                 #[doc = " the `EventIndex` then in case if the topic has the same contents on the next block"]
                 #[doc = " no notification will be triggered thus the event might be lost."]
-                pub async fn event_topics_iter(
+                pub fn event_topics_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, EventTopics<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<EventTopics>()?
-                        == [
-                            231u8, 73u8, 172u8, 223u8, 210u8, 145u8, 151u8, 102u8, 73u8, 23u8,
-                            140u8, 55u8, 97u8, 40u8, 219u8, 239u8, 229u8, 177u8, 72u8, 41u8, 93u8,
-                            178u8, 7u8, 209u8, 57u8, 86u8, 153u8, 252u8, 86u8, 152u8, 245u8, 179u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, EventTopics<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EventTopics>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                231u8, 73u8, 172u8, 223u8, 210u8, 145u8, 151u8, 102u8, 73u8, 23u8,
+                                140u8, 55u8, 97u8, 40u8, 219u8, 239u8, 229u8, 177u8, 72u8, 41u8,
+                                93u8, 178u8, 7u8, 209u8, 57u8, 86u8, 153u8, 252u8, 86u8, 152u8,
+                                245u8, 179u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Stores the `spec_version` and `spec_name` of when the last runtime upgrade happened."]
-                pub async fn last_runtime_upgrade(
+                pub fn last_runtime_upgrade(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<runtime_types::frame_system::LastRuntimeUpgradeInfo>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<LastRuntimeUpgrade>()?
-                        == [
-                            219u8, 153u8, 158u8, 38u8, 45u8, 65u8, 151u8, 137u8, 53u8, 76u8, 11u8,
-                            181u8, 218u8, 248u8, 125u8, 190u8, 100u8, 240u8, 173u8, 75u8, 179u8,
-                            137u8, 198u8, 197u8, 248u8, 185u8, 118u8, 58u8, 42u8, 165u8, 125u8,
-                            119u8,
-                        ]
-                    {
-                        let entry = LastRuntimeUpgrade;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<runtime_types::frame_system::LastRuntimeUpgradeInfo>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<LastRuntimeUpgrade>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                219u8, 153u8, 158u8, 38u8, 45u8, 65u8, 151u8, 137u8, 53u8, 76u8,
+                                11u8, 181u8, 218u8, 248u8, 125u8, 190u8, 100u8, 240u8, 173u8, 75u8,
+                                179u8, 137u8, 198u8, 197u8, 248u8, 185u8, 118u8, 58u8, 42u8, 165u8,
+                                125u8, 119u8,
+                            ]
+                        {
+                            let entry = LastRuntimeUpgrade;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " True if we have upgraded so that `type RefCount` is `u32`. False (default) if not."]
-                pub async fn upgraded_to_u32_ref_count(
+                pub fn upgraded_to_u32_ref_count(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<UpgradedToU32RefCount>()?
-                        == [
-                            171u8, 88u8, 244u8, 92u8, 122u8, 67u8, 27u8, 18u8, 59u8, 175u8, 175u8,
-                            178u8, 20u8, 150u8, 213u8, 59u8, 222u8, 141u8, 32u8, 107u8, 3u8, 114u8,
-                            83u8, 250u8, 180u8, 233u8, 152u8, 54u8, 187u8, 99u8, 131u8, 204u8,
-                        ]
-                    {
-                        let entry = UpgradedToU32RefCount;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<UpgradedToU32RefCount>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                171u8, 88u8, 244u8, 92u8, 122u8, 67u8, 27u8, 18u8, 59u8, 175u8,
+                                175u8, 178u8, 20u8, 150u8, 213u8, 59u8, 222u8, 141u8, 32u8, 107u8,
+                                3u8, 114u8, 83u8, 250u8, 180u8, 233u8, 152u8, 54u8, 187u8, 99u8,
+                                131u8, 204u8,
+                            ]
+                        {
+                            let entry = UpgradedToU32RefCount;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " True if we have upgraded so that AccountInfo contains three types of `RefCount`. False"]
                 #[doc = " (default) if not."]
-                pub async fn upgraded_to_triple_ref_count(
+                pub fn upgraded_to_triple_ref_count(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<UpgradedToTripleRefCount>()?
-                        == [
-                            90u8, 33u8, 56u8, 86u8, 90u8, 101u8, 89u8, 133u8, 203u8, 56u8, 201u8,
-                            210u8, 244u8, 232u8, 150u8, 18u8, 51u8, 105u8, 14u8, 230u8, 103u8,
-                            155u8, 246u8, 99u8, 53u8, 207u8, 225u8, 128u8, 186u8, 76u8, 40u8,
-                            185u8,
-                        ]
-                    {
-                        let entry = UpgradedToTripleRefCount;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<UpgradedToTripleRefCount>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                90u8, 33u8, 56u8, 86u8, 90u8, 101u8, 89u8, 133u8, 203u8, 56u8,
+                                201u8, 210u8, 244u8, 232u8, 150u8, 18u8, 51u8, 105u8, 14u8, 230u8,
+                                103u8, 155u8, 246u8, 99u8, 53u8, 207u8, 225u8, 128u8, 186u8, 76u8,
+                                40u8, 185u8,
+                            ]
+                        {
+                            let entry = UpgradedToTripleRefCount;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The execution phase of the block."]
-                pub async fn execution_phase(
+                pub fn execution_phase(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<runtime_types::frame_system::Phase>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ExecutionPhase>()?
-                        == [
-                            174u8, 13u8, 230u8, 220u8, 239u8, 161u8, 172u8, 122u8, 188u8, 95u8,
-                            141u8, 118u8, 91u8, 158u8, 111u8, 145u8, 243u8, 173u8, 226u8, 212u8,
-                            187u8, 118u8, 94u8, 132u8, 221u8, 244u8, 61u8, 148u8, 217u8, 30u8,
-                            238u8, 225u8,
-                        ]
-                    {
-                        let entry = ExecutionPhase;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<runtime_types::frame_system::Phase>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ExecutionPhase>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                174u8, 13u8, 230u8, 220u8, 239u8, 161u8, 172u8, 122u8, 188u8, 95u8,
+                                141u8, 118u8, 91u8, 158u8, 111u8, 145u8, 243u8, 173u8, 226u8,
+                                212u8, 187u8, 118u8, 94u8, 132u8, 221u8, 244u8, 61u8, 148u8, 217u8,
+                                30u8, 238u8, 225u8,
+                            ]
+                        {
+                            let entry = ExecutionPhase;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -1181,10 +1451,9 @@ pub mod api {
                     runtime_types::frame_system::limits::BlockWeights,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("System", "BlockWeights")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("System", "BlockWeights")?
                         == [
                             49u8, 105u8, 160u8, 185u8, 41u8, 100u8, 26u8, 18u8, 154u8, 196u8,
                             108u8, 96u8, 36u8, 148u8, 28u8, 162u8, 92u8, 234u8, 89u8, 152u8, 149u8,
@@ -1192,7 +1461,7 @@ pub mod api {
                             106u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("System")?;
+                        let pallet = metadata.pallet("System")?;
                         let constant = pallet.constant("BlockWeights")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1207,10 +1476,9 @@ pub mod api {
                     runtime_types::frame_system::limits::BlockLength,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("System", "BlockLength")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("System", "BlockLength")?
                         == [
                             120u8, 249u8, 182u8, 103u8, 246u8, 214u8, 149u8, 44u8, 42u8, 64u8, 2u8,
                             56u8, 157u8, 184u8, 43u8, 195u8, 214u8, 251u8, 207u8, 207u8, 249u8,
@@ -1218,7 +1486,7 @@ pub mod api {
                             114u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("System")?;
+                        let pallet = metadata.pallet("System")?;
                         let constant = pallet.constant("BlockLength")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1231,10 +1499,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("System", "BlockHashCount")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("System", "BlockHashCount")?
                         == [
                             123u8, 126u8, 182u8, 103u8, 71u8, 187u8, 233u8, 8u8, 47u8, 226u8,
                             159u8, 139u8, 0u8, 59u8, 190u8, 135u8, 189u8, 77u8, 190u8, 81u8, 39u8,
@@ -1242,7 +1509,7 @@ pub mod api {
                             194u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("System")?;
+                        let pallet = metadata.pallet("System")?;
                         let constant = pallet.constant("BlockHashCount")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1257,14 +1524,16 @@ pub mod api {
                     runtime_types::frame_support::weights::RuntimeDbWeight,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().constant_hash("System", "DbWeight")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("System", "DbWeight")?
                         == [
                             203u8, 8u8, 106u8, 152u8, 74u8, 132u8, 2u8, 132u8, 244u8, 106u8, 147u8,
                             12u8, 93u8, 80u8, 61u8, 158u8, 172u8, 178u8, 228u8, 125u8, 213u8,
                             102u8, 75u8, 210u8, 64u8, 185u8, 204u8, 84u8, 10u8, 164u8, 204u8, 62u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("System")?;
+                        let pallet = metadata.pallet("System")?;
                         let constant = pallet.constant("DbWeight")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1279,14 +1548,16 @@ pub mod api {
                     runtime_types::sp_version::RuntimeVersion,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().constant_hash("System", "Version")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("System", "Version")?
                         == [
                             4u8, 196u8, 159u8, 160u8, 39u8, 68u8, 64u8, 128u8, 30u8, 31u8, 154u8,
                             92u8, 244u8, 227u8, 163u8, 224u8, 64u8, 138u8, 32u8, 61u8, 235u8,
                             207u8, 6u8, 209u8, 10u8, 186u8, 223u8, 81u8, 36u8, 116u8, 23u8, 169u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("System")?;
+                        let pallet = metadata.pallet("System")?;
                         let constant = pallet.constant("Version")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1303,17 +1574,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u16, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("System", "SS58Prefix")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("System", "SS58Prefix")?
                         == [
                             197u8, 217u8, 49u8, 68u8, 82u8, 238u8, 120u8, 50u8, 91u8, 58u8, 6u8,
                             156u8, 40u8, 1u8, 241u8, 213u8, 141u8, 74u8, 83u8, 115u8, 117u8, 41u8,
                             119u8, 50u8, 140u8, 136u8, 163u8, 185u8, 34u8, 190u8, 60u8, 97u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("System")?;
+                        let pallet = metadata.pallet("System")?;
                         let constant = pallet.constant("SS58Prefix")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1350,29 +1620,40 @@ pub mod api {
                 #[doc = " Series of block headers from the last 81 blocks that acts as random seed material. This"]
                 #[doc = " is arranged as a ring buffer with `block_number % 81` being the index into the `Vec` of"]
                 #[doc = " the oldest hash."]
-                pub async fn random_material(
+                pub fn random_material(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                        ::subxt::sp_core::H256,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            ::subxt::sp_core::H256,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<RandomMaterial>()?
-                        == [
-                            60u8, 176u8, 119u8, 155u8, 161u8, 136u8, 144u8, 88u8, 26u8, 57u8,
-                            142u8, 34u8, 5u8, 37u8, 115u8, 11u8, 90u8, 222u8, 147u8, 194u8, 82u8,
-                            194u8, 70u8, 227u8, 175u8, 198u8, 235u8, 24u8, 7u8, 87u8, 203u8, 182u8,
-                        ]
-                    {
-                        let entry = RandomMaterial;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<RandomMaterial>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                60u8, 176u8, 119u8, 155u8, 161u8, 136u8, 144u8, 88u8, 26u8, 57u8,
+                                142u8, 34u8, 5u8, 37u8, 115u8, 11u8, 90u8, 222u8, 147u8, 194u8,
+                                82u8, 194u8, 70u8, 227u8, 175u8, 198u8, 235u8, 24u8, 7u8, 87u8,
+                                203u8, 182u8,
+                            ]
+                        {
+                            let entry = RandomMaterial;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -1381,6 +1662,7 @@ pub mod api {
     pub mod timestamp {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -1432,7 +1714,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Set, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Set>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Set>()?
+                    };
+                    if runtime_call_hash
                         == [
                             191u8, 73u8, 102u8, 150u8, 65u8, 157u8, 172u8, 194u8, 7u8, 72u8, 1u8,
                             35u8, 54u8, 99u8, 245u8, 139u8, 40u8, 136u8, 245u8, 53u8, 167u8, 100u8,
@@ -1475,47 +1762,67 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " Current time for the current block."]
-                pub async fn now(
+                pub fn now(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Now>()?
-                        == [
-                            148u8, 53u8, 50u8, 54u8, 13u8, 161u8, 57u8, 150u8, 16u8, 83u8, 144u8,
-                            221u8, 59u8, 75u8, 158u8, 130u8, 39u8, 123u8, 106u8, 134u8, 202u8,
-                            185u8, 83u8, 85u8, 60u8, 41u8, 120u8, 96u8, 210u8, 34u8, 2u8, 250u8,
-                        ]
-                    {
-                        let entry = Now;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Now>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                148u8, 53u8, 50u8, 54u8, 13u8, 161u8, 57u8, 150u8, 16u8, 83u8,
+                                144u8, 221u8, 59u8, 75u8, 158u8, 130u8, 39u8, 123u8, 106u8, 134u8,
+                                202u8, 185u8, 83u8, 85u8, 60u8, 41u8, 120u8, 96u8, 210u8, 34u8,
+                                2u8, 250u8,
+                            ]
+                        {
+                            let entry = Now;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Did the timestamp get updated in this block?"]
-                pub async fn did_update(
+                pub fn did_update(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<DidUpdate>()?
-                        == [
-                            70u8, 13u8, 92u8, 186u8, 80u8, 151u8, 167u8, 90u8, 158u8, 232u8, 175u8,
-                            13u8, 103u8, 135u8, 2u8, 78u8, 16u8, 6u8, 39u8, 158u8, 167u8, 85u8,
-                            27u8, 47u8, 122u8, 73u8, 127u8, 26u8, 35u8, 168u8, 72u8, 204u8,
-                        ]
-                    {
-                        let entry = DidUpdate;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<DidUpdate>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                70u8, 13u8, 92u8, 186u8, 80u8, 151u8, 167u8, 90u8, 158u8, 232u8,
+                                175u8, 13u8, 103u8, 135u8, 2u8, 78u8, 16u8, 6u8, 39u8, 158u8,
+                                167u8, 85u8, 27u8, 47u8, 122u8, 73u8, 127u8, 26u8, 35u8, 168u8,
+                                72u8, 204u8,
+                            ]
+                        {
+                            let entry = DidUpdate;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -1537,17 +1844,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Timestamp", "MinimumPeriod")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Timestamp", "MinimumPeriod")?
                         == [
                             141u8, 242u8, 40u8, 24u8, 83u8, 43u8, 33u8, 194u8, 156u8, 149u8, 219u8,
                             61u8, 10u8, 123u8, 120u8, 247u8, 228u8, 22u8, 25u8, 24u8, 214u8, 188u8,
                             54u8, 135u8, 240u8, 162u8, 41u8, 216u8, 3u8, 58u8, 238u8, 39u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Timestamp")?;
+                        let pallet = metadata.pallet("Timestamp")?;
                         let constant = pallet.constant("MinimumPeriod")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -1561,6 +1867,7 @@ pub mod api {
     pub mod babe {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -1647,7 +1954,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ReportEquivocation>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ReportEquivocation>()?
+                    };
+                    if runtime_call_hash
                         == [
                             123u8, 212u8, 216u8, 77u8, 79u8, 132u8, 201u8, 155u8, 166u8, 230u8,
                             50u8, 89u8, 98u8, 68u8, 56u8, 213u8, 206u8, 245u8, 91u8, 104u8, 89u8,
@@ -1693,10 +2005,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .call_hash::<ReportEquivocationUnsigned>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ReportEquivocationUnsigned>()?
+                    };
+                    if runtime_call_hash
                         == [
                             32u8, 163u8, 168u8, 251u8, 251u8, 9u8, 1u8, 195u8, 173u8, 32u8, 235u8,
                             125u8, 141u8, 201u8, 130u8, 207u8, 239u8, 76u8, 150u8, 99u8, 74u8,
@@ -1731,7 +2045,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<PlanConfigChange>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<PlanConfigChange>()?
+                    };
+                    if runtime_call_hash
                         == [
                             215u8, 121u8, 90u8, 87u8, 178u8, 247u8, 114u8, 53u8, 174u8, 28u8, 20u8,
                             33u8, 139u8, 216u8, 13u8, 187u8, 74u8, 198u8, 38u8, 28u8, 175u8, 13u8,
@@ -1913,103 +2232,144 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " Current epoch index."]
-                pub async fn epoch_index(
+                pub fn epoch_index(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<EpochIndex>()?
-                        == [
-                            51u8, 27u8, 91u8, 156u8, 118u8, 99u8, 46u8, 219u8, 190u8, 147u8, 205u8,
-                            23u8, 106u8, 169u8, 121u8, 218u8, 208u8, 235u8, 135u8, 127u8, 243u8,
-                            41u8, 55u8, 243u8, 235u8, 122u8, 57u8, 86u8, 37u8, 90u8, 208u8, 71u8,
-                        ]
-                    {
-                        let entry = EpochIndex;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EpochIndex>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                51u8, 27u8, 91u8, 156u8, 118u8, 99u8, 46u8, 219u8, 190u8, 147u8,
+                                205u8, 23u8, 106u8, 169u8, 121u8, 218u8, 208u8, 235u8, 135u8,
+                                127u8, 243u8, 41u8, 55u8, 243u8, 235u8, 122u8, 57u8, 86u8, 37u8,
+                                90u8, 208u8, 71u8,
+                            ]
+                        {
+                            let entry = EpochIndex;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Current epoch authorities."]
-                pub async fn authorities(
+                pub fn authorities(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<(
-                        runtime_types::sp_consensus_babe::app::Public,
-                        ::core::primitive::u64,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Authorities>()?
-                        == [
-                            39u8, 102u8, 251u8, 125u8, 230u8, 247u8, 174u8, 255u8, 2u8, 81u8, 86u8,
-                            69u8, 182u8, 92u8, 191u8, 163u8, 66u8, 181u8, 247u8, 9u8, 57u8, 154u8,
-                            239u8, 34u8, 25u8, 139u8, 119u8, 4u8, 131u8, 124u8, 135u8, 240u8,
-                        ]
-                    {
-                        let entry = Authorities;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<(
+                            runtime_types::sp_consensus_babe::app::Public,
+                            ::core::primitive::u64,
+                        )>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Authorities>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                39u8, 102u8, 251u8, 125u8, 230u8, 247u8, 174u8, 255u8, 2u8, 81u8,
+                                86u8, 69u8, 182u8, 92u8, 191u8, 163u8, 66u8, 181u8, 247u8, 9u8,
+                                57u8, 154u8, 239u8, 34u8, 25u8, 139u8, 119u8, 4u8, 131u8, 124u8,
+                                135u8, 240u8,
+                            ]
+                        {
+                            let entry = Authorities;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The slot at which the first epoch actually started. This is 0"]
                 #[doc = " until the first block of the chain."]
-                pub async fn genesis_slot(
+                pub fn genesis_slot(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::sp_consensus_slots::Slot,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<GenesisSlot>()?
-                        == [
-                            136u8, 244u8, 7u8, 142u8, 224u8, 33u8, 144u8, 186u8, 155u8, 144u8,
-                            68u8, 81u8, 241u8, 57u8, 40u8, 207u8, 35u8, 39u8, 28u8, 41u8, 210u8,
-                            213u8, 53u8, 195u8, 175u8, 119u8, 6u8, 175u8, 100u8, 192u8, 180u8,
-                            73u8,
-                        ]
-                    {
-                        let entry = GenesisSlot;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::sp_consensus_slots::Slot,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<GenesisSlot>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                136u8, 244u8, 7u8, 142u8, 224u8, 33u8, 144u8, 186u8, 155u8, 144u8,
+                                68u8, 81u8, 241u8, 57u8, 40u8, 207u8, 35u8, 39u8, 28u8, 41u8,
+                                210u8, 213u8, 53u8, 195u8, 175u8, 119u8, 6u8, 175u8, 100u8, 192u8,
+                                180u8, 73u8,
+                            ]
+                        {
+                            let entry = GenesisSlot;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Current slot number."]
-                pub async fn current_slot(
+                pub fn current_slot(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::sp_consensus_slots::Slot,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<CurrentSlot>()?
-                        == [
-                            233u8, 102u8, 77u8, 99u8, 103u8, 50u8, 151u8, 229u8, 46u8, 226u8,
-                            181u8, 37u8, 117u8, 204u8, 234u8, 120u8, 116u8, 166u8, 80u8, 188u8,
-                            92u8, 154u8, 137u8, 150u8, 79u8, 164u8, 29u8, 203u8, 2u8, 51u8, 123u8,
-                            104u8,
-                        ]
-                    {
-                        let entry = CurrentSlot;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::sp_consensus_slots::Slot,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<CurrentSlot>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                233u8, 102u8, 77u8, 99u8, 103u8, 50u8, 151u8, 229u8, 46u8, 226u8,
+                                181u8, 37u8, 117u8, 204u8, 234u8, 120u8, 116u8, 166u8, 80u8, 188u8,
+                                92u8, 154u8, 137u8, 150u8, 79u8, 164u8, 29u8, 203u8, 2u8, 51u8,
+                                123u8, 104u8,
+                            ]
+                        {
+                            let entry = CurrentSlot;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The epoch randomness for the *current* epoch."]
@@ -2022,103 +2382,148 @@ pub mod api {
                 #[doc = " (like everything else on-chain) it is public. For example, it can be"]
                 #[doc = " used where a number is needed that cannot have been chosen by an"]
                 #[doc = " adversary, for purposes such as public-coin zero-knowledge proofs."]
-                pub async fn randomness(
+                pub fn randomness(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<[::core::primitive::u8; 32usize], ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Randomness>()?
-                        == [
-                            191u8, 197u8, 25u8, 164u8, 104u8, 248u8, 247u8, 193u8, 244u8, 60u8,
-                            181u8, 195u8, 248u8, 90u8, 41u8, 199u8, 82u8, 123u8, 72u8, 126u8, 18u8,
-                            17u8, 128u8, 215u8, 34u8, 251u8, 227u8, 70u8, 166u8, 10u8, 104u8,
-                            140u8,
-                        ]
-                    {
-                        let entry = Randomness;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        [::core::primitive::u8; 32usize],
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Randomness>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                191u8, 197u8, 25u8, 164u8, 104u8, 248u8, 247u8, 193u8, 244u8, 60u8,
+                                181u8, 195u8, 248u8, 90u8, 41u8, 199u8, 82u8, 123u8, 72u8, 126u8,
+                                18u8, 17u8, 128u8, 215u8, 34u8, 251u8, 227u8, 70u8, 166u8, 10u8,
+                                104u8, 140u8,
+                            ]
+                        {
+                            let entry = Randomness;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Pending epoch configuration change that will be applied when the next epoch is enacted."]
-                pub async fn pending_epoch_config_change(
+                pub fn pending_epoch_config_change(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::sp_consensus_babe::digests::NextConfigDescriptor,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<PendingEpochConfigChange>()?
-                        == [
-                            98u8, 52u8, 22u8, 32u8, 76u8, 196u8, 89u8, 78u8, 119u8, 181u8, 17u8,
-                            49u8, 220u8, 159u8, 195u8, 74u8, 33u8, 59u8, 15u8, 104u8, 26u8, 111u8,
-                            165u8, 68u8, 147u8, 14u8, 86u8, 94u8, 250u8, 167u8, 146u8, 82u8,
-                        ]
-                    {
-                        let entry = PendingEpochConfigChange;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PendingEpochConfigChange>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                98u8, 52u8, 22u8, 32u8, 76u8, 196u8, 89u8, 78u8, 119u8, 181u8,
+                                17u8, 49u8, 220u8, 159u8, 195u8, 74u8, 33u8, 59u8, 15u8, 104u8,
+                                26u8, 111u8, 165u8, 68u8, 147u8, 14u8, 86u8, 94u8, 250u8, 167u8,
+                                146u8, 82u8,
+                            ]
+                        {
+                            let entry = PendingEpochConfigChange;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Next epoch randomness."]
-                pub async fn next_randomness(
+                pub fn next_randomness(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<[::core::primitive::u8; 32usize], ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<NextRandomness>()?
-                        == [
-                            185u8, 98u8, 45u8, 109u8, 253u8, 38u8, 238u8, 221u8, 240u8, 29u8, 38u8,
-                            107u8, 118u8, 117u8, 131u8, 115u8, 21u8, 255u8, 203u8, 81u8, 243u8,
-                            251u8, 91u8, 60u8, 163u8, 202u8, 125u8, 193u8, 173u8, 234u8, 166u8,
-                            92u8,
-                        ]
-                    {
-                        let entry = NextRandomness;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        [::core::primitive::u8; 32usize],
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextRandomness>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                185u8, 98u8, 45u8, 109u8, 253u8, 38u8, 238u8, 221u8, 240u8, 29u8,
+                                38u8, 107u8, 118u8, 117u8, 131u8, 115u8, 21u8, 255u8, 203u8, 81u8,
+                                243u8, 251u8, 91u8, 60u8, 163u8, 202u8, 125u8, 193u8, 173u8, 234u8,
+                                166u8, 92u8,
+                            ]
+                        {
+                            let entry = NextRandomness;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Next epoch authorities."]
-                pub async fn next_authorities(
+                pub fn next_authorities(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<(
-                        runtime_types::sp_consensus_babe::app::Public,
-                        ::core::primitive::u64,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextAuthorities>()?
-                        == [
-                            211u8, 175u8, 218u8, 0u8, 212u8, 114u8, 210u8, 137u8, 146u8, 135u8,
-                            78u8, 133u8, 85u8, 253u8, 140u8, 242u8, 101u8, 155u8, 159u8, 8u8,
-                            217u8, 176u8, 234u8, 143u8, 212u8, 103u8, 198u8, 94u8, 121u8, 111u8,
-                            56u8, 89u8,
-                        ]
-                    {
-                        let entry = NextAuthorities;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<(
+                            runtime_types::sp_consensus_babe::app::Public,
+                            ::core::primitive::u64,
+                        )>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextAuthorities>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                211u8, 175u8, 218u8, 0u8, 212u8, 114u8, 210u8, 137u8, 146u8, 135u8,
+                                78u8, 133u8, 85u8, 253u8, 140u8, 242u8, 101u8, 155u8, 159u8, 8u8,
+                                217u8, 176u8, 234u8, 143u8, 212u8, 103u8, 198u8, 94u8, 121u8,
+                                111u8, 56u8, 89u8,
+                            ]
+                        {
+                            let entry = NextAuthorities;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Randomness under construction."]
@@ -2130,128 +2535,183 @@ pub mod api {
                 #[doc = " Once a segment reaches this length, we begin the next one."]
                 #[doc = " We reset all segments and return to `0` at the beginning of every"]
                 #[doc = " epoch."]
-                pub async fn segment_index(
+                pub fn segment_index(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<SegmentIndex>()?
-                        == [
-                            128u8, 45u8, 87u8, 58u8, 174u8, 152u8, 241u8, 156u8, 56u8, 192u8, 19u8,
-                            45u8, 75u8, 160u8, 35u8, 253u8, 145u8, 11u8, 178u8, 81u8, 114u8, 117u8,
-                            112u8, 107u8, 163u8, 208u8, 240u8, 151u8, 102u8, 176u8, 246u8, 5u8,
-                        ]
-                    {
-                        let entry = SegmentIndex;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<SegmentIndex>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                128u8, 45u8, 87u8, 58u8, 174u8, 152u8, 241u8, 156u8, 56u8, 192u8,
+                                19u8, 45u8, 75u8, 160u8, 35u8, 253u8, 145u8, 11u8, 178u8, 81u8,
+                                114u8, 117u8, 112u8, 107u8, 163u8, 208u8, 240u8, 151u8, 102u8,
+                                176u8, 246u8, 5u8,
+                            ]
+                        {
+                            let entry = SegmentIndex;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " TWOX-NOTE: `SegmentIndex` is an increasing integer, so this is okay."]
-                pub async fn under_construction(
+                pub fn under_construction(
                     &self,
-                    _0: &::core::primitive::u32,
+                    _0: &'a ::core::primitive::u32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                        [::core::primitive::u8; 32usize],
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            [::core::primitive::u8; 32usize],
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<UnderConstruction>()?
-                        == [
-                            12u8, 167u8, 30u8, 96u8, 161u8, 63u8, 210u8, 63u8, 91u8, 199u8, 188u8,
-                            78u8, 254u8, 255u8, 253u8, 202u8, 203u8, 26u8, 4u8, 105u8, 76u8, 125u8,
-                            191u8, 245u8, 32u8, 97u8, 127u8, 129u8, 167u8, 80u8, 210u8, 123u8,
-                        ]
-                    {
-                        let entry = UnderConstruction(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<UnderConstruction>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                12u8, 167u8, 30u8, 96u8, 161u8, 63u8, 210u8, 63u8, 91u8, 199u8,
+                                188u8, 78u8, 254u8, 255u8, 253u8, 202u8, 203u8, 26u8, 4u8, 105u8,
+                                76u8, 125u8, 191u8, 245u8, 32u8, 97u8, 127u8, 129u8, 167u8, 80u8,
+                                210u8, 123u8,
+                            ]
+                        {
+                            let entry = UnderConstruction(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " TWOX-NOTE: `SegmentIndex` is an increasing integer, so this is okay."]
-                pub async fn under_construction_iter(
+                pub fn under_construction_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, UnderConstruction<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<UnderConstruction>()?
-                        == [
-                            12u8, 167u8, 30u8, 96u8, 161u8, 63u8, 210u8, 63u8, 91u8, 199u8, 188u8,
-                            78u8, 254u8, 255u8, 253u8, 202u8, 203u8, 26u8, 4u8, 105u8, 76u8, 125u8,
-                            191u8, 245u8, 32u8, 97u8, 127u8, 129u8, 167u8, 80u8, 210u8, 123u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, UnderConstruction<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<UnderConstruction>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                12u8, 167u8, 30u8, 96u8, 161u8, 63u8, 210u8, 63u8, 91u8, 199u8,
+                                188u8, 78u8, 254u8, 255u8, 253u8, 202u8, 203u8, 26u8, 4u8, 105u8,
+                                76u8, 125u8, 191u8, 245u8, 32u8, 97u8, 127u8, 129u8, 167u8, 80u8,
+                                210u8, 123u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Temporary value (cleared at block finalization) which is `Some`"]
                 #[doc = " if per-block initialization has already been called for current block."]
-                pub async fn initialized(
+                pub fn initialized(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        ::core::option::Option<[::core::primitive::u8; 32usize]>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            ::core::option::Option<[::core::primitive::u8; 32usize]>,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Initialized>()?
-                        == [
-                            48u8, 206u8, 111u8, 118u8, 149u8, 175u8, 148u8, 53u8, 233u8, 82u8,
-                            220u8, 57u8, 22u8, 164u8, 116u8, 228u8, 134u8, 237u8, 129u8, 195u8,
-                            60u8, 169u8, 1u8, 164u8, 74u8, 177u8, 145u8, 112u8, 66u8, 198u8, 53u8,
-                            157u8,
-                        ]
-                    {
-                        let entry = Initialized;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Initialized>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                48u8, 206u8, 111u8, 118u8, 149u8, 175u8, 148u8, 53u8, 233u8, 82u8,
+                                220u8, 57u8, 22u8, 164u8, 116u8, 228u8, 134u8, 237u8, 129u8, 195u8,
+                                60u8, 169u8, 1u8, 164u8, 74u8, 177u8, 145u8, 112u8, 66u8, 198u8,
+                                53u8, 157u8,
+                            ]
+                        {
+                            let entry = Initialized;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " This field should always be populated during block processing unless"]
                 #[doc = " secondary plain slots are enabled (which don't contain a VRF output)."]
                 #[doc = ""]
                 #[doc = " It is set in `on_initialize`, before it will contain the value from the last block."]
-                pub async fn author_vrf_randomness(
+                pub fn author_vrf_randomness(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<[::core::primitive::u8; 32usize]>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<AuthorVrfRandomness>()?
-                        == [
-                            66u8, 235u8, 74u8, 252u8, 222u8, 135u8, 19u8, 28u8, 74u8, 191u8, 170u8,
-                            197u8, 207u8, 127u8, 77u8, 121u8, 138u8, 138u8, 110u8, 187u8, 34u8,
-                            14u8, 230u8, 43u8, 241u8, 241u8, 63u8, 163u8, 53u8, 179u8, 250u8,
-                            247u8,
-                        ]
-                    {
-                        let entry = AuthorVrfRandomness;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<[::core::primitive::u8; 32usize]>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AuthorVrfRandomness>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                66u8, 235u8, 74u8, 252u8, 222u8, 135u8, 19u8, 28u8, 74u8, 191u8,
+                                170u8, 197u8, 207u8, 127u8, 77u8, 121u8, 138u8, 138u8, 110u8,
+                                187u8, 34u8, 14u8, 230u8, 43u8, 241u8, 241u8, 63u8, 163u8, 53u8,
+                                179u8, 250u8, 247u8,
+                            ]
+                        {
+                            let entry = AuthorVrfRandomness;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The block numbers when the last and current epoch have started, respectively `N-1` and"]
@@ -2259,28 +2719,38 @@ pub mod api {
                 #[doc = " NOTE: We track this is in order to annotate the block number when a given pool of"]
                 #[doc = " entropy was fixed (i.e. it was known to chain observers). Since epochs are defined in"]
                 #[doc = " slots, which may be skipped, the block numbers may not line up with the slot numbers."]
-                pub async fn epoch_start(
+                pub fn epoch_start(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    (::core::primitive::u32, ::core::primitive::u32),
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<EpochStart>()?
-                        == [
-                            196u8, 39u8, 241u8, 20u8, 150u8, 180u8, 136u8, 4u8, 195u8, 205u8,
-                            218u8, 10u8, 130u8, 131u8, 168u8, 243u8, 207u8, 249u8, 58u8, 195u8,
-                            177u8, 119u8, 110u8, 243u8, 241u8, 3u8, 245u8, 56u8, 157u8, 5u8, 68u8,
-                            60u8,
-                        ]
-                    {
-                        let entry = EpochStart;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        (::core::primitive::u32, ::core::primitive::u32),
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EpochStart>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                196u8, 39u8, 241u8, 20u8, 150u8, 180u8, 136u8, 4u8, 195u8, 205u8,
+                                218u8, 10u8, 130u8, 131u8, 168u8, 243u8, 207u8, 249u8, 58u8, 195u8,
+                                177u8, 119u8, 110u8, 243u8, 241u8, 3u8, 245u8, 56u8, 157u8, 5u8,
+                                68u8, 60u8,
+                            ]
+                        {
+                            let entry = EpochStart;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " How late the current block is compared to its parent."]
@@ -2288,76 +2758,111 @@ pub mod api {
                 #[doc = " This entry is populated as part of block execution and is cleaned up"]
                 #[doc = " on block finalization. Querying this storage entry outside of block"]
                 #[doc = " execution context should always yield zero."]
-                pub async fn lateness(
+                pub fn lateness(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Lateness>()?
-                        == [
-                            229u8, 230u8, 224u8, 89u8, 49u8, 213u8, 198u8, 236u8, 144u8, 56u8,
-                            193u8, 234u8, 62u8, 242u8, 191u8, 199u8, 105u8, 131u8, 74u8, 63u8,
-                            75u8, 1u8, 210u8, 49u8, 3u8, 128u8, 18u8, 77u8, 219u8, 146u8, 60u8,
-                            88u8,
-                        ]
-                    {
-                        let entry = Lateness;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Lateness>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                229u8, 230u8, 224u8, 89u8, 49u8, 213u8, 198u8, 236u8, 144u8, 56u8,
+                                193u8, 234u8, 62u8, 242u8, 191u8, 199u8, 105u8, 131u8, 74u8, 63u8,
+                                75u8, 1u8, 210u8, 49u8, 3u8, 128u8, 18u8, 77u8, 219u8, 146u8, 60u8,
+                                88u8,
+                            ]
+                        {
+                            let entry = Lateness;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The configuration for the current epoch. Should never be `None` as it is initialized in"]
                 #[doc = " genesis."]
-                pub async fn epoch_config(
+                pub fn epoch_config(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::sp_consensus_babe::BabeEpochConfiguration,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::sp_consensus_babe::BabeEpochConfiguration,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<EpochConfig>()?
-                        == [
-                            169u8, 189u8, 214u8, 159u8, 181u8, 232u8, 243u8, 4u8, 113u8, 24u8,
-                            221u8, 229u8, 27u8, 35u8, 3u8, 121u8, 136u8, 88u8, 187u8, 193u8, 207u8,
-                            153u8, 223u8, 225u8, 166u8, 183u8, 53u8, 3u8, 162u8, 207u8, 88u8,
-                            133u8,
-                        ]
-                    {
-                        let entry = EpochConfig;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EpochConfig>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                169u8, 189u8, 214u8, 159u8, 181u8, 232u8, 243u8, 4u8, 113u8, 24u8,
+                                221u8, 229u8, 27u8, 35u8, 3u8, 121u8, 136u8, 88u8, 187u8, 193u8,
+                                207u8, 153u8, 223u8, 225u8, 166u8, 183u8, 53u8, 3u8, 162u8, 207u8,
+                                88u8, 133u8,
+                            ]
+                        {
+                            let entry = EpochConfig;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The configuration for the next epoch, `None` if the config will not change"]
                 #[doc = " (you can fallback to `EpochConfig` instead in that case)."]
-                pub async fn next_epoch_config(
+                pub fn next_epoch_config(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::sp_consensus_babe::BabeEpochConfiguration,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::sp_consensus_babe::BabeEpochConfiguration,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextEpochConfig>()?
-                        == [
-                            239u8, 125u8, 203u8, 223u8, 161u8, 107u8, 232u8, 54u8, 158u8, 100u8,
-                            244u8, 140u8, 119u8, 58u8, 253u8, 245u8, 73u8, 236u8, 50u8, 67u8,
-                            228u8, 162u8, 166u8, 168u8, 162u8, 152u8, 239u8, 246u8, 153u8, 223u8,
-                            109u8, 121u8,
-                        ]
-                    {
-                        let entry = NextEpochConfig;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextEpochConfig>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                239u8, 125u8, 203u8, 223u8, 161u8, 107u8, 232u8, 54u8, 158u8,
+                                100u8, 244u8, 140u8, 119u8, 58u8, 253u8, 245u8, 73u8, 236u8, 50u8,
+                                67u8, 228u8, 162u8, 166u8, 168u8, 162u8, 152u8, 239u8, 246u8,
+                                153u8, 223u8, 109u8, 121u8,
+                            ]
+                        {
+                            let entry = NextEpochConfig;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -2378,10 +2883,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Babe", "EpochDuration")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Babe", "EpochDuration")?
                         == [
                             40u8, 54u8, 255u8, 20u8, 89u8, 2u8, 38u8, 235u8, 70u8, 145u8, 128u8,
                             227u8, 177u8, 3u8, 153u8, 91u8, 102u8, 159u8, 160u8, 139u8, 88u8,
@@ -2389,7 +2893,7 @@ pub mod api {
                             254u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Babe")?;
+                        let pallet = metadata.pallet("Babe")?;
                         let constant = pallet.constant("EpochDuration")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -2406,17 +2910,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Babe", "ExpectedBlockTime")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Babe", "ExpectedBlockTime")?
                         == [
                             249u8, 170u8, 37u8, 7u8, 132u8, 115u8, 106u8, 71u8, 116u8, 166u8, 78u8,
                             251u8, 242u8, 146u8, 99u8, 207u8, 204u8, 225u8, 157u8, 57u8, 19u8,
                             17u8, 202u8, 231u8, 50u8, 67u8, 17u8, 205u8, 238u8, 80u8, 154u8, 125u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Babe")?;
+                        let pallet = metadata.pallet("Babe")?;
                         let constant = pallet.constant("ExpectedBlockTime")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -2429,17 +2932,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Babe", "MaxAuthorities")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Babe", "MaxAuthorities")?
                         == [
                             205u8, 23u8, 62u8, 93u8, 110u8, 248u8, 109u8, 245u8, 1u8, 57u8, 144u8,
                             146u8, 103u8, 0u8, 178u8, 246u8, 63u8, 80u8, 77u8, 155u8, 202u8, 208u8,
                             73u8, 194u8, 210u8, 49u8, 121u8, 99u8, 101u8, 222u8, 127u8, 206u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Babe")?;
+                        let pallet = metadata.pallet("Babe")?;
                         let constant = pallet.constant("MaxAuthorities")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -2453,6 +2955,7 @@ pub mod api {
     pub mod authorship {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -2505,7 +3008,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetUncles>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetUncles>()?
+                    };
+                    if runtime_call_hash
                         == [
                             5u8, 56u8, 71u8, 152u8, 103u8, 232u8, 101u8, 171u8, 200u8, 2u8, 177u8,
                             102u8, 0u8, 93u8, 210u8, 90u8, 56u8, 151u8, 5u8, 235u8, 227u8, 197u8,
@@ -2563,77 +3071,111 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " Uncles"]
-                pub async fn uncles(
+                pub fn uncles(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<
-                        runtime_types::pallet_authorship::UncleEntryItem<
-                            ::core::primitive::u32,
-                            ::subxt::sp_core::H256,
-                            ::subxt::sp_core::crypto::AccountId32,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<
+                            runtime_types::pallet_authorship::UncleEntryItem<
+                                ::core::primitive::u32,
+                                ::subxt::sp_core::H256,
+                                ::subxt::sp_core::crypto::AccountId32,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Uncles>()?
-                        == [
-                            71u8, 135u8, 85u8, 172u8, 221u8, 165u8, 212u8, 2u8, 208u8, 50u8, 9u8,
-                            92u8, 251u8, 25u8, 194u8, 123u8, 210u8, 4u8, 148u8, 30u8, 20u8, 146u8,
-                            21u8, 210u8, 138u8, 128u8, 144u8, 152u8, 97u8, 57u8, 205u8, 231u8,
-                        ]
-                    {
-                        let entry = Uncles;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Uncles>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                71u8, 135u8, 85u8, 172u8, 221u8, 165u8, 212u8, 2u8, 208u8, 50u8,
+                                9u8, 92u8, 251u8, 25u8, 194u8, 123u8, 210u8, 4u8, 148u8, 30u8,
+                                20u8, 146u8, 21u8, 210u8, 138u8, 128u8, 144u8, 152u8, 97u8, 57u8,
+                                205u8, 231u8,
+                            ]
+                        {
+                            let entry = Uncles;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Author of current block."]
-                pub async fn author(
+                pub fn author(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Author>()?
-                        == [
-                            191u8, 57u8, 3u8, 242u8, 220u8, 123u8, 103u8, 215u8, 149u8, 120u8,
-                            20u8, 139u8, 146u8, 234u8, 180u8, 105u8, 129u8, 128u8, 114u8, 147u8,
-                            114u8, 236u8, 23u8, 21u8, 15u8, 250u8, 180u8, 19u8, 177u8, 145u8, 77u8,
-                            228u8,
-                        ]
-                    {
-                        let entry = Author;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Author>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                191u8, 57u8, 3u8, 242u8, 220u8, 123u8, 103u8, 215u8, 149u8, 120u8,
+                                20u8, 139u8, 146u8, 234u8, 180u8, 105u8, 129u8, 128u8, 114u8,
+                                147u8, 114u8, 236u8, 23u8, 21u8, 15u8, 250u8, 180u8, 19u8, 177u8,
+                                145u8, 77u8, 228u8,
+                            ]
+                        {
+                            let entry = Author;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Whether uncles were already set in this block."]
-                pub async fn did_set_uncles(
+                pub fn did_set_uncles(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<DidSetUncles>()?
-                        == [
-                            64u8, 3u8, 208u8, 187u8, 50u8, 45u8, 37u8, 88u8, 163u8, 226u8, 37u8,
-                            126u8, 232u8, 107u8, 156u8, 187u8, 29u8, 15u8, 53u8, 46u8, 28u8, 73u8,
-                            83u8, 123u8, 14u8, 244u8, 243u8, 43u8, 245u8, 143u8, 15u8, 115u8,
-                        ]
-                    {
-                        let entry = DidSetUncles;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<DidSetUncles>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                64u8, 3u8, 208u8, 187u8, 50u8, 45u8, 37u8, 88u8, 163u8, 226u8,
+                                37u8, 126u8, 232u8, 107u8, 156u8, 187u8, 29u8, 15u8, 53u8, 46u8,
+                                28u8, 73u8, 83u8, 123u8, 14u8, 244u8, 243u8, 43u8, 245u8, 143u8,
+                                15u8, 115u8,
+                            ]
+                        {
+                            let entry = DidSetUncles;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -2654,17 +3196,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Authorship", "UncleGenerations")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Authorship", "UncleGenerations")?
                         == [
                             0u8, 72u8, 57u8, 175u8, 222u8, 143u8, 191u8, 33u8, 163u8, 157u8, 202u8,
                             83u8, 186u8, 103u8, 162u8, 103u8, 227u8, 158u8, 239u8, 212u8, 205u8,
                             193u8, 226u8, 138u8, 5u8, 220u8, 221u8, 42u8, 7u8, 146u8, 173u8, 205u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Authorship")?;
+                        let pallet = metadata.pallet("Authorship")?;
                         let constant = pallet.constant("UncleGenerations")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -2678,6 +3219,7 @@ pub mod api {
     pub mod balances {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -2808,7 +3350,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Transfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Transfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             250u8, 8u8, 164u8, 186u8, 80u8, 220u8, 134u8, 247u8, 142u8, 121u8,
                             34u8, 22u8, 169u8, 39u8, 6u8, 93u8, 72u8, 47u8, 44u8, 107u8, 9u8, 98u8,
@@ -2848,7 +3395,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetBalance>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetBalance>()?
+                    };
+                    if runtime_call_hash
                         == [
                             232u8, 6u8, 27u8, 131u8, 163u8, 72u8, 148u8, 197u8, 14u8, 239u8, 94u8,
                             1u8, 32u8, 94u8, 17u8, 14u8, 123u8, 82u8, 39u8, 233u8, 77u8, 20u8,
@@ -2893,7 +3445,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceTransfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceTransfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             120u8, 66u8, 111u8, 84u8, 176u8, 241u8, 214u8, 118u8, 219u8, 75u8,
                             127u8, 222u8, 45u8, 33u8, 204u8, 147u8, 126u8, 214u8, 101u8, 190u8,
@@ -2935,7 +3492,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<TransferKeepAlive>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TransferKeepAlive>()?
+                    };
+                    if runtime_call_hash
                         == [
                             111u8, 233u8, 125u8, 71u8, 223u8, 141u8, 112u8, 94u8, 157u8, 11u8,
                             88u8, 7u8, 239u8, 145u8, 247u8, 183u8, 245u8, 87u8, 157u8, 35u8, 49u8,
@@ -2983,7 +3545,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<TransferAll>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TransferAll>()?
+                    };
+                    if runtime_call_hash
                         == [
                             240u8, 165u8, 185u8, 144u8, 24u8, 149u8, 15u8, 46u8, 60u8, 147u8, 19u8,
                             187u8, 96u8, 24u8, 150u8, 53u8, 151u8, 232u8, 200u8, 164u8, 176u8,
@@ -3017,7 +3584,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceUnreserve>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceUnreserve>()?
+                    };
+                    if runtime_call_hash
                         == [
                             106u8, 42u8, 48u8, 136u8, 41u8, 155u8, 214u8, 112u8, 99u8, 122u8,
                             202u8, 250u8, 95u8, 60u8, 182u8, 13u8, 25u8, 149u8, 212u8, 212u8,
@@ -3033,6 +3605,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_balances::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -3216,25 +3789,35 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " The total units issued in the system."]
-                pub async fn total_issuance(
+                pub fn total_issuance(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<TotalIssuance>()?
-                        == [
-                            1u8, 206u8, 252u8, 237u8, 6u8, 30u8, 20u8, 232u8, 164u8, 115u8, 51u8,
-                            156u8, 156u8, 206u8, 241u8, 187u8, 44u8, 84u8, 25u8, 164u8, 235u8,
-                            20u8, 86u8, 242u8, 124u8, 23u8, 28u8, 140u8, 26u8, 73u8, 231u8, 51u8,
-                        ]
-                    {
-                        let entry = TotalIssuance;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<TotalIssuance>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                1u8, 206u8, 252u8, 237u8, 6u8, 30u8, 20u8, 232u8, 164u8, 115u8,
+                                51u8, 156u8, 156u8, 206u8, 241u8, 187u8, 44u8, 84u8, 25u8, 164u8,
+                                235u8, 20u8, 86u8, 242u8, 124u8, 23u8, 28u8, 140u8, 26u8, 73u8,
+                                231u8, 51u8,
+                            ]
+                        {
+                            let entry = TotalIssuance;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The Balances pallet example of storing the balance of an account."]
@@ -3261,195 +3844,282 @@ pub mod api {
                 #[doc = " `frame_system` data alongside the account data contrary to storing account balances in the"]
                 #[doc = " `Balances` pallet, which uses a `StorageMap` to store balances data only."]
                 #[doc = " NOTE: This is only used in the case that this pallet is used to store balances."]
-                pub async fn account(
+                pub fn account(
                     &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            129u8, 169u8, 171u8, 206u8, 229u8, 178u8, 69u8, 118u8, 199u8, 64u8,
-                            254u8, 67u8, 16u8, 154u8, 160u8, 197u8, 177u8, 161u8, 148u8, 199u8,
-                            78u8, 219u8, 187u8, 83u8, 99u8, 110u8, 207u8, 252u8, 243u8, 39u8, 46u8,
-                            106u8,
-                        ]
-                    {
-                        let entry = Account(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The Balances pallet example of storing the balance of an account."]
-                #[doc = ""]
-                #[doc = " # Example"]
-                #[doc = ""]
-                #[doc = " ```nocompile"]
-                #[doc = "  impl pallet_balances::Config for Runtime {"]
-                #[doc = "    type AccountStore = StorageMapShim<Self::Account<Runtime>, frame_system::Provider<Runtime>, AccountId, Self::AccountData<Balance>>"]
-                #[doc = "  }"]
-                #[doc = " ```"]
-                #[doc = ""]
-                #[doc = " You can also store the balance of an account in the `System` pallet."]
-                #[doc = ""]
-                #[doc = " # Example"]
-                #[doc = ""]
-                #[doc = " ```nocompile"]
-                #[doc = "  impl pallet_balances::Config for Runtime {"]
-                #[doc = "   type AccountStore = System"]
-                #[doc = "  }"]
-                #[doc = " ```"]
-                #[doc = ""]
-                #[doc = " But this comes with tradeoffs, storing account balances in the system pallet stores"]
-                #[doc = " `frame_system` data alongside the account data contrary to storing account balances in the"]
-                #[doc = " `Balances` pallet, which uses a `StorageMap` to store balances data only."]
-                #[doc = " NOTE: This is only used in the case that this pallet is used to store balances."]
-                pub async fn account_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            129u8, 169u8, 171u8, 206u8, 229u8, 178u8, 69u8, 118u8, 199u8, 64u8,
-                            254u8, 67u8, 16u8, 154u8, 160u8, 197u8, 177u8, 161u8, 148u8, 199u8,
-                            78u8, 219u8, 187u8, 83u8, 99u8, 110u8, 207u8, 252u8, 243u8, 39u8, 46u8,
-                            106u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Any liquidity locks on some account balances."]
-                #[doc = " NOTE: Should only be accessed when setting, changing and freeing a lock."]
-                pub async fn locks(
-                    &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
-                        runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::pallet_balances::AccountData<::core::primitive::u128>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Locks>()?
-                        == [
-                            31u8, 76u8, 213u8, 60u8, 86u8, 11u8, 155u8, 151u8, 33u8, 212u8, 74u8,
-                            89u8, 174u8, 74u8, 195u8, 107u8, 29u8, 163u8, 178u8, 34u8, 209u8, 8u8,
-                            201u8, 237u8, 77u8, 99u8, 205u8, 212u8, 236u8, 132u8, 2u8, 252u8,
-                        ]
-                    {
-                        let entry = Locks(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                129u8, 169u8, 171u8, 206u8, 229u8, 178u8, 69u8, 118u8, 199u8, 64u8,
+                                254u8, 67u8, 16u8, 154u8, 160u8, 197u8, 177u8, 161u8, 148u8, 199u8,
+                                78u8, 219u8, 187u8, 83u8, 99u8, 110u8, 207u8, 252u8, 243u8, 39u8,
+                                46u8, 106u8,
+                            ]
+                        {
+                            let entry = Account(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The Balances pallet example of storing the balance of an account."]
+                #[doc = ""]
+                #[doc = " # Example"]
+                #[doc = ""]
+                #[doc = " ```nocompile"]
+                #[doc = "  impl pallet_balances::Config for Runtime {"]
+                #[doc = "    type AccountStore = StorageMapShim<Self::Account<Runtime>, frame_system::Provider<Runtime>, AccountId, Self::AccountData<Balance>>"]
+                #[doc = "  }"]
+                #[doc = " ```"]
+                #[doc = ""]
+                #[doc = " You can also store the balance of an account in the `System` pallet."]
+                #[doc = ""]
+                #[doc = " # Example"]
+                #[doc = ""]
+                #[doc = " ```nocompile"]
+                #[doc = "  impl pallet_balances::Config for Runtime {"]
+                #[doc = "   type AccountStore = System"]
+                #[doc = "  }"]
+                #[doc = " ```"]
+                #[doc = ""]
+                #[doc = " But this comes with tradeoffs, storing account balances in the system pallet stores"]
+                #[doc = " `frame_system` data alongside the account data contrary to storing account balances in the"]
+                #[doc = " `Balances` pallet, which uses a `StorageMap` to store balances data only."]
+                #[doc = " NOTE: This is only used in the case that this pallet is used to store balances."]
+                pub fn account_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Account<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                129u8, 169u8, 171u8, 206u8, 229u8, 178u8, 69u8, 118u8, 199u8, 64u8,
+                                254u8, 67u8, 16u8, 154u8, 160u8, 197u8, 177u8, 161u8, 148u8, 199u8,
+                                78u8, 219u8, 187u8, 83u8, 99u8, 110u8, 207u8, 252u8, 243u8, 39u8,
+                                46u8, 106u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Any liquidity locks on some account balances."]
                 #[doc = " NOTE: Should only be accessed when setting, changing and freeing a lock."]
-                pub async fn locks_iter(
+                pub fn locks(
                     &self,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Locks<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Locks>()?
-                        == [
-                            31u8, 76u8, 213u8, 60u8, 86u8, 11u8, 155u8, 151u8, 33u8, 212u8, 74u8,
-                            89u8, 174u8, 74u8, 195u8, 107u8, 29u8, 163u8, 178u8, 34u8, 209u8, 8u8,
-                            201u8, 237u8, 77u8, 99u8, 205u8, 212u8, 236u8, 132u8, 2u8, 252u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Named reserves on some account balances."]
-                pub async fn reserves(
-                    &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                        runtime_types::pallet_balances::ReserveData<
-                            [::core::primitive::u8; 8usize],
-                            ::core::primitive::u128,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
+                            runtime_types::pallet_balances::BalanceLock<::core::primitive::u128>,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Reserves>()?
-                        == [
-                            103u8, 6u8, 69u8, 151u8, 81u8, 40u8, 146u8, 113u8, 56u8, 239u8, 104u8,
-                            31u8, 168u8, 242u8, 141u8, 121u8, 213u8, 213u8, 114u8, 63u8, 62u8,
-                            47u8, 91u8, 119u8, 57u8, 91u8, 95u8, 81u8, 19u8, 208u8, 59u8, 146u8,
-                        ]
-                    {
-                        let entry = Reserves(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Locks>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                31u8, 76u8, 213u8, 60u8, 86u8, 11u8, 155u8, 151u8, 33u8, 212u8,
+                                74u8, 89u8, 174u8, 74u8, 195u8, 107u8, 29u8, 163u8, 178u8, 34u8,
+                                209u8, 8u8, 201u8, 237u8, 77u8, 99u8, 205u8, 212u8, 236u8, 132u8,
+                                2u8, 252u8,
+                            ]
+                        {
+                            let entry = Locks(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Any liquidity locks on some account balances."]
+                #[doc = " NOTE: Should only be accessed when setting, changing and freeing a lock."]
+                pub fn locks_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Locks<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Locks>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                31u8, 76u8, 213u8, 60u8, 86u8, 11u8, 155u8, 151u8, 33u8, 212u8,
+                                74u8, 89u8, 174u8, 74u8, 195u8, 107u8, 29u8, 163u8, 178u8, 34u8,
+                                209u8, 8u8, 201u8, 237u8, 77u8, 99u8, 205u8, 212u8, 236u8, 132u8,
+                                2u8, 252u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Named reserves on some account balances."]
-                pub async fn reserves_iter(
+                pub fn reserves(
+                    &self,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                            runtime_types::pallet_balances::ReserveData<
+                                [::core::primitive::u8; 8usize],
+                                ::core::primitive::u128,
+                            >,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Reserves>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                103u8, 6u8, 69u8, 151u8, 81u8, 40u8, 146u8, 113u8, 56u8, 239u8,
+                                104u8, 31u8, 168u8, 242u8, 141u8, 121u8, 213u8, 213u8, 114u8, 63u8,
+                                62u8, 47u8, 91u8, 119u8, 57u8, 91u8, 95u8, 81u8, 19u8, 208u8, 59u8,
+                                146u8,
+                            ]
+                        {
+                            let entry = Reserves(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Named reserves on some account balances."]
+                pub fn reserves_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Reserves<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Reserves>()?
-                        == [
-                            103u8, 6u8, 69u8, 151u8, 81u8, 40u8, 146u8, 113u8, 56u8, 239u8, 104u8,
-                            31u8, 168u8, 242u8, 141u8, 121u8, 213u8, 213u8, 114u8, 63u8, 62u8,
-                            47u8, 91u8, 119u8, 57u8, 91u8, 95u8, 81u8, 19u8, 208u8, 59u8, 146u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Reserves<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Reserves>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                103u8, 6u8, 69u8, 151u8, 81u8, 40u8, 146u8, 113u8, 56u8, 239u8,
+                                104u8, 31u8, 168u8, 242u8, 141u8, 121u8, 213u8, 213u8, 114u8, 63u8,
+                                62u8, 47u8, 91u8, 119u8, 57u8, 91u8, 95u8, 81u8, 19u8, 208u8, 59u8,
+                                146u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Storage version of the pallet."]
                 #[doc = ""]
                 #[doc = " This is set to v2.0.0 for new networks."]
-                pub async fn storage_version(
+                pub fn storage_version(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_balances::Releases,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<StorageVersion>()?
-                        == [
-                            135u8, 96u8, 28u8, 234u8, 124u8, 212u8, 56u8, 140u8, 40u8, 101u8,
-                            235u8, 128u8, 136u8, 221u8, 182u8, 81u8, 17u8, 9u8, 184u8, 228u8,
-                            174u8, 165u8, 200u8, 162u8, 214u8, 178u8, 227u8, 72u8, 34u8, 5u8,
-                            173u8, 96u8,
-                        ]
-                    {
-                        let entry = StorageVersion;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::pallet_balances::Releases,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<StorageVersion>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                135u8, 96u8, 28u8, 234u8, 124u8, 212u8, 56u8, 140u8, 40u8, 101u8,
+                                235u8, 128u8, 136u8, 221u8, 182u8, 81u8, 17u8, 9u8, 184u8, 228u8,
+                                174u8, 165u8, 200u8, 162u8, 214u8, 178u8, 227u8, 72u8, 34u8, 5u8,
+                                173u8, 96u8,
+                            ]
+                        {
+                            let entry = StorageVersion;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -3468,10 +4138,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Balances", "ExistentialDeposit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Balances", "ExistentialDeposit")?
                         == [
                             73u8, 138u8, 39u8, 150u8, 84u8, 112u8, 183u8, 185u8, 133u8, 100u8,
                             109u8, 141u8, 83u8, 77u8, 76u8, 142u8, 153u8, 35u8, 251u8, 35u8, 33u8,
@@ -3479,7 +4148,7 @@ pub mod api {
                             12u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Balances")?;
+                        let pallet = metadata.pallet("Balances")?;
                         let constant = pallet.constant("ExistentialDeposit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -3493,17 +4162,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Balances", "MaxLocks")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Balances", "MaxLocks")?
                         == [
                             250u8, 58u8, 19u8, 15u8, 35u8, 113u8, 227u8, 89u8, 39u8, 75u8, 21u8,
                             108u8, 202u8, 32u8, 163u8, 167u8, 207u8, 233u8, 69u8, 151u8, 53u8,
                             164u8, 230u8, 16u8, 14u8, 22u8, 172u8, 46u8, 36u8, 216u8, 29u8, 1u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Balances")?;
+                        let pallet = metadata.pallet("Balances")?;
                         let constant = pallet.constant("MaxLocks")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -3516,17 +4184,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Balances", "MaxReserves")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Balances", "MaxReserves")?
                         == [
                             24u8, 30u8, 77u8, 89u8, 216u8, 114u8, 140u8, 11u8, 127u8, 252u8, 130u8,
                             203u8, 4u8, 55u8, 62u8, 240u8, 65u8, 182u8, 187u8, 189u8, 140u8, 6u8,
                             177u8, 216u8, 159u8, 108u8, 18u8, 73u8, 95u8, 67u8, 62u8, 50u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Balances")?;
+                        let pallet = metadata.pallet("Balances")?;
                         let constant = pallet.constant("MaxReserves")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -3567,50 +4234,72 @@ pub mod api {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self { client }
                 }
-                pub async fn next_fee_multiplier(
+                pub fn next_fee_multiplier(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::sp_arithmetic::fixed_point::FixedU128,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextFeeMultiplier>()?
-                        == [
-                            232u8, 48u8, 68u8, 202u8, 209u8, 29u8, 249u8, 71u8, 0u8, 84u8, 229u8,
-                            250u8, 176u8, 203u8, 27u8, 26u8, 34u8, 55u8, 83u8, 183u8, 224u8, 40u8,
-                            62u8, 127u8, 131u8, 88u8, 128u8, 9u8, 56u8, 178u8, 31u8, 183u8,
-                        ]
-                    {
-                        let entry = NextFeeMultiplier;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::sp_arithmetic::fixed_point::FixedU128,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextFeeMultiplier>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                232u8, 48u8, 68u8, 202u8, 209u8, 29u8, 249u8, 71u8, 0u8, 84u8,
+                                229u8, 250u8, 176u8, 203u8, 27u8, 26u8, 34u8, 55u8, 83u8, 183u8,
+                                224u8, 40u8, 62u8, 127u8, 131u8, 88u8, 128u8, 9u8, 56u8, 178u8,
+                                31u8, 183u8,
+                            ]
+                        {
+                            let entry = NextFeeMultiplier;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn storage_version(
+                pub fn storage_version(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_transaction_payment::Releases,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<StorageVersion>()?
-                        == [
-                            219u8, 243u8, 82u8, 176u8, 65u8, 5u8, 132u8, 114u8, 8u8, 82u8, 176u8,
-                            200u8, 97u8, 150u8, 177u8, 164u8, 166u8, 11u8, 34u8, 12u8, 12u8, 198u8,
-                            58u8, 191u8, 186u8, 221u8, 221u8, 119u8, 181u8, 253u8, 154u8, 228u8,
-                        ]
-                    {
-                        let entry = StorageVersion;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::pallet_transaction_payment::Releases,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<StorageVersion>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                219u8, 243u8, 82u8, 176u8, 65u8, 5u8, 132u8, 114u8, 8u8, 82u8,
+                                176u8, 200u8, 97u8, 150u8, 177u8, 164u8, 166u8, 11u8, 34u8, 12u8,
+                                12u8, 198u8, 58u8, 191u8, 186u8, 221u8, 221u8, 119u8, 181u8, 253u8,
+                                154u8, 228u8,
+                            ]
+                        {
+                            let entry = StorageVersion;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -3629,17 +4318,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("TransactionPayment", "TransactionByteFee")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("TransactionPayment", "TransactionByteFee")?
                         == [
                             183u8, 21u8, 105u8, 53u8, 108u8, 121u8, 186u8, 76u8, 202u8, 99u8,
                             230u8, 139u8, 18u8, 171u8, 99u8, 19u8, 189u8, 6u8, 194u8, 165u8, 226u8,
                             21u8, 230u8, 225u8, 53u8, 180u8, 49u8, 17u8, 0u8, 30u8, 213u8, 142u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("TransactionPayment")?;
+                        let pallet = metadata.pallet("TransactionPayment")?;
                         let constant = pallet.constant("TransactionByteFee")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -3672,10 +4360,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u8, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("TransactionPayment", "OperationalFeeMultiplier")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("TransactionPayment", "OperationalFeeMultiplier")?
                         == [
                             161u8, 232u8, 150u8, 43u8, 106u8, 83u8, 56u8, 248u8, 54u8, 123u8,
                             244u8, 73u8, 5u8, 49u8, 245u8, 150u8, 70u8, 92u8, 158u8, 207u8, 127u8,
@@ -3683,7 +4370,7 @@ pub mod api {
                             196u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("TransactionPayment")?;
+                        let pallet = metadata.pallet("TransactionPayment")?;
                         let constant = pallet.constant("OperationalFeeMultiplier")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -3702,10 +4389,9 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("TransactionPayment", "WeightToFee")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("TransactionPayment", "WeightToFee")?
                         == [
                             236u8, 89u8, 172u8, 50u8, 101u8, 218u8, 151u8, 158u8, 128u8, 186u8,
                             120u8, 84u8, 103u8, 248u8, 220u8, 191u8, 9u8, 185u8, 114u8, 160u8,
@@ -3713,7 +4399,7 @@ pub mod api {
                             12u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("TransactionPayment")?;
+                        let pallet = metadata.pallet("TransactionPayment")?;
                         let constant = pallet.constant("WeightToFee")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -3727,6 +4413,7 @@ pub mod api {
     pub mod octopus_appchain {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -3871,7 +4558,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SubmitObservations>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SubmitObservations>()?
+                    };
+                    if runtime_call_hash
                         == [
                             131u8, 234u8, 87u8, 150u8, 173u8, 60u8, 177u8, 246u8, 203u8, 153u8,
                             248u8, 208u8, 29u8, 55u8, 70u8, 11u8, 196u8, 185u8, 202u8, 141u8,
@@ -3899,7 +4591,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceSetIsActivated>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceSetIsActivated>()?
+                    };
+                    if runtime_call_hash
                         == [
                             82u8, 165u8, 95u8, 78u8, 177u8, 2u8, 9u8, 78u8, 62u8, 221u8, 119u8,
                             84u8, 52u8, 1u8, 196u8, 111u8, 216u8, 195u8, 53u8, 234u8, 116u8, 201u8,
@@ -3926,7 +4623,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceSetNextSetId>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceSetNextSetId>()?
+                    };
+                    if runtime_call_hash
                         == [
                             205u8, 181u8, 231u8, 95u8, 68u8, 241u8, 214u8, 131u8, 173u8, 85u8,
                             167u8, 205u8, 47u8, 218u8, 230u8, 242u8, 243u8, 118u8, 96u8, 112u8,
@@ -3957,10 +4659,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .call_hash::<ForceSetPlannedValidators>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceSetPlannedValidators>()?
+                    };
+                    if runtime_call_hash
                         == [
                             241u8, 123u8, 44u8, 41u8, 232u8, 178u8, 105u8, 119u8, 13u8, 177u8,
                             228u8, 191u8, 70u8, 65u8, 209u8, 225u8, 89u8, 181u8, 8u8, 188u8, 198u8,
@@ -3983,7 +4687,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Lock, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Lock>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Lock>()?
+                    };
+                    if runtime_call_hash
                         == [
                             59u8, 116u8, 159u8, 139u8, 246u8, 131u8, 64u8, 221u8, 230u8, 19u8,
                             15u8, 94u8, 163u8, 177u8, 34u8, 253u8, 31u8, 227u8, 70u8, 171u8, 188u8,
@@ -4020,7 +4729,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<MintAsset>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<MintAsset>()?
+                    };
+                    if runtime_call_hash
                         == [
                             21u8, 208u8, 168u8, 222u8, 234u8, 151u8, 158u8, 246u8, 111u8, 118u8,
                             110u8, 200u8, 199u8, 47u8, 250u8, 75u8, 105u8, 110u8, 207u8, 175u8,
@@ -4055,7 +4769,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<BurnAsset>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<BurnAsset>()?
+                    };
+                    if runtime_call_hash
                         == [
                             173u8, 20u8, 42u8, 239u8, 193u8, 223u8, 201u8, 117u8, 74u8, 90u8,
                             131u8, 231u8, 161u8, 240u8, 7u8, 185u8, 177u8, 167u8, 63u8, 103u8,
@@ -4088,7 +4807,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetAssetName>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetAssetName>()?
+                    };
+                    if runtime_call_hash
                         == [
                             177u8, 251u8, 214u8, 114u8, 89u8, 103u8, 116u8, 65u8, 235u8, 163u8,
                             111u8, 152u8, 64u8, 142u8, 94u8, 199u8, 216u8, 227u8, 205u8, 177u8,
@@ -4123,10 +4847,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .call_hash::<TranferFromPalletAccount>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TranferFromPalletAccount>()?
+                    };
+                    if runtime_call_hash
                         == [
                             251u8, 35u8, 177u8, 150u8, 171u8, 156u8, 141u8, 217u8, 58u8, 96u8,
                             222u8, 176u8, 182u8, 75u8, 51u8, 237u8, 28u8, 247u8, 74u8, 20u8, 26u8,
@@ -4156,7 +4882,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<LockNft>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<LockNft>()?
+                    };
+                    if runtime_call_hash
                         == [
                             120u8, 154u8, 76u8, 198u8, 157u8, 253u8, 25u8, 14u8, 241u8, 19u8, 89u8,
                             10u8, 237u8, 126u8, 77u8, 102u8, 103u8, 85u8, 100u8, 82u8, 58u8, 234u8,
@@ -4175,6 +4906,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_octopus_appchain::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -4451,358 +5183,517 @@ pub mod api {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self { client }
                 }
-                pub async fn anchor_contract(
+                pub fn anchor_contract(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<AnchorContract>()?
-                        == [
-                            39u8, 254u8, 249u8, 168u8, 27u8, 186u8, 34u8, 81u8, 114u8, 252u8,
-                            137u8, 120u8, 169u8, 110u8, 85u8, 144u8, 32u8, 155u8, 158u8, 251u8,
-                            126u8, 107u8, 64u8, 213u8, 87u8, 20u8, 213u8, 218u8, 46u8, 1u8, 107u8,
-                            208u8,
-                        ]
-                    {
-                        let entry = AnchorContract;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AnchorContract>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                39u8, 254u8, 249u8, 168u8, 27u8, 186u8, 34u8, 81u8, 114u8, 252u8,
+                                137u8, 120u8, 169u8, 110u8, 85u8, 144u8, 32u8, 155u8, 158u8, 251u8,
+                                126u8, 107u8, 64u8, 213u8, 87u8, 20u8, 213u8, 218u8, 46u8, 1u8,
+                                107u8, 208u8,
+                            ]
+                        {
+                            let entry = AnchorContract;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn asset_id_by_name(
+                pub fn asset_id_by_name(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<AssetIdByName>()?
-                        == [
-                            215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8, 89u8,
-                            86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8, 238u8,
-                            156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8, 97u8, 234u8,
-                        ]
-                    {
-                        let entry = AssetIdByName(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AssetIdByName>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8,
+                                89u8, 86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8,
+                                238u8, 156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8,
+                                97u8, 234u8,
+                            ]
+                        {
+                            let entry = AssetIdByName(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn asset_id_by_name_iter(
+                pub fn asset_id_by_name_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, AssetIdByName<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<AssetIdByName>()?
-                        == [
-                            215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8, 89u8,
-                            86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8, 238u8,
-                            156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8, 97u8, 234u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, AssetIdByName<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AssetIdByName>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8,
+                                89u8, 86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8,
+                                238u8, 156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8,
+                                97u8, 234u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Whether the appchain is activated."]
                 #[doc = ""]
                 #[doc = " Only an active appchain will communicate with the mainchain and pay block rewards."]
-                pub async fn is_activated(
+                pub fn is_activated(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<IsActivated>()?
-                        == [
-                            79u8, 161u8, 11u8, 40u8, 81u8, 93u8, 156u8, 140u8, 189u8, 249u8, 217u8,
-                            21u8, 180u8, 193u8, 93u8, 129u8, 149u8, 250u8, 97u8, 1u8, 205u8, 234u8,
-                            123u8, 232u8, 167u8, 194u8, 188u8, 247u8, 182u8, 179u8, 196u8, 209u8,
-                        ]
-                    {
-                        let entry = IsActivated;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<IsActivated>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                79u8, 161u8, 11u8, 40u8, 81u8, 93u8, 156u8, 140u8, 189u8, 249u8,
+                                217u8, 21u8, 180u8, 193u8, 93u8, 129u8, 149u8, 250u8, 97u8, 1u8,
+                                205u8, 234u8, 123u8, 232u8, 167u8, 194u8, 188u8, 247u8, 182u8,
+                                179u8, 196u8, 209u8,
+                            ]
+                        {
+                            let entry = IsActivated;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn next_set_id(
+                pub fn next_set_id(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<NextSetId>()?
-                        == [
-                            143u8, 235u8, 138u8, 252u8, 147u8, 133u8, 43u8, 104u8, 147u8, 238u8,
-                            74u8, 115u8, 65u8, 100u8, 51u8, 239u8, 106u8, 122u8, 127u8, 146u8,
-                            234u8, 160u8, 38u8, 18u8, 20u8, 59u8, 28u8, 254u8, 105u8, 194u8, 56u8,
-                            31u8,
-                        ]
-                    {
-                        let entry = NextSetId;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSetId>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                143u8, 235u8, 138u8, 252u8, 147u8, 133u8, 43u8, 104u8, 147u8,
+                                238u8, 74u8, 115u8, 65u8, 100u8, 51u8, 239u8, 106u8, 122u8, 127u8,
+                                146u8, 234u8, 160u8, 38u8, 18u8, 20u8, 59u8, 28u8, 254u8, 105u8,
+                                194u8, 56u8, 31u8,
+                            ]
+                        {
+                            let entry = NextSetId;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn planned_validators(
+                pub fn planned_validators(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<PlannedValidators>()?
-                        == [
-                            43u8, 15u8, 180u8, 107u8, 112u8, 151u8, 132u8, 149u8, 199u8, 222u8,
-                            232u8, 177u8, 36u8, 194u8, 139u8, 153u8, 17u8, 50u8, 203u8, 150u8,
-                            242u8, 34u8, 89u8, 184u8, 158u8, 112u8, 73u8, 220u8, 96u8, 96u8, 160u8,
-                            142u8,
-                        ]
-                    {
-                        let entry = PlannedValidators;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn next_notification_id(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<NextNotificationId>()?
-                        == [
-                            116u8, 245u8, 172u8, 65u8, 54u8, 136u8, 117u8, 21u8, 20u8, 36u8, 37u8,
-                            8u8, 204u8, 118u8, 33u8, 67u8, 247u8, 121u8, 86u8, 178u8, 130u8, 76u8,
-                            18u8, 8u8, 135u8, 34u8, 142u8, 60u8, 197u8, 177u8, 161u8, 64u8,
-                        ]
-                    {
-                        let entry = NextNotificationId;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn observations(
-                    &self,
-                    _0: &runtime_types::pallet_octopus_appchain::ObservationType,
-                    _1: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<
-                        runtime_types::pallet_octopus_appchain::Observation<
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<(
                             ::subxt::sp_core::crypto::AccountId32,
-                        >,
+                            ::core::primitive::u128,
+                        )>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Observations>()?
-                        == [
-                            21u8, 184u8, 9u8, 134u8, 224u8, 3u8, 125u8, 59u8, 231u8, 69u8, 173u8,
-                            180u8, 184u8, 55u8, 118u8, 185u8, 116u8, 117u8, 29u8, 137u8, 142u8,
-                            80u8, 194u8, 17u8, 18u8, 4u8, 125u8, 188u8, 208u8, 227u8, 115u8, 231u8,
-                        ]
-                    {
-                        let entry = Observations(_0, _1);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PlannedValidators>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                43u8, 15u8, 180u8, 107u8, 112u8, 151u8, 132u8, 149u8, 199u8, 222u8,
+                                232u8, 177u8, 36u8, 194u8, 139u8, 153u8, 17u8, 50u8, 203u8, 150u8,
+                                242u8, 34u8, 89u8, 184u8, 158u8, 112u8, 73u8, 220u8, 96u8, 96u8,
+                                160u8, 142u8,
+                            ]
+                        {
+                            let entry = PlannedValidators;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn observations_iter(
+                pub fn next_notification_id(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Observations<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Observations>()?
-                        == [
-                            21u8, 184u8, 9u8, 134u8, 224u8, 3u8, 125u8, 59u8, 231u8, 69u8, 173u8,
-                            180u8, 184u8, 55u8, 118u8, 185u8, 116u8, 117u8, 29u8, 137u8, 142u8,
-                            80u8, 194u8, 17u8, 18u8, 4u8, 125u8, 188u8, 208u8, 227u8, 115u8, 231u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextNotificationId>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                116u8, 245u8, 172u8, 65u8, 54u8, 136u8, 117u8, 21u8, 20u8, 36u8,
+                                37u8, 8u8, 204u8, 118u8, 33u8, 67u8, 247u8, 121u8, 86u8, 178u8,
+                                130u8, 76u8, 18u8, 8u8, 135u8, 34u8, 142u8, 60u8, 197u8, 177u8,
+                                161u8, 64u8,
+                            ]
+                        {
+                            let entry = NextNotificationId;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn observing(
+                pub fn observations(
                     &self,
-                    _0: &runtime_types::pallet_octopus_appchain::Observation<
+                    _0: &'a runtime_types::pallet_octopus_appchain::ObservationType,
+                    _1: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<
+                            runtime_types::pallet_octopus_appchain::Observation<
+                                ::subxt::sp_core::crypto::AccountId32,
+                            >,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Observations>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                21u8, 184u8, 9u8, 134u8, 224u8, 3u8, 125u8, 59u8, 231u8, 69u8,
+                                173u8, 180u8, 184u8, 55u8, 118u8, 185u8, 116u8, 117u8, 29u8, 137u8,
+                                142u8, 80u8, 194u8, 17u8, 18u8, 4u8, 125u8, 188u8, 208u8, 227u8,
+                                115u8, 231u8,
+                            ]
+                        {
+                            let entry = Observations(_0, _1);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                pub fn observations_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Observations<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Observations>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                21u8, 184u8, 9u8, 134u8, 224u8, 3u8, 125u8, 59u8, 231u8, 69u8,
+                                173u8, 180u8, 184u8, 55u8, 118u8, 185u8, 116u8, 117u8, 29u8, 137u8,
+                                142u8, 80u8, 194u8, 17u8, 18u8, 4u8, 125u8, 188u8, 208u8, 227u8,
+                                115u8, 231u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                pub fn observing(
+                    &self,
+                    _0: &'a runtime_types::pallet_octopus_appchain::Observation<
                         ::subxt::sp_core::crypto::AccountId32,
                     >,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Observing>()?
-                        == [
-                            114u8, 218u8, 121u8, 218u8, 217u8, 165u8, 24u8, 151u8, 67u8, 250u8,
-                            65u8, 226u8, 7u8, 201u8, 126u8, 126u8, 227u8, 21u8, 123u8, 65u8, 39u8,
-                            11u8, 80u8, 246u8, 253u8, 3u8, 222u8, 205u8, 176u8, 33u8, 4u8, 159u8,
-                        ]
-                    {
-                        let entry = Observing(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn observing_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Observing<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Observing>()?
-                        == [
-                            114u8, 218u8, 121u8, 218u8, 217u8, 165u8, 24u8, 151u8, 67u8, 250u8,
-                            65u8, 226u8, 7u8, 201u8, 126u8, 126u8, 227u8, 21u8, 123u8, 65u8, 39u8,
-                            11u8, 80u8, 246u8, 253u8, 3u8, 222u8, 205u8, 176u8, 33u8, 4u8, 159u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn octopus_pallet_id(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<OctopusPalletId>()?
-                        == [
-                            40u8, 44u8, 123u8, 181u8, 124u8, 176u8, 194u8, 41u8, 209u8, 34u8, 81u8,
-                            95u8, 168u8, 100u8, 48u8, 60u8, 108u8, 53u8, 86u8, 85u8, 227u8, 73u8,
-                            92u8, 204u8, 37u8, 236u8, 196u8, 167u8, 168u8, 34u8, 1u8, 249u8,
-                        ]
-                    {
-                        let entry = OctopusPalletId;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn notification_history(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_octopus_appchain::NotificationResult,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<NotificationHistory>()?
-                        == [
-                            225u8, 191u8, 108u8, 250u8, 203u8, 210u8, 122u8, 2u8, 99u8, 101u8,
-                            88u8, 151u8, 134u8, 3u8, 238u8, 247u8, 178u8, 53u8, 184u8, 103u8,
-                            168u8, 195u8, 157u8, 48u8, 119u8, 0u8, 100u8, 39u8, 217u8, 47u8, 146u8,
-                            193u8,
-                        ]
-                    {
-                        let entry = NotificationHistory(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Observing>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                114u8, 218u8, 121u8, 218u8, 217u8, 165u8, 24u8, 151u8, 67u8, 250u8,
+                                65u8, 226u8, 7u8, 201u8, 126u8, 126u8, 227u8, 21u8, 123u8, 65u8,
+                                39u8, 11u8, 80u8, 246u8, 253u8, 3u8, 222u8, 205u8, 176u8, 33u8,
+                                4u8, 159u8,
+                            ]
+                        {
+                            let entry = Observing(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn notification_history_iter(
+                pub fn observing_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NotificationHistory<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<NotificationHistory>()?
-                        == [
-                            225u8, 191u8, 108u8, 250u8, 203u8, 210u8, 122u8, 2u8, 99u8, 101u8,
-                            88u8, 151u8, 134u8, 3u8, 238u8, 247u8, 178u8, 53u8, 184u8, 103u8,
-                            168u8, 195u8, 157u8, 48u8, 119u8, 0u8, 100u8, 39u8, 217u8, 47u8, 146u8,
-                            193u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Observing<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Observing>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                114u8, 218u8, 121u8, 218u8, 217u8, 165u8, 24u8, 151u8, 67u8, 250u8,
+                                65u8, 226u8, 7u8, 201u8, 126u8, 126u8, 227u8, 21u8, 123u8, 65u8,
+                                39u8, 11u8, 80u8, 246u8, 253u8, 3u8, 222u8, 205u8, 176u8, 33u8,
+                                4u8, 159u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn git_version(
+                pub fn octopus_pallet_id(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<GitVersion>()?
-                        == [
-                            10u8, 147u8, 169u8, 151u8, 159u8, 49u8, 156u8, 150u8, 193u8, 119u8,
-                            142u8, 14u8, 209u8, 167u8, 213u8, 190u8, 32u8, 113u8, 55u8, 15u8, 65u8,
-                            163u8, 137u8, 102u8, 26u8, 173u8, 93u8, 252u8, 234u8, 94u8, 5u8, 174u8,
-                        ]
-                    {
-                        let entry = GitVersion;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<OctopusPalletId>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                40u8, 44u8, 123u8, 181u8, 124u8, 176u8, 194u8, 41u8, 209u8, 34u8,
+                                81u8, 95u8, 168u8, 100u8, 48u8, 60u8, 108u8, 53u8, 86u8, 85u8,
+                                227u8, 73u8, 92u8, 204u8, 37u8, 236u8, 196u8, 167u8, 168u8, 34u8,
+                                1u8, 249u8,
+                            ]
+                        {
+                            let entry = OctopusPalletId;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                pub fn notification_history(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_octopus_appchain::NotificationResult,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NotificationHistory>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                225u8, 191u8, 108u8, 250u8, 203u8, 210u8, 122u8, 2u8, 99u8, 101u8,
+                                88u8, 151u8, 134u8, 3u8, 238u8, 247u8, 178u8, 53u8, 184u8, 103u8,
+                                168u8, 195u8, 157u8, 48u8, 119u8, 0u8, 100u8, 39u8, 217u8, 47u8,
+                                146u8, 193u8,
+                            ]
+                        {
+                            let entry = NotificationHistory(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                pub fn notification_history_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, NotificationHistory<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NotificationHistory>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                225u8, 191u8, 108u8, 250u8, 203u8, 210u8, 122u8, 2u8, 99u8, 101u8,
+                                88u8, 151u8, 134u8, 3u8, 238u8, 247u8, 178u8, 53u8, 184u8, 103u8,
+                                168u8, 195u8, 157u8, 48u8, 119u8, 0u8, 100u8, 39u8, 217u8, 47u8,
+                                146u8, 193u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                pub fn git_version(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<GitVersion>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                10u8, 147u8, 169u8, 151u8, 159u8, 49u8, 156u8, 150u8, 193u8, 119u8,
+                                142u8, 14u8, 209u8, 167u8, 213u8, 190u8, 32u8, 113u8, 55u8, 15u8,
+                                65u8, 163u8, 137u8, 102u8, 26u8, 173u8, 93u8, 252u8, 234u8, 94u8,
+                                5u8, 174u8,
+                            ]
+                        {
+                            let entry = GitVersion;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -4822,17 +5713,16 @@ pub mod api {
                     runtime_types::frame_support::PalletId,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAppchain", "PalletId")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAppchain", "PalletId")?
                         == [
                             236u8, 223u8, 87u8, 151u8, 53u8, 214u8, 193u8, 211u8, 33u8, 7u8, 9u8,
                             168u8, 166u8, 90u8, 212u8, 102u8, 32u8, 118u8, 46u8, 106u8, 4u8, 241u8,
                             130u8, 67u8, 77u8, 46u8, 1u8, 145u8, 20u8, 139u8, 56u8, 25u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                        let pallet = metadata.pallet("OctopusAppchain")?;
                         let constant = pallet.constant("PalletId")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -4849,10 +5739,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAppchain", "GracePeriod")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAppchain", "GracePeriod")?
                         == [
                             186u8, 247u8, 209u8, 75u8, 234u8, 165u8, 168u8, 20u8, 46u8, 13u8,
                             122u8, 144u8, 170u8, 135u8, 80u8, 47u8, 189u8, 64u8, 113u8, 223u8,
@@ -4860,7 +5749,7 @@ pub mod api {
                             116u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                        let pallet = metadata.pallet("OctopusAppchain")?;
                         let constant = pallet.constant("GracePeriod")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -4876,10 +5765,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAppchain", "UnsignedPriority")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAppchain", "UnsignedPriority")?
                         == [
                             235u8, 29u8, 23u8, 191u8, 31u8, 101u8, 167u8, 228u8, 144u8, 234u8,
                             94u8, 85u8, 113u8, 178u8, 135u8, 146u8, 65u8, 220u8, 233u8, 202u8,
@@ -4887,7 +5775,7 @@ pub mod api {
                             116u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                        let pallet = metadata.pallet("OctopusAppchain")?;
                         let constant = pallet.constant("UnsignedPriority")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -4899,10 +5787,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAppchain", "RequestEventLimit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAppchain", "RequestEventLimit")?
                         == [
                             40u8, 22u8, 193u8, 130u8, 169u8, 43u8, 232u8, 243u8, 184u8, 208u8,
                             142u8, 85u8, 148u8, 194u8, 126u8, 240u8, 180u8, 80u8, 218u8, 198u8,
@@ -4910,7 +5797,7 @@ pub mod api {
                             162u8, 181u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAppchain")?;
+                        let pallet = metadata.pallet("OctopusAppchain")?;
                         let constant = pallet.constant("RequestEventLimit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -4924,6 +5811,7 @@ pub mod api {
     pub mod octopus_lpos {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -5004,7 +5892,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetHistoryDepth>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetHistoryDepth>()?
+                    };
+                    if runtime_call_hash
                         == [
                             128u8, 149u8, 139u8, 192u8, 213u8, 239u8, 248u8, 215u8, 57u8, 145u8,
                             177u8, 225u8, 43u8, 214u8, 228u8, 14u8, 213u8, 181u8, 18u8, 40u8,
@@ -5035,7 +5928,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceSetEraPayout>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceSetEraPayout>()?
+                    };
+                    if runtime_call_hash
                         == [
                             31u8, 235u8, 56u8, 254u8, 54u8, 192u8, 0u8, 180u8, 57u8, 94u8, 106u8,
                             16u8, 80u8, 207u8, 215u8, 86u8, 231u8, 74u8, 87u8, 174u8, 62u8, 71u8,
@@ -5050,6 +5948,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_octopus_lpos::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -5242,409 +6141,586 @@ pub mod api {
                 #[doc = " Must be more than the number of eras delayed by session otherwise. I.e. active era must"]
                 #[doc = " always be in history. I.e. `active_era > current_era - history_depth` must be"]
                 #[doc = " guaranteed."]
-                pub async fn history_depth(
+                pub fn history_depth(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<HistoryDepth>()?
-                        == [
-                            41u8, 54u8, 118u8, 245u8, 75u8, 136u8, 220u8, 25u8, 55u8, 255u8, 149u8,
-                            177u8, 49u8, 155u8, 167u8, 188u8, 170u8, 29u8, 251u8, 44u8, 240u8,
-                            250u8, 225u8, 205u8, 102u8, 74u8, 25u8, 47u8, 52u8, 235u8, 204u8,
-                            167u8,
-                        ]
-                    {
-                        let entry = HistoryDepth;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<HistoryDepth>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                41u8, 54u8, 118u8, 245u8, 75u8, 136u8, 220u8, 25u8, 55u8, 255u8,
+                                149u8, 177u8, 49u8, 155u8, 167u8, 188u8, 170u8, 29u8, 251u8, 44u8,
+                                240u8, 250u8, 225u8, 205u8, 102u8, 74u8, 25u8, 47u8, 52u8, 235u8,
+                                204u8, 167u8,
+                            ]
+                        {
+                            let entry = HistoryDepth;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The current era index."]
                 #[doc = ""]
                 #[doc = " This is the latest planned era, depending on how the Session pallet queues the validator"]
                 #[doc = " set, it might be active or not."]
-                pub async fn current_era(
+                pub fn current_era(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<CurrentEra>()?
-                        == [
-                            105u8, 150u8, 49u8, 122u8, 4u8, 78u8, 8u8, 121u8, 34u8, 136u8, 157u8,
-                            227u8, 59u8, 139u8, 7u8, 253u8, 7u8, 10u8, 117u8, 71u8, 240u8, 74u8,
-                            86u8, 36u8, 198u8, 37u8, 153u8, 93u8, 196u8, 22u8, 192u8, 243u8,
-                        ]
-                    {
-                        let entry = CurrentEra;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<CurrentEra>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                105u8, 150u8, 49u8, 122u8, 4u8, 78u8, 8u8, 121u8, 34u8, 136u8,
+                                157u8, 227u8, 59u8, 139u8, 7u8, 253u8, 7u8, 10u8, 117u8, 71u8,
+                                240u8, 74u8, 86u8, 36u8, 198u8, 37u8, 153u8, 93u8, 196u8, 22u8,
+                                192u8, 243u8,
+                            ]
+                        {
+                            let entry = CurrentEra;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The active era information, it holds index and start."]
                 #[doc = ""]
                 #[doc = " The active era is the era being currently rewarded. Validator set of this era must be"]
                 #[doc = " equal to [`SessionInterface::validators`]."]
-                pub async fn active_era(
+                pub fn active_era(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<runtime_types::pallet_octopus_lpos::ActiveEraInfo>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ActiveEra>()?
-                        == [
-                            134u8, 251u8, 154u8, 229u8, 115u8, 221u8, 194u8, 18u8, 186u8, 224u8,
-                            229u8, 98u8, 62u8, 124u8, 56u8, 81u8, 224u8, 104u8, 114u8, 2u8, 81u8,
-                            33u8, 217u8, 208u8, 137u8, 154u8, 31u8, 19u8, 253u8, 83u8, 55u8, 142u8,
-                        ]
-                    {
-                        let entry = ActiveEra;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The session index at which the era start for the last `HISTORY_DEPTH` eras."]
-                #[doc = ""]
-                #[doc = " Note: This tracks the starting session (i.e. session index when era start being active)"]
-                #[doc = " for the eras in `[CurrentEra - HISTORY_DEPTH, CurrentEra]`."]
-                pub async fn eras_start_session_index(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ErasStartSessionIndex>()?
-                        == [
-                            92u8, 157u8, 168u8, 144u8, 132u8, 3u8, 212u8, 80u8, 230u8, 229u8,
-                            251u8, 218u8, 97u8, 55u8, 79u8, 100u8, 163u8, 91u8, 32u8, 246u8, 122u8,
-                            78u8, 149u8, 214u8, 103u8, 249u8, 119u8, 20u8, 101u8, 116u8, 110u8,
-                            185u8,
-                        ]
-                    {
-                        let entry = ErasStartSessionIndex(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The session index at which the era start for the last `HISTORY_DEPTH` eras."]
-                #[doc = ""]
-                #[doc = " Note: This tracks the starting session (i.e. session index when era start being active)"]
-                #[doc = " for the eras in `[CurrentEra - HISTORY_DEPTH, CurrentEra]`."]
-                pub async fn eras_start_session_index_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasStartSessionIndex<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ErasStartSessionIndex>()?
-                        == [
-                            92u8, 157u8, 168u8, 144u8, 132u8, 3u8, 212u8, 80u8, 230u8, 229u8,
-                            251u8, 218u8, 97u8, 55u8, 79u8, 100u8, 163u8, 91u8, 32u8, 246u8, 122u8,
-                            78u8, 149u8, 214u8, 103u8, 249u8, 119u8, 20u8, 101u8, 116u8, 110u8,
-                            185u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Exposure of validator at era."]
-                #[doc = ""]
-                #[doc = " This is keyed first by the era index to allow bulk deletion and then the stash account."]
-                #[doc = ""]
-                #[doc = " Is it removed after `HISTORY_DEPTH` eras."]
-                #[doc = " If stakers hasn't been set or has been removed then empty exposure is returned."]
-                pub async fn eras_stakers(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    _1: &::subxt::sp_core::crypto::AccountId32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ErasStakers>()?
-                        == [
-                            85u8, 187u8, 55u8, 106u8, 130u8, 221u8, 44u8, 232u8, 36u8, 206u8, 79u8,
-                            165u8, 220u8, 24u8, 252u8, 25u8, 176u8, 126u8, 122u8, 39u8, 241u8,
-                            172u8, 250u8, 9u8, 191u8, 142u8, 223u8, 117u8, 255u8, 182u8, 26u8,
-                            235u8,
-                        ]
-                    {
-                        let entry = ErasStakers(_0, _1);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Exposure of validator at era."]
-                #[doc = ""]
-                #[doc = " This is keyed first by the era index to allow bulk deletion and then the stash account."]
-                #[doc = ""]
-                #[doc = " Is it removed after `HISTORY_DEPTH` eras."]
-                #[doc = " If stakers hasn't been set or has been removed then empty exposure is returned."]
-                pub async fn eras_stakers_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasStakers<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ErasStakers>()?
-                        == [
-                            85u8, 187u8, 55u8, 106u8, 130u8, 221u8, 44u8, 232u8, 36u8, 206u8, 79u8,
-                            165u8, 220u8, 24u8, 252u8, 25u8, 176u8, 126u8, 122u8, 39u8, 241u8,
-                            172u8, 250u8, 9u8, 191u8, 142u8, 223u8, 117u8, 255u8, 182u8, 26u8,
-                            235u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The total validator era payout for the last `HISTORY_DEPTH` eras."]
-                #[doc = ""]
-                #[doc = " Eras that haven't finished yet or has been removed doesn't have reward."]
-                pub async fn eras_validator_reward(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u128>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ErasValidatorReward>()?
-                        == [
-                            87u8, 80u8, 156u8, 123u8, 107u8, 77u8, 203u8, 37u8, 231u8, 84u8, 124u8,
-                            155u8, 227u8, 212u8, 212u8, 179u8, 84u8, 161u8, 223u8, 255u8, 254u8,
-                            107u8, 52u8, 89u8, 98u8, 169u8, 136u8, 241u8, 104u8, 3u8, 244u8, 161u8,
-                        ]
-                    {
-                        let entry = ErasValidatorReward(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The total validator era payout for the last `HISTORY_DEPTH` eras."]
-                #[doc = ""]
-                #[doc = " Eras that haven't finished yet or has been removed doesn't have reward."]
-                pub async fn eras_validator_reward_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasValidatorReward<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ErasValidatorReward>()?
-                        == [
-                            87u8, 80u8, 156u8, 123u8, 107u8, 77u8, 203u8, 37u8, 231u8, 84u8, 124u8,
-                            155u8, 227u8, 212u8, 212u8, 179u8, 84u8, 161u8, 223u8, 255u8, 254u8,
-                            107u8, 52u8, 89u8, 98u8, 169u8, 136u8, 241u8, 104u8, 3u8, 244u8, 161u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Rewards for the last `HISTORY_DEPTH` eras."]
-                #[doc = " If reward hasn't been set or has been removed then 0 reward is returned."]
-                pub async fn eras_reward_points(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_octopus_lpos::EraRewardPoints<
-                        ::subxt::sp_core::crypto::AccountId32,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<runtime_types::pallet_octopus_lpos::ActiveEraInfo>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ErasRewardPoints>()?
-                        == [
-                            76u8, 221u8, 158u8, 62u8, 3u8, 254u8, 139u8, 170u8, 103u8, 218u8,
-                            191u8, 103u8, 57u8, 212u8, 208u8, 7u8, 105u8, 52u8, 117u8, 173u8, 8u8,
-                            34u8, 82u8, 141u8, 51u8, 72u8, 243u8, 56u8, 206u8, 206u8, 48u8, 140u8,
-                        ]
-                    {
-                        let entry = ErasRewardPoints(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ActiveEra>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                134u8, 251u8, 154u8, 229u8, 115u8, 221u8, 194u8, 18u8, 186u8,
+                                224u8, 229u8, 98u8, 62u8, 124u8, 56u8, 81u8, 224u8, 104u8, 114u8,
+                                2u8, 81u8, 33u8, 217u8, 208u8, 137u8, 154u8, 31u8, 19u8, 253u8,
+                                83u8, 55u8, 142u8,
+                            ]
+                        {
+                            let entry = ActiveEra;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The session index at which the era start for the last `HISTORY_DEPTH` eras."]
+                #[doc = ""]
+                #[doc = " Note: This tracks the starting session (i.e. session index when era start being active)"]
+                #[doc = " for the eras in `[CurrentEra - HISTORY_DEPTH, CurrentEra]`."]
+                pub fn eras_start_session_index(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasStartSessionIndex>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                92u8, 157u8, 168u8, 144u8, 132u8, 3u8, 212u8, 80u8, 230u8, 229u8,
+                                251u8, 218u8, 97u8, 55u8, 79u8, 100u8, 163u8, 91u8, 32u8, 246u8,
+                                122u8, 78u8, 149u8, 214u8, 103u8, 249u8, 119u8, 20u8, 101u8, 116u8,
+                                110u8, 185u8,
+                            ]
+                        {
+                            let entry = ErasStartSessionIndex(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The session index at which the era start for the last `HISTORY_DEPTH` eras."]
+                #[doc = ""]
+                #[doc = " Note: This tracks the starting session (i.e. session index when era start being active)"]
+                #[doc = " for the eras in `[CurrentEra - HISTORY_DEPTH, CurrentEra]`."]
+                pub fn eras_start_session_index_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ErasStartSessionIndex<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasStartSessionIndex>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                92u8, 157u8, 168u8, 144u8, 132u8, 3u8, 212u8, 80u8, 230u8, 229u8,
+                                251u8, 218u8, 97u8, 55u8, 79u8, 100u8, 163u8, 91u8, 32u8, 246u8,
+                                122u8, 78u8, 149u8, 214u8, 103u8, 249u8, 119u8, 20u8, 101u8, 116u8,
+                                110u8, 185u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Exposure of validator at era."]
+                #[doc = ""]
+                #[doc = " This is keyed first by the era index to allow bulk deletion and then the stash account."]
+                #[doc = ""]
+                #[doc = " Is it removed after `HISTORY_DEPTH` eras."]
+                #[doc = " If stakers hasn't been set or has been removed then empty exposure is returned."]
+                pub fn eras_stakers(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    _1: &'a ::subxt::sp_core::crypto::AccountId32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasStakers>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                85u8, 187u8, 55u8, 106u8, 130u8, 221u8, 44u8, 232u8, 36u8, 206u8,
+                                79u8, 165u8, 220u8, 24u8, 252u8, 25u8, 176u8, 126u8, 122u8, 39u8,
+                                241u8, 172u8, 250u8, 9u8, 191u8, 142u8, 223u8, 117u8, 255u8, 182u8,
+                                26u8, 235u8,
+                            ]
+                        {
+                            let entry = ErasStakers(_0, _1);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Exposure of validator at era."]
+                #[doc = ""]
+                #[doc = " This is keyed first by the era index to allow bulk deletion and then the stash account."]
+                #[doc = ""]
+                #[doc = " Is it removed after `HISTORY_DEPTH` eras."]
+                #[doc = " If stakers hasn't been set or has been removed then empty exposure is returned."]
+                pub fn eras_stakers_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ErasStakers<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasStakers>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                85u8, 187u8, 55u8, 106u8, 130u8, 221u8, 44u8, 232u8, 36u8, 206u8,
+                                79u8, 165u8, 220u8, 24u8, 252u8, 25u8, 176u8, 126u8, 122u8, 39u8,
+                                241u8, 172u8, 250u8, 9u8, 191u8, 142u8, 223u8, 117u8, 255u8, 182u8,
+                                26u8, 235u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The total validator era payout for the last `HISTORY_DEPTH` eras."]
+                #[doc = ""]
+                #[doc = " Eras that haven't finished yet or has been removed doesn't have reward."]
+                pub fn eras_validator_reward(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u128>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasValidatorReward>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                87u8, 80u8, 156u8, 123u8, 107u8, 77u8, 203u8, 37u8, 231u8, 84u8,
+                                124u8, 155u8, 227u8, 212u8, 212u8, 179u8, 84u8, 161u8, 223u8,
+                                255u8, 254u8, 107u8, 52u8, 89u8, 98u8, 169u8, 136u8, 241u8, 104u8,
+                                3u8, 244u8, 161u8,
+                            ]
+                        {
+                            let entry = ErasValidatorReward(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The total validator era payout for the last `HISTORY_DEPTH` eras."]
+                #[doc = ""]
+                #[doc = " Eras that haven't finished yet or has been removed doesn't have reward."]
+                pub fn eras_validator_reward_iter(
+                    &self,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ErasValidatorReward<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasValidatorReward>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                87u8, 80u8, 156u8, 123u8, 107u8, 77u8, 203u8, 37u8, 231u8, 84u8,
+                                124u8, 155u8, 227u8, 212u8, 212u8, 179u8, 84u8, 161u8, 223u8,
+                                255u8, 254u8, 107u8, 52u8, 89u8, 98u8, 169u8, 136u8, 241u8, 104u8,
+                                3u8, 244u8, 161u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Rewards for the last `HISTORY_DEPTH` eras."]
                 #[doc = " If reward hasn't been set or has been removed then 0 reward is returned."]
-                pub async fn eras_reward_points_iter(
+                pub fn eras_reward_points(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::pallet_octopus_lpos::EraRewardPoints<
+                            ::subxt::sp_core::crypto::AccountId32,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasRewardPoints>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                76u8, 221u8, 158u8, 62u8, 3u8, 254u8, 139u8, 170u8, 103u8, 218u8,
+                                191u8, 103u8, 57u8, 212u8, 208u8, 7u8, 105u8, 52u8, 117u8, 173u8,
+                                8u8, 34u8, 82u8, 141u8, 51u8, 72u8, 243u8, 56u8, 206u8, 206u8,
+                                48u8, 140u8,
+                            ]
+                        {
+                            let entry = ErasRewardPoints(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Rewards for the last `HISTORY_DEPTH` eras."]
+                #[doc = " If reward hasn't been set or has been removed then 0 reward is returned."]
+                pub fn eras_reward_points_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasRewardPoints<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ErasRewardPoints>()?
-                        == [
-                            76u8, 221u8, 158u8, 62u8, 3u8, 254u8, 139u8, 170u8, 103u8, 218u8,
-                            191u8, 103u8, 57u8, 212u8, 208u8, 7u8, 105u8, 52u8, 117u8, 173u8, 8u8,
-                            34u8, 82u8, 141u8, 51u8, 72u8, 243u8, 56u8, 206u8, 206u8, 48u8, 140u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ErasRewardPoints<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasRewardPoints>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                76u8, 221u8, 158u8, 62u8, 3u8, 254u8, 139u8, 170u8, 103u8, 218u8,
+                                191u8, 103u8, 57u8, 212u8, 208u8, 7u8, 105u8, 52u8, 117u8, 173u8,
+                                8u8, 34u8, 82u8, 141u8, 51u8, 72u8, 243u8, 56u8, 206u8, 206u8,
+                                48u8, 140u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The total amount staked for the last `HISTORY_DEPTH` eras."]
                 #[doc = " If total hasn't been set or has been removed then 0 stake is returned."]
-                pub async fn eras_total_stake(
+                pub fn eras_total_stake(
                     &self,
-                    _0: &::core::primitive::u32,
+                    _0: &'a ::core::primitive::u32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ErasTotalStake>()?
-                        == [
-                            224u8, 240u8, 168u8, 69u8, 148u8, 140u8, 249u8, 240u8, 4u8, 46u8, 77u8,
-                            11u8, 224u8, 65u8, 26u8, 239u8, 1u8, 110u8, 53u8, 11u8, 247u8, 235u8,
-                            142u8, 234u8, 22u8, 43u8, 24u8, 36u8, 37u8, 43u8, 170u8, 40u8,
-                        ]
-                    {
-                        let entry = ErasTotalStake(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasTotalStake>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                224u8, 240u8, 168u8, 69u8, 148u8, 140u8, 249u8, 240u8, 4u8, 46u8,
+                                77u8, 11u8, 224u8, 65u8, 26u8, 239u8, 1u8, 110u8, 53u8, 11u8,
+                                247u8, 235u8, 142u8, 234u8, 22u8, 43u8, 24u8, 36u8, 37u8, 43u8,
+                                170u8, 40u8,
+                            ]
+                        {
+                            let entry = ErasTotalStake(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The total amount staked for the last `HISTORY_DEPTH` eras."]
                 #[doc = " If total hasn't been set or has been removed then 0 stake is returned."]
-                pub async fn eras_total_stake_iter(
+                pub fn eras_total_stake_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ErasTotalStake<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ErasTotalStake>()?
-                        == [
-                            224u8, 240u8, 168u8, 69u8, 148u8, 140u8, 249u8, 240u8, 4u8, 46u8, 77u8,
-                            11u8, 224u8, 65u8, 26u8, 239u8, 1u8, 110u8, 53u8, 11u8, 247u8, 235u8,
-                            142u8, 234u8, 22u8, 43u8, 24u8, 36u8, 37u8, 43u8, 170u8, 40u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ErasTotalStake<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ErasTotalStake>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                224u8, 240u8, 168u8, 69u8, 148u8, 140u8, 249u8, 240u8, 4u8, 46u8,
+                                77u8, 11u8, 224u8, 65u8, 26u8, 239u8, 1u8, 110u8, 53u8, 11u8,
+                                247u8, 235u8, 142u8, 234u8, 22u8, 43u8, 24u8, 36u8, 37u8, 43u8,
+                                170u8, 40u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " A mapping from still-bonded eras to the first session index of that era."]
                 #[doc = ""]
                 #[doc = " Must contains information for eras for the range:"]
                 #[doc = " `[active_era - bounding_duration; active_era]`"]
-                pub async fn bonded_eras(
+                pub fn bonded_eras(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<BondedEras>()?
-                        == [
-                            243u8, 162u8, 236u8, 198u8, 122u8, 182u8, 37u8, 55u8, 171u8, 156u8,
-                            235u8, 223u8, 226u8, 129u8, 89u8, 206u8, 2u8, 155u8, 222u8, 154u8,
-                            116u8, 124u8, 4u8, 119u8, 155u8, 94u8, 248u8, 30u8, 171u8, 51u8, 78u8,
-                            106u8,
-                        ]
-                    {
-                        let entry = BondedEras;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<(::core::primitive::u32, ::core::primitive::u32)>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<BondedEras>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                243u8, 162u8, 236u8, 198u8, 122u8, 182u8, 37u8, 55u8, 171u8, 156u8,
+                                235u8, 223u8, 226u8, 129u8, 89u8, 206u8, 2u8, 155u8, 222u8, 154u8,
+                                116u8, 124u8, 4u8, 119u8, 155u8, 94u8, 248u8, 30u8, 171u8, 51u8,
+                                78u8, 106u8,
+                            ]
+                        {
+                            let entry = BondedEras;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The last planned session scheduled by the session pallet."]
                 #[doc = ""]
                 #[doc = " This is basically in sync with the call to [`SessionManager::new_session`]."]
-                pub async fn current_planned_session(
+                pub fn current_planned_session(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<CurrentPlannedSession>()?
-                        == [
-                            38u8, 22u8, 56u8, 250u8, 17u8, 154u8, 99u8, 37u8, 155u8, 253u8, 100u8,
-                            117u8, 5u8, 239u8, 31u8, 190u8, 53u8, 241u8, 11u8, 185u8, 163u8, 227u8,
-                            10u8, 77u8, 210u8, 64u8, 156u8, 218u8, 105u8, 16u8, 1u8, 57u8,
-                        ]
-                    {
-                        let entry = CurrentPlannedSession;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<CurrentPlannedSession>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                38u8, 22u8, 56u8, 250u8, 17u8, 154u8, 99u8, 37u8, 155u8, 253u8,
+                                100u8, 117u8, 5u8, 239u8, 31u8, 190u8, 53u8, 241u8, 11u8, 185u8,
+                                163u8, 227u8, 10u8, 77u8, 210u8, 64u8, 156u8, 218u8, 105u8, 16u8,
+                                1u8, 57u8,
+                            ]
+                        {
+                            let entry = CurrentPlannedSession;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The payout for validators and the system for the current era."]
-                pub async fn era_payout(
+                pub fn era_payout(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<EraPayout>()?
-                        == [
-                            170u8, 205u8, 212u8, 96u8, 48u8, 137u8, 153u8, 23u8, 221u8, 85u8, 55u8,
-                            48u8, 57u8, 151u8, 98u8, 86u8, 82u8, 140u8, 29u8, 186u8, 244u8, 84u8,
-                            188u8, 25u8, 69u8, 183u8, 21u8, 189u8, 164u8, 101u8, 25u8, 233u8,
-                        ]
-                    {
-                        let entry = EraPayout;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<EraPayout>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                170u8, 205u8, 212u8, 96u8, 48u8, 137u8, 153u8, 23u8, 221u8, 85u8,
+                                55u8, 48u8, 57u8, 151u8, 98u8, 86u8, 82u8, 140u8, 29u8, 186u8,
+                                244u8, 84u8, 188u8, 25u8, 69u8, 183u8, 21u8, 189u8, 164u8, 101u8,
+                                25u8, 233u8,
+                            ]
+                        {
+                            let entry = EraPayout;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -5663,17 +6739,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusLpos", "SessionsPerEra")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusLpos", "SessionsPerEra")?
                         == [
                             73u8, 207u8, 178u8, 212u8, 159u8, 9u8, 41u8, 31u8, 205u8, 221u8, 166u8,
                             159u8, 104u8, 218u8, 113u8, 160u8, 174u8, 66u8, 95u8, 0u8, 237u8, 42u8,
                             120u8, 171u8, 68u8, 78u8, 136u8, 162u8, 163u8, 225u8, 199u8, 138u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusLpos")?;
+                        let pallet = metadata.pallet("OctopusLpos")?;
                         let constant = pallet.constant("SessionsPerEra")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -5685,10 +6760,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusLpos", "BlocksPerEra")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusLpos", "BlocksPerEra")?
                         == [
                             237u8, 188u8, 9u8, 53u8, 207u8, 253u8, 43u8, 105u8, 115u8, 126u8,
                             252u8, 130u8, 131u8, 190u8, 103u8, 88u8, 221u8, 34u8, 253u8, 92u8,
@@ -5696,7 +6770,7 @@ pub mod api {
                             166u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusLpos")?;
+                        let pallet = metadata.pallet("OctopusLpos")?;
                         let constant = pallet.constant("BlocksPerEra")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -5709,17 +6783,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusLpos", "BondingDuration")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusLpos", "BondingDuration")?
                         == [
                             117u8, 2u8, 56u8, 16u8, 159u8, 102u8, 149u8, 196u8, 2u8, 213u8, 25u8,
                             224u8, 92u8, 126u8, 224u8, 29u8, 59u8, 121u8, 215u8, 129u8, 144u8,
                             144u8, 128u8, 154u8, 133u8, 111u8, 55u8, 39u8, 28u8, 45u8, 198u8, 55u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusLpos")?;
+                        let pallet = metadata.pallet("OctopusLpos")?;
                         let constant = pallet.constant("BondingDuration")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -5733,6 +6806,7 @@ pub mod api {
     pub mod octopus_upward_messages {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -5754,6 +6828,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_octopus_upward_messages::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -5786,50 +6861,69 @@ pub mod api {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self { client }
                 }
-                pub async fn message_queue(
+                pub fn message_queue(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<MessageQueue>()?
-                        == [
-                            142u8, 49u8, 124u8, 4u8, 98u8, 234u8, 187u8, 185u8, 244u8, 158u8,
-                            156u8, 227u8, 130u8, 54u8, 183u8, 240u8, 234u8, 170u8, 100u8, 150u8,
-                            198u8, 150u8, 108u8, 164u8, 58u8, 70u8, 46u8, 59u8, 176u8, 56u8, 172u8,
-                            52u8,
-                        ]
-                    {
-                        let entry = MessageQueue;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<runtime_types::pallet_octopus_upward_messages::Message>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<MessageQueue>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                142u8, 49u8, 124u8, 4u8, 98u8, 234u8, 187u8, 185u8, 244u8, 158u8,
+                                156u8, 227u8, 130u8, 54u8, 183u8, 240u8, 234u8, 170u8, 100u8,
+                                150u8, 198u8, 150u8, 108u8, 164u8, 58u8, 70u8, 46u8, 59u8, 176u8,
+                                56u8, 172u8, 52u8,
+                            ]
+                        {
+                            let entry = MessageQueue;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn nonce(
+                pub fn nonce(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Nonce>()?
-                        == [
-                            122u8, 169u8, 95u8, 131u8, 85u8, 32u8, 154u8, 114u8, 143u8, 56u8, 12u8,
-                            182u8, 64u8, 150u8, 241u8, 249u8, 254u8, 251u8, 160u8, 235u8, 192u8,
-                            41u8, 101u8, 232u8, 186u8, 108u8, 187u8, 149u8, 210u8, 91u8, 179u8,
-                            98u8,
-                        ]
-                    {
-                        let entry = Nonce;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Nonce>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                122u8, 169u8, 95u8, 131u8, 85u8, 32u8, 154u8, 114u8, 143u8, 56u8,
+                                12u8, 182u8, 64u8, 150u8, 241u8, 249u8, 254u8, 251u8, 160u8, 235u8,
+                                192u8, 41u8, 101u8, 232u8, 186u8, 108u8, 187u8, 149u8, 210u8, 91u8,
+                                179u8, 98u8,
+                            ]
+                        {
+                            let entry = Nonce;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -5848,17 +6942,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUpwardMessages", "UpwardMessagesLimit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUpwardMessages", "UpwardMessagesLimit")?
                         == [
                             58u8, 44u8, 120u8, 149u8, 124u8, 229u8, 134u8, 99u8, 16u8, 140u8,
                             161u8, 12u8, 225u8, 2u8, 2u8, 38u8, 10u8, 84u8, 178u8, 88u8, 209u8,
                             83u8, 147u8, 164u8, 33u8, 119u8, 56u8, 118u8, 210u8, 182u8, 56u8, 79u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUpwardMessages")?;
+                        let pallet = metadata.pallet("OctopusUpwardMessages")?;
                         let constant = pallet.constant("UpwardMessagesLimit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -5872,6 +6965,7 @@ pub mod api {
     pub mod octopus_assets {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -6226,7 +7320,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Create>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Create>()?
+                    };
+                    if runtime_call_hash
                         == [
                             22u8, 132u8, 128u8, 87u8, 22u8, 196u8, 236u8, 106u8, 26u8, 235u8, 17u8,
                             225u8, 180u8, 30u8, 18u8, 182u8, 134u8, 142u8, 242u8, 223u8, 94u8,
@@ -6282,7 +7381,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceCreate>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceCreate>()?
+                    };
+                    if runtime_call_hash
                         == [
                             255u8, 135u8, 183u8, 58u8, 93u8, 70u8, 28u8, 45u8, 83u8, 139u8, 19u8,
                             96u8, 29u8, 75u8, 27u8, 51u8, 118u8, 77u8, 33u8, 76u8, 231u8, 24u8,
@@ -6333,7 +7437,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Destroy>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Destroy>()?
+                    };
+                    if runtime_call_hash
                         == [
                             75u8, 150u8, 231u8, 156u8, 201u8, 102u8, 132u8, 29u8, 65u8, 54u8,
                             131u8, 27u8, 34u8, 254u8, 226u8, 60u8, 139u8, 241u8, 76u8, 182u8,
@@ -6371,7 +7480,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Mint, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Mint>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Mint>()?
+                    };
+                    if runtime_call_hash
                         == [
                             176u8, 5u8, 185u8, 90u8, 101u8, 30u8, 92u8, 236u8, 132u8, 69u8, 249u8,
                             183u8, 224u8, 224u8, 28u8, 95u8, 178u8, 107u8, 47u8, 149u8, 102u8,
@@ -6415,7 +7529,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Burn, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Burn>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Burn>()?
+                    };
+                    if runtime_call_hash
                         == [
                             141u8, 248u8, 72u8, 10u8, 198u8, 66u8, 50u8, 6u8, 176u8, 102u8, 21u8,
                             118u8, 94u8, 127u8, 26u8, 112u8, 220u8, 61u8, 77u8, 217u8, 61u8, 247u8,
@@ -6465,7 +7584,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Transfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Transfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             107u8, 247u8, 199u8, 196u8, 111u8, 11u8, 46u8, 128u8, 201u8, 89u8,
                             196u8, 206u8, 164u8, 199u8, 56u8, 111u8, 148u8, 206u8, 237u8, 27u8,
@@ -6516,7 +7640,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<TransferKeepAlive>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TransferKeepAlive>()?
+                    };
+                    if runtime_call_hash
                         == [
                             162u8, 209u8, 34u8, 46u8, 89u8, 14u8, 90u8, 101u8, 160u8, 250u8, 105u8,
                             13u8, 15u8, 245u8, 75u8, 30u8, 145u8, 177u8, 201u8, 157u8, 57u8, 221u8,
@@ -6571,7 +7700,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceTransfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceTransfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             42u8, 166u8, 74u8, 186u8, 185u8, 246u8, 0u8, 191u8, 198u8, 218u8, 76u8,
                             238u8, 47u8, 30u8, 206u8, 214u8, 214u8, 220u8, 211u8, 197u8, 210u8,
@@ -6611,7 +7745,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Freeze, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Freeze>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Freeze>()?
+                    };
+                    if runtime_call_hash
                         == [
                             142u8, 1u8, 72u8, 133u8, 217u8, 28u8, 148u8, 48u8, 5u8, 154u8, 11u8,
                             106u8, 202u8, 177u8, 116u8, 118u8, 152u8, 99u8, 225u8, 89u8, 43u8,
@@ -6645,7 +7784,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Thaw, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Thaw>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Thaw>()?
+                    };
+                    if runtime_call_hash
                         == [
                             23u8, 243u8, 155u8, 178u8, 118u8, 62u8, 57u8, 188u8, 112u8, 79u8,
                             205u8, 15u8, 247u8, 11u8, 227u8, 53u8, 24u8, 238u8, 50u8, 206u8, 199u8,
@@ -6682,7 +7826,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<FreezeAsset>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<FreezeAsset>()?
+                    };
+                    if runtime_call_hash
                         == [
                             143u8, 188u8, 2u8, 145u8, 109u8, 95u8, 170u8, 60u8, 163u8, 226u8, 99u8,
                             18u8, 106u8, 64u8, 77u8, 168u8, 131u8, 87u8, 105u8, 203u8, 145u8, 97u8,
@@ -6718,7 +7867,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ThawAsset>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ThawAsset>()?
+                    };
+                    if runtime_call_hash
                         == [
                             63u8, 222u8, 197u8, 201u8, 125u8, 210u8, 148u8, 180u8, 52u8, 93u8,
                             190u8, 63u8, 195u8, 10u8, 15u8, 140u8, 154u8, 95u8, 5u8, 32u8, 36u8,
@@ -6759,7 +7913,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<TransferOwnership>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TransferOwnership>()?
+                    };
+                    if runtime_call_hash
                         == [
                             121u8, 79u8, 188u8, 97u8, 241u8, 75u8, 186u8, 246u8, 105u8, 159u8,
                             229u8, 73u8, 244u8, 97u8, 0u8, 35u8, 31u8, 242u8, 220u8, 125u8, 62u8,
@@ -6810,7 +7969,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetTeam>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetTeam>()?
+                    };
+                    if runtime_call_hash
                         == [
                             158u8, 23u8, 201u8, 88u8, 18u8, 219u8, 244u8, 74u8, 106u8, 19u8, 181u8,
                             71u8, 73u8, 73u8, 203u8, 89u8, 221u8, 202u8, 234u8, 120u8, 44u8, 52u8,
@@ -6861,7 +8025,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             173u8, 223u8, 227u8, 51u8, 239u8, 95u8, 222u8, 28u8, 190u8, 232u8,
                             231u8, 226u8, 149u8, 147u8, 69u8, 135u8, 183u8, 147u8, 254u8, 80u8,
@@ -6905,7 +8074,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ClearMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ClearMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             167u8, 244u8, 159u8, 98u8, 242u8, 73u8, 109u8, 217u8, 75u8, 20u8, 34u8,
                             94u8, 21u8, 190u8, 179u8, 182u8, 156u8, 14u8, 19u8, 91u8, 36u8, 130u8,
@@ -6950,7 +8124,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceSetMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceSetMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             30u8, 254u8, 44u8, 17u8, 82u8, 41u8, 93u8, 110u8, 113u8, 6u8, 75u8,
                             27u8, 7u8, 69u8, 221u8, 148u8, 47u8, 106u8, 111u8, 144u8, 18u8, 79u8,
@@ -6994,7 +8173,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceClearMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceClearMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             31u8, 209u8, 69u8, 120u8, 235u8, 248u8, 172u8, 247u8, 79u8, 199u8,
                             186u8, 52u8, 254u8, 240u8, 76u8, 59u8, 74u8, 6u8, 136u8, 142u8, 240u8,
@@ -7062,7 +8246,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceAssetStatus>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceAssetStatus>()?
+                    };
+                    if runtime_call_hash
                         == [
                             15u8, 174u8, 37u8, 4u8, 197u8, 25u8, 16u8, 52u8, 7u8, 59u8, 34u8, 91u8,
                             158u8, 87u8, 237u8, 130u8, 75u8, 87u8, 103u8, 137u8, 130u8, 212u8,
@@ -7123,7 +8312,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ApproveTransfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ApproveTransfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             142u8, 115u8, 147u8, 169u8, 36u8, 87u8, 10u8, 209u8, 67u8, 225u8, 1u8,
                             27u8, 156u8, 60u8, 215u8, 104u8, 35u8, 43u8, 181u8, 215u8, 3u8, 88u8,
@@ -7171,7 +8365,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<CancelApproval>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<CancelApproval>()?
+                    };
+                    if runtime_call_hash
                         == [
                             64u8, 68u8, 198u8, 159u8, 170u8, 36u8, 215u8, 175u8, 51u8, 52u8, 211u8,
                             178u8, 187u8, 60u8, 97u8, 126u8, 104u8, 87u8, 145u8, 128u8, 124u8,
@@ -7219,7 +8418,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceCancelApproval>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceCancelApproval>()?
+                    };
+                    if runtime_call_hash
                         == [
                             55u8, 3u8, 145u8, 168u8, 228u8, 58u8, 62u8, 53u8, 79u8, 128u8, 191u8,
                             87u8, 218u8, 150u8, 165u8, 123u8, 52u8, 201u8, 168u8, 81u8, 188u8,
@@ -7278,7 +8482,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<TransferApproved>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TransferApproved>()?
+                    };
+                    if runtime_call_hash
                         == [
                             121u8, 143u8, 106u8, 161u8, 29u8, 103u8, 166u8, 228u8, 7u8, 23u8,
                             227u8, 159u8, 243u8, 74u8, 47u8, 115u8, 111u8, 53u8, 26u8, 182u8,
@@ -7313,7 +8522,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Touch, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Touch>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Touch>()?
+                    };
+                    if runtime_call_hash
                         == [
                             148u8, 89u8, 169u8, 34u8, 198u8, 67u8, 136u8, 9u8, 219u8, 214u8, 164u8,
                             144u8, 195u8, 48u8, 75u8, 218u8, 231u8, 109u8, 253u8, 88u8, 23u8,
@@ -7342,7 +8556,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Refund, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Refund>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Refund>()?
+                    };
+                    if runtime_call_hash
                         == [
                             72u8, 197u8, 177u8, 250u8, 20u8, 37u8, 39u8, 132u8, 62u8, 24u8, 167u8,
                             155u8, 79u8, 88u8, 158u8, 209u8, 112u8, 40u8, 41u8, 83u8, 224u8, 224u8,
@@ -7357,6 +8576,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_assets::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -7675,201 +8895,312 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " Details of an asset."]
-                pub async fn asset(
+                pub fn asset(
                     &self,
-                    _0: &::core::primitive::u32,
+                    _0: &'a ::core::primitive::u32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_assets::types::AssetDetails<
-                            ::core::primitive::u128,
-                            ::subxt::sp_core::crypto::AccountId32,
-                            ::core::primitive::u128,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_assets::types::AssetDetails<
+                                ::core::primitive::u128,
+                                ::subxt::sp_core::crypto::AccountId32,
+                                ::core::primitive::u128,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Asset>()?
-                        == [
-                            171u8, 171u8, 67u8, 144u8, 214u8, 143u8, 54u8, 233u8, 197u8, 111u8,
-                            154u8, 139u8, 7u8, 231u8, 194u8, 246u8, 190u8, 109u8, 168u8, 154u8,
-                            247u8, 28u8, 227u8, 53u8, 108u8, 48u8, 4u8, 89u8, 119u8, 8u8, 79u8,
-                            76u8,
-                        ]
-                    {
-                        let entry = Asset(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Asset>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                171u8, 171u8, 67u8, 144u8, 214u8, 143u8, 54u8, 233u8, 197u8, 111u8,
+                                154u8, 139u8, 7u8, 231u8, 194u8, 246u8, 190u8, 109u8, 168u8, 154u8,
+                                247u8, 28u8, 227u8, 53u8, 108u8, 48u8, 4u8, 89u8, 119u8, 8u8, 79u8,
+                                76u8,
+                            ]
+                        {
+                            let entry = Asset(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Details of an asset."]
-                pub async fn asset_iter(
+                pub fn asset_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Asset>()?
-                        == [
-                            171u8, 171u8, 67u8, 144u8, 214u8, 143u8, 54u8, 233u8, 197u8, 111u8,
-                            154u8, 139u8, 7u8, 231u8, 194u8, 246u8, 190u8, 109u8, 168u8, 154u8,
-                            247u8, 28u8, 227u8, 53u8, 108u8, 48u8, 4u8, 89u8, 119u8, 8u8, 79u8,
-                            76u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The holdings of a specific account for a specific asset."]
-                pub async fn account(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    _1: &::subxt::sp_core::crypto::AccountId32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_assets::types::AssetAccount<
-                            ::core::primitive::u128,
-                            ::core::primitive::u128,
-                            (),
-                        >,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Asset<'a>>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            189u8, 8u8, 93u8, 193u8, 123u8, 139u8, 0u8, 132u8, 208u8, 132u8, 162u8,
-                            170u8, 142u8, 0u8, 81u8, 72u8, 143u8, 234u8, 207u8, 2u8, 140u8, 112u8,
-                            135u8, 25u8, 79u8, 202u8, 25u8, 87u8, 147u8, 169u8, 0u8, 213u8,
-                        ]
-                    {
-                        let entry = Account(_0, _1);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Asset>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                171u8, 171u8, 67u8, 144u8, 214u8, 143u8, 54u8, 233u8, 197u8, 111u8,
+                                154u8, 139u8, 7u8, 231u8, 194u8, 246u8, 190u8, 109u8, 168u8, 154u8,
+                                247u8, 28u8, 227u8, 53u8, 108u8, 48u8, 4u8, 89u8, 119u8, 8u8, 79u8,
+                                76u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The holdings of a specific account for a specific asset."]
-                pub async fn account_iter(
+                pub fn account(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    _1: &'a ::subxt::sp_core::crypto::AccountId32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_assets::types::AssetAccount<
+                                ::core::primitive::u128,
+                                ::core::primitive::u128,
+                                (),
+                            >,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                189u8, 8u8, 93u8, 193u8, 123u8, 139u8, 0u8, 132u8, 208u8, 132u8,
+                                162u8, 170u8, 142u8, 0u8, 81u8, 72u8, 143u8, 234u8, 207u8, 2u8,
+                                140u8, 112u8, 135u8, 25u8, 79u8, 202u8, 25u8, 87u8, 147u8, 169u8,
+                                0u8, 213u8,
+                            ]
+                        {
+                            let entry = Account(_0, _1);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The holdings of a specific account for a specific asset."]
+                pub fn account_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            189u8, 8u8, 93u8, 193u8, 123u8, 139u8, 0u8, 132u8, 208u8, 132u8, 162u8,
-                            170u8, 142u8, 0u8, 81u8, 72u8, 143u8, 234u8, 207u8, 2u8, 140u8, 112u8,
-                            135u8, 25u8, 79u8, 202u8, 25u8, 87u8, 147u8, 169u8, 0u8, 213u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Account<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                189u8, 8u8, 93u8, 193u8, 123u8, 139u8, 0u8, 132u8, 208u8, 132u8,
+                                162u8, 170u8, 142u8, 0u8, 81u8, 72u8, 143u8, 234u8, 207u8, 2u8,
+                                140u8, 112u8, 135u8, 25u8, 79u8, 202u8, 25u8, 87u8, 147u8, 169u8,
+                                0u8, 213u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Approved balance transfers. First balance is the amount approved for transfer. Second"]
                 #[doc = " is the amount of `T::Currency` reserved for storing this."]
                 #[doc = " First key is the asset ID, second key is the owner and third key is the delegate."]
-                pub async fn approvals(
+                pub fn approvals(
                     &self,
-                    _0: &::core::primitive::u32,
-                    _1: &::subxt::sp_core::crypto::AccountId32,
-                    _2: &::subxt::sp_core::crypto::AccountId32,
+                    _0: &'a ::core::primitive::u32,
+                    _1: &'a ::subxt::sp_core::crypto::AccountId32,
+                    _2: &'a ::subxt::sp_core::crypto::AccountId32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_assets::types::Approval<
-                            ::core::primitive::u128,
-                            ::core::primitive::u128,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_assets::types::Approval<
+                                ::core::primitive::u128,
+                                ::core::primitive::u128,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Approvals>()?
-                        == [
-                            237u8, 98u8, 160u8, 91u8, 202u8, 124u8, 226u8, 49u8, 184u8, 96u8, 90u8,
-                            61u8, 79u8, 66u8, 54u8, 237u8, 156u8, 232u8, 140u8, 67u8, 81u8, 55u8,
-                            89u8, 132u8, 68u8, 125u8, 47u8, 254u8, 11u8, 104u8, 207u8, 96u8,
-                        ]
-                    {
-                        let entry = Approvals(_0, _1, _2);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Approvals>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                237u8, 98u8, 160u8, 91u8, 202u8, 124u8, 226u8, 49u8, 184u8, 96u8,
+                                90u8, 61u8, 79u8, 66u8, 54u8, 237u8, 156u8, 232u8, 140u8, 67u8,
+                                81u8, 55u8, 89u8, 132u8, 68u8, 125u8, 47u8, 254u8, 11u8, 104u8,
+                                207u8, 96u8,
+                            ]
+                        {
+                            let entry = Approvals(_0, _1, _2);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Approved balance transfers. First balance is the amount approved for transfer. Second"]
                 #[doc = " is the amount of `T::Currency` reserved for storing this."]
                 #[doc = " First key is the asset ID, second key is the owner and third key is the delegate."]
-                pub async fn approvals_iter(
+                pub fn approvals_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Approvals<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Approvals>()?
-                        == [
-                            237u8, 98u8, 160u8, 91u8, 202u8, 124u8, 226u8, 49u8, 184u8, 96u8, 90u8,
-                            61u8, 79u8, 66u8, 54u8, 237u8, 156u8, 232u8, 140u8, 67u8, 81u8, 55u8,
-                            89u8, 132u8, 68u8, 125u8, 47u8, 254u8, 11u8, 104u8, 207u8, 96u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Metadata of an asset."]
-                pub async fn metadata(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_assets::types::AssetMetadata<
-                        ::core::primitive::u128,
-                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                            ::core::primitive::u8,
-                        >,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Approvals<'a>>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Metadata>()?
-                        == [
-                            209u8, 23u8, 7u8, 106u8, 173u8, 10u8, 115u8, 39u8, 138u8, 26u8, 54u8,
-                            230u8, 183u8, 233u8, 249u8, 85u8, 76u8, 84u8, 184u8, 54u8, 114u8,
-                            213u8, 38u8, 238u8, 109u8, 30u8, 0u8, 246u8, 123u8, 200u8, 40u8, 34u8,
-                        ]
-                    {
-                        let entry = Metadata(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Approvals>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                237u8, 98u8, 160u8, 91u8, 202u8, 124u8, 226u8, 49u8, 184u8, 96u8,
+                                90u8, 61u8, 79u8, 66u8, 54u8, 237u8, 156u8, 232u8, 140u8, 67u8,
+                                81u8, 55u8, 89u8, 132u8, 68u8, 125u8, 47u8, 254u8, 11u8, 104u8,
+                                207u8, 96u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Metadata of an asset."]
-                pub async fn metadata_iter(
+                pub fn metadata(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::pallet_assets::types::AssetMetadata<
+                            ::core::primitive::u128,
+                            runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                                ::core::primitive::u8,
+                            >,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Metadata>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                209u8, 23u8, 7u8, 106u8, 173u8, 10u8, 115u8, 39u8, 138u8, 26u8,
+                                54u8, 230u8, 183u8, 233u8, 249u8, 85u8, 76u8, 84u8, 184u8, 54u8,
+                                114u8, 213u8, 38u8, 238u8, 109u8, 30u8, 0u8, 246u8, 123u8, 200u8,
+                                40u8, 34u8,
+                            ]
+                        {
+                            let entry = Metadata(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Metadata of an asset."]
+                pub fn metadata_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Metadata<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Metadata>()?
-                        == [
-                            209u8, 23u8, 7u8, 106u8, 173u8, 10u8, 115u8, 39u8, 138u8, 26u8, 54u8,
-                            230u8, 183u8, 233u8, 249u8, 85u8, 76u8, 84u8, 184u8, 54u8, 114u8,
-                            213u8, 38u8, 238u8, 109u8, 30u8, 0u8, 246u8, 123u8, 200u8, 40u8, 34u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Metadata<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Metadata>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                209u8, 23u8, 7u8, 106u8, 173u8, 10u8, 115u8, 39u8, 138u8, 26u8,
+                                54u8, 230u8, 183u8, 233u8, 249u8, 85u8, 76u8, 84u8, 184u8, 54u8,
+                                114u8, 213u8, 38u8, 238u8, 109u8, 30u8, 0u8, 246u8, 123u8, 200u8,
+                                40u8, 34u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -7888,17 +9219,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAssets", "AssetDeposit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAssets", "AssetDeposit")?
                         == [
                             120u8, 251u8, 49u8, 189u8, 118u8, 126u8, 35u8, 7u8, 192u8, 36u8, 209u8,
                             166u8, 76u8, 186u8, 19u8, 231u8, 236u8, 176u8, 226u8, 77u8, 214u8,
                             84u8, 210u8, 31u8, 67u8, 246u8, 12u8, 191u8, 209u8, 37u8, 166u8, 49u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                        let pallet = metadata.pallet("OctopusAssets")?;
                         let constant = pallet.constant("AssetDeposit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -7912,17 +9242,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAssets", "AssetAccountDeposit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAssets", "AssetAccountDeposit")?
                         == [
                             79u8, 195u8, 123u8, 184u8, 64u8, 11u8, 96u8, 8u8, 191u8, 95u8, 213u8,
                             157u8, 114u8, 36u8, 9u8, 111u8, 224u8, 97u8, 190u8, 223u8, 63u8, 168u8,
                             198u8, 108u8, 145u8, 100u8, 74u8, 86u8, 2u8, 8u8, 189u8, 192u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                        let pallet = metadata.pallet("OctopusAssets")?;
                         let constant = pallet.constant("AssetAccountDeposit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -7935,10 +9264,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAssets", "MetadataDepositBase")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAssets", "MetadataDepositBase")?
                         == [
                             206u8, 201u8, 26u8, 198u8, 159u8, 174u8, 212u8, 81u8, 73u8, 223u8,
                             96u8, 44u8, 229u8, 140u8, 251u8, 240u8, 199u8, 30u8, 40u8, 52u8, 229u8,
@@ -7946,7 +9274,7 @@ pub mod api {
                             151u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                        let pallet = metadata.pallet("OctopusAssets")?;
                         let constant = pallet.constant("MetadataDepositBase")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -7960,17 +9288,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAssets", "MetadataDepositPerByte")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAssets", "MetadataDepositPerByte")?
                         == [
                             151u8, 19u8, 126u8, 167u8, 151u8, 217u8, 225u8, 213u8, 132u8, 62u8,
                             163u8, 83u8, 72u8, 11u8, 37u8, 124u8, 0u8, 55u8, 119u8, 47u8, 9u8,
                             106u8, 184u8, 68u8, 74u8, 62u8, 87u8, 57u8, 5u8, 91u8, 85u8, 255u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                        let pallet = metadata.pallet("OctopusAssets")?;
                         let constant = pallet.constant("MetadataDepositPerByte")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -7983,17 +9310,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAssets", "ApprovalDeposit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAssets", "ApprovalDeposit")?
                         == [
                             203u8, 2u8, 76u8, 21u8, 80u8, 235u8, 119u8, 243u8, 16u8, 127u8, 215u8,
                             34u8, 196u8, 158u8, 88u8, 86u8, 223u8, 34u8, 253u8, 1u8, 125u8, 249u8,
                             157u8, 188u8, 94u8, 237u8, 100u8, 0u8, 103u8, 145u8, 166u8, 124u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                        let pallet = metadata.pallet("OctopusAssets")?;
                         let constant = pallet.constant("ApprovalDeposit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -8006,10 +9332,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusAssets", "StringLimit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusAssets", "StringLimit")?
                         == [
                             64u8, 204u8, 1u8, 240u8, 39u8, 64u8, 238u8, 105u8, 253u8, 194u8, 239u8,
                             211u8, 82u8, 163u8, 118u8, 129u8, 51u8, 252u8, 113u8, 145u8, 46u8,
@@ -8017,7 +9342,7 @@ pub mod api {
                             185u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusAssets")?;
+                        let pallet = metadata.pallet("OctopusAssets")?;
                         let constant = pallet.constant("StringLimit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -8031,6 +9356,7 @@ pub mod api {
     pub mod octopus_uniques {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -8349,7 +9675,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Create, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Create>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Create>()?
+                    };
+                    if runtime_call_hash
                         == [
                             247u8, 34u8, 3u8, 210u8, 20u8, 107u8, 91u8, 114u8, 239u8, 4u8, 143u8,
                             223u8, 245u8, 170u8, 62u8, 161u8, 1u8, 151u8, 48u8, 162u8, 112u8,
@@ -8397,7 +9728,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceCreate>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceCreate>()?
+                    };
+                    if runtime_call_hash
                         == [
                             188u8, 185u8, 9u8, 122u8, 215u8, 22u8, 153u8, 205u8, 169u8, 112u8,
                             68u8, 55u8, 220u8, 115u8, 54u8, 17u8, 31u8, 211u8, 2u8, 102u8, 61u8,
@@ -8445,7 +9781,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Destroy>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Destroy>()?
+                    };
+                    if runtime_call_hash
                         == [
                             29u8, 224u8, 27u8, 160u8, 68u8, 160u8, 3u8, 212u8, 177u8, 195u8, 133u8,
                             6u8, 222u8, 190u8, 119u8, 154u8, 193u8, 245u8, 21u8, 115u8, 88u8, 81u8,
@@ -8481,7 +9822,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Mint, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Mint>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Mint>()?
+                    };
+                    if runtime_call_hash
                         == [
                             27u8, 85u8, 153u8, 112u8, 19u8, 35u8, 166u8, 253u8, 85u8, 67u8, 1u8,
                             160u8, 60u8, 238u8, 137u8, 63u8, 191u8, 79u8, 196u8, 253u8, 6u8, 216u8,
@@ -8525,7 +9871,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Burn, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Burn>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Burn>()?
+                    };
+                    if runtime_call_hash
                         == [
                             20u8, 11u8, 245u8, 20u8, 69u8, 167u8, 67u8, 133u8, 228u8, 231u8, 161u8,
                             116u8, 31u8, 205u8, 199u8, 0u8, 79u8, 105u8, 73u8, 166u8, 66u8, 18u8,
@@ -8576,7 +9927,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Transfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Transfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             222u8, 245u8, 117u8, 163u8, 14u8, 194u8, 121u8, 164u8, 151u8, 36u8,
                             207u8, 101u8, 226u8, 131u8, 153u8, 119u8, 149u8, 39u8, 163u8, 9u8,
@@ -8626,7 +9982,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Redeposit>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Redeposit>()?
+                    };
+                    if runtime_call_hash
                         == [
                             26u8, 183u8, 73u8, 30u8, 195u8, 113u8, 102u8, 64u8, 244u8, 181u8, 17u8,
                             132u8, 160u8, 167u8, 168u8, 32u8, 0u8, 91u8, 184u8, 232u8, 48u8, 122u8,
@@ -8657,7 +10018,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Freeze, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Freeze>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Freeze>()?
+                    };
+                    if runtime_call_hash
                         == [
                             63u8, 169u8, 254u8, 159u8, 243u8, 63u8, 201u8, 226u8, 38u8, 159u8,
                             20u8, 200u8, 60u8, 19u8, 0u8, 55u8, 31u8, 79u8, 74u8, 226u8, 206u8,
@@ -8689,7 +10055,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Thaw, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Thaw>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Thaw>()?
+                    };
+                    if runtime_call_hash
                         == [
                             59u8, 190u8, 79u8, 193u8, 89u8, 47u8, 37u8, 194u8, 15u8, 241u8, 44u8,
                             105u8, 9u8, 252u8, 110u8, 28u8, 13u8, 40u8, 216u8, 28u8, 30u8, 6u8,
@@ -8725,7 +10096,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<FreezeClass>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<FreezeClass>()?
+                    };
+                    if runtime_call_hash
                         == [
                             51u8, 100u8, 25u8, 136u8, 7u8, 148u8, 50u8, 157u8, 129u8, 132u8, 72u8,
                             91u8, 70u8, 62u8, 151u8, 254u8, 125u8, 64u8, 159u8, 230u8, 218u8, 84u8,
@@ -8761,7 +10137,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ThawClass>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ThawClass>()?
+                    };
+                    if runtime_call_hash
                         == [
                             90u8, 34u8, 138u8, 61u8, 209u8, 49u8, 101u8, 71u8, 81u8, 40u8, 14u8,
                             216u8, 166u8, 227u8, 31u8, 106u8, 220u8, 5u8, 101u8, 143u8, 233u8,
@@ -8803,7 +10184,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<TransferOwnership>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<TransferOwnership>()?
+                    };
+                    if runtime_call_hash
                         == [
                             241u8, 200u8, 130u8, 24u8, 232u8, 13u8, 91u8, 126u8, 176u8, 36u8, 71u8,
                             127u8, 101u8, 91u8, 146u8, 205u8, 252u8, 235u8, 72u8, 207u8, 127u8,
@@ -8855,7 +10241,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetTeam>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetTeam>()?
+                    };
+                    if runtime_call_hash
                         == [
                             101u8, 215u8, 217u8, 42u8, 173u8, 23u8, 17u8, 168u8, 236u8, 126u8,
                             185u8, 1u8, 220u8, 116u8, 90u8, 16u8, 125u8, 106u8, 205u8, 253u8,
@@ -8904,7 +10295,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ApproveTransfer>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ApproveTransfer>()?
+                    };
+                    if runtime_call_hash
                         == [
                             51u8, 134u8, 191u8, 188u8, 145u8, 203u8, 198u8, 27u8, 250u8, 82u8,
                             96u8, 46u8, 137u8, 19u8, 200u8, 63u8, 13u8, 49u8, 32u8, 50u8, 130u8,
@@ -8958,7 +10354,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<CancelApproval>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<CancelApproval>()?
+                    };
+                    if runtime_call_hash
                         == [
                             0u8, 150u8, 8u8, 91u8, 17u8, 97u8, 46u8, 109u8, 133u8, 29u8, 133u8,
                             97u8, 216u8, 93u8, 54u8, 150u8, 125u8, 117u8, 93u8, 102u8, 226u8,
@@ -9025,7 +10426,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ForceAssetStatus>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ForceAssetStatus>()?
+                    };
+                    if runtime_call_hash
                         == [
                             223u8, 7u8, 2u8, 208u8, 61u8, 152u8, 114u8, 203u8, 169u8, 221u8, 82u8,
                             7u8, 202u8, 171u8, 132u8, 169u8, 81u8, 107u8, 6u8, 183u8, 49u8, 206u8,
@@ -9084,7 +10490,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetAttribute>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetAttribute>()?
+                    };
+                    if runtime_call_hash
                         == [
                             201u8, 58u8, 143u8, 57u8, 65u8, 57u8, 59u8, 160u8, 140u8, 140u8, 100u8,
                             2u8, 145u8, 198u8, 155u8, 29u8, 209u8, 63u8, 51u8, 91u8, 114u8, 139u8,
@@ -9134,7 +10545,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ClearAttribute>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ClearAttribute>()?
+                    };
+                    if runtime_call_hash
                         == [
                             1u8, 54u8, 59u8, 1u8, 98u8, 171u8, 69u8, 245u8, 59u8, 70u8, 70u8, 1u8,
                             203u8, 168u8, 83u8, 252u8, 135u8, 147u8, 26u8, 62u8, 133u8, 129u8,
@@ -9187,7 +10603,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             108u8, 117u8, 161u8, 103u8, 80u8, 183u8, 100u8, 166u8, 122u8, 219u8,
                             127u8, 140u8, 165u8, 88u8, 125u8, 71u8, 31u8, 33u8, 1u8, 66u8, 124u8,
@@ -9233,7 +10654,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ClearMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ClearMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             42u8, 6u8, 221u8, 228u8, 104u8, 250u8, 23u8, 226u8, 183u8, 239u8, 46u8,
                             108u8, 184u8, 40u8, 10u8, 196u8, 72u8, 88u8, 230u8, 154u8, 250u8, 30u8,
@@ -9280,7 +10706,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetClassMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetClassMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             137u8, 199u8, 225u8, 169u8, 109u8, 52u8, 46u8, 219u8, 114u8, 135u8,
                             210u8, 6u8, 125u8, 238u8, 95u8, 55u8, 142u8, 13u8, 192u8, 74u8, 106u8,
@@ -9323,7 +10754,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ClearClassMetadata>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ClearClassMetadata>()?
+                    };
+                    if runtime_call_hash
                         == [
                             196u8, 232u8, 76u8, 203u8, 83u8, 169u8, 24u8, 119u8, 77u8, 85u8, 143u8,
                             238u8, 7u8, 183u8, 196u8, 43u8, 93u8, 47u8, 47u8, 147u8, 207u8, 67u8,
@@ -9338,6 +10774,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_uniques::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -9775,339 +11212,529 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " Details of an asset class."]
-                pub async fn class(
+                pub fn class(
                     &self,
-                    _0: &::core::primitive::u128,
+                    _0: &'a ::core::primitive::u128,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_uniques::types::ClassDetails<
-                            ::subxt::sp_core::crypto::AccountId32,
-                            ::core::primitive::u128,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_uniques::types::ClassDetails<
+                                ::subxt::sp_core::crypto::AccountId32,
+                                ::core::primitive::u128,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Class>()?
-                        == [
-                            79u8, 27u8, 236u8, 67u8, 45u8, 11u8, 57u8, 242u8, 46u8, 132u8, 64u8,
-                            212u8, 32u8, 114u8, 35u8, 201u8, 115u8, 172u8, 165u8, 150u8, 94u8,
-                            185u8, 26u8, 160u8, 11u8, 144u8, 186u8, 43u8, 195u8, 39u8, 36u8, 155u8,
-                        ]
-                    {
-                        let entry = Class(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Class>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                79u8, 27u8, 236u8, 67u8, 45u8, 11u8, 57u8, 242u8, 46u8, 132u8,
+                                64u8, 212u8, 32u8, 114u8, 35u8, 201u8, 115u8, 172u8, 165u8, 150u8,
+                                94u8, 185u8, 26u8, 160u8, 11u8, 144u8, 186u8, 43u8, 195u8, 39u8,
+                                36u8, 155u8,
+                            ]
+                        {
+                            let entry = Class(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Details of an asset class."]
-                pub async fn class_iter(
+                pub fn class_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Class<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Class>()?
-                        == [
-                            79u8, 27u8, 236u8, 67u8, 45u8, 11u8, 57u8, 242u8, 46u8, 132u8, 64u8,
-                            212u8, 32u8, 114u8, 35u8, 201u8, 115u8, 172u8, 165u8, 150u8, 94u8,
-                            185u8, 26u8, 160u8, 11u8, 144u8, 186u8, 43u8, 195u8, 39u8, 36u8, 155u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Class<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Class>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                79u8, 27u8, 236u8, 67u8, 45u8, 11u8, 57u8, 242u8, 46u8, 132u8,
+                                64u8, 212u8, 32u8, 114u8, 35u8, 201u8, 115u8, 172u8, 165u8, 150u8,
+                                94u8, 185u8, 26u8, 160u8, 11u8, 144u8, 186u8, 43u8, 195u8, 39u8,
+                                36u8, 155u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The assets held by any given account; set out this way so that assets owned by a single"]
                 #[doc = " account can be enumerated."]
-                pub async fn account(
+                pub fn account(
                     &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
-                    _1: &::core::primitive::u128,
-                    _2: &::core::primitive::u128,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
+                    _1: &'a ::core::primitive::u128,
+                    _2: &'a ::core::primitive::u128,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::option::Option<()>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            29u8, 248u8, 71u8, 245u8, 81u8, 70u8, 34u8, 134u8, 248u8, 53u8, 155u8,
-                            234u8, 150u8, 196u8, 113u8, 75u8, 142u8, 180u8, 87u8, 214u8, 201u8,
-                            166u8, 190u8, 136u8, 160u8, 232u8, 225u8, 139u8, 233u8, 49u8, 28u8,
-                            24u8,
-                        ]
-                    {
-                        let entry = Account(_0, _1, _2);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<()>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                29u8, 248u8, 71u8, 245u8, 81u8, 70u8, 34u8, 134u8, 248u8, 53u8,
+                                155u8, 234u8, 150u8, 196u8, 113u8, 75u8, 142u8, 180u8, 87u8, 214u8,
+                                201u8, 166u8, 190u8, 136u8, 160u8, 232u8, 225u8, 139u8, 233u8,
+                                49u8, 28u8, 24u8,
+                            ]
+                        {
+                            let entry = Account(_0, _1, _2);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The assets held by any given account; set out this way so that assets owned by a single"]
                 #[doc = " account can be enumerated."]
-                pub async fn account_iter(
+                pub fn account_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Account<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Account>()?
-                        == [
-                            29u8, 248u8, 71u8, 245u8, 81u8, 70u8, 34u8, 134u8, 248u8, 53u8, 155u8,
-                            234u8, 150u8, 196u8, 113u8, 75u8, 142u8, 180u8, 87u8, 214u8, 201u8,
-                            166u8, 190u8, 136u8, 160u8, 232u8, 225u8, 139u8, 233u8, 49u8, 28u8,
-                            24u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Account<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Account>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                29u8, 248u8, 71u8, 245u8, 81u8, 70u8, 34u8, 134u8, 248u8, 53u8,
+                                155u8, 234u8, 150u8, 196u8, 113u8, 75u8, 142u8, 180u8, 87u8, 214u8,
+                                201u8, 166u8, 190u8, 136u8, 160u8, 232u8, 225u8, 139u8, 233u8,
+                                49u8, 28u8, 24u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The classes owned by any given account; set out this way so that classes owned by a single"]
                 #[doc = " account can be enumerated."]
-                pub async fn class_account(
+                pub fn class_account(
                     &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
-                    _1: &::core::primitive::u128,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
+                    _1: &'a ::core::primitive::u128,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::option::Option<()>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ClassAccount>()?
-                        == [
-                            132u8, 19u8, 191u8, 42u8, 253u8, 236u8, 186u8, 175u8, 183u8, 0u8,
-                            160u8, 148u8, 24u8, 117u8, 21u8, 162u8, 70u8, 239u8, 45u8, 133u8,
-                            200u8, 217u8, 202u8, 230u8, 186u8, 8u8, 18u8, 90u8, 188u8, 33u8, 71u8,
-                            7u8,
-                        ]
-                    {
-                        let entry = ClassAccount(_0, _1);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<()>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClassAccount>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                132u8, 19u8, 191u8, 42u8, 253u8, 236u8, 186u8, 175u8, 183u8, 0u8,
+                                160u8, 148u8, 24u8, 117u8, 21u8, 162u8, 70u8, 239u8, 45u8, 133u8,
+                                200u8, 217u8, 202u8, 230u8, 186u8, 8u8, 18u8, 90u8, 188u8, 33u8,
+                                71u8, 7u8,
+                            ]
+                        {
+                            let entry = ClassAccount(_0, _1);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The classes owned by any given account; set out this way so that classes owned by a single"]
                 #[doc = " account can be enumerated."]
-                pub async fn class_account_iter(
+                pub fn class_account_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ClassAccount<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ClassAccount>()?
-                        == [
-                            132u8, 19u8, 191u8, 42u8, 253u8, 236u8, 186u8, 175u8, 183u8, 0u8,
-                            160u8, 148u8, 24u8, 117u8, 21u8, 162u8, 70u8, 239u8, 45u8, 133u8,
-                            200u8, 217u8, 202u8, 230u8, 186u8, 8u8, 18u8, 90u8, 188u8, 33u8, 71u8,
-                            7u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ClassAccount<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClassAccount>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                132u8, 19u8, 191u8, 42u8, 253u8, 236u8, 186u8, 175u8, 183u8, 0u8,
+                                160u8, 148u8, 24u8, 117u8, 21u8, 162u8, 70u8, 239u8, 45u8, 133u8,
+                                200u8, 217u8, 202u8, 230u8, 186u8, 8u8, 18u8, 90u8, 188u8, 33u8,
+                                71u8, 7u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The assets in existence and their ownership details."]
-                pub async fn asset(
+                pub fn asset(
                     &self,
-                    _0: &::core::primitive::u128,
-                    _1: &::core::primitive::u128,
+                    _0: &'a ::core::primitive::u128,
+                    _1: &'a ::core::primitive::u128,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_uniques::types::InstanceDetails<
-                            ::subxt::sp_core::crypto::AccountId32,
-                            ::core::primitive::u128,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_uniques::types::InstanceDetails<
+                                ::subxt::sp_core::crypto::AccountId32,
+                                ::core::primitive::u128,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Asset>()?
-                        == [
-                            59u8, 240u8, 185u8, 223u8, 178u8, 217u8, 8u8, 249u8, 60u8, 96u8, 186u8,
-                            215u8, 1u8, 187u8, 63u8, 194u8, 109u8, 238u8, 61u8, 109u8, 36u8, 20u8,
-                            80u8, 75u8, 110u8, 95u8, 217u8, 136u8, 161u8, 11u8, 56u8, 10u8,
-                        ]
-                    {
-                        let entry = Asset(_0, _1);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Asset>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                59u8, 240u8, 185u8, 223u8, 178u8, 217u8, 8u8, 249u8, 60u8, 96u8,
+                                186u8, 215u8, 1u8, 187u8, 63u8, 194u8, 109u8, 238u8, 61u8, 109u8,
+                                36u8, 20u8, 80u8, 75u8, 110u8, 95u8, 217u8, 136u8, 161u8, 11u8,
+                                56u8, 10u8,
+                            ]
+                        {
+                            let entry = Asset(_0, _1);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The assets in existence and their ownership details."]
-                pub async fn asset_iter(
+                pub fn asset_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Asset<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Asset>()?
-                        == [
-                            59u8, 240u8, 185u8, 223u8, 178u8, 217u8, 8u8, 249u8, 60u8, 96u8, 186u8,
-                            215u8, 1u8, 187u8, 63u8, 194u8, 109u8, 238u8, 61u8, 109u8, 36u8, 20u8,
-                            80u8, 75u8, 110u8, 95u8, 217u8, 136u8, 161u8, 11u8, 56u8, 10u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " Metadata of an asset class."]
-                pub async fn class_metadata_of(
-                    &self,
-                    _0: &::core::primitive::u128,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_uniques::types::ClassMetadata<
-                            ::core::primitive::u128,
-                        >,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Asset<'a>>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ClassMetadataOf>()?
-                        == [
-                            45u8, 181u8, 68u8, 155u8, 228u8, 213u8, 134u8, 119u8, 143u8, 49u8,
-                            249u8, 160u8, 92u8, 114u8, 56u8, 220u8, 22u8, 70u8, 133u8, 34u8, 17u8,
-                            243u8, 234u8, 159u8, 121u8, 207u8, 14u8, 27u8, 130u8, 169u8, 98u8,
-                            170u8,
-                        ]
-                    {
-                        let entry = ClassMetadataOf(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Asset>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                59u8, 240u8, 185u8, 223u8, 178u8, 217u8, 8u8, 249u8, 60u8, 96u8,
+                                186u8, 215u8, 1u8, 187u8, 63u8, 194u8, 109u8, 238u8, 61u8, 109u8,
+                                36u8, 20u8, 80u8, 75u8, 110u8, 95u8, 217u8, 136u8, 161u8, 11u8,
+                                56u8, 10u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Metadata of an asset class."]
-                pub async fn class_metadata_of_iter(
+                pub fn class_metadata_of(
+                    &self,
+                    _0: &'a ::core::primitive::u128,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_uniques::types::ClassMetadata<
+                                ::core::primitive::u128,
+                            >,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClassMetadataOf>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                45u8, 181u8, 68u8, 155u8, 228u8, 213u8, 134u8, 119u8, 143u8, 49u8,
+                                249u8, 160u8, 92u8, 114u8, 56u8, 220u8, 22u8, 70u8, 133u8, 34u8,
+                                17u8, 243u8, 234u8, 159u8, 121u8, 207u8, 14u8, 27u8, 130u8, 169u8,
+                                98u8, 170u8,
+                            ]
+                        {
+                            let entry = ClassMetadataOf(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " Metadata of an asset class."]
+                pub fn class_metadata_of_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ClassMetadataOf<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ClassMetadataOf>()?
-                        == [
-                            45u8, 181u8, 68u8, 155u8, 228u8, 213u8, 134u8, 119u8, 143u8, 49u8,
-                            249u8, 160u8, 92u8, 114u8, 56u8, 220u8, 22u8, 70u8, 133u8, 34u8, 17u8,
-                            243u8, 234u8, 159u8, 121u8, 207u8, 14u8, 27u8, 130u8, 169u8, 98u8,
-                            170u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ClassMetadataOf<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClassMetadataOf>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                45u8, 181u8, 68u8, 155u8, 228u8, 213u8, 134u8, 119u8, 143u8, 49u8,
+                                249u8, 160u8, 92u8, 114u8, 56u8, 220u8, 22u8, 70u8, 133u8, 34u8,
+                                17u8, 243u8, 234u8, 159u8, 121u8, 207u8, 14u8, 27u8, 130u8, 169u8,
+                                98u8, 170u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Metadata of an asset instance."]
-                pub async fn instance_metadata_of(
+                pub fn instance_metadata_of(
                     &self,
-                    _0: &::core::primitive::u128,
-                    _1: &::core::primitive::u128,
+                    _0: &'a ::core::primitive::u128,
+                    _1: &'a ::core::primitive::u128,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_uniques::types::InstanceMetadata<
-                            ::core::primitive::u128,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_uniques::types::InstanceMetadata<
+                                ::core::primitive::u128,
+                            >,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<InstanceMetadataOf>()?
-                        == [
-                            120u8, 60u8, 235u8, 113u8, 230u8, 91u8, 175u8, 133u8, 92u8, 212u8,
-                            90u8, 30u8, 45u8, 220u8, 187u8, 83u8, 192u8, 98u8, 196u8, 193u8, 27u8,
-                            221u8, 253u8, 109u8, 183u8, 11u8, 197u8, 127u8, 181u8, 74u8, 132u8,
-                            213u8,
-                        ]
-                    {
-                        let entry = InstanceMetadataOf(_0, _1);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<InstanceMetadataOf>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                120u8, 60u8, 235u8, 113u8, 230u8, 91u8, 175u8, 133u8, 92u8, 212u8,
+                                90u8, 30u8, 45u8, 220u8, 187u8, 83u8, 192u8, 98u8, 196u8, 193u8,
+                                27u8, 221u8, 253u8, 109u8, 183u8, 11u8, 197u8, 127u8, 181u8, 74u8,
+                                132u8, 213u8,
+                            ]
+                        {
+                            let entry = InstanceMetadataOf(_0, _1);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Metadata of an asset instance."]
-                pub async fn instance_metadata_of_iter(
+                pub fn instance_metadata_of_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, InstanceMetadataOf<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<InstanceMetadataOf>()?
-                        == [
-                            120u8, 60u8, 235u8, 113u8, 230u8, 91u8, 175u8, 133u8, 92u8, 212u8,
-                            90u8, 30u8, 45u8, 220u8, 187u8, 83u8, 192u8, 98u8, 196u8, 193u8, 27u8,
-                            221u8, 253u8, 109u8, 183u8, 11u8, 197u8, 127u8, 181u8, 74u8, 132u8,
-                            213u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, InstanceMetadataOf<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<InstanceMetadataOf>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                120u8, 60u8, 235u8, 113u8, 230u8, 91u8, 175u8, 133u8, 92u8, 212u8,
+                                90u8, 30u8, 45u8, 220u8, 187u8, 83u8, 192u8, 98u8, 196u8, 193u8,
+                                27u8, 221u8, 253u8, 109u8, 183u8, 11u8, 197u8, 127u8, 181u8, 74u8,
+                                132u8, 213u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Metadata of an asset class."]
-                pub async fn attribute(
+                pub fn attribute(
                     &self,
-                    _0: &::core::primitive::u128,
-                    _1: &::core::option::Option<::core::primitive::u128>,
-                    _2: &runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                    _0: &'a ::core::primitive::u128,
+                    _1: &'a ::core::option::Option<::core::primitive::u128>,
+                    _2: &'a runtime_types::frame_support::storage::bounded_vec::BoundedVec<
                         ::core::primitive::u8,
                     >,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<(
-                        runtime_types::frame_support::storage::bounded_vec::BoundedVec<
-                            ::core::primitive::u8,
-                        >,
-                        ::core::primitive::u128,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Attribute>()?
-                        == [
-                            107u8, 204u8, 167u8, 152u8, 109u8, 129u8, 199u8, 120u8, 79u8, 149u8,
-                            174u8, 199u8, 160u8, 17u8, 238u8, 227u8, 217u8, 115u8, 122u8, 50u8,
-                            53u8, 140u8, 203u8, 243u8, 89u8, 73u8, 197u8, 203u8, 113u8, 147u8,
-                            89u8, 239u8,
-                        ]
-                    {
-                        let entry = Attribute(_0, _1, _2);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<(
+                            runtime_types::frame_support::storage::bounded_vec::BoundedVec<
+                                ::core::primitive::u8,
+                            >,
+                            ::core::primitive::u128,
+                        )>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Attribute>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                107u8, 204u8, 167u8, 152u8, 109u8, 129u8, 199u8, 120u8, 79u8,
+                                149u8, 174u8, 199u8, 160u8, 17u8, 238u8, 227u8, 217u8, 115u8,
+                                122u8, 50u8, 53u8, 140u8, 203u8, 243u8, 89u8, 73u8, 197u8, 203u8,
+                                113u8, 147u8, 89u8, 239u8,
+                            ]
+                        {
+                            let entry = Attribute(_0, _1, _2);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Metadata of an asset class."]
-                pub async fn attribute_iter(
+                pub fn attribute_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Attribute<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Attribute>()?
-                        == [
-                            107u8, 204u8, 167u8, 152u8, 109u8, 129u8, 199u8, 120u8, 79u8, 149u8,
-                            174u8, 199u8, 160u8, 17u8, 238u8, 227u8, 217u8, 115u8, 122u8, 50u8,
-                            53u8, 140u8, 203u8, 243u8, 89u8, 73u8, 197u8, 203u8, 113u8, 147u8,
-                            89u8, 239u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Attribute<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Attribute>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                107u8, 204u8, 167u8, 152u8, 109u8, 129u8, 199u8, 120u8, 79u8,
+                                149u8, 174u8, 199u8, 160u8, 17u8, 238u8, 227u8, 217u8, 115u8,
+                                122u8, 50u8, 53u8, 140u8, 203u8, 243u8, 89u8, 73u8, 197u8, 203u8,
+                                113u8, 147u8, 89u8, 239u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -10126,17 +11753,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "ClassDeposit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "ClassDeposit")?
                         == [
                             179u8, 90u8, 186u8, 104u8, 152u8, 33u8, 93u8, 165u8, 193u8, 254u8,
                             82u8, 250u8, 21u8, 19u8, 29u8, 155u8, 98u8, 244u8, 113u8, 82u8, 134u8,
                             137u8, 141u8, 75u8, 8u8, 148u8, 64u8, 3u8, 222u8, 42u8, 69u8, 70u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("ClassDeposit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10149,17 +11775,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "InstanceDeposit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "InstanceDeposit")?
                         == [
                             43u8, 80u8, 222u8, 41u8, 217u8, 254u8, 1u8, 168u8, 232u8, 202u8, 122u8,
                             202u8, 202u8, 201u8, 194u8, 76u8, 210u8, 97u8, 95u8, 217u8, 39u8,
                             168u8, 125u8, 20u8, 73u8, 46u8, 146u8, 80u8, 59u8, 149u8, 248u8, 36u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("InstanceDeposit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10172,10 +11797,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "MetadataDepositBase")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "MetadataDepositBase")?
                         == [
                             206u8, 201u8, 26u8, 198u8, 159u8, 174u8, 212u8, 81u8, 73u8, 223u8,
                             96u8, 44u8, 229u8, 140u8, 251u8, 240u8, 199u8, 30u8, 40u8, 52u8, 229u8,
@@ -10183,7 +11807,7 @@ pub mod api {
                             151u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("MetadataDepositBase")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10196,17 +11820,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "AttributeDepositBase")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "AttributeDepositBase")?
                         == [
                             63u8, 111u8, 114u8, 85u8, 48u8, 17u8, 244u8, 44u8, 74u8, 218u8, 209u8,
                             150u8, 227u8, 58u8, 148u8, 159u8, 91u8, 152u8, 25u8, 216u8, 50u8,
                             101u8, 24u8, 246u8, 1u8, 166u8, 198u8, 151u8, 50u8, 153u8, 93u8, 102u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("AttributeDepositBase")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10220,17 +11843,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u128, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "DepositPerByte")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "DepositPerByte")?
                         == [
                             88u8, 82u8, 164u8, 201u8, 241u8, 110u8, 252u8, 26u8, 70u8, 120u8,
                             219u8, 206u8, 109u8, 91u8, 140u8, 163u8, 7u8, 34u8, 4u8, 171u8, 43u8,
                             236u8, 24u8, 23u8, 105u8, 77u8, 20u8, 161u8, 61u8, 78u8, 32u8, 58u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("DepositPerByte")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10243,10 +11865,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "StringLimit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "StringLimit")?
                         == [
                             64u8, 204u8, 1u8, 240u8, 39u8, 64u8, 238u8, 105u8, 253u8, 194u8, 239u8,
                             211u8, 82u8, 163u8, 118u8, 129u8, 51u8, 252u8, 113u8, 145u8, 46u8,
@@ -10254,7 +11875,7 @@ pub mod api {
                             185u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("StringLimit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10267,10 +11888,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "KeyLimit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "KeyLimit")?
                         == [
                             37u8, 214u8, 216u8, 115u8, 253u8, 41u8, 189u8, 100u8, 84u8, 70u8,
                             100u8, 115u8, 85u8, 221u8, 169u8, 79u8, 201u8, 130u8, 8u8, 51u8, 200u8,
@@ -10278,7 +11898,7 @@ pub mod api {
                             117u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("KeyLimit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10291,10 +11911,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("OctopusUniques", "ValueLimit")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("OctopusUniques", "ValueLimit")?
                         == [
                             29u8, 180u8, 129u8, 166u8, 237u8, 165u8, 240u8, 161u8, 119u8, 217u8,
                             132u8, 181u8, 138u8, 134u8, 165u8, 162u8, 239u8, 6u8, 239u8, 185u8,
@@ -10302,7 +11921,7 @@ pub mod api {
                             184u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("OctopusUniques")?;
+                        let pallet = metadata.pallet("OctopusUniques")?;
                         let constant = pallet.constant("ValueLimit")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -10316,6 +11935,7 @@ pub mod api {
     pub mod session {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -10379,7 +11999,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetKeys>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetKeys>()?
+                    };
+                    if runtime_call_hash
                         == [
                             224u8, 124u8, 236u8, 244u8, 237u8, 183u8, 209u8, 133u8, 254u8, 17u8,
                             41u8, 153u8, 177u8, 1u8, 127u8, 11u8, 170u8, 233u8, 53u8, 216u8, 222u8,
@@ -10421,7 +12046,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<PurgeKeys>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<PurgeKeys>()?
+                    };
+                    if runtime_call_hash
                         == [
                             200u8, 255u8, 4u8, 213u8, 188u8, 92u8, 99u8, 116u8, 163u8, 152u8, 29u8,
                             35u8, 133u8, 119u8, 246u8, 44u8, 91u8, 31u8, 145u8, 23u8, 213u8, 64u8,
@@ -10436,6 +12066,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_session::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -10540,102 +12171,142 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " The current set of validators."]
-                pub async fn validators(
+                pub fn validators(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Validators>()?
-                        == [
-                            186u8, 248u8, 234u8, 74u8, 245u8, 141u8, 90u8, 152u8, 226u8, 220u8,
-                            255u8, 104u8, 174u8, 1u8, 37u8, 152u8, 23u8, 208u8, 25u8, 49u8, 33u8,
-                            253u8, 254u8, 251u8, 141u8, 16u8, 18u8, 175u8, 196u8, 188u8, 163u8,
-                            209u8,
-                        ]
-                    {
-                        let entry = Validators;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::subxt::sp_core::crypto::AccountId32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Validators>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                186u8, 248u8, 234u8, 74u8, 245u8, 141u8, 90u8, 152u8, 226u8, 220u8,
+                                255u8, 104u8, 174u8, 1u8, 37u8, 152u8, 23u8, 208u8, 25u8, 49u8,
+                                33u8, 253u8, 254u8, 251u8, 141u8, 16u8, 18u8, 175u8, 196u8, 188u8,
+                                163u8, 209u8,
+                            ]
+                        {
+                            let entry = Validators;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Current index of the session."]
-                pub async fn current_index(
+                pub fn current_index(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<CurrentIndex>()?
-                        == [
-                            148u8, 179u8, 159u8, 15u8, 197u8, 95u8, 214u8, 30u8, 209u8, 251u8,
-                            183u8, 231u8, 91u8, 25u8, 181u8, 191u8, 143u8, 252u8, 227u8, 80u8,
-                            159u8, 66u8, 194u8, 67u8, 113u8, 74u8, 111u8, 91u8, 218u8, 187u8,
-                            130u8, 40u8,
-                        ]
-                    {
-                        let entry = CurrentIndex;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<CurrentIndex>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                148u8, 179u8, 159u8, 15u8, 197u8, 95u8, 214u8, 30u8, 209u8, 251u8,
+                                183u8, 231u8, 91u8, 25u8, 181u8, 191u8, 143u8, 252u8, 227u8, 80u8,
+                                159u8, 66u8, 194u8, 67u8, 113u8, 74u8, 111u8, 91u8, 218u8, 187u8,
+                                130u8, 40u8,
+                            ]
+                        {
+                            let entry = CurrentIndex;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " True if the underlying economic identities or weighting behind the validators"]
                 #[doc = " has changed in the queued validator set."]
-                pub async fn queued_changed(
+                pub fn queued_changed(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<QueuedChanged>()?
-                        == [
-                            105u8, 140u8, 235u8, 218u8, 96u8, 100u8, 252u8, 10u8, 58u8, 221u8,
-                            244u8, 251u8, 67u8, 91u8, 80u8, 202u8, 152u8, 42u8, 50u8, 113u8, 200u8,
-                            247u8, 59u8, 213u8, 77u8, 195u8, 1u8, 150u8, 220u8, 18u8, 245u8, 46u8,
-                        ]
-                    {
-                        let entry = QueuedChanged;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::bool, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<QueuedChanged>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                105u8, 140u8, 235u8, 218u8, 96u8, 100u8, 252u8, 10u8, 58u8, 221u8,
+                                244u8, 251u8, 67u8, 91u8, 80u8, 202u8, 152u8, 42u8, 50u8, 113u8,
+                                200u8, 247u8, 59u8, 213u8, 77u8, 195u8, 1u8, 150u8, 220u8, 18u8,
+                                245u8, 46u8,
+                            ]
+                        {
+                            let entry = QueuedChanged;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The queued keys for the next session. When the next session begins, these keys"]
                 #[doc = " will be used to determine the validator's session keys."]
-                pub async fn queued_keys(
+                pub fn queued_keys(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        runtime_types::node_template_runtime::opaque::SessionKeys,
-                    )>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<QueuedKeys>()?
-                        == [
-                            139u8, 177u8, 78u8, 136u8, 47u8, 183u8, 45u8, 83u8, 48u8, 164u8, 218u8,
-                            50u8, 51u8, 203u8, 196u8, 246u8, 48u8, 241u8, 9u8, 157u8, 254u8, 22u8,
-                            123u8, 219u8, 243u8, 42u8, 36u8, 175u8, 159u8, 238u8, 242u8, 204u8,
-                        ]
-                    {
-                        let entry = QueuedKeys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<(
+                            ::subxt::sp_core::crypto::AccountId32,
+                            runtime_types::node_template_runtime::opaque::SessionKeys,
+                        )>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<QueuedKeys>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                139u8, 177u8, 78u8, 136u8, 47u8, 183u8, 45u8, 83u8, 48u8, 164u8,
+                                218u8, 50u8, 51u8, 203u8, 196u8, 246u8, 48u8, 241u8, 9u8, 157u8,
+                                254u8, 22u8, 123u8, 219u8, 243u8, 42u8, 36u8, 175u8, 159u8, 238u8,
+                                242u8, 204u8,
+                            ]
+                        {
+                            let entry = QueuedKeys;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Indices of disabled validators."]
@@ -10643,122 +12314,181 @@ pub mod api {
                 #[doc = " The vec is always kept sorted so that we can find whether a given validator is"]
                 #[doc = " disabled using binary search. It gets cleared when `on_session_ending` returns"]
                 #[doc = " a new set of identities."]
-                pub async fn disabled_validators(
+                pub fn disabled_validators(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<DisabledValidators>()?
-                        == [
-                            135u8, 22u8, 22u8, 97u8, 82u8, 217u8, 144u8, 141u8, 121u8, 240u8,
-                            189u8, 16u8, 176u8, 88u8, 177u8, 31u8, 20u8, 242u8, 73u8, 104u8, 11u8,
-                            110u8, 214u8, 34u8, 52u8, 217u8, 106u8, 33u8, 174u8, 174u8, 198u8,
-                            84u8,
-                        ]
-                    {
-                        let entry = DisabledValidators;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " The next session keys for a validator."]
-                pub async fn next_keys(
-                    &self,
-                    _0: &::subxt::sp_core::crypto::AccountId32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::node_template_runtime::opaque::SessionKeys,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u32>,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextKeys>()?
-                        == [
-                            25u8, 113u8, 96u8, 196u8, 191u8, 47u8, 173u8, 101u8, 50u8, 237u8,
-                            231u8, 247u8, 60u8, 130u8, 31u8, 185u8, 57u8, 206u8, 185u8, 84u8, 45u8,
-                            32u8, 242u8, 196u8, 181u8, 159u8, 121u8, 140u8, 12u8, 53u8, 174u8,
-                            144u8,
-                        ]
-                    {
-                        let entry = NextKeys(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<DisabledValidators>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                135u8, 22u8, 22u8, 97u8, 82u8, 217u8, 144u8, 141u8, 121u8, 240u8,
+                                189u8, 16u8, 176u8, 88u8, 177u8, 31u8, 20u8, 242u8, 73u8, 104u8,
+                                11u8, 110u8, 214u8, 34u8, 52u8, 217u8, 106u8, 33u8, 174u8, 174u8,
+                                198u8, 84u8,
+                            ]
+                        {
+                            let entry = DisabledValidators;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The next session keys for a validator."]
-                pub async fn next_keys_iter(
+                pub fn next_keys(
+                    &self,
+                    _0: &'a ::subxt::sp_core::crypto::AccountId32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::node_template_runtime::opaque::SessionKeys,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextKeys>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                25u8, 113u8, 96u8, 196u8, 191u8, 47u8, 173u8, 101u8, 50u8, 237u8,
+                                231u8, 247u8, 60u8, 130u8, 31u8, 185u8, 57u8, 206u8, 185u8, 84u8,
+                                45u8, 32u8, 242u8, 196u8, 181u8, 159u8, 121u8, 140u8, 12u8, 53u8,
+                                174u8, 144u8,
+                            ]
+                        {
+                            let entry = NextKeys(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " The next session keys for a validator."]
+                pub fn next_keys_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextKeys<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextKeys>()?
-                        == [
-                            25u8, 113u8, 96u8, 196u8, 191u8, 47u8, 173u8, 101u8, 50u8, 237u8,
-                            231u8, 247u8, 60u8, 130u8, 31u8, 185u8, 57u8, 206u8, 185u8, 84u8, 45u8,
-                            32u8, 242u8, 196u8, 181u8, 159u8, 121u8, 140u8, 12u8, 53u8, 174u8,
-                            144u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, NextKeys<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextKeys>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                25u8, 113u8, 96u8, 196u8, 191u8, 47u8, 173u8, 101u8, 50u8, 237u8,
+                                231u8, 247u8, 60u8, 130u8, 31u8, 185u8, 57u8, 206u8, 185u8, 84u8,
+                                45u8, 32u8, 242u8, 196u8, 181u8, 159u8, 121u8, 140u8, 12u8, 53u8,
+                                174u8, 144u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The owner of a key. The key is the `KeyTypeId` + the encoded key."]
-                pub async fn key_owner(
+                pub fn key_owner(
                     &self,
-                    _0: &runtime_types::sp_core::crypto::KeyTypeId,
-                    _1: &[::core::primitive::u8],
+                    _0: &'a runtime_types::sp_core::crypto::KeyTypeId,
+                    _1: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<KeyOwner>()?
-                        == [
-                            49u8, 245u8, 212u8, 141u8, 211u8, 208u8, 109u8, 102u8, 249u8, 161u8,
-                            41u8, 93u8, 220u8, 230u8, 14u8, 59u8, 251u8, 176u8, 33u8, 127u8, 93u8,
-                            149u8, 205u8, 229u8, 113u8, 129u8, 162u8, 177u8, 155u8, 216u8, 151u8,
-                            57u8,
-                        ]
-                    {
-                        let entry = KeyOwner(_0, _1);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<KeyOwner>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                49u8, 245u8, 212u8, 141u8, 211u8, 208u8, 109u8, 102u8, 249u8,
+                                161u8, 41u8, 93u8, 220u8, 230u8, 14u8, 59u8, 251u8, 176u8, 33u8,
+                                127u8, 93u8, 149u8, 205u8, 229u8, 113u8, 129u8, 162u8, 177u8,
+                                155u8, 216u8, 151u8, 57u8,
+                            ]
+                        {
+                            let entry = KeyOwner(_0, _1);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The owner of a key. The key is the `KeyTypeId` + the encoded key."]
-                pub async fn key_owner_iter(
+                pub fn key_owner_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, KeyOwner<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<KeyOwner>()?
-                        == [
-                            49u8, 245u8, 212u8, 141u8, 211u8, 208u8, 109u8, 102u8, 249u8, 161u8,
-                            41u8, 93u8, 220u8, 230u8, 14u8, 59u8, 251u8, 176u8, 33u8, 127u8, 93u8,
-                            149u8, 205u8, 229u8, 113u8, 129u8, 162u8, 177u8, 155u8, 216u8, 151u8,
-                            57u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, KeyOwner<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<KeyOwner>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                49u8, 245u8, 212u8, 141u8, 211u8, 208u8, 109u8, 102u8, 249u8,
+                                161u8, 41u8, 93u8, 220u8, 230u8, 14u8, 59u8, 251u8, 176u8, 33u8,
+                                127u8, 93u8, 149u8, 205u8, 229u8, 113u8, 129u8, 162u8, 177u8,
+                                155u8, 216u8, 151u8, 57u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -10767,6 +12497,7 @@ pub mod api {
     pub mod grandpa {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -10845,7 +12576,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<ReportEquivocation>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ReportEquivocation>()?
+                    };
+                    if runtime_call_hash
                         == [
                             230u8, 252u8, 24u8, 207u8, 164u8, 127u8, 177u8, 30u8, 113u8, 175u8,
                             207u8, 252u8, 230u8, 225u8, 181u8, 190u8, 236u8, 110u8, 145u8, 168u8,
@@ -10889,10 +12625,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .call_hash::<ReportEquivocationUnsigned>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<ReportEquivocationUnsigned>()?
+                    };
+                    if runtime_call_hash
                         == [
                             141u8, 235u8, 27u8, 135u8, 124u8, 124u8, 234u8, 51u8, 100u8, 105u8,
                             188u8, 248u8, 133u8, 10u8, 84u8, 14u8, 40u8, 235u8, 14u8, 107u8, 63u8,
@@ -10931,7 +12669,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<NoteStalled>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<NoteStalled>()?
+                    };
+                    if runtime_call_hash
                         == [
                             227u8, 98u8, 249u8, 158u8, 96u8, 124u8, 72u8, 188u8, 27u8, 215u8, 73u8,
                             62u8, 103u8, 79u8, 38u8, 48u8, 212u8, 88u8, 233u8, 187u8, 11u8, 95u8,
@@ -10949,6 +12692,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_grandpa::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -11047,167 +12791,256 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " State of the current authority set."]
-                pub async fn state(
+                pub fn state(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::pallet_grandpa::StoredState<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<State>()?
-                        == [
-                            159u8, 75u8, 78u8, 23u8, 98u8, 89u8, 239u8, 230u8, 192u8, 67u8, 139u8,
-                            222u8, 151u8, 237u8, 216u8, 20u8, 235u8, 247u8, 180u8, 24u8, 64u8,
-                            160u8, 58u8, 15u8, 205u8, 191u8, 120u8, 68u8, 32u8, 5u8, 161u8, 106u8,
-                        ]
-                    {
-                        let entry = State;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::pallet_grandpa::StoredState<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<State>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                159u8, 75u8, 78u8, 23u8, 98u8, 89u8, 239u8, 230u8, 192u8, 67u8,
+                                139u8, 222u8, 151u8, 237u8, 216u8, 20u8, 235u8, 247u8, 180u8, 24u8,
+                                64u8, 160u8, 58u8, 15u8, 205u8, 191u8, 120u8, 68u8, 32u8, 5u8,
+                                161u8, 106u8,
+                            ]
+                        {
+                            let entry = State;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Pending change: (signaled at, scheduled change)."]
-                pub async fn pending_change(
+                pub fn pending_change(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::pallet_grandpa::StoredPendingChange<::core::primitive::u32>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::pallet_grandpa::StoredPendingChange<
+                                ::core::primitive::u32,
+                            >,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<PendingChange>()?
-                        == [
-                            128u8, 176u8, 209u8, 41u8, 231u8, 111u8, 205u8, 198u8, 154u8, 44u8,
-                            228u8, 231u8, 44u8, 110u8, 74u8, 9u8, 31u8, 86u8, 128u8, 244u8, 112u8,
-                            21u8, 120u8, 176u8, 50u8, 213u8, 122u8, 46u8, 85u8, 255u8, 40u8, 173u8,
-                        ]
-                    {
-                        let entry = PendingChange;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PendingChange>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                128u8, 176u8, 209u8, 41u8, 231u8, 111u8, 205u8, 198u8, 154u8, 44u8,
+                                228u8, 231u8, 44u8, 110u8, 74u8, 9u8, 31u8, 86u8, 128u8, 244u8,
+                                112u8, 21u8, 120u8, 176u8, 50u8, 213u8, 122u8, 46u8, 85u8, 255u8,
+                                40u8, 173u8,
+                            ]
+                        {
+                            let entry = PendingChange;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " next block number where we can force a change."]
-                pub async fn next_forced(
+                pub fn next_forced(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextForced>()?
-                        == [
-                            99u8, 43u8, 245u8, 201u8, 60u8, 9u8, 122u8, 99u8, 188u8, 29u8, 67u8,
-                            6u8, 193u8, 133u8, 179u8, 67u8, 202u8, 208u8, 62u8, 179u8, 19u8, 169u8,
-                            196u8, 119u8, 107u8, 75u8, 100u8, 3u8, 121u8, 18u8, 80u8, 156u8,
-                        ]
-                    {
-                        let entry = NextForced;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextForced>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                99u8, 43u8, 245u8, 201u8, 60u8, 9u8, 122u8, 99u8, 188u8, 29u8,
+                                67u8, 6u8, 193u8, 133u8, 179u8, 67u8, 202u8, 208u8, 62u8, 179u8,
+                                19u8, 169u8, 196u8, 119u8, 107u8, 75u8, 100u8, 3u8, 121u8, 18u8,
+                                80u8, 156u8,
+                            ]
+                        {
+                            let entry = NextForced;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " `true` if we are currently stalled."]
-                pub async fn stalled(
+                pub fn stalled(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<(::core::primitive::u32, ::core::primitive::u32)>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Stalled>()?
-                        == [
-                            219u8, 8u8, 37u8, 78u8, 150u8, 55u8, 0u8, 57u8, 201u8, 170u8, 186u8,
-                            189u8, 56u8, 161u8, 44u8, 15u8, 53u8, 178u8, 224u8, 208u8, 231u8,
-                            109u8, 14u8, 209u8, 57u8, 205u8, 237u8, 153u8, 231u8, 156u8, 24u8,
-                            185u8,
-                        ]
-                    {
-                        let entry = Stalled;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<(::core::primitive::u32, ::core::primitive::u32)>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Stalled>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                219u8, 8u8, 37u8, 78u8, 150u8, 55u8, 0u8, 57u8, 201u8, 170u8,
+                                186u8, 189u8, 56u8, 161u8, 44u8, 15u8, 53u8, 178u8, 224u8, 208u8,
+                                231u8, 109u8, 14u8, 209u8, 57u8, 205u8, 237u8, 153u8, 231u8, 156u8,
+                                24u8, 185u8,
+                            ]
+                        {
+                            let entry = Stalled;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The number of changes (both in terms of keys and underlying economic responsibilities)"]
                 #[doc = " in the \"set\" of Grandpa validators from genesis."]
-                pub async fn current_set_id(
+                pub fn current_set_id(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<CurrentSetId>()?
-                        == [
-                            129u8, 7u8, 62u8, 101u8, 199u8, 60u8, 56u8, 33u8, 54u8, 158u8, 20u8,
-                            178u8, 244u8, 145u8, 189u8, 197u8, 157u8, 163u8, 116u8, 36u8, 105u8,
-                            52u8, 149u8, 244u8, 108u8, 94u8, 109u8, 111u8, 244u8, 137u8, 7u8,
-                            108u8,
-                        ]
-                    {
-                        let entry = CurrentSetId;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<CurrentSetId>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                129u8, 7u8, 62u8, 101u8, 199u8, 60u8, 56u8, 33u8, 54u8, 158u8,
+                                20u8, 178u8, 244u8, 145u8, 189u8, 197u8, 157u8, 163u8, 116u8, 36u8,
+                                105u8, 52u8, 149u8, 244u8, 108u8, 94u8, 109u8, 111u8, 244u8, 137u8,
+                                7u8, 108u8,
+                            ]
+                        {
+                            let entry = CurrentSetId;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " A mapping from grandpa set ID to the index of the *most recent* session for which its"]
                 #[doc = " members were responsible."]
                 #[doc = ""]
                 #[doc = " TWOX-NOTE: `SetId` is not under user control."]
-                pub async fn set_id_session(
+                pub fn set_id_session(
                     &self,
-                    _0: &::core::primitive::u64,
+                    _0: &'a ::core::primitive::u64,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<SetIdSession>()?
-                        == [
-                            91u8, 175u8, 145u8, 127u8, 242u8, 81u8, 13u8, 231u8, 110u8, 11u8,
-                            166u8, 169u8, 103u8, 146u8, 123u8, 133u8, 157u8, 15u8, 33u8, 234u8,
-                            108u8, 13u8, 88u8, 115u8, 254u8, 9u8, 145u8, 199u8, 102u8, 47u8, 53u8,
-                            134u8,
-                        ]
-                    {
-                        let entry = SetIdSession(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<SetIdSession>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                91u8, 175u8, 145u8, 127u8, 242u8, 81u8, 13u8, 231u8, 110u8, 11u8,
+                                166u8, 169u8, 103u8, 146u8, 123u8, 133u8, 157u8, 15u8, 33u8, 234u8,
+                                108u8, 13u8, 88u8, 115u8, 254u8, 9u8, 145u8, 199u8, 102u8, 47u8,
+                                53u8, 134u8,
+                            ]
+                        {
+                            let entry = SetIdSession(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " A mapping from grandpa set ID to the index of the *most recent* session for which its"]
                 #[doc = " members were responsible."]
                 #[doc = ""]
                 #[doc = " TWOX-NOTE: `SetId` is not under user control."]
-                pub async fn set_id_session_iter(
+                pub fn set_id_session_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, SetIdSession<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<SetIdSession>()?
-                        == [
-                            91u8, 175u8, 145u8, 127u8, 242u8, 81u8, 13u8, 231u8, 110u8, 11u8,
-                            166u8, 169u8, 103u8, 146u8, 123u8, 133u8, 157u8, 15u8, 33u8, 234u8,
-                            108u8, 13u8, 88u8, 115u8, 254u8, 9u8, 145u8, 199u8, 102u8, 47u8, 53u8,
-                            134u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, SetIdSession<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<SetIdSession>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                91u8, 175u8, 145u8, 127u8, 242u8, 81u8, 13u8, 231u8, 110u8, 11u8,
+                                166u8, 169u8, 103u8, 146u8, 123u8, 133u8, 157u8, 15u8, 33u8, 234u8,
+                                108u8, 13u8, 88u8, 115u8, 254u8, 9u8, 145u8, 199u8, 102u8, 47u8,
+                                53u8, 134u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -11226,17 +13059,16 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("Grandpa", "MaxAuthorities")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("Grandpa", "MaxAuthorities")?
                         == [
                             205u8, 23u8, 62u8, 93u8, 110u8, 248u8, 109u8, 245u8, 1u8, 57u8, 144u8,
                             146u8, 103u8, 0u8, 178u8, 246u8, 63u8, 80u8, 77u8, 155u8, 202u8, 208u8,
                             73u8, 194u8, 210u8, 49u8, 121u8, 99u8, 101u8, 222u8, 127u8, 206u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("Grandpa")?;
+                        let pallet = metadata.pallet("Grandpa")?;
                         let constant = pallet.constant("MaxAuthorities")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -11250,6 +13082,7 @@ pub mod api {
     pub mod im_online {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -11302,7 +13135,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Heartbeat>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Heartbeat>()?
+                    };
+                    if runtime_call_hash
                         == [
                             246u8, 83u8, 28u8, 233u8, 69u8, 55u8, 28u8, 178u8, 82u8, 159u8, 56u8,
                             241u8, 111u8, 78u8, 194u8, 15u8, 14u8, 250u8, 172u8, 148u8, 208u8,
@@ -11321,6 +13159,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_im_online::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -11426,157 +13265,219 @@ pub mod api {
                 #[doc = " This value will only be used as a fallback if we fail to get a proper session"]
                 #[doc = " progress estimate from `NextSessionRotation`, as those estimates should be"]
                 #[doc = " more accurate then the value we calculate for `HeartbeatAfter`."]
-                pub async fn heartbeat_after(
+                pub fn heartbeat_after(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<HeartbeatAfter>()?
-                        == [
-                            108u8, 100u8, 85u8, 198u8, 226u8, 122u8, 94u8, 225u8, 97u8, 154u8,
-                            135u8, 95u8, 106u8, 28u8, 185u8, 78u8, 192u8, 196u8, 35u8, 191u8, 12u8,
-                            19u8, 163u8, 46u8, 232u8, 235u8, 193u8, 81u8, 126u8, 204u8, 25u8,
-                            228u8,
-                        ]
-                    {
-                        let entry = HeartbeatAfter;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<HeartbeatAfter>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                108u8, 100u8, 85u8, 198u8, 226u8, 122u8, 94u8, 225u8, 97u8, 154u8,
+                                135u8, 95u8, 106u8, 28u8, 185u8, 78u8, 192u8, 196u8, 35u8, 191u8,
+                                12u8, 19u8, 163u8, 46u8, 232u8, 235u8, 193u8, 81u8, 126u8, 204u8,
+                                25u8, 228u8,
+                            ]
+                        {
+                            let entry = HeartbeatAfter;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The current set of keys that may issue a heartbeat."]
-                pub async fn keys(
+                pub fn keys(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
-                        runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Keys>()?
-                        == [
-                            105u8, 250u8, 99u8, 106u8, 9u8, 29u8, 73u8, 176u8, 158u8, 247u8, 28u8,
-                            171u8, 95u8, 1u8, 109u8, 11u8, 231u8, 52u8, 54u8, 102u8, 142u8, 105u8,
-                            209u8, 31u8, 132u8, 60u8, 89u8, 181u8, 89u8, 193u8, 241u8, 130u8,
-                        ]
-                    {
-                        let entry = Keys;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " For each session index, we keep a mapping of `SessionIndex` and `AuthIndex` to"]
-                #[doc = " `WrapperOpaque<BoundedOpaqueNetworkState>`."]
-                pub async fn received_heartbeats(
-                    &self,
-                    _0: &::core::primitive::u32,
-                    _1: &::core::primitive::u32,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<
-                        runtime_types::frame_support::traits::misc::WrapperOpaque<
-                            runtime_types::pallet_im_online::BoundedOpaqueNetworkState,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::frame_support::storage::weak_bounded_vec::WeakBoundedVec<
+                            runtime_types::pallet_im_online::sr25519::app_sr25519::Public,
                         >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ReceivedHeartbeats>()?
-                        == [
-                            29u8, 40u8, 67u8, 222u8, 59u8, 104u8, 24u8, 193u8, 249u8, 200u8, 152u8,
-                            225u8, 72u8, 243u8, 140u8, 114u8, 121u8, 216u8, 54u8, 145u8, 205u8,
-                            82u8, 133u8, 128u8, 109u8, 54u8, 153u8, 118u8, 66u8, 147u8, 251u8,
-                            148u8,
-                        ]
-                    {
-                        let entry = ReceivedHeartbeats(_0, _1);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Keys>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                105u8, 250u8, 99u8, 106u8, 9u8, 29u8, 73u8, 176u8, 158u8, 247u8,
+                                28u8, 171u8, 95u8, 1u8, 109u8, 11u8, 231u8, 52u8, 54u8, 102u8,
+                                142u8, 105u8, 209u8, 31u8, 132u8, 60u8, 89u8, 181u8, 89u8, 193u8,
+                                241u8, 130u8,
+                            ]
+                        {
+                            let entry = Keys;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " For each session index, we keep a mapping of `SessionIndex` and `AuthIndex` to"]
                 #[doc = " `WrapperOpaque<BoundedOpaqueNetworkState>`."]
-                pub async fn received_heartbeats_iter(
+                pub fn received_heartbeats(
+                    &self,
+                    _0: &'a ::core::primitive::u32,
+                    _1: &'a ::core::primitive::u32,
+                    block_hash: ::core::option::Option<T::Hash>,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<
+                            runtime_types::frame_support::traits::misc::WrapperOpaque<
+                                runtime_types::pallet_im_online::BoundedOpaqueNetworkState,
+                            >,
+                        >,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ReceivedHeartbeats>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                29u8, 40u8, 67u8, 222u8, 59u8, 104u8, 24u8, 193u8, 249u8, 200u8,
+                                152u8, 225u8, 72u8, 243u8, 140u8, 114u8, 121u8, 216u8, 54u8, 145u8,
+                                205u8, 82u8, 133u8, 128u8, 109u8, 54u8, 153u8, 118u8, 66u8, 147u8,
+                                251u8, 148u8,
+                            ]
+                        {
+                            let entry = ReceivedHeartbeats(_0, _1);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
+                    }
+                }
+                #[doc = " For each session index, we keep a mapping of `SessionIndex` and `AuthIndex` to"]
+                #[doc = " `WrapperOpaque<BoundedOpaqueNetworkState>`."]
+                pub fn received_heartbeats_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ReceivedHeartbeats<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ReceivedHeartbeats>()?
-                        == [
-                            29u8, 40u8, 67u8, 222u8, 59u8, 104u8, 24u8, 193u8, 249u8, 200u8, 152u8,
-                            225u8, 72u8, 243u8, 140u8, 114u8, 121u8, 216u8, 54u8, 145u8, 205u8,
-                            82u8, 133u8, 128u8, 109u8, 54u8, 153u8, 118u8, 66u8, 147u8, 251u8,
-                            148u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ReceivedHeartbeats<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ReceivedHeartbeats>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                29u8, 40u8, 67u8, 222u8, 59u8, 104u8, 24u8, 193u8, 249u8, 200u8,
+                                152u8, 225u8, 72u8, 243u8, 140u8, 114u8, 121u8, 216u8, 54u8, 145u8,
+                                205u8, 82u8, 133u8, 128u8, 109u8, 54u8, 153u8, 118u8, 66u8, 147u8,
+                                251u8, 148u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " For each session index, we keep a mapping of `ValidatorId<T>` to the"]
                 #[doc = " number of blocks authored by the given authority."]
-                pub async fn authored_blocks(
+                pub fn authored_blocks(
                     &self,
-                    _0: &::core::primitive::u32,
-                    _1: &::subxt::sp_core::crypto::AccountId32,
+                    _0: &'a ::core::primitive::u32,
+                    _1: &'a ::subxt::sp_core::crypto::AccountId32,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<AuthoredBlocks>()?
-                        == [
-                            94u8, 193u8, 107u8, 126u8, 3u8, 13u8, 28u8, 151u8, 197u8, 226u8, 224u8,
-                            48u8, 138u8, 113u8, 31u8, 57u8, 111u8, 184u8, 218u8, 215u8, 185u8,
-                            83u8, 209u8, 139u8, 114u8, 241u8, 68u8, 110u8, 157u8, 208u8, 16u8,
-                            22u8,
-                        ]
-                    {
-                        let entry = AuthoredBlocks(_0, _1);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AuthoredBlocks>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                94u8, 193u8, 107u8, 126u8, 3u8, 13u8, 28u8, 151u8, 197u8, 226u8,
+                                224u8, 48u8, 138u8, 113u8, 31u8, 57u8, 111u8, 184u8, 218u8, 215u8,
+                                185u8, 83u8, 209u8, 139u8, 114u8, 241u8, 68u8, 110u8, 157u8, 208u8,
+                                16u8, 22u8,
+                            ]
+                        {
+                            let entry = AuthoredBlocks(_0, _1);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " For each session index, we keep a mapping of `ValidatorId<T>` to the"]
                 #[doc = " number of blocks authored by the given authority."]
-                pub async fn authored_blocks_iter(
+                pub fn authored_blocks_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, AuthoredBlocks<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<AuthoredBlocks>()?
-                        == [
-                            94u8, 193u8, 107u8, 126u8, 3u8, 13u8, 28u8, 151u8, 197u8, 226u8, 224u8,
-                            48u8, 138u8, 113u8, 31u8, 57u8, 111u8, 184u8, 218u8, 215u8, 185u8,
-                            83u8, 209u8, 139u8, 114u8, 241u8, 68u8, 110u8, 157u8, 208u8, 16u8,
-                            22u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, AuthoredBlocks<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AuthoredBlocks>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                94u8, 193u8, 107u8, 126u8, 3u8, 13u8, 28u8, 151u8, 197u8, 226u8,
+                                224u8, 48u8, 138u8, 113u8, 31u8, 57u8, 111u8, 184u8, 218u8, 215u8,
+                                185u8, 83u8, 209u8, 139u8, 114u8, 241u8, 68u8, 110u8, 157u8, 208u8,
+                                16u8, 22u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -11598,10 +13499,9 @@ pub mod api {
                     &self,
                 ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
                 {
-                    if self
-                        .client
-                        .metadata()
-                        .constant_hash("ImOnline", "UnsignedPriority")?
+                    let locked_metadata = self.client.metadata();
+                    let metadata = locked_metadata.read();
+                    if metadata.constant_hash("ImOnline", "UnsignedPriority")?
                         == [
                             78u8, 226u8, 84u8, 70u8, 162u8, 23u8, 167u8, 100u8, 156u8, 228u8,
                             119u8, 16u8, 28u8, 202u8, 21u8, 71u8, 72u8, 244u8, 3u8, 255u8, 243u8,
@@ -11609,7 +13509,7 @@ pub mod api {
                             217u8,
                         ]
                     {
-                        let pallet = self.client.metadata().pallet("ImOnline")?;
+                        let pallet = metadata.pallet("ImOnline")?;
                         let constant = pallet.constant("UnsignedPriority")?;
                         let value = ::subxt::codec::Decode::decode(&mut &constant.value[..])?;
                         Ok(value)
@@ -11667,96 +13567,143 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " Latest MMR Root hash."]
-                pub async fn root_hash(
+                pub fn root_hash(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<RootHash>()?
-                        == [
-                            156u8, 176u8, 7u8, 77u8, 96u8, 23u8, 240u8, 140u8, 74u8, 33u8, 12u8,
-                            124u8, 160u8, 228u8, 78u8, 8u8, 139u8, 164u8, 109u8, 52u8, 168u8,
-                            234u8, 221u8, 194u8, 100u8, 2u8, 250u8, 5u8, 188u8, 203u8, 13u8, 117u8,
-                        ]
-                    {
-                        let entry = RootHash;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::subxt::sp_core::H256, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<RootHash>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                156u8, 176u8, 7u8, 77u8, 96u8, 23u8, 240u8, 140u8, 74u8, 33u8,
+                                12u8, 124u8, 160u8, 228u8, 78u8, 8u8, 139u8, 164u8, 109u8, 52u8,
+                                168u8, 234u8, 221u8, 194u8, 100u8, 2u8, 250u8, 5u8, 188u8, 203u8,
+                                13u8, 117u8,
+                            ]
+                        {
+                            let entry = RootHash;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Current size of the MMR (number of leaves)."]
-                pub async fn number_of_leaves(
+                pub fn number_of_leaves(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<NumberOfLeaves>()?
-                        == [
-                            138u8, 124u8, 23u8, 186u8, 255u8, 231u8, 187u8, 122u8, 213u8, 160u8,
-                            29u8, 24u8, 88u8, 98u8, 171u8, 36u8, 195u8, 216u8, 27u8, 190u8, 192u8,
-                            152u8, 8u8, 13u8, 210u8, 232u8, 45u8, 184u8, 240u8, 255u8, 156u8,
-                            204u8,
-                        ]
-                    {
-                        let entry = NumberOfLeaves;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NumberOfLeaves>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                138u8, 124u8, 23u8, 186u8, 255u8, 231u8, 187u8, 122u8, 213u8,
+                                160u8, 29u8, 24u8, 88u8, 98u8, 171u8, 36u8, 195u8, 216u8, 27u8,
+                                190u8, 192u8, 152u8, 8u8, 13u8, 210u8, 232u8, 45u8, 184u8, 240u8,
+                                255u8, 156u8, 204u8,
+                            ]
+                        {
+                            let entry = NumberOfLeaves;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Hashes of the nodes in the MMR."]
                 #[doc = ""]
                 #[doc = " Note this collection only contains MMR peaks, the inner nodes (and leaves)"]
                 #[doc = " are pruned and only stored in the Offchain DB."]
-                pub async fn nodes(
+                pub fn nodes(
                     &self,
-                    _0: &::core::primitive::u64,
+                    _0: &'a ::core::primitive::u64,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::H256>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Nodes>()?
-                        == [
-                            150u8, 135u8, 92u8, 131u8, 236u8, 239u8, 244u8, 0u8, 254u8, 50u8,
-                            117u8, 224u8, 131u8, 70u8, 100u8, 212u8, 191u8, 58u8, 146u8, 207u8,
-                            94u8, 72u8, 187u8, 139u8, 80u8, 136u8, 215u8, 68u8, 131u8, 249u8,
-                            190u8, 247u8,
-                        ]
-                    {
-                        let entry = Nodes(_0);
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::subxt::sp_core::H256>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Nodes>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                150u8, 135u8, 92u8, 131u8, 236u8, 239u8, 244u8, 0u8, 254u8, 50u8,
+                                117u8, 224u8, 131u8, 70u8, 100u8, 212u8, 191u8, 58u8, 146u8, 207u8,
+                                94u8, 72u8, 187u8, 139u8, 80u8, 136u8, 215u8, 68u8, 131u8, 249u8,
+                                190u8, 247u8,
+                            ]
+                        {
+                            let entry = Nodes(_0);
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Hashes of the nodes in the MMR."]
                 #[doc = ""]
                 #[doc = " Note this collection only contains MMR peaks, the inner nodes (and leaves)"]
                 #[doc = " are pruned and only stored in the Offchain DB."]
-                pub async fn nodes_iter(
+                pub fn nodes_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Nodes<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Nodes>()?
-                        == [
-                            150u8, 135u8, 92u8, 131u8, 236u8, 239u8, 244u8, 0u8, 254u8, 50u8,
-                            117u8, 224u8, 131u8, 70u8, 100u8, 212u8, 191u8, 58u8, 146u8, 207u8,
-                            94u8, 72u8, 187u8, 139u8, 80u8, 136u8, 215u8, 68u8, 131u8, 249u8,
-                            190u8, 247u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Nodes<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Nodes>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                150u8, 135u8, 92u8, 131u8, 236u8, 239u8, 244u8, 0u8, 254u8, 50u8,
+                                117u8, 224u8, 131u8, 70u8, 100u8, 212u8, 191u8, 58u8, 146u8, 207u8,
+                                94u8, 72u8, 187u8, 139u8, 80u8, 136u8, 215u8, 68u8, 131u8, 249u8,
+                                190u8, 247u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -11765,6 +13712,7 @@ pub mod api {
     pub mod beefy {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -11823,75 +13771,105 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " The current authorities set"]
-                pub async fn authorities(
+                pub fn authorities(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<runtime_types::beefy_primitives::crypto::Public>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Authorities>()?
-                        == [
-                            45u8, 197u8, 244u8, 25u8, 113u8, 204u8, 231u8, 240u8, 124u8, 4u8,
-                            153u8, 160u8, 92u8, 242u8, 251u8, 64u8, 146u8, 82u8, 161u8, 154u8,
-                            238u8, 220u8, 206u8, 186u8, 244u8, 49u8, 238u8, 244u8, 122u8, 26u8,
-                            159u8, 168u8,
-                        ]
-                    {
-                        let entry = Authorities;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<runtime_types::beefy_primitives::crypto::Public>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Authorities>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                45u8, 197u8, 244u8, 25u8, 113u8, 204u8, 231u8, 240u8, 124u8, 4u8,
+                                153u8, 160u8, 92u8, 242u8, 251u8, 64u8, 146u8, 82u8, 161u8, 154u8,
+                                238u8, 220u8, 206u8, 186u8, 244u8, 49u8, 238u8, 244u8, 122u8, 26u8,
+                                159u8, 168u8,
+                            ]
+                        {
+                            let entry = Authorities;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " The current validator set id"]
-                pub async fn validator_set_id(
+                pub fn validator_set_id(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ValidatorSetId>()?
-                        == [
-                            132u8, 47u8, 139u8, 239u8, 214u8, 179u8, 24u8, 63u8, 55u8, 154u8,
-                            248u8, 206u8, 73u8, 7u8, 52u8, 135u8, 54u8, 111u8, 250u8, 106u8, 71u8,
-                            78u8, 44u8, 44u8, 235u8, 177u8, 36u8, 112u8, 17u8, 122u8, 252u8, 80u8,
-                        ]
-                    {
-                        let entry = ValidatorSetId;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ValidatorSetId>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                132u8, 47u8, 139u8, 239u8, 214u8, 179u8, 24u8, 63u8, 55u8, 154u8,
+                                248u8, 206u8, 73u8, 7u8, 52u8, 135u8, 54u8, 111u8, 250u8, 106u8,
+                                71u8, 78u8, 44u8, 44u8, 235u8, 177u8, 36u8, 112u8, 17u8, 122u8,
+                                252u8, 80u8,
+                            ]
+                        {
+                            let entry = ValidatorSetId;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " Authorities set scheduled to be used with the next session"]
-                pub async fn next_authorities(
+                pub fn next_authorities(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<runtime_types::beefy_primitives::crypto::Public>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextAuthorities>()?
-                        == [
-                            217u8, 12u8, 213u8, 100u8, 67u8, 73u8, 155u8, 134u8, 236u8, 210u8,
-                            129u8, 96u8, 191u8, 83u8, 200u8, 17u8, 181u8, 124u8, 201u8, 155u8,
-                            14u8, 246u8, 203u8, 23u8, 57u8, 221u8, 95u8, 174u8, 128u8, 9u8, 32u8,
-                            1u8,
-                        ]
-                    {
-                        let entry = NextAuthorities;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<runtime_types::beefy_primitives::crypto::Public>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextAuthorities>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                217u8, 12u8, 213u8, 100u8, 67u8, 73u8, 155u8, 134u8, 236u8, 210u8,
+                                129u8, 96u8, 191u8, 83u8, 200u8, 17u8, 181u8, 124u8, 201u8, 155u8,
+                                14u8, 246u8, 203u8, 23u8, 57u8, 221u8, 95u8, 174u8, 128u8, 9u8,
+                                32u8, 1u8,
+                            ]
+                        {
+                            let entry = NextAuthorities;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -11923,32 +13901,40 @@ pub mod api {
                 #[doc = " Details of next BEEFY authority set."]
                 #[doc = ""]
                 #[doc = " This storage entry is used as cache for calls to `update_beefy_next_authority_set`."]
-                pub async fn beefy_next_authorities(
+                pub fn beefy_next_authorities(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    runtime_types::beefy_primitives::mmr::BeefyNextAuthoritySet<
-                        ::subxt::sp_core::H256,
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        runtime_types::beefy_primitives::mmr::BeefyNextAuthoritySet<
+                            ::subxt::sp_core::H256,
+                        >,
+                        ::subxt::BasicError,
                     >,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<BeefyNextAuthorities>()?
-                        == [
-                            176u8, 52u8, 163u8, 20u8, 65u8, 149u8, 67u8, 119u8, 40u8, 134u8, 178u8,
-                            89u8, 67u8, 6u8, 201u8, 226u8, 207u8, 218u8, 138u8, 14u8, 201u8, 41u8,
-                            40u8, 110u8, 227u8, 200u8, 56u8, 164u8, 187u8, 168u8, 116u8, 127u8,
-                        ]
-                    {
-                        let entry = BeefyNextAuthorities;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<BeefyNextAuthorities>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                176u8, 52u8, 163u8, 20u8, 65u8, 149u8, 67u8, 119u8, 40u8, 134u8,
+                                178u8, 89u8, 67u8, 6u8, 201u8, 226u8, 207u8, 218u8, 138u8, 14u8,
+                                201u8, 41u8, 40u8, 110u8, 227u8, 200u8, 56u8, 164u8, 187u8, 168u8,
+                                116u8, 127u8,
+                            ]
+                        {
+                            let entry = BeefyNextAuthorities;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -11957,6 +13943,7 @@ pub mod api {
     pub mod sudo {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -12029,12 +14016,16 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, Sudo, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Sudo>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Sudo>()?
+                    };
+                    if runtime_call_hash
                         == [
-                            175u8, 118u8, 40u8, 58u8, 7u8, 81u8, 19u8, 5u8, 183u8, 177u8, 167u8,
-                            151u8, 199u8, 232u8, 165u8, 43u8, 50u8, 128u8, 235u8, 197u8, 47u8,
-                            226u8, 175u8, 177u8, 170u8, 194u8, 149u8, 18u8, 224u8, 98u8, 124u8,
-                            247u8,
+                            89u8, 64u8, 213u8, 151u8, 81u8, 252u8, 224u8, 66u8, 121u8, 6u8, 35u8,
+                            114u8, 15u8, 15u8, 171u8, 186u8, 30u8, 115u8, 210u8, 35u8, 165u8, 15u8,
+                            24u8, 164u8, 23u8, 221u8, 196u8, 124u8, 32u8, 121u8, 77u8, 203u8,
                         ]
                     {
                         let call = Sudo {
@@ -12070,11 +14061,16 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SudoUncheckedWeight>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SudoUncheckedWeight>()?
+                    };
+                    if runtime_call_hash
                         == [
-                            164u8, 85u8, 94u8, 110u8, 198u8, 102u8, 244u8, 163u8, 45u8, 100u8,
-                            147u8, 61u8, 104u8, 35u8, 22u8, 174u8, 48u8, 154u8, 116u8, 96u8, 106u8,
-                            239u8, 237u8, 67u8, 214u8, 37u8, 84u8, 28u8, 1u8, 111u8, 221u8, 218u8,
+                            180u8, 35u8, 26u8, 78u8, 11u8, 229u8, 159u8, 149u8, 203u8, 16u8, 89u8,
+                            174u8, 35u8, 252u8, 57u8, 12u8, 169u8, 77u8, 10u8, 2u8, 78u8, 189u8,
+                            6u8, 72u8, 75u8, 201u8, 182u8, 7u8, 54u8, 83u8, 201u8, 31u8,
                         ]
                     {
                         let call = SudoUncheckedWeight {
@@ -12106,7 +14102,12 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, SetKey, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SetKey>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SetKey>()?
+                    };
+                    if runtime_call_hash
                         == [
                             77u8, 253u8, 211u8, 157u8, 74u8, 92u8, 1u8, 102u8, 178u8, 103u8, 126u8,
                             56u8, 156u8, 105u8, 45u8, 44u8, 64u8, 154u8, 163u8, 102u8, 93u8, 93u8,
@@ -12141,11 +14142,17 @@ pub mod api {
                     ::subxt::SubmittableExtrinsic<'a, T, X, SudoAs, DispatchError, root_mod::Event>,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<SudoAs>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<SudoAs>()?
+                    };
+                    if runtime_call_hash
                         == [
-                            185u8, 205u8, 172u8, 244u8, 214u8, 109u8, 74u8, 94u8, 129u8, 106u8,
-                            253u8, 33u8, 13u8, 209u8, 52u8, 35u8, 218u8, 140u8, 65u8, 206u8, 94u8,
-                            166u8, 229u8, 194u8, 60u8, 237u8, 56u8, 181u8, 99u8, 22u8, 203u8, 66u8,
+                            121u8, 1u8, 47u8, 144u8, 206u8, 66u8, 210u8, 249u8, 119u8, 223u8,
+                            251u8, 52u8, 4u8, 63u8, 56u8, 160u8, 170u8, 201u8, 216u8, 60u8, 52u8,
+                            199u8, 228u8, 33u8, 210u8, 81u8, 18u8, 223u8, 93u8, 145u8, 131u8,
+                            160u8,
                         ]
                     {
                         let call = SudoAs {
@@ -12159,6 +14166,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_sudo::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -12211,25 +14219,38 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " The `AccountId` of the sudo key."]
-                pub async fn key(
+                pub fn key(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Key>()?
-                        == [
-                            222u8, 90u8, 158u8, 233u8, 184u8, 23u8, 141u8, 135u8, 81u8, 187u8,
-                            47u8, 100u8, 30u8, 81u8, 239u8, 197u8, 249u8, 253u8, 73u8, 207u8,
-                            161u8, 141u8, 174u8, 59u8, 74u8, 181u8, 10u8, 90u8, 22u8, 109u8, 62u8,
-                            27u8,
-                        ]
-                    {
-                        let entry = Key;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::subxt::sp_core::crypto::AccountId32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Key>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                222u8, 90u8, 158u8, 233u8, 184u8, 23u8, 141u8, 135u8, 81u8, 187u8,
+                                47u8, 100u8, 30u8, 81u8, 239u8, 197u8, 249u8, 253u8, 73u8, 207u8,
+                                161u8, 141u8, 174u8, 59u8, 74u8, 181u8, 10u8, 90u8, 22u8, 109u8,
+                                62u8, 27u8,
+                            ]
+                        {
+                            let entry = Key;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -12238,6 +14259,7 @@ pub mod api {
     pub mod template_module {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -12292,7 +14314,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<DoSomething>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<DoSomething>()?
+                    };
+                    if runtime_call_hash
                         == [
                             118u8, 135u8, 114u8, 170u8, 240u8, 97u8, 215u8, 4u8, 153u8, 184u8,
                             191u8, 161u8, 106u8, 187u8, 143u8, 60u8, 254u8, 16u8, 244u8, 150u8,
@@ -12320,7 +14347,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<CauseError>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<CauseError>()?
+                    };
+                    if runtime_call_hash
                         == [
                             130u8, 169u8, 2u8, 174u8, 179u8, 44u8, 35u8, 37u8, 1u8, 110u8, 218u8,
                             248u8, 55u8, 69u8, 235u8, 186u8, 204u8, 99u8, 5u8, 33u8, 20u8, 68u8,
@@ -12335,6 +14367,7 @@ pub mod api {
                 }
             }
         }
+        #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
         pub type Event = runtime_types::pallet_template::pallet::Event;
         pub mod events {
             use super::runtime_types;
@@ -12368,25 +14401,38 @@ pub mod api {
                 pub fn new(client: &'a ::subxt::Client<T>) -> Self {
                     Self { client }
                 }
-                pub async fn something(
+                pub fn something(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::core::option::Option<::core::primitive::u32>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Something>()?
-                        == [
-                            133u8, 15u8, 68u8, 243u8, 54u8, 252u8, 134u8, 227u8, 161u8, 207u8,
-                            221u8, 164u8, 33u8, 75u8, 249u8, 148u8, 184u8, 225u8, 102u8, 168u8,
-                            104u8, 72u8, 191u8, 148u8, 253u8, 173u8, 33u8, 89u8, 108u8, 218u8,
-                            70u8, 179u8,
-                        ]
-                    {
-                        let entry = Something;
-                        self.client.storage().fetch(&entry, block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::core::option::Option<::core::primitive::u32>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Something>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                133u8, 15u8, 68u8, 243u8, 54u8, 252u8, 134u8, 227u8, 161u8, 207u8,
+                                221u8, 164u8, 33u8, 75u8, 249u8, 148u8, 184u8, 225u8, 102u8, 168u8,
+                                104u8, 72u8, 191u8, 148u8, 253u8, 173u8, 33u8, 89u8, 108u8, 218u8,
+                                70u8, 179u8,
+                            ]
+                        {
+                            let entry = Something;
+                            client.storage().fetch(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -12395,6 +14441,9 @@ pub mod api {
     pub mod ibc {
         use super::root_mod;
         use super::runtime_types;
+        #[doc = "Dispatchable functions allows users to interact with the pallet and invoke state changes."]
+        #[doc = "These functions materialize as \"extrinsic\", which are often compared to transactions."]
+        #[doc = "Dispatch able functions must be annotated with a weight and must return a DispatchResult."]
         pub mod calls {
             use super::root_mod;
             use super::runtime_types;
@@ -12416,20 +14465,6 @@ pub mod api {
             impl ::subxt::Call for UpdateClientState {
                 const PALLET: &'static str = "Ibc";
                 const FUNCTION: &'static str = "update_client_state";
-            }
-            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            pub struct Transfer {
-                pub source_port: ::std::vec::Vec<::core::primitive::u8>,
-                pub source_channel: ::std::vec::Vec<::core::primitive::u8>,
-                pub token: ::std::vec::Vec<::core::primitive::u8>,
-                pub amount: ::core::primitive::u128,
-                pub receiver: ::std::vec::Vec<::core::primitive::u8>,
-                pub timeout_height: ::core::primitive::u64,
-                pub timeout_timestamp: ::core::primitive::u64,
-            }
-            impl ::subxt::Call for Transfer {
-                const PALLET: &'static str = "Ibc";
-                const FUNCTION: &'static str = "transfer";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
             pub struct DeleteSendPacketEvent;
@@ -12475,7 +14510,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<Deliver>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<Deliver>()?
+                    };
+                    if runtime_call_hash
                         == [
                             94u8, 89u8, 78u8, 130u8, 130u8, 148u8, 176u8, 178u8, 139u8, 78u8,
                             235u8, 190u8, 160u8, 65u8, 229u8, 28u8, 249u8, 7u8, 142u8, 146u8, 42u8,
@@ -12506,7 +14546,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<UpdateClientState>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<UpdateClientState>()?
+                    };
+                    if runtime_call_hash
                         == [
                             121u8, 232u8, 249u8, 204u8, 195u8, 137u8, 227u8, 218u8, 6u8, 153u8,
                             10u8, 131u8, 93u8, 53u8, 91u8, 145u8, 202u8, 32u8, 187u8, 104u8, 36u8,
@@ -12517,49 +14562,6 @@ pub mod api {
                         let call = UpdateClientState {
                             client_id,
                             mmr_root,
-                        };
-                        Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = "Transfer interface for user test by explore"]
-                pub fn transfer(
-                    &self,
-                    source_port: ::std::vec::Vec<::core::primitive::u8>,
-                    source_channel: ::std::vec::Vec<::core::primitive::u8>,
-                    token: ::std::vec::Vec<::core::primitive::u8>,
-                    amount: ::core::primitive::u128,
-                    receiver: ::std::vec::Vec<::core::primitive::u8>,
-                    timeout_height: ::core::primitive::u64,
-                    timeout_timestamp: ::core::primitive::u64,
-                ) -> Result<
-                    ::subxt::SubmittableExtrinsic<
-                        'a,
-                        T,
-                        X,
-                        Transfer,
-                        DispatchError,
-                        root_mod::Event,
-                    >,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().call_hash::<Transfer>()?
-                        == [
-                            166u8, 115u8, 135u8, 47u8, 243u8, 145u8, 189u8, 95u8, 87u8, 133u8,
-                            97u8, 104u8, 13u8, 103u8, 246u8, 226u8, 164u8, 41u8, 175u8, 24u8,
-                            110u8, 40u8, 244u8, 17u8, 137u8, 12u8, 147u8, 12u8, 208u8, 215u8, 88u8,
-                            173u8,
-                        ]
-                    {
-                        let call = Transfer {
-                            source_port,
-                            source_channel,
-                            token,
-                            amount,
-                            receiver,
-                            timeout_height,
-                            timeout_timestamp,
                         };
                         Ok(::subxt::SubmittableExtrinsic::new(self.client, call))
                     } else {
@@ -12579,10 +14581,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self
-                        .client
-                        .metadata()
-                        .call_hash::<DeleteSendPacketEvent>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<DeleteSendPacketEvent>()?
+                    };
+                    if runtime_call_hash
                         == [
                             118u8, 248u8, 190u8, 235u8, 207u8, 82u8, 39u8, 30u8, 234u8, 197u8,
                             70u8, 76u8, 249u8, 227u8, 10u8, 48u8, 200u8, 136u8, 193u8, 248u8,
@@ -12609,7 +14613,12 @@ pub mod api {
                     >,
                     ::subxt::BasicError,
                 > {
-                    if self.client.metadata().call_hash::<DeleteAckPacketEvent>()?
+                    let runtime_call_hash = {
+                        let locked_metadata = self.client.metadata();
+                        let metadata = locked_metadata.read();
+                        metadata.call_hash::<DeleteAckPacketEvent>()?
+                    };
+                    if runtime_call_hash
                         == [
                             75u8, 24u8, 246u8, 1u8, 96u8, 231u8, 39u8, 112u8, 114u8, 137u8, 83u8,
                             104u8, 138u8, 161u8, 208u8, 234u8, 100u8, 210u8, 250u8, 54u8, 80u8,
@@ -12625,317 +14634,378 @@ pub mod api {
                 }
             }
         }
+        #[doc = "Substrate IBC event list"]
         pub type Event = runtime_types::pallet_ibc::pallet::Event;
         pub mod events {
             use super::runtime_types;
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit new block event"]
-            pub struct NewBlock(pub runtime_types::pallet_ibc::event::primitive::Height);
-            impl ::subxt::Event for NewBlock {
-                const PALLET: &'static str = "Ibc";
-                const EVENT: &'static str = "NewBlock";
-            }
-            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit create client event"]
-            pub struct CreateClient(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientType,
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-            );
-            impl ::subxt::Event for CreateClient {
-                const PALLET: &'static str = "Ibc";
-                const EVENT: &'static str = "CreateClient";
-            }
-            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit updte client event"]
-            pub struct UpdateClient(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientType,
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-            );
-            impl ::subxt::Event for UpdateClient {
-                const PALLET: &'static str = "Ibc";
-                const EVENT: &'static str = "UpdateClient";
-            }
-            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
             #[doc = "emit update client state event"]
             pub struct UpdateClientState(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::ClientState,
+                pub runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub runtime_types::pallet_ibc::module::clients::ics10_grandpa::ClientState,
             );
             impl ::subxt::Event for UpdateClientState {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "UpdateClientState";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit upgrade client event"]
-            pub struct UpgradeClient(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientType,
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-            );
+            #[doc = "New block"]
+            pub struct NewBlock {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+            }
+            impl ::subxt::Event for NewBlock {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "NewBlock";
+            }
+            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+            #[doc = "Client Created"]
+            pub struct CreateClient {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub client_type: runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                pub consensus_height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+            }
+            impl ::subxt::Event for CreateClient {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "CreateClient";
+            }
+            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+            #[doc = "Client updated"]
+            pub struct UpdateClient {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub client_type: runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                pub consensus_height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+            }
+            impl ::subxt::Event for UpdateClient {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "UpdateClient";
+            }
+            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+            #[doc = "Client upgraded"]
+            pub struct UpgradeClient {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub client_type: runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                pub consensus_height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+            }
             impl ::subxt::Event for UpgradeClient {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "UpgradeClient";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit client misbehaviour event"]
-            pub struct ClientMisbehaviour(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub runtime_types::pallet_ibc::event::primitive::ClientType,
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-            );
+            #[doc = "Client misbehaviour"]
+            pub struct ClientMisbehaviour {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub client_type: runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                pub consensus_height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+            }
             impl ::subxt::Event for ClientMisbehaviour {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "ClientMisbehaviour";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open init connection event"]
-            pub struct OpenInitConnection(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+            #[doc = "Connection open init"]
+            pub struct OpenInitConnection {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub counterparty_connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-            );
+                pub counterparty_client_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+            }
             impl ::subxt::Event for OpenInitConnection {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenInitConnection";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open try connection event"]
-            pub struct OpenTryConnection(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+            #[doc = "Connection open try"]
+            pub struct OpenTryConnection {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub counterparty_connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-            );
+                pub counterparty_client_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+            }
             impl ::subxt::Event for OpenTryConnection {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenTryConnection";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open ack connection event"]
-            pub struct OpenAckConnection(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+            #[doc = "Connection open acknowledgement"]
+            pub struct OpenAckConnection {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub counterparty_connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-            );
+                pub counterparty_client_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+            }
             impl ::subxt::Event for OpenAckConnection {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenAckConnection";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open confirm connection event"]
-            pub struct OpenConfirmConnection(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+            #[doc = "Connection open confirm"]
+            pub struct OpenConfirmConnection {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-                pub  ::core::option::Option<
-                    runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                pub client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                pub counterparty_connection_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                 >,
-                pub runtime_types::pallet_ibc::event::primitive::ClientId,
-            );
+                pub counterparty_client_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+            }
             impl ::subxt::Event for OpenConfirmConnection {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenConfirmConnection";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open init channel event"]
-            pub struct OpenInitChannel(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-                pub runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-            );
+            #[doc = "Channel open init"]
+            pub struct OpenInitChannel {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+                pub connection_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                pub counterparty_port_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub counterparty_channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+            }
             impl ::subxt::Event for OpenInitChannel {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenInitChannel";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open try channel event"]
-            pub struct OpenTryChannel(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-                pub runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-            );
+            #[doc = "Channel open try"]
+            pub struct OpenTryChannel {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+                pub connection_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                pub counterparty_port_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub counterparty_channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+            }
             impl ::subxt::Event for OpenTryChannel {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenTryChannel";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open ack channel event"]
-            pub struct OpenAckChannel(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-                pub runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-            );
+            #[doc = "Channel open acknowledgement"]
+            pub struct OpenAckChannel {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+                pub connection_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                pub counterparty_port_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub counterparty_channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+            }
             impl ::subxt::Event for OpenAckChannel {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenAckChannel";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit open confirm channel event"]
-            pub struct OpenConfirmChannel(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-                pub runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-            );
+            #[doc = "Channel open confirm"]
+            pub struct OpenConfirmChannel {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+                pub connection_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                pub counterparty_port_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub counterparty_channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+            }
             impl ::subxt::Event for OpenConfirmChannel {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "OpenConfirmChannel";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit close init channel event"]
-            pub struct CloseInitChannel(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-                pub runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-            );
+            #[doc = "Channel close init"]
+            pub struct CloseInitChannel {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+                pub connection_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                pub counterparty_port_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub counterparty_channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+            }
             impl ::subxt::Event for CloseInitChannel {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "CloseInitChannel";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit close confirm channel event"]
-            pub struct CloseConfirmChannel(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-                pub runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                pub runtime_types::pallet_ibc::event::primitive::PortId,
-                pub ::core::option::Option<runtime_types::pallet_ibc::event::primitive::ChannelId>,
-            );
+            #[doc = "Channel close confirm"]
+            pub struct CloseConfirmChannel {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+                pub connection_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                pub counterparty_port_id:
+                    runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                pub counterparty_channel_id: ::core::option::Option<
+                    runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                >,
+            }
             impl ::subxt::Event for CloseConfirmChannel {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "CloseConfirmChannel";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit send packet event"]
-            pub struct SendPacket(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::Packet,
-            );
+            #[doc = "Send packet"]
+            pub struct SendPacket {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+            }
             impl ::subxt::Event for SendPacket {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "SendPacket";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit receive packet"]
-            pub struct ReceivePacket(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::Packet,
-            );
+            #[doc = "Receive packet"]
+            pub struct ReceivePacket {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+            }
             impl ::subxt::Event for ReceivePacket {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "ReceivePacket";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit write acknowledgement packet event"]
-            pub struct WriteAcknowledgement(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::Packet,
-                pub ::std::vec::Vec<::core::primitive::u8>,
-            );
+            #[doc = "WriteAcknowledgement packet"]
+            pub struct WriteAcknowledgement {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                pub ack: ::std::vec::Vec<::core::primitive::u8>,
+            }
             impl ::subxt::Event for WriteAcknowledgement {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "WriteAcknowledgement";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit acknowledgement packet event"]
-            pub struct AcknowledgePacket(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::Packet,
-            );
+            #[doc = "Acknowledgements packet"]
+            pub struct AcknowledgePacket {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+            }
             impl ::subxt::Event for AcknowledgePacket {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "AcknowledgePacket";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit timeout packet event"]
-            pub struct TimeoutPacket(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::Packet,
-            );
+            #[doc = "Timeout packet"]
+            pub struct TimeoutPacket {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+            }
             impl ::subxt::Event for TimeoutPacket {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "TimeoutPacket";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit timeout on close packet event"]
-            pub struct TimeoutOnClosePacket(
-                pub runtime_types::pallet_ibc::event::primitive::Height,
-                pub runtime_types::pallet_ibc::event::primitive::Packet,
-            );
+            #[doc = "TimoutOnClose packet"]
+            pub struct TimeoutOnClosePacket {
+                pub height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                pub packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+            }
             impl ::subxt::Event for TimeoutOnClosePacket {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "TimeoutOnClosePacket";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit empty event"]
+            #[doc = "Empty"]
             pub struct Empty(pub ::std::vec::Vec<::core::primitive::u8>);
             impl ::subxt::Event for Empty {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "Empty";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit chain error event"]
+            #[doc = "Chain Error"]
             pub struct ChainError(pub ::std::vec::Vec<::core::primitive::u8>);
             impl ::subxt::Event for ChainError {
                 const PALLET: &'static str = "Ibc";
                 const EVENT: &'static str = "ChainError";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit escrow token"]
-            pub struct EscrowToken(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for EscrowToken {
+            #[doc = "App Module"]
+            pub struct AppModule(pub runtime_types::pallet_ibc::events::ModuleEvent);
+            impl ::subxt::Event for AppModule {
                 const PALLET: &'static str = "Ibc";
-                const EVENT: &'static str = "EscrowToken";
+                const EVENT: &'static str = "AppModule";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "emit burn token"]
+            #[doc = "transfer native token"]
+            pub struct TransferNativeToken(
+                pub runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                pub runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for TransferNativeToken {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "TransferNativeToken";
+            }
+            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+            #[doc = "transfer no native token"]
+            pub struct TransferNoNativeToken(
+                pub runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                pub runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                pub ::core::primitive::u128,
+            );
+            impl ::subxt::Event for TransferNoNativeToken {
+                const PALLET: &'static str = "Ibc";
+                const EVENT: &'static str = "TransferNoNativeToken";
+            }
+            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+            #[doc = "Burn cross chain token"]
             pub struct BurnToken(
                 pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
+                pub runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
                 pub ::core::primitive::u128,
             );
             impl ::subxt::Event for BurnToken {
@@ -12943,21 +15013,10 @@ pub mod api {
                 const EVENT: &'static str = "BurnToken";
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "unescrow token"]
-            pub struct UnEscrowToken(
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::subxt::sp_core::crypto::AccountId32,
-                pub ::core::primitive::u128,
-            );
-            impl ::subxt::Event for UnEscrowToken {
-                const PALLET: &'static str = "Ibc";
-                const EVENT: &'static str = "UnEscrowToken";
-            }
-            #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-            #[doc = "mint token"]
+            #[doc = "Mint chairperson  token"]
             pub struct MintToken(
                 pub ::core::primitive::u32,
-                pub ::subxt::sp_core::crypto::AccountId32,
+                pub runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
                 pub ::core::primitive::u128,
             );
             impl ::subxt::Event for MintToken {
@@ -13262,39 +15321,6 @@ pub mod api {
                     ::subxt::StorageEntryKey::Plain
                 }
             }
-            pub struct Denomination<'a>(pub &'a [::core::primitive::u8]);
-            impl ::subxt::StorageEntry for Denomination<'_> {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "Denomination";
-                type Value = ::std::vec::Vec<::core::primitive::u8>;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![::subxt::StorageMapKey::new(
-                        &self.0,
-                        ::subxt::StorageHasher::Blake2_128Concat,
-                    )])
-                }
-            }
-            pub struct EscrowAddresses<'a>(
-                pub &'a runtime_types::pallet_ibc::event::primitive::PortId,
-                pub &'a runtime_types::pallet_ibc::event::primitive::ChannelId,
-            );
-            impl ::subxt::StorageEntry for EscrowAddresses<'_> {
-                const PALLET: &'static str = "Ibc";
-                const STORAGE: &'static str = "EscrowAddresses";
-                type Value = ::subxt::sp_core::crypto::AccountId32;
-                fn key(&self) -> ::subxt::StorageEntryKey {
-                    ::subxt::StorageEntryKey::Map(vec![
-                        ::subxt::StorageMapKey::new(
-                            &self.0,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                        ::subxt::StorageMapKey::new(
-                            &self.1,
-                            ::subxt::StorageHasher::Blake2_128Concat,
-                        ),
-                    ])
-                }
-            }
             pub struct AssetIdByName<'a>(pub &'a [::core::primitive::u8]);
             impl ::subxt::StorageEntry for AssetIdByName<'_> {
                 const PALLET: &'static str = "Ibc";
@@ -13315,1052 +15341,1419 @@ pub mod api {
                     Self { client }
                 }
                 #[doc = " ClientStatePath(client_id) => ClientState"]
-                pub async fn client_states(
+                pub fn client_states(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ClientStates>()?
-                        == [
-                            152u8, 61u8, 20u8, 185u8, 66u8, 82u8, 87u8, 198u8, 200u8, 82u8, 17u8,
-                            70u8, 194u8, 161u8, 141u8, 18u8, 150u8, 161u8, 211u8, 177u8, 40u8,
-                            189u8, 70u8, 104u8, 51u8, 190u8, 94u8, 171u8, 157u8, 254u8, 120u8,
-                            254u8,
-                        ]
-                    {
-                        let entry = ClientStates(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientStates>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                152u8, 61u8, 20u8, 185u8, 66u8, 82u8, 87u8, 198u8, 200u8, 82u8,
+                                17u8, 70u8, 194u8, 161u8, 141u8, 18u8, 150u8, 161u8, 211u8, 177u8,
+                                40u8, 189u8, 70u8, 104u8, 51u8, 190u8, 94u8, 171u8, 157u8, 254u8,
+                                120u8, 254u8,
+                            ]
+                        {
+                            let entry = ClientStates(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientStatePath(client_id) => ClientState"]
-                pub async fn client_states_iter(
+                pub fn client_states_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ClientStates<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ClientStates>()?
-                        == [
-                            152u8, 61u8, 20u8, 185u8, 66u8, 82u8, 87u8, 198u8, 200u8, 82u8, 17u8,
-                            70u8, 194u8, 161u8, 141u8, 18u8, 150u8, 161u8, 211u8, 177u8, 40u8,
-                            189u8, 70u8, 104u8, 51u8, 190u8, 94u8, 171u8, 157u8, 254u8, 120u8,
-                            254u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ClientStates<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientStates>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                152u8, 61u8, 20u8, 185u8, 66u8, 82u8, 87u8, 198u8, 200u8, 82u8,
+                                17u8, 70u8, 194u8, 161u8, 141u8, 18u8, 150u8, 161u8, 211u8, 177u8,
+                                40u8, 189u8, 70u8, 104u8, 51u8, 190u8, 94u8, 171u8, 157u8, 254u8,
+                                120u8, 254u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " (client_id, height) => timestamp"]
-                pub async fn client_processed_times(
+                pub fn client_processed_times(
                     &self,
-                    _0: &[::core::primitive::u8],
-                    _1: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
+                    _1: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ClientProcessedTimes>()?
-                        == [
-                            217u8, 78u8, 5u8, 80u8, 212u8, 239u8, 150u8, 48u8, 18u8, 200u8, 42u8,
-                            80u8, 249u8, 199u8, 99u8, 174u8, 43u8, 226u8, 178u8, 95u8, 127u8,
-                            156u8, 217u8, 23u8, 192u8, 200u8, 29u8, 235u8, 8u8, 188u8, 35u8, 179u8,
-                        ]
-                    {
-                        let entry = ClientProcessedTimes(_0, _1);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientProcessedTimes>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                217u8, 78u8, 5u8, 80u8, 212u8, 239u8, 150u8, 48u8, 18u8, 200u8,
+                                42u8, 80u8, 249u8, 199u8, 99u8, 174u8, 43u8, 226u8, 178u8, 95u8,
+                                127u8, 156u8, 217u8, 23u8, 192u8, 200u8, 29u8, 235u8, 8u8, 188u8,
+                                35u8, 179u8,
+                            ]
+                        {
+                            let entry = ClientProcessedTimes(_0, _1);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " (client_id, height) => timestamp"]
-                pub async fn client_processed_times_iter(
+                pub fn client_processed_times_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ClientProcessedTimes<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ClientProcessedTimes>()?
-                        == [
-                            217u8, 78u8, 5u8, 80u8, 212u8, 239u8, 150u8, 48u8, 18u8, 200u8, 42u8,
-                            80u8, 249u8, 199u8, 99u8, 174u8, 43u8, 226u8, 178u8, 95u8, 127u8,
-                            156u8, 217u8, 23u8, 192u8, 200u8, 29u8, 235u8, 8u8, 188u8, 35u8, 179u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ClientProcessedTimes<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientProcessedTimes>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                217u8, 78u8, 5u8, 80u8, 212u8, 239u8, 150u8, 48u8, 18u8, 200u8,
+                                42u8, 80u8, 249u8, 199u8, 99u8, 174u8, 43u8, 226u8, 178u8, 95u8,
+                                127u8, 156u8, 217u8, 23u8, 192u8, 200u8, 29u8, 235u8, 8u8, 188u8,
+                                35u8, 179u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " (client_id, height) => host_height"]
-                pub async fn client_processed_heights(
+                pub fn client_processed_heights(
                     &self,
-                    _0: &[::core::primitive::u8],
-                    _1: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
+                    _1: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ClientProcessedHeights>()?
-                        == [
-                            132u8, 248u8, 6u8, 234u8, 122u8, 247u8, 165u8, 252u8, 28u8, 81u8, 54u8,
-                            120u8, 116u8, 201u8, 65u8, 159u8, 212u8, 8u8, 64u8, 215u8, 59u8, 121u8,
-                            69u8, 34u8, 59u8, 194u8, 112u8, 30u8, 238u8, 248u8, 115u8, 14u8,
-                        ]
-                    {
-                        let entry = ClientProcessedHeights(_0, _1);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientProcessedHeights>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                132u8, 248u8, 6u8, 234u8, 122u8, 247u8, 165u8, 252u8, 28u8, 81u8,
+                                54u8, 120u8, 116u8, 201u8, 65u8, 159u8, 212u8, 8u8, 64u8, 215u8,
+                                59u8, 121u8, 69u8, 34u8, 59u8, 194u8, 112u8, 30u8, 238u8, 248u8,
+                                115u8, 14u8,
+                            ]
+                        {
+                            let entry = ClientProcessedHeights(_0, _1);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " (client_id, height) => host_height"]
-                pub async fn client_processed_heights_iter(
+                pub fn client_processed_heights_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ClientProcessedHeights<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ClientProcessedHeights>()?
-                        == [
-                            132u8, 248u8, 6u8, 234u8, 122u8, 247u8, 165u8, 252u8, 28u8, 81u8, 54u8,
-                            120u8, 116u8, 201u8, 65u8, 159u8, 212u8, 8u8, 64u8, 215u8, 59u8, 121u8,
-                            69u8, 34u8, 59u8, 194u8, 112u8, 30u8, 238u8, 248u8, 115u8, 14u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ClientProcessedHeights<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientProcessedHeights>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                132u8, 248u8, 6u8, 234u8, 122u8, 247u8, 165u8, 252u8, 28u8, 81u8,
+                                54u8, 120u8, 116u8, 201u8, 65u8, 159u8, 212u8, 8u8, 64u8, 215u8,
+                                59u8, 121u8, 69u8, 34u8, 59u8, 194u8, 112u8, 30u8, 238u8, 248u8,
+                                115u8, 14u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientConsensusStatePath(client_id, Height) => ConsensusState"]
-                pub async fn consensus_states(
+                pub fn consensus_states(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ConsensusStates>()?
-                        == [
-                            249u8, 84u8, 86u8, 26u8, 68u8, 70u8, 245u8, 236u8, 213u8, 72u8, 162u8,
-                            47u8, 13u8, 158u8, 147u8, 129u8, 241u8, 182u8, 52u8, 149u8, 156u8,
-                            241u8, 212u8, 252u8, 29u8, 127u8, 184u8, 60u8, 228u8, 138u8, 103u8,
-                            221u8,
-                        ]
-                    {
-                        let entry = ConsensusStates(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ConsensusStates>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                249u8, 84u8, 86u8, 26u8, 68u8, 70u8, 245u8, 236u8, 213u8, 72u8,
+                                162u8, 47u8, 13u8, 158u8, 147u8, 129u8, 241u8, 182u8, 52u8, 149u8,
+                                156u8, 241u8, 212u8, 252u8, 29u8, 127u8, 184u8, 60u8, 228u8, 138u8,
+                                103u8, 221u8,
+                            ]
+                        {
+                            let entry = ConsensusStates(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientConsensusStatePath(client_id, Height) => ConsensusState"]
-                pub async fn consensus_states_iter(
+                pub fn consensus_states_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ConsensusStates<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ConsensusStates>()?
-                        == [
-                            249u8, 84u8, 86u8, 26u8, 68u8, 70u8, 245u8, 236u8, 213u8, 72u8, 162u8,
-                            47u8, 13u8, 158u8, 147u8, 129u8, 241u8, 182u8, 52u8, 149u8, 156u8,
-                            241u8, 212u8, 252u8, 29u8, 127u8, 184u8, 60u8, 228u8, 138u8, 103u8,
-                            221u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ConsensusStates<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ConsensusStates>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                249u8, 84u8, 86u8, 26u8, 68u8, 70u8, 245u8, 236u8, 213u8, 72u8,
+                                162u8, 47u8, 13u8, 158u8, 147u8, 129u8, 241u8, 182u8, 52u8, 149u8,
+                                156u8, 241u8, 212u8, 252u8, 29u8, 127u8, 184u8, 60u8, 228u8, 138u8,
+                                103u8, 221u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ConnectionsPath(connection_id) => ConnectionEnd"]
-                pub async fn connections(
+                pub fn connections(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Connections>()?
-                        == [
-                            37u8, 64u8, 201u8, 194u8, 200u8, 243u8, 164u8, 32u8, 192u8, 132u8,
-                            162u8, 108u8, 130u8, 185u8, 100u8, 253u8, 190u8, 135u8, 162u8, 24u8,
-                            69u8, 214u8, 50u8, 186u8, 139u8, 178u8, 132u8, 250u8, 230u8, 252u8,
-                            225u8, 209u8,
-                        ]
-                    {
-                        let entry = Connections(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Connections>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                37u8, 64u8, 201u8, 194u8, 200u8, 243u8, 164u8, 32u8, 192u8, 132u8,
+                                162u8, 108u8, 130u8, 185u8, 100u8, 253u8, 190u8, 135u8, 162u8,
+                                24u8, 69u8, 214u8, 50u8, 186u8, 139u8, 178u8, 132u8, 250u8, 230u8,
+                                252u8, 225u8, 209u8,
+                            ]
+                        {
+                            let entry = Connections(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ConnectionsPath(connection_id) => ConnectionEnd"]
-                pub async fn connections_iter(
+                pub fn connections_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Connections<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Connections>()?
-                        == [
-                            37u8, 64u8, 201u8, 194u8, 200u8, 243u8, 164u8, 32u8, 192u8, 132u8,
-                            162u8, 108u8, 130u8, 185u8, 100u8, 253u8, 190u8, 135u8, 162u8, 24u8,
-                            69u8, 214u8, 50u8, 186u8, 139u8, 178u8, 132u8, 250u8, 230u8, 252u8,
-                            225u8, 209u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Connections<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Connections>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                37u8, 64u8, 201u8, 194u8, 200u8, 243u8, 164u8, 32u8, 192u8, 132u8,
+                                162u8, 108u8, 130u8, 185u8, 100u8, 253u8, 190u8, 135u8, 162u8,
+                                24u8, 69u8, 214u8, 50u8, 186u8, 139u8, 178u8, 132u8, 250u8, 230u8,
+                                252u8, 225u8, 209u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ChannelEndPath(port_id, channel_id) => ChannelEnd"]
-                pub async fn channels(
+                pub fn channels(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Channels>()?
-                        == [
-                            155u8, 89u8, 67u8, 15u8, 71u8, 90u8, 108u8, 178u8, 66u8, 197u8, 189u8,
-                            188u8, 236u8, 254u8, 221u8, 110u8, 84u8, 47u8, 173u8, 148u8, 171u8,
-                            185u8, 3u8, 185u8, 35u8, 247u8, 69u8, 180u8, 196u8, 87u8, 139u8, 26u8,
-                        ]
-                    {
-                        let entry = Channels(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Channels>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                155u8, 89u8, 67u8, 15u8, 71u8, 90u8, 108u8, 178u8, 66u8, 197u8,
+                                189u8, 188u8, 236u8, 254u8, 221u8, 110u8, 84u8, 47u8, 173u8, 148u8,
+                                171u8, 185u8, 3u8, 185u8, 35u8, 247u8, 69u8, 180u8, 196u8, 87u8,
+                                139u8, 26u8,
+                            ]
+                        {
+                            let entry = Channels(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ChannelEndPath(port_id, channel_id) => ChannelEnd"]
-                pub async fn channels_iter(
+                pub fn channels_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Channels<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Channels>()?
-                        == [
-                            155u8, 89u8, 67u8, 15u8, 71u8, 90u8, 108u8, 178u8, 66u8, 197u8, 189u8,
-                            188u8, 236u8, 254u8, 221u8, 110u8, 84u8, 47u8, 173u8, 148u8, 171u8,
-                            185u8, 3u8, 185u8, 35u8, 247u8, 69u8, 180u8, 196u8, 87u8, 139u8, 26u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Channels<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Channels>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                155u8, 89u8, 67u8, 15u8, 71u8, 90u8, 108u8, 178u8, 66u8, 197u8,
+                                189u8, 188u8, 236u8, 254u8, 221u8, 110u8, 84u8, 47u8, 173u8, 148u8,
+                                171u8, 185u8, 3u8, 185u8, 35u8, 247u8, 69u8, 180u8, 196u8, 87u8,
+                                139u8, 26u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ConnectionsPath(connection_id) => Vec<ChannelEndPath(port_id, channel_id)>"]
-                pub async fn channels_connection(
+                pub fn channels_connection(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ChannelsConnection>()?
-                        == [
-                            180u8, 105u8, 88u8, 231u8, 159u8, 163u8, 230u8, 246u8, 142u8, 66u8,
-                            218u8, 148u8, 50u8, 239u8, 15u8, 37u8, 167u8, 204u8, 109u8, 241u8,
-                            151u8, 72u8, 132u8, 7u8, 253u8, 186u8, 61u8, 180u8, 105u8, 42u8, 184u8,
-                            3u8,
-                        ]
-                    {
-                        let entry = ChannelsConnection(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::std::vec::Vec<::core::primitive::u8>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ChannelsConnection>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                180u8, 105u8, 88u8, 231u8, 159u8, 163u8, 230u8, 246u8, 142u8, 66u8,
+                                218u8, 148u8, 50u8, 239u8, 15u8, 37u8, 167u8, 204u8, 109u8, 241u8,
+                                151u8, 72u8, 132u8, 7u8, 253u8, 186u8, 61u8, 180u8, 105u8, 42u8,
+                                184u8, 3u8,
+                            ]
+                        {
+                            let entry = ChannelsConnection(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ConnectionsPath(connection_id) => Vec<ChannelEndPath(port_id, channel_id)>"]
-                pub async fn channels_connection_iter(
+                pub fn channels_connection_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ChannelsConnection<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<ChannelsConnection>()?
-                        == [
-                            180u8, 105u8, 88u8, 231u8, 159u8, 163u8, 230u8, 246u8, 142u8, 66u8,
-                            218u8, 148u8, 50u8, 239u8, 15u8, 37u8, 167u8, 204u8, 109u8, 241u8,
-                            151u8, 72u8, 132u8, 7u8, 253u8, 186u8, 61u8, 180u8, 105u8, 42u8, 184u8,
-                            3u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ChannelsConnection<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ChannelsConnection>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                180u8, 105u8, 88u8, 231u8, 159u8, 163u8, 230u8, 246u8, 142u8, 66u8,
+                                218u8, 148u8, 50u8, 239u8, 15u8, 37u8, 167u8, 204u8, 109u8, 241u8,
+                                151u8, 72u8, 132u8, 7u8, 253u8, 186u8, 61u8, 180u8, 105u8, 42u8,
+                                184u8, 3u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " SeqSendsPath(port_id, channel_id) => sequence"]
-                pub async fn next_sequence_send(
+                pub fn next_sequence_send(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<NextSequenceSend>()?
-                        == [
-                            154u8, 235u8, 77u8, 36u8, 152u8, 40u8, 194u8, 82u8, 241u8, 212u8,
-                            205u8, 60u8, 95u8, 168u8, 210u8, 93u8, 152u8, 32u8, 102u8, 42u8, 83u8,
-                            186u8, 229u8, 93u8, 225u8, 234u8, 133u8, 52u8, 177u8, 209u8, 195u8,
-                            79u8,
-                        ]
-                    {
-                        let entry = NextSequenceSend(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSequenceSend>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                154u8, 235u8, 77u8, 36u8, 152u8, 40u8, 194u8, 82u8, 241u8, 212u8,
+                                205u8, 60u8, 95u8, 168u8, 210u8, 93u8, 152u8, 32u8, 102u8, 42u8,
+                                83u8, 186u8, 229u8, 93u8, 225u8, 234u8, 133u8, 52u8, 177u8, 209u8,
+                                195u8, 79u8,
+                            ]
+                        {
+                            let entry = NextSequenceSend(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " SeqSendsPath(port_id, channel_id) => sequence"]
-                pub async fn next_sequence_send_iter(
+                pub fn next_sequence_send_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextSequenceSend<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextSequenceSend>()?
-                        == [
-                            154u8, 235u8, 77u8, 36u8, 152u8, 40u8, 194u8, 82u8, 241u8, 212u8,
-                            205u8, 60u8, 95u8, 168u8, 210u8, 93u8, 152u8, 32u8, 102u8, 42u8, 83u8,
-                            186u8, 229u8, 93u8, 225u8, 234u8, 133u8, 52u8, 177u8, 209u8, 195u8,
-                            79u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, NextSequenceSend<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSequenceSend>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                154u8, 235u8, 77u8, 36u8, 152u8, 40u8, 194u8, 82u8, 241u8, 212u8,
+                                205u8, 60u8, 95u8, 168u8, 210u8, 93u8, 152u8, 32u8, 102u8, 42u8,
+                                83u8, 186u8, 229u8, 93u8, 225u8, 234u8, 133u8, 52u8, 177u8, 209u8,
+                                195u8, 79u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " SeqRecvsPath(port_id, channel_id) => sequence"]
-                pub async fn next_sequence_recv(
+                pub fn next_sequence_recv(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<NextSequenceRecv>()?
-                        == [
-                            140u8, 106u8, 29u8, 215u8, 240u8, 11u8, 109u8, 32u8, 99u8, 100u8, 89u8,
-                            172u8, 95u8, 52u8, 114u8, 27u8, 142u8, 220u8, 240u8, 103u8, 80u8, 25u8,
-                            111u8, 100u8, 21u8, 196u8, 214u8, 148u8, 213u8, 56u8, 196u8, 107u8,
-                        ]
-                    {
-                        let entry = NextSequenceRecv(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSequenceRecv>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                140u8, 106u8, 29u8, 215u8, 240u8, 11u8, 109u8, 32u8, 99u8, 100u8,
+                                89u8, 172u8, 95u8, 52u8, 114u8, 27u8, 142u8, 220u8, 240u8, 103u8,
+                                80u8, 25u8, 111u8, 100u8, 21u8, 196u8, 214u8, 148u8, 213u8, 56u8,
+                                196u8, 107u8,
+                            ]
+                        {
+                            let entry = NextSequenceRecv(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " SeqRecvsPath(port_id, channel_id) => sequence"]
-                pub async fn next_sequence_recv_iter(
+                pub fn next_sequence_recv_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextSequenceRecv<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextSequenceRecv>()?
-                        == [
-                            140u8, 106u8, 29u8, 215u8, 240u8, 11u8, 109u8, 32u8, 99u8, 100u8, 89u8,
-                            172u8, 95u8, 52u8, 114u8, 27u8, 142u8, 220u8, 240u8, 103u8, 80u8, 25u8,
-                            111u8, 100u8, 21u8, 196u8, 214u8, 148u8, 213u8, 56u8, 196u8, 107u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, NextSequenceRecv<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSequenceRecv>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                140u8, 106u8, 29u8, 215u8, 240u8, 11u8, 109u8, 32u8, 99u8, 100u8,
+                                89u8, 172u8, 95u8, 52u8, 114u8, 27u8, 142u8, 220u8, 240u8, 103u8,
+                                80u8, 25u8, 111u8, 100u8, 21u8, 196u8, 214u8, 148u8, 213u8, 56u8,
+                                196u8, 107u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " SeqAcksPath(port_id, channel_id) => sequence"]
-                pub async fn next_sequence_ack(
+                pub fn next_sequence_ack(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<NextSequenceAck>()?
-                        == [
-                            182u8, 132u8, 89u8, 11u8, 255u8, 63u8, 131u8, 200u8, 51u8, 110u8, 95u8,
-                            134u8, 26u8, 178u8, 42u8, 242u8, 93u8, 233u8, 161u8, 84u8, 140u8,
-                            234u8, 90u8, 173u8, 151u8, 167u8, 59u8, 130u8, 207u8, 122u8, 121u8,
-                            139u8,
-                        ]
-                    {
-                        let entry = NextSequenceAck(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSequenceAck>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                182u8, 132u8, 89u8, 11u8, 255u8, 63u8, 131u8, 200u8, 51u8, 110u8,
+                                95u8, 134u8, 26u8, 178u8, 42u8, 242u8, 93u8, 233u8, 161u8, 84u8,
+                                140u8, 234u8, 90u8, 173u8, 151u8, 167u8, 59u8, 130u8, 207u8, 122u8,
+                                121u8, 139u8,
+                            ]
+                        {
+                            let entry = NextSequenceAck(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " SeqAcksPath(port_id, channel_id) => sequence"]
-                pub async fn next_sequence_ack_iter(
+                pub fn next_sequence_ack_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, NextSequenceAck<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<NextSequenceAck>()?
-                        == [
-                            182u8, 132u8, 89u8, 11u8, 255u8, 63u8, 131u8, 200u8, 51u8, 110u8, 95u8,
-                            134u8, 26u8, 178u8, 42u8, 242u8, 93u8, 233u8, 161u8, 84u8, 140u8,
-                            234u8, 90u8, 173u8, 151u8, 167u8, 59u8, 130u8, 207u8, 122u8, 121u8,
-                            139u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, NextSequenceAck<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<NextSequenceAck>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                182u8, 132u8, 89u8, 11u8, 255u8, 63u8, 131u8, 200u8, 51u8, 110u8,
+                                95u8, 134u8, 26u8, 178u8, 42u8, 242u8, 93u8, 233u8, 161u8, 84u8,
+                                140u8, 234u8, 90u8, 173u8, 151u8, 167u8, 59u8, 130u8, 207u8, 122u8,
+                                121u8, 139u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " AcksPath(port_id, channel_id, sequence) => hash of acknowledgement"]
-                pub async fn acknowledgements(
+                pub fn acknowledgements(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Acknowledgements>()?
-                        == [
-                            144u8, 152u8, 242u8, 14u8, 99u8, 29u8, 132u8, 28u8, 68u8, 11u8, 11u8,
-                            152u8, 147u8, 250u8, 175u8, 140u8, 165u8, 231u8, 225u8, 70u8, 160u8,
-                            214u8, 240u8, 207u8, 204u8, 252u8, 110u8, 238u8, 255u8, 176u8, 109u8,
-                            193u8,
-                        ]
-                    {
-                        let entry = Acknowledgements(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Acknowledgements>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                144u8, 152u8, 242u8, 14u8, 99u8, 29u8, 132u8, 28u8, 68u8, 11u8,
+                                11u8, 152u8, 147u8, 250u8, 175u8, 140u8, 165u8, 231u8, 225u8, 70u8,
+                                160u8, 214u8, 240u8, 207u8, 204u8, 252u8, 110u8, 238u8, 255u8,
+                                176u8, 109u8, 193u8,
+                            ]
+                        {
+                            let entry = Acknowledgements(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " AcksPath(port_id, channel_id, sequence) => hash of acknowledgement"]
-                pub async fn acknowledgements_iter(
+                pub fn acknowledgements_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Acknowledgements<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Acknowledgements>()?
-                        == [
-                            144u8, 152u8, 242u8, 14u8, 99u8, 29u8, 132u8, 28u8, 68u8, 11u8, 11u8,
-                            152u8, 147u8, 250u8, 175u8, 140u8, 165u8, 231u8, 225u8, 70u8, 160u8,
-                            214u8, 240u8, 207u8, 204u8, 252u8, 110u8, 238u8, 255u8, 176u8, 109u8,
-                            193u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Acknowledgements<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Acknowledgements>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                144u8, 152u8, 242u8, 14u8, 99u8, 29u8, 132u8, 28u8, 68u8, 11u8,
+                                11u8, 152u8, 147u8, 250u8, 175u8, 140u8, 165u8, 231u8, 225u8, 70u8,
+                                160u8, 214u8, 240u8, 207u8, 204u8, 252u8, 110u8, 238u8, 255u8,
+                                176u8, 109u8, 193u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientTypePath(client_id) => client_type"]
-                pub async fn clients(
+                pub fn clients(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Clients>()?
-                        == [
-                            239u8, 211u8, 78u8, 91u8, 26u8, 160u8, 9u8, 221u8, 209u8, 43u8, 118u8,
-                            199u8, 130u8, 221u8, 246u8, 23u8, 153u8, 204u8, 137u8, 253u8, 108u8,
-                            38u8, 149u8, 191u8, 248u8, 65u8, 239u8, 43u8, 133u8, 6u8, 153u8, 234u8,
-                        ]
-                    {
-                        let entry = Clients(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Clients>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                239u8, 211u8, 78u8, 91u8, 26u8, 160u8, 9u8, 221u8, 209u8, 43u8,
+                                118u8, 199u8, 130u8, 221u8, 246u8, 23u8, 153u8, 204u8, 137u8,
+                                253u8, 108u8, 38u8, 149u8, 191u8, 248u8, 65u8, 239u8, 43u8, 133u8,
+                                6u8, 153u8, 234u8,
+                            ]
+                        {
+                            let entry = Clients(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientTypePath(client_id) => client_type"]
-                pub async fn clients_iter(
+                pub fn clients_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::subxt::KeyIter<'a, T, Clients<'a>>, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<Clients>()?
-                        == [
-                            239u8, 211u8, 78u8, 91u8, 26u8, 160u8, 9u8, 221u8, 209u8, 43u8, 118u8,
-                            199u8, 130u8, 221u8, 246u8, 23u8, 153u8, 204u8, 137u8, 253u8, 108u8,
-                            38u8, 149u8, 191u8, 248u8, 65u8, 239u8, 43u8, 133u8, 6u8, 153u8, 234u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, Clients<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<Clients>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                239u8, 211u8, 78u8, 91u8, 26u8, 160u8, 9u8, 221u8, 209u8, 43u8,
+                                118u8, 199u8, 130u8, 221u8, 246u8, 23u8, 153u8, 204u8, 137u8,
+                                253u8, 108u8, 38u8, 149u8, 191u8, 248u8, 65u8, 239u8, 43u8, 133u8,
+                                6u8, 153u8, 234u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " client counter"]
-                pub async fn client_counter(
+                pub fn client_counter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ClientCounter>()?
-                        == [
-                            1u8, 150u8, 194u8, 56u8, 39u8, 130u8, 126u8, 87u8, 194u8, 216u8, 27u8,
-                            64u8, 125u8, 9u8, 89u8, 203u8, 105u8, 87u8, 27u8, 160u8, 235u8, 137u8,
-                            164u8, 201u8, 8u8, 147u8, 164u8, 123u8, 247u8, 14u8, 190u8, 12u8,
-                        ]
-                    {
-                        let entry = ClientCounter;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ClientCounter>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                1u8, 150u8, 194u8, 56u8, 39u8, 130u8, 126u8, 87u8, 194u8, 216u8,
+                                27u8, 64u8, 125u8, 9u8, 89u8, 203u8, 105u8, 87u8, 27u8, 160u8,
+                                235u8, 137u8, 164u8, 201u8, 8u8, 147u8, 164u8, 123u8, 247u8, 14u8,
+                                190u8, 12u8,
+                            ]
+                        {
+                            let entry = ClientCounter;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " connection counter"]
-                pub async fn connection_counter(
+                pub fn connection_counter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ConnectionCounter>()?
-                        == [
-                            118u8, 133u8, 237u8, 98u8, 216u8, 34u8, 98u8, 106u8, 121u8, 19u8, 26u8,
-                            46u8, 199u8, 28u8, 6u8, 100u8, 34u8, 176u8, 78u8, 81u8, 114u8, 75u8,
-                            19u8, 41u8, 148u8, 84u8, 130u8, 223u8, 220u8, 211u8, 5u8, 114u8,
-                        ]
-                    {
-                        let entry = ConnectionCounter;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ConnectionCounter>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                118u8, 133u8, 237u8, 98u8, 216u8, 34u8, 98u8, 106u8, 121u8, 19u8,
+                                26u8, 46u8, 199u8, 28u8, 6u8, 100u8, 34u8, 176u8, 78u8, 81u8,
+                                114u8, 75u8, 19u8, 41u8, 148u8, 84u8, 130u8, 223u8, 220u8, 211u8,
+                                5u8, 114u8,
+                            ]
+                        {
+                            let entry = ConnectionCounter;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " channel counter"]
-                pub async fn channel_counter(
+                pub fn channel_counter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<ChannelCounter>()?
-                        == [
-                            14u8, 251u8, 41u8, 5u8, 204u8, 203u8, 45u8, 151u8, 66u8, 199u8, 1u8,
-                            166u8, 123u8, 240u8, 123u8, 121u8, 19u8, 159u8, 131u8, 59u8, 13u8,
-                            12u8, 52u8, 26u8, 7u8, 110u8, 137u8, 200u8, 4u8, 234u8, 96u8, 143u8,
-                        ]
-                    {
-                        let entry = ChannelCounter;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ChannelCounter>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                14u8, 251u8, 41u8, 5u8, 204u8, 203u8, 45u8, 151u8, 66u8, 199u8,
+                                1u8, 166u8, 123u8, 240u8, 123u8, 121u8, 19u8, 159u8, 131u8, 59u8,
+                                13u8, 12u8, 52u8, 26u8, 7u8, 110u8, 137u8, 200u8, 4u8, 234u8, 96u8,
+                                143u8,
+                            ]
+                        {
+                            let entry = ChannelCounter;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientConnectionsPath(client_id) => connection_id"]
-                pub async fn connection_client(
+                pub fn connection_client(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ConnectionClient>()?
-                        == [
-                            97u8, 22u8, 25u8, 124u8, 71u8, 112u8, 42u8, 26u8, 50u8, 121u8, 187u8,
-                            234u8, 234u8, 220u8, 6u8, 206u8, 83u8, 51u8, 87u8, 125u8, 65u8, 230u8,
-                            61u8, 17u8, 126u8, 142u8, 200u8, 243u8, 103u8, 163u8, 105u8, 26u8,
-                        ]
-                    {
-                        let entry = ConnectionClient(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ConnectionClient>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                97u8, 22u8, 25u8, 124u8, 71u8, 112u8, 42u8, 26u8, 50u8, 121u8,
+                                187u8, 234u8, 234u8, 220u8, 6u8, 206u8, 83u8, 51u8, 87u8, 125u8,
+                                65u8, 230u8, 61u8, 17u8, 126u8, 142u8, 200u8, 243u8, 103u8, 163u8,
+                                105u8, 26u8,
+                            ]
+                        {
+                            let entry = ConnectionClient(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ClientConnectionsPath(client_id) => connection_id"]
-                pub async fn connection_client_iter(
+                pub fn connection_client_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, ConnectionClient<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<ConnectionClient>()?
-                        == [
-                            97u8, 22u8, 25u8, 124u8, 71u8, 112u8, 42u8, 26u8, 50u8, 121u8, 187u8,
-                            234u8, 234u8, 220u8, 6u8, 206u8, 83u8, 51u8, 87u8, 125u8, 65u8, 230u8,
-                            61u8, 17u8, 126u8, 142u8, 200u8, 243u8, 103u8, 163u8, 105u8, 26u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, ConnectionClient<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<ConnectionClient>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                97u8, 22u8, 25u8, 124u8, 71u8, 112u8, 42u8, 26u8, 50u8, 121u8,
+                                187u8, 234u8, 234u8, 220u8, 6u8, 206u8, 83u8, 51u8, 87u8, 125u8,
+                                65u8, 230u8, 61u8, 17u8, 126u8, 142u8, 200u8, 243u8, 103u8, 163u8,
+                                105u8, 26u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ReceiptsPath(port_id, channel_id, sequence) => receipt"]
-                pub async fn packet_receipt(
+                pub fn packet_receipt(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<PacketReceipt>()?
-                        == [
-                            72u8, 156u8, 0u8, 186u8, 23u8, 100u8, 252u8, 193u8, 164u8, 7u8, 18u8,
-                            186u8, 196u8, 0u8, 174u8, 248u8, 10u8, 46u8, 157u8, 117u8, 146u8,
-                            189u8, 120u8, 180u8, 237u8, 153u8, 14u8, 9u8, 240u8, 98u8, 84u8, 86u8,
-                        ]
-                    {
-                        let entry = PacketReceipt(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PacketReceipt>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                72u8, 156u8, 0u8, 186u8, 23u8, 100u8, 252u8, 193u8, 164u8, 7u8,
+                                18u8, 186u8, 196u8, 0u8, 174u8, 248u8, 10u8, 46u8, 157u8, 117u8,
+                                146u8, 189u8, 120u8, 180u8, 237u8, 153u8, 14u8, 9u8, 240u8, 98u8,
+                                84u8, 86u8,
+                            ]
+                        {
+                            let entry = PacketReceipt(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " ReceiptsPath(port_id, channel_id, sequence) => receipt"]
-                pub async fn packet_receipt_iter(
+                pub fn packet_receipt_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, PacketReceipt<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<PacketReceipt>()?
-                        == [
-                            72u8, 156u8, 0u8, 186u8, 23u8, 100u8, 252u8, 193u8, 164u8, 7u8, 18u8,
-                            186u8, 196u8, 0u8, 174u8, 248u8, 10u8, 46u8, 157u8, 117u8, 146u8,
-                            189u8, 120u8, 180u8, 237u8, 153u8, 14u8, 9u8, 240u8, 98u8, 84u8, 86u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, PacketReceipt<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PacketReceipt>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                72u8, 156u8, 0u8, 186u8, 23u8, 100u8, 252u8, 193u8, 164u8, 7u8,
+                                18u8, 186u8, 196u8, 0u8, 174u8, 248u8, 10u8, 46u8, 157u8, 117u8,
+                                146u8, 189u8, 120u8, 180u8, 237u8, 153u8, 14u8, 9u8, 240u8, 98u8,
+                                84u8, 86u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " CommitmentsPath(port_id, channel_id, sequence) => hash of (timestamp, height, packet)"]
-                pub async fn packet_commitment(
+                pub fn packet_commitment(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<PacketCommitment>()?
-                        == [
-                            251u8, 193u8, 176u8, 79u8, 238u8, 1u8, 154u8, 165u8, 170u8, 194u8,
-                            11u8, 101u8, 234u8, 73u8, 216u8, 131u8, 114u8, 110u8, 228u8, 24u8,
-                            255u8, 80u8, 255u8, 51u8, 203u8, 75u8, 234u8, 74u8, 169u8, 0u8, 183u8,
-                            115u8,
-                        ]
-                    {
-                        let entry = PacketCommitment(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PacketCommitment>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                251u8, 193u8, 176u8, 79u8, 238u8, 1u8, 154u8, 165u8, 170u8, 194u8,
+                                11u8, 101u8, 234u8, 73u8, 216u8, 131u8, 114u8, 110u8, 228u8, 24u8,
+                                255u8, 80u8, 255u8, 51u8, 203u8, 75u8, 234u8, 74u8, 169u8, 0u8,
+                                183u8, 115u8,
+                            ]
+                        {
+                            let entry = PacketCommitment(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " CommitmentsPath(port_id, channel_id, sequence) => hash of (timestamp, height, packet)"]
-                pub async fn packet_commitment_iter(
+                pub fn packet_commitment_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, PacketCommitment<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<PacketCommitment>()?
-                        == [
-                            251u8, 193u8, 176u8, 79u8, 238u8, 1u8, 154u8, 165u8, 170u8, 194u8,
-                            11u8, 101u8, 234u8, 73u8, 216u8, 131u8, 114u8, 110u8, 228u8, 24u8,
-                            255u8, 80u8, 255u8, 51u8, 203u8, 75u8, 234u8, 74u8, 169u8, 0u8, 183u8,
-                            115u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, PacketCommitment<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<PacketCommitment>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                251u8, 193u8, 176u8, 79u8, 238u8, 1u8, 154u8, 165u8, 170u8, 194u8,
+                                11u8, 101u8, 234u8, 73u8, 216u8, 131u8, 114u8, 110u8, 228u8, 24u8,
+                                255u8, 80u8, 255u8, 51u8, 203u8, 75u8, 234u8, 74u8, 169u8, 0u8,
+                                183u8, 115u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                #[doc = " (height, port_id, channel_id, sequence) => sendpacket event"]
-                pub async fn send_packet_event(
+                #[doc = " (height, port_id, channel_id, sequence) => send-packet event"]
+                pub fn send_packet_event(
                     &self,
-                    _0: &[::core::primitive::u8],
-                    _1: &[::core::primitive::u8],
-                    _2: &::core::primitive::u64,
+                    _0: &'a [::core::primitive::u8],
+                    _1: &'a [::core::primitive::u8],
+                    _2: &'a ::core::primitive::u64,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<SendPacketEvent>()?
-                        == [
-                            88u8, 140u8, 15u8, 238u8, 88u8, 79u8, 47u8, 111u8, 163u8, 158u8, 181u8,
-                            65u8, 135u8, 60u8, 13u8, 96u8, 80u8, 215u8, 62u8, 97u8, 235u8, 236u8,
-                            105u8, 54u8, 201u8, 233u8, 22u8, 34u8, 168u8, 132u8, 217u8, 58u8,
-                        ]
-                    {
-                        let entry = SendPacketEvent(_0, _1, _2);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<SendPacketEvent>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                88u8, 140u8, 15u8, 238u8, 88u8, 79u8, 47u8, 111u8, 163u8, 158u8,
+                                181u8, 65u8, 135u8, 60u8, 13u8, 96u8, 80u8, 215u8, 62u8, 97u8,
+                                235u8, 236u8, 105u8, 54u8, 201u8, 233u8, 22u8, 34u8, 168u8, 132u8,
+                                217u8, 58u8,
+                            ]
+                        {
+                            let entry = SendPacketEvent(_0, _1, _2);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                #[doc = " (height, port_id, channel_id, sequence) => sendpacket event"]
-                pub async fn send_packet_event_iter(
+                #[doc = " (height, port_id, channel_id, sequence) => send-packet event"]
+                pub fn send_packet_event_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, SendPacketEvent<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<SendPacketEvent>()?
-                        == [
-                            88u8, 140u8, 15u8, 238u8, 88u8, 79u8, 47u8, 111u8, 163u8, 158u8, 181u8,
-                            65u8, 135u8, 60u8, 13u8, 96u8, 80u8, 215u8, 62u8, 97u8, 235u8, 236u8,
-                            105u8, 54u8, 201u8, 233u8, 22u8, 34u8, 168u8, 132u8, 217u8, 58u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, SendPacketEvent<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<SendPacketEvent>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                88u8, 140u8, 15u8, 238u8, 88u8, 79u8, 47u8, 111u8, 163u8, 158u8,
+                                181u8, 65u8, 135u8, 60u8, 13u8, 96u8, 80u8, 215u8, 62u8, 97u8,
+                                235u8, 236u8, 105u8, 54u8, 201u8, 233u8, 22u8, 34u8, 168u8, 132u8,
+                                217u8, 58u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                #[doc = " (port_id, channel_id, sequence) => writeack event"]
-                pub async fn write_ack_packet_event(
+                #[doc = " (port_id, channel_id, sequence) => writ ack event"]
+                pub fn write_ack_packet_event(
                     &self,
-                    _0: &[::core::primitive::u8],
-                    _1: &[::core::primitive::u8],
-                    _2: &::core::primitive::u64,
+                    _0: &'a [::core::primitive::u8],
+                    _1: &'a [::core::primitive::u8],
+                    _2: &'a ::core::primitive::u64,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<WriteAckPacketEvent>()?
-                        == [
-                            107u8, 75u8, 137u8, 252u8, 105u8, 139u8, 38u8, 13u8, 26u8, 206u8, 92u8,
-                            82u8, 227u8, 107u8, 43u8, 222u8, 107u8, 189u8, 119u8, 142u8, 23u8,
-                            95u8, 68u8, 148u8, 207u8, 174u8, 127u8, 231u8, 13u8, 0u8, 16u8, 204u8,
-                        ]
-                    {
-                        let entry = WriteAckPacketEvent(_0, _1, _2);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<WriteAckPacketEvent>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                107u8, 75u8, 137u8, 252u8, 105u8, 139u8, 38u8, 13u8, 26u8, 206u8,
+                                92u8, 82u8, 227u8, 107u8, 43u8, 222u8, 107u8, 189u8, 119u8, 142u8,
+                                23u8, 95u8, 68u8, 148u8, 207u8, 174u8, 127u8, 231u8, 13u8, 0u8,
+                                16u8, 204u8,
+                            ]
+                        {
+                            let entry = WriteAckPacketEvent(_0, _1, _2);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                #[doc = " (port_id, channel_id, sequence) => writeack event"]
-                pub async fn write_ack_packet_event_iter(
+                #[doc = " (port_id, channel_id, sequence) => writ ack event"]
+                pub fn write_ack_packet_event_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, WriteAckPacketEvent<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self
-                        .client
-                        .metadata()
-                        .storage_hash::<WriteAckPacketEvent>()?
-                        == [
-                            107u8, 75u8, 137u8, 252u8, 105u8, 139u8, 38u8, 13u8, 26u8, 206u8, 92u8,
-                            82u8, 227u8, 107u8, 43u8, 222u8, 107u8, 189u8, 119u8, 142u8, 23u8,
-                            95u8, 68u8, 148u8, 207u8, 174u8, 127u8, 231u8, 13u8, 0u8, 16u8, 204u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, WriteAckPacketEvent<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<WriteAckPacketEvent>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                107u8, 75u8, 137u8, 252u8, 105u8, 139u8, 38u8, 13u8, 26u8, 206u8,
+                                92u8, 82u8, 227u8, 107u8, 43u8, 222u8, 107u8, 189u8, 119u8, 142u8,
+                                23u8, 95u8, 68u8, 148u8, 207u8, 174u8, 127u8, 231u8, 13u8, 0u8,
+                                16u8, 204u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
                 #[doc = " store latest height"]
-                pub async fn latest_height(
+                pub fn latest_height(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<LatestHeight>()?
-                        == [
-                            207u8, 46u8, 16u8, 118u8, 150u8, 32u8, 84u8, 137u8, 81u8, 241u8, 168u8,
-                            46u8, 77u8, 118u8, 236u8, 6u8, 146u8, 77u8, 38u8, 48u8, 238u8, 120u8,
-                            17u8, 22u8, 81u8, 23u8, 142u8, 1u8, 197u8, 240u8, 1u8, 216u8,
-                        ]
-                    {
-                        let entry = LatestHeight;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::std::vec::Vec<::core::primitive::u8>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<LatestHeight>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                207u8, 46u8, 16u8, 118u8, 150u8, 32u8, 84u8, 137u8, 81u8, 241u8,
+                                168u8, 46u8, 77u8, 118u8, 236u8, 6u8, 146u8, 77u8, 38u8, 48u8,
+                                238u8, 120u8, 17u8, 22u8, 81u8, 23u8, 142u8, 1u8, 197u8, 240u8,
+                                1u8, 216u8,
+                            ]
+                        {
+                            let entry = LatestHeight;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                pub async fn old_height(
+                pub fn old_height(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<OldHeight>()?
-                        == [
-                            99u8, 216u8, 180u8, 203u8, 123u8, 207u8, 2u8, 234u8, 253u8, 100u8,
-                            107u8, 176u8, 159u8, 168u8, 234u8, 220u8, 35u8, 202u8, 234u8, 27u8,
-                            60u8, 90u8, 197u8, 146u8, 82u8, 214u8, 129u8, 56u8, 8u8, 154u8, 250u8,
-                            181u8,
-                        ]
-                    {
-                        let entry = OldHeight;
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u64, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<OldHeight>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                99u8, 216u8, 180u8, 203u8, 123u8, 207u8, 2u8, 234u8, 253u8, 100u8,
+                                107u8, 176u8, 159u8, 168u8, 234u8, 220u8, 35u8, 202u8, 234u8, 27u8,
+                                60u8, 90u8, 197u8, 146u8, 82u8, 214u8, 129u8, 56u8, 8u8, 154u8,
+                                250u8, 181u8,
+                            ]
+                        {
+                            let entry = OldHeight;
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                #[doc = " sha256(tracePath + \"/\" + baseDenom) => DenomTrace"]
-                pub async fn denomination(
+                #[doc = " key-value asset id with asset name"]
+                pub fn asset_id_by_name(
                     &self,
-                    _0: &[::core::primitive::u8],
+                    _0: &'a [::core::primitive::u8],
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::std::vec::Vec<::core::primitive::u8>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Denomination>()?
-                        == [
-                            249u8, 85u8, 198u8, 110u8, 211u8, 39u8, 28u8, 25u8, 188u8, 232u8,
-                            102u8, 243u8, 2u8, 164u8, 179u8, 2u8, 7u8, 51u8, 65u8, 74u8, 251u8,
-                            101u8, 20u8, 241u8, 146u8, 240u8, 107u8, 57u8, 21u8, 218u8, 50u8,
-                            121u8,
-                        ]
-                    {
-                        let entry = Denomination(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AssetIdByName>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8,
+                                89u8, 86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8,
+                                238u8, 156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8,
+                                97u8, 234u8,
+                            ]
+                        {
+                            let entry = AssetIdByName(_0);
+                            client.storage().fetch_or_default(&entry, block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
-                #[doc = " sha256(tracePath + \"/\" + baseDenom) => DenomTrace"]
-                pub async fn denomination_iter(
+                #[doc = " key-value asset id with asset name"]
+                pub fn asset_id_by_name_iter(
                     &self,
                     block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, Denomination<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<Denomination>()?
-                        == [
-                            249u8, 85u8, 198u8, 110u8, 211u8, 39u8, 28u8, 25u8, 188u8, 232u8,
-                            102u8, 243u8, 2u8, 164u8, 179u8, 2u8, 7u8, 51u8, 65u8, 74u8, 251u8,
-                            101u8, 20u8, 241u8, 146u8, 240u8, 107u8, 57u8, 21u8, 218u8, 50u8,
-                            121u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn escrow_addresses(
-                    &self,
-                    _0: &runtime_types::pallet_ibc::event::primitive::PortId,
-                    _1: &runtime_types::pallet_ibc::event::primitive::ChannelId,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::sp_core::crypto::AccountId32,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<EscrowAddresses>()?
-                        == [
-                            216u8, 119u8, 214u8, 39u8, 219u8, 181u8, 163u8, 17u8, 80u8, 98u8, 70u8,
-                            251u8, 227u8, 190u8, 167u8, 251u8, 13u8, 209u8, 214u8, 156u8, 169u8,
-                            159u8, 125u8, 251u8, 172u8, 59u8, 30u8, 148u8, 164u8, 2u8, 113u8, 70u8,
-                        ]
-                    {
-                        let entry = EscrowAddresses(_0, _1);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                pub async fn escrow_addresses_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, EscrowAddresses<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<EscrowAddresses>()?
-                        == [
-                            216u8, 119u8, 214u8, 39u8, 219u8, 181u8, 163u8, 17u8, 80u8, 98u8, 70u8,
-                            251u8, 227u8, 190u8, 167u8, 251u8, 13u8, 209u8, 214u8, 156u8, 169u8,
-                            159u8, 125u8, 251u8, 172u8, 59u8, 30u8, 148u8, 164u8, 2u8, 113u8, 70u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " key-value asserid with asset name"]
-                pub async fn asset_id_by_name(
-                    &self,
-                    _0: &[::core::primitive::u8],
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<::core::primitive::u32, ::subxt::BasicError>
-                {
-                    if self.client.metadata().storage_hash::<AssetIdByName>()?
-                        == [
-                            215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8, 89u8,
-                            86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8, 238u8,
-                            156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8, 97u8, 234u8,
-                        ]
-                    {
-                        let entry = AssetIdByName(_0);
-                        self.client
-                            .storage()
-                            .fetch_or_default(&entry, block_hash)
-                            .await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
-                    }
-                }
-                #[doc = " key-value asserid with asset name"]
-                pub async fn asset_id_by_name_iter(
-                    &self,
-                    block_hash: ::core::option::Option<T::Hash>,
-                ) -> ::core::result::Result<
-                    ::subxt::KeyIter<'a, T, AssetIdByName<'a>>,
-                    ::subxt::BasicError,
-                > {
-                    if self.client.metadata().storage_hash::<AssetIdByName>()?
-                        == [
-                            215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8, 89u8,
-                            86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8, 238u8,
-                            156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8, 97u8, 234u8,
-                        ]
-                    {
-                        self.client.storage().iter(block_hash).await
-                    } else {
-                        Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                ) -> impl ::core::future::Future<
+                    Output = ::core::result::Result<
+                        ::subxt::KeyIter<'a, T, AssetIdByName<'a>>,
+                        ::subxt::BasicError,
+                    >,
+                > + 'a {
+                    let client = self.client;
+                    async move {
+                        let runtime_storage_hash = {
+                            let locked_metadata = client.metadata();
+                            let metadata = locked_metadata.read();
+                            match metadata.storage_hash::<AssetIdByName>() {
+                                Ok(hash) => hash,
+                                Err(e) => return Err(e.into()),
+                            }
+                        };
+                        if runtime_storage_hash
+                            == [
+                                215u8, 34u8, 187u8, 76u8, 52u8, 161u8, 208u8, 252u8, 20u8, 73u8,
+                                89u8, 86u8, 60u8, 181u8, 239u8, 83u8, 152u8, 173u8, 251u8, 138u8,
+                                238u8, 156u8, 72u8, 45u8, 164u8, 36u8, 94u8, 16u8, 86u8, 155u8,
+                                97u8, 234u8,
+                            ]
+                        {
+                            client.storage().iter(block_hash).await
+                        } else {
+                            Err(::subxt::MetadataError::IncompatibleMetadata.into())
+                        }
                     }
                 }
             }
@@ -14559,6 +16952,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "A dispatch that will fill the block weight up to the given ratio."]
@@ -14635,6 +17029,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Error for the System pallet"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "The name of specification does not match between the current runtime"]
@@ -14660,6 +17055,7 @@ pub mod api {
                     CallFiltered,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Event for the System pallet."]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "An extrinsic completed successfully."]
@@ -14810,6 +17206,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Issue a new class of fungible assets from a public origin."]
@@ -15418,6 +17815,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Account balance must be greater than or equal to the transfer amount."]
@@ -15468,6 +17866,7 @@ pub mod api {
                     WouldBurn,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "Some asset class was created."]
@@ -15651,6 +18050,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Provide a set of uncles."]
@@ -15664,6 +18064,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "The uncle parent not in the chain."]
@@ -15701,6 +18102,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Report authority equivocation/misbehavior. This method will verify"]
@@ -15750,6 +18152,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "An equivocation proof provided as part of an equivocation report is invalid."]
@@ -15768,6 +18171,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Transfer some liquid free balance to another account."]
@@ -15894,6 +18298,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Vesting balance too high to send value"]
@@ -15921,6 +18326,7 @@ pub mod api {
                     TooManyReserves,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "An account was created with some free balance."]
@@ -16031,6 +18437,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {}
             }
         }
@@ -16039,6 +18446,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Report voter equivocation/misbehavior. This method will verify the"]
@@ -16087,6 +18495,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Attempt to signal GRANDPA pause when the authority set isn't live"]
@@ -16113,6 +18522,7 @@ pub mod api {
                     DuplicateOffenceReport,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "New authority set has been applied."]
@@ -16155,70 +18565,132 @@ pub mod api {
         }
         pub mod pallet_ibc {
             use super::runtime_types;
-            pub mod event {
+            pub mod events {
                 use super::runtime_types;
-                pub mod primitive {
+                #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                pub struct ModuleEvent {
+                    pub kind: ::std::vec::Vec<::core::primitive::u8>,
+                    pub module_name: runtime_types::pallet_ibc::events::ModuleId,
+                    pub attributes:
+                        ::std::vec::Vec<runtime_types::pallet_ibc::events::ModuleEventAttribute>,
+                }
+                #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                pub struct ModuleEventAttribute {
+                    pub key: ::std::vec::Vec<::core::primitive::u8>,
+                    pub value: ::std::vec::Vec<::core::primitive::u8>,
+                }
+                #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                pub struct ModuleId(pub ::std::vec::Vec<::core::primitive::u8>);
+            }
+            pub mod module {
+                use super::runtime_types;
+                pub mod applications {
                     use super::runtime_types;
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct ChannelId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct ClientId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct ClientState {
-                        pub chain_id: ::std::vec::Vec<::core::primitive::u8>,
-                        pub block_number: ::core::primitive::u32,
-                        pub frozen_height: ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::Height,
-                        >,
-                        pub block_header: ::std::vec::Vec<::core::primitive::u8>,
-                        pub latest_commitment: ::std::vec::Vec<::core::primitive::u8>,
-                        pub validator_set: ::std::vec::Vec<::core::primitive::u8>,
+                    pub mod transfer {
+                        use super::runtime_types;
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct IbcAccount(pub ::subxt::sp_core::crypto::AccountId32);
                     }
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub enum ClientType {
-                        #[codec(index = 0)]
-                        Tendermint,
-                        #[codec(index = 1)]
-                        Grandpa,
+                }
+                pub mod clients {
+                    use super::runtime_types;
+                    pub mod ics10_grandpa {
+                        use super::runtime_types;
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct ClientState {
+                            pub chain_id: ::std::vec::Vec<::core::primitive::u8>,
+                            pub block_number: ::core::primitive::u32,
+                            pub frozen_height: ::core::option::Option<
+                                runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                            >,
+                            pub block_header: ::std::vec::Vec<::core::primitive::u8>,
+                            pub latest_commitment: ::std::vec::Vec<::core::primitive::u8>,
+                            pub validator_set: ::std::vec::Vec<::core::primitive::u8>,
+                        }
                     }
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct ConnectionId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct Height {
-                        pub revision_number: ::core::primitive::u64,
-                        pub revision_height: ::core::primitive::u64,
-                    }
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct Packet {
-                        pub sequence: runtime_types::pallet_ibc::event::primitive::Sequence,
-                        pub source_port: runtime_types::pallet_ibc::event::primitive::PortId,
-                        pub source_channel: runtime_types::pallet_ibc::event::primitive::ChannelId,
-                        pub destination_port: runtime_types::pallet_ibc::event::primitive::PortId,
-                        pub destination_channel:
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
-                        pub data: ::std::vec::Vec<::core::primitive::u8>,
-                        pub timeout_height: runtime_types::pallet_ibc::event::primitive::Height,
-                        pub timeout_timestamp:
-                            runtime_types::pallet_ibc::event::primitive::Timestamp,
-                    }
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct PortId(pub ::std::vec::Vec<::core::primitive::u8>);
-                    #[derive(
-                        :: subxt :: codec :: CompactAs,
-                        :: subxt :: codec :: Decode,
-                        :: subxt :: codec :: Encode,
-                        Debug,
-                    )]
-                    pub struct Sequence(pub ::core::primitive::u64);
-                    #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
-                    pub struct Timestamp {
-                        pub time: ::std::vec::Vec<::core::primitive::u8>,
+                }
+                pub mod core {
+                    use super::runtime_types;
+                    pub mod ics24_host {
+                        use super::runtime_types;
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct ChannelId(pub ::std::vec::Vec<::core::primitive::u8>);
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct ClientId(pub ::std::vec::Vec<::core::primitive::u8>);
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub enum ClientType {
+                            #[codec(index = 0)]
+                            Tendermint,
+                            #[codec(index = 1)]
+                            Grandpa,
+                        }
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct ConnectionId(pub ::std::vec::Vec<::core::primitive::u8>);
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct Height {
+                            pub revision_number: ::core::primitive::u64,
+                            pub revision_height: ::core::primitive::u64,
+                        }
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct Packet {
+                            pub sequence:
+                                runtime_types::pallet_ibc::module::core::ics24_host::Sequence,
+                            pub source_port:
+                                runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                            pub source_channel:
+                                runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                            pub destination_port:
+                                runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                            pub destination_channel:
+                                runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
+                            pub data: ::std::vec::Vec<::core::primitive::u8>,
+                            pub timeout_height:
+                                runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                            pub timeout_timestamp:
+                                runtime_types::pallet_ibc::module::core::ics24_host::Timestamp,
+                        }
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct PortId(pub ::std::vec::Vec<::core::primitive::u8>);
+                        #[derive(
+                            :: subxt :: codec :: CompactAs,
+                            :: subxt :: codec :: Decode,
+                            :: subxt :: codec :: Encode,
+                            Debug,
+                        )]
+                        pub struct Sequence(pub ::core::primitive::u64);
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub struct Timestamp {
+                            pub time: ::std::vec::Vec<::core::primitive::u8>,
+                        }
                     }
                 }
             }
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Dispatchable functions allows users to interact with the pallet and invoke state changes."]
+                #[doc = "These functions materialize as \"extrinsic\", which are often compared to transactions."]
+                #[doc = "Dispatch able functions must be annotated with a weight and must return a DispatchResult."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "This function acts as an entry for all of the IBC request(except MMR root update)."]
@@ -16235,22 +18707,12 @@ pub mod api {
                         mmr_root: ::std::vec::Vec<::core::primitive::u8>,
                     },
                     #[codec(index = 2)]
-                    #[doc = "Transfer interface for user test by explore"]
-                    transfer {
-                        source_port: ::std::vec::Vec<::core::primitive::u8>,
-                        source_channel: ::std::vec::Vec<::core::primitive::u8>,
-                        token: ::std::vec::Vec<::core::primitive::u8>,
-                        amount: ::core::primitive::u128,
-                        receiver: ::std::vec::Vec<::core::primitive::u8>,
-                        timeout_height: ::core::primitive::u64,
-                        timeout_timestamp: ::core::primitive::u64,
-                    },
-                    #[codec(index = 3)]
                     delete_send_packet_event,
-                    #[codec(index = 4)]
+                    #[codec(index = 3)]
                     delete_ack_packet_event,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Errors in MMR verification informing users that something went wrong."]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "update the beefy light client failure!"]
@@ -16271,340 +18733,296 @@ pub mod api {
                     #[doc = "FromUtf8Error"]
                     InvalidFromUtf8,
                     #[codec(index = 6)]
-                    #[doc = "ics26router error"]
-                    Ics26Error,
-                    #[codec(index = 7)]
-                    #[doc = "invalid signer"]
-                    InvalidSigner,
-                    #[codec(index = 8)]
-                    #[doc = "empty channel id"]
-                    EmptyChannelId,
-                    #[codec(index = 9)]
-                    #[doc = "ics20 error"]
-                    Ics20Error,
-                    #[codec(index = 10)]
-                    #[doc = "parse ibc packet error"]
-                    InvalidPacket,
-                    #[codec(index = 11)]
                     #[doc = "invalid signed_commitment"]
                     InvalidSignedCommitment,
-                    #[codec(index = 12)]
-                    #[doc = "invalid identifier"]
-                    InvalidIdentifier,
-                    #[codec(index = 13)]
-                    #[doc = "invalid timestamp"]
-                    InvalidTimestamp,
-                    #[codec(index = 14)]
+                    #[codec(index = 7)]
                     #[doc = "empty latest_commitment"]
                     EmptyLatestCommitment,
-                    #[codec(index = 15)]
-                    #[doc = "send packet error"]
-                    SendPacketError,
-                    #[codec(index = 16)]
-                    #[doc = "ReceivePacket error"]
-                    ReceivePacketError,
-                    #[codec(index = 17)]
-                    #[doc = "TimeoutPacket error"]
-                    TimeoutPacketError,
-                    #[codec(index = 18)]
-                    #[doc = "AcknowledgePacket error"]
-                    AcknowledgePacketError,
-                    #[codec(index = 19)]
-                    #[doc = "OpenInitChannel error"]
-                    OpenInitChannelError,
-                    #[codec(index = 20)]
-                    #[doc = "OpenTryChannel error"]
-                    OpenTryChannelError,
-                    #[codec(index = 21)]
-                    #[doc = "OpenAckChannel error"]
-                    OpenAckChannelError,
-                    #[codec(index = 22)]
-                    #[doc = "OpenConfirmChannel error"]
-                    OpenConfirmChannelError,
-                    #[codec(index = 23)]
-                    #[doc = "CloseInitChannel error"]
-                    CloseInitChannelError,
-                    #[codec(index = 24)]
-                    #[doc = "CloseConfirmChannel error"]
-                    CloseConfirmChannelError,
-                    #[codec(index = 25)]
-                    #[doc = "AmountOverflow"]
-                    AmountOverflow,
-                    #[codec(index = 26)]
-                    SerdeIBCFungibleTokenPacketDataError,
-                    #[codec(index = 27)]
-                    #[doc = "Invalid parse"]
-                    InvalidParse,
-                    #[codec(index = 28)]
-                    #[doc = "parse denom trace error"]
-                    ParseDenomTraceError,
-                    #[codec(index = 29)]
-                    #[doc = "acknowledgement_response_empty"]
-                    AcknowledgementResponseEmpty,
-                    #[codec(index = 30)]
-                    #[doc = "Get Ibc denom Error"]
-                    GetIbcDenomError,
-                    #[codec(index = 31)]
-                    #[doc = "invalid_validation"]
-                    InvalidValidation,
-                    #[codec(index = 32)]
-                    #[doc = "store packet result error"]
-                    StorePacketResultError,
-                    #[codec(index = 33)]
+                    #[codec(index = 8)]
                     #[doc = "invalid token id"]
                     InvalidTokenId,
-                    #[codec(index = 34)]
+                    #[codec(index = 9)]
                     #[doc = "wrong assert id"]
                     WrongAssetId,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Substrate IBC event list"]
                 pub enum Event {
                     #[codec(index = 0)]
-                    #[doc = "emit new block event"]
-                    NewBlock(runtime_types::pallet_ibc::event::primitive::Height),
-                    #[codec(index = 1)]
-                    #[doc = "emit create client event"]
-                    CreateClient(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientType,
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                    ),
-                    #[codec(index = 2)]
-                    #[doc = "emit updte client event"]
-                    UpdateClient(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientType,
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                    ),
-                    #[codec(index = 3)]
                     #[doc = "emit update client state event"]
                     UpdateClientState(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::ClientState,
+                        runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        runtime_types::pallet_ibc::module::clients::ics10_grandpa::ClientState,
                     ),
+                    #[codec(index = 1)]
+                    #[doc = "New block"]
+                    NewBlock {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                    },
+                    #[codec(index = 2)]
+                    #[doc = "Client Created"]
+                    CreateClient {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        client_type:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                        consensus_height:
+                            runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                    },
+                    #[codec(index = 3)]
+                    #[doc = "Client updated"]
+                    UpdateClient {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        client_type:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                        consensus_height:
+                            runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                    },
                     #[codec(index = 4)]
-                    #[doc = "emit upgrade client event"]
-                    UpgradeClient(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientType,
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                    ),
+                    #[doc = "Client upgraded"]
+                    UpgradeClient {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        client_type:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                        consensus_height:
+                            runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                    },
                     #[codec(index = 5)]
-                    #[doc = "emit client misbehaviour event"]
-                    ClientMisbehaviour(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        runtime_types::pallet_ibc::event::primitive::ClientType,
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                    ),
+                    #[doc = "Client misbehaviour"]
+                    ClientMisbehaviour {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        client_type:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientType,
+                        consensus_height:
+                            runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                    },
                     #[codec(index = 6)]
-                    #[doc = "emit open init connection event"]
-                    OpenInitConnection(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                    #[doc = "Connection open init"]
+                    OpenInitConnection {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        counterparty_connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                    ),
+                        counterparty_client_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                    },
                     #[codec(index = 7)]
-                    #[doc = "emit open try connection event"]
-                    OpenTryConnection(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                    #[doc = "Connection open try"]
+                    OpenTryConnection {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        counterparty_connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                    ),
+                        counterparty_client_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                    },
                     #[codec(index = 8)]
-                    #[doc = "emit open ack connection event"]
-                    OpenAckConnection(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                    #[doc = "Connection open acknowledgement"]
+                    OpenAckConnection {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        counterparty_connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                    ),
+                        counterparty_client_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                    },
                     #[codec(index = 9)]
-                    #[doc = "emit open confirm connection event"]
-                    OpenConfirmConnection(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                    #[doc = "Connection open confirm"]
+                    OpenConfirmConnection {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ConnectionId,
+                        client_id: runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                        counterparty_connection_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ClientId,
-                    ),
+                        counterparty_client_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ClientId,
+                    },
                     #[codec(index = 10)]
-                    #[doc = "emit open init channel event"]
-                    OpenInitChannel(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    #[doc = "Channel open init"]
+                    OpenInitChannel {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                        connection_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                        counterparty_port_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        counterparty_channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                    ),
+                    },
                     #[codec(index = 11)]
-                    #[doc = "emit open try channel event"]
-                    OpenTryChannel(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    #[doc = "Channel open try"]
+                    OpenTryChannel {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                        connection_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                        counterparty_port_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        counterparty_channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                    ),
+                    },
                     #[codec(index = 12)]
-                    #[doc = "emit open ack channel event"]
-                    OpenAckChannel(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    #[doc = "Channel open acknowledgement"]
+                    OpenAckChannel {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                        connection_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                        counterparty_port_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        counterparty_channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                    ),
+                    },
                     #[codec(index = 13)]
-                    #[doc = "emit open confirm channel event"]
-                    OpenConfirmChannel(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    #[doc = "Channel open confirm"]
+                    OpenConfirmChannel {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                        connection_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                        counterparty_port_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        counterparty_channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                    ),
+                    },
                     #[codec(index = 14)]
-                    #[doc = "emit close init channel event"]
-                    CloseInitChannel(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    #[doc = "Channel close init"]
+                    CloseInitChannel {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                        connection_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                        counterparty_port_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        counterparty_channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                    ),
+                    },
                     #[codec(index = 15)]
-                    #[doc = "emit close confirm channel event"]
-                    CloseConfirmChannel(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                    #[doc = "Channel close confirm"]
+                    CloseConfirmChannel {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        port_id: runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                        runtime_types::pallet_ibc::event::primitive::ConnectionId,
-                        runtime_types::pallet_ibc::event::primitive::PortId,
-                        ::core::option::Option<
-                            runtime_types::pallet_ibc::event::primitive::ChannelId,
+                        connection_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
+                        counterparty_port_id:
+                            runtime_types::pallet_ibc::module::core::ics24_host::PortId,
+                        counterparty_channel_id: ::core::option::Option<
+                            runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                         >,
-                    ),
+                    },
                     #[codec(index = 16)]
-                    #[doc = "emit send packet event"]
-                    SendPacket(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::Packet,
-                    ),
+                    #[doc = "Send packet"]
+                    SendPacket {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                    },
                     #[codec(index = 17)]
-                    #[doc = "emit receive packet"]
-                    ReceivePacket(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::Packet,
-                    ),
+                    #[doc = "Receive packet"]
+                    ReceivePacket {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                    },
                     #[codec(index = 18)]
-                    #[doc = "emit write acknowledgement packet event"]
-                    WriteAcknowledgement(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::Packet,
-                        ::std::vec::Vec<::core::primitive::u8>,
-                    ),
+                    #[doc = "WriteAcknowledgement packet"]
+                    WriteAcknowledgement {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                        ack: ::std::vec::Vec<::core::primitive::u8>,
+                    },
                     #[codec(index = 19)]
-                    #[doc = "emit acknowledgement packet event"]
-                    AcknowledgePacket(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::Packet,
-                    ),
+                    #[doc = "Acknowledgements packet"]
+                    AcknowledgePacket {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                    },
                     #[codec(index = 20)]
-                    #[doc = "emit timeout packet event"]
-                    TimeoutPacket(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::Packet,
-                    ),
+                    #[doc = "Timeout packet"]
+                    TimeoutPacket {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                    },
                     #[codec(index = 21)]
-                    #[doc = "emit timeout on close packet event"]
-                    TimeoutOnClosePacket(
-                        runtime_types::pallet_ibc::event::primitive::Height,
-                        runtime_types::pallet_ibc::event::primitive::Packet,
-                    ),
+                    #[doc = "TimoutOnClose packet"]
+                    TimeoutOnClosePacket {
+                        height: runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                        packet: runtime_types::pallet_ibc::module::core::ics24_host::Packet,
+                    },
                     #[codec(index = 22)]
-                    #[doc = "emit empty event"]
+                    #[doc = "Empty"]
                     Empty(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 23)]
-                    #[doc = "emit chain error event"]
+                    #[doc = "Chain Error"]
                     ChainError(::std::vec::Vec<::core::primitive::u8>),
                     #[codec(index = 24)]
-                    #[doc = "emit escrow token"]
-                    EscrowToken(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::core::primitive::u128,
-                    ),
+                    #[doc = "App Module"]
+                    AppModule(runtime_types::pallet_ibc::events::ModuleEvent),
                     #[codec(index = 25)]
-                    #[doc = "emit burn token"]
-                    BurnToken(
-                        ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
+                    #[doc = "transfer native token"]
+                    TransferNativeToken(
+                        runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                        runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
                         ::core::primitive::u128,
                     ),
                     #[codec(index = 26)]
-                    #[doc = "unescrow token"]
-                    UnEscrowToken(
-                        ::subxt::sp_core::crypto::AccountId32,
-                        ::subxt::sp_core::crypto::AccountId32,
+                    #[doc = "transfer no native token"]
+                    TransferNoNativeToken(
+                        runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                        runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
                         ::core::primitive::u128,
                     ),
                     #[codec(index = 27)]
-                    #[doc = "mint token"]
+                    #[doc = "Burn cross chain token"]
+                    BurnToken(
+                        ::core::primitive::u32,
+                        runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
+                        ::core::primitive::u128,
+                    ),
+                    #[codec(index = 28)]
+                    #[doc = "Mint chairperson  token"]
                     MintToken(
                         ::core::primitive::u32,
-                        ::subxt::sp_core::crypto::AccountId32,
+                        runtime_types::pallet_ibc::module::applications::transfer::IbcAccount,
                         ::core::primitive::u128,
                     ),
                 }
@@ -16620,6 +19038,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "# <weight>"]
@@ -16638,6 +19057,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Non existent public key."]
@@ -16647,6 +19067,7 @@ pub mod api {
                     DuplicatedHeartbeat,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "A new heartbeat was received from `AuthorityId`."]
@@ -16708,6 +19129,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Submit observations."]
@@ -16775,6 +19197,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "The set id of new validator set was wrong."]
@@ -16823,6 +19246,7 @@ pub mod api {
                     ConvertorNotImplement,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "A new set of validators is waiting to be changed."]
@@ -16996,6 +19420,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Set `HistoryDepth` value. This function will delete any history information"]
@@ -17030,6 +19455,7 @@ pub mod api {
                     force_set_era_payout { era_payout: ::core::primitive::u128 },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Not a controller account."]
@@ -17110,6 +19536,7 @@ pub mod api {
                     AmountOverflow,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "Notifies the mainchain to prepare the next era."]
@@ -17168,8 +19595,10 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {}
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Nonce overflow."]
@@ -17179,6 +19608,7 @@ pub mod api {
                     QueueSizeLimitReached,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {}
             }
             #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
@@ -17193,6 +19623,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Sets the session key(s) of the function caller to `keys`."]
@@ -17233,6 +19664,7 @@ pub mod api {
                     purge_keys,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Error for the session pallet."]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Invalid ownership proof."]
@@ -17251,6 +19683,7 @@ pub mod api {
                     NoAccount,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "New session has happened. Note that the argument is the session index, not the"]
@@ -17266,6 +19699,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Authenticates the sudo key and dispatches a function call with `Root` origin."]
@@ -17334,12 +19768,14 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Error for the Sudo pallet"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Sender must be the Sudo account"]
                     RequireSudo,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "A sudo just took place. \\[result\\]"]
@@ -17366,6 +19802,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "An example dispatchable that takes a singles value as a parameter, writes the value to"]
@@ -17376,6 +19813,7 @@ pub mod api {
                     cause_error,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "Error names should be descriptive."]
@@ -17385,6 +19823,7 @@ pub mod api {
                     StorageOverflow,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "Event documentation should end with an array that provides descriptive names for event"]
@@ -17401,6 +19840,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Set the current time."]
@@ -17443,6 +19883,7 @@ pub mod api {
             pub mod pallet {
                 use super::runtime_types;
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "Contains one variant per dispatchable that can be called by an extrinsic."]
                 pub enum Call {
                     #[codec(index = 0)]
                     #[doc = "Issue a new class of non-fungible assets from a public origin."]
@@ -17958,6 +20399,7 @@ pub mod api {
                     },
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tCustom [dispatch errors](https://docs.substrate.io/v3/runtime/events-and-errors)\n\t\t\tof this pallet.\n\t\t\t"]
                 pub enum Error {
                     #[codec(index = 0)]
                     #[doc = "The signing account has no permission to do the operation."]
@@ -17991,6 +20433,7 @@ pub mod api {
                     Unapproved,
                 }
                 #[derive(:: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug)]
+                #[doc = "\n\t\t\tThe [event](https://docs.substrate.io/v3/runtime/events-and-errors) emitted\n\t\t\tby this pallet.\n\t\t\t"]
                 pub enum Event {
                     #[codec(index = 0)]
                     #[doc = "An asset class was created."]
@@ -19055,6 +21498,14 @@ pub mod api {
         pub client: ::subxt::Client<T>,
         marker: ::core::marker::PhantomData<X>,
     }
+    impl<T: ::subxt::Config, X> Clone for RuntimeApi<T, X> {
+        fn clone(&self) -> Self {
+            Self {
+                client: self.client.clone(),
+                marker: ::core::marker::PhantomData,
+            }
+        }
+    }
     impl<T, X> ::core::convert::From<::subxt::Client<T>> for RuntimeApi<T, X>
     where
         T: ::subxt::Config,
@@ -19073,11 +21524,16 @@ pub mod api {
         X: ::subxt::extrinsic::ExtrinsicParams<T>,
     {
         pub fn validate_metadata(&'a self) -> Result<(), ::subxt::MetadataError> {
-            if self.client.metadata().metadata_hash(&PALLETS)
+            let runtime_metadata_hash = {
+                let locked_metadata = self.client.metadata();
+                let metadata = locked_metadata.read();
+                metadata.metadata_hash(&PALLETS)
+            };
+            if runtime_metadata_hash
                 != [
-                    179u8, 43u8, 7u8, 218u8, 143u8, 185u8, 11u8, 161u8, 36u8, 225u8, 34u8, 134u8,
-                    219u8, 3u8, 204u8, 79u8, 231u8, 87u8, 110u8, 26u8, 24u8, 89u8, 108u8, 74u8,
-                    112u8, 165u8, 173u8, 111u8, 62u8, 64u8, 63u8, 228u8,
+                    163u8, 208u8, 98u8, 30u8, 38u8, 83u8, 169u8, 22u8, 203u8, 155u8, 3u8, 60u8,
+                    161u8, 173u8, 115u8, 147u8, 187u8, 246u8, 78u8, 179u8, 82u8, 127u8, 41u8,
+                    212u8, 146u8, 14u8, 216u8, 209u8, 29u8, 0u8, 197u8, 59u8,
                 ]
             {
                 Err(::subxt::MetadataError::IncompatibleMetadata)
@@ -19114,7 +21570,7 @@ pub mod api {
         pub async fn at(
             &self,
             block_hash: T::Hash,
-        ) -> Result<::subxt::events::Events<'a, T, Event>, ::subxt::BasicError> {
+        ) -> Result<::subxt::events::Events<T, Event>, ::subxt::BasicError> {
             ::subxt::events::at::<T, Event>(self.client, block_hash).await
         }
         pub async fn subscribe(

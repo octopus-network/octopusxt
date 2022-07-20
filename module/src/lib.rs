@@ -25,18 +25,20 @@ pub type SubstrateNodeTemplateExtrinsicParams<T> =
 pub type SubstrateNodeTemplateExtrinsicParamsBuilder<T> =
     subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
 
-// use subxt::SubstrateExtrinsicParams;
-#[derive(Debug, Encode, Decode)]
-pub enum ClientType {
-    Tendermint,
-    Grandpa,
+impl From<ibc::core::ics02_client::client_type::ClientType> for ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType {
+    fn from(client_type: ibc::core::ics02_client::client_type::ClientType) -> Self {
+        match client_type {
+            ibc::core::ics02_client::client_type::ClientType::Tendermint => Self::Tendermint,
+            ibc::core::ics02_client::client_type::ClientType::Grandpa => Self::Grandpa,
+        }
+    }
 }
 
-impl From<ClientType> for ibc::core::ics02_client::client_type::ClientType {
-    fn from(client_type: ClientType) -> Self {
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType> for ibc::core::ics02_client::client_type::ClientType {
+    fn from(client_type: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType) -> Self {
         match client_type {
-            ClientType::Tendermint => Self::Tendermint,
-            ClientType::Grandpa => Self::Grandpa,
+            ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType::Tendermint => Self::Tendermint,
+            ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientType::Grandpa => Self::Grandpa,
         }
     }
 }
@@ -75,16 +77,16 @@ impl Config for MyConfig {
     type Extrinsic = <DefaultConfig as Config>::Extrinsic;
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Height> for ibc::Height {
-    fn from(height: ibc_node::runtime_types::pallet_ibc::event::primitive::Height) -> Self {
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Height> for ibc::Height {
+    fn from(height: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Height) -> Self {
         ibc::Height::new(REVISION_NUMBER, height.revision_height).expect("REVISION_NUMBER is 8888")
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Packet>
     for ibc::core::ics04_channel::packet::Packet
 {
-    fn from(packet: ibc_node::runtime_types::pallet_ibc::event::primitive::Packet) -> Self {
+    fn from(packet: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Packet) -> Self {
         Self {
             sequence: packet.sequence.into(),
             source_port: packet.source_port.into(),
@@ -100,56 +102,56 @@ impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Packet>
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId>
     for ibc::core::ics24_host::identifier::ConnectionId
 {
     fn from(
-        connection_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ConnectionId,
+        connection_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ConnectionId,
     ) -> Self {
         let value = String::from_utf8(connection_id.0).unwrap();
         Self(value)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ChannelId>
     for ibc::core::ics24_host::identifier::ChannelId
 {
-    fn from(channel_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ChannelId) -> Self {
+    fn from(channel_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ChannelId) -> Self {
         let value = String::from_utf8(channel_id.0).unwrap();
         Self::from_str(&value).unwrap()
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::PortId>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::PortId>
     for ibc::core::ics24_host::identifier::PortId
 {
-    fn from(port_id: ibc_node::runtime_types::pallet_ibc::event::primitive::PortId) -> Self {
+    fn from(port_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::PortId) -> Self {
         let value = String::from_utf8(port_id.0).unwrap();
         Self(value)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientId>
     for ibc::core::ics24_host::identifier::ClientId
 {
-    fn from(client_id: ibc_node::runtime_types::pallet_ibc::event::primitive::ClientId) -> Self {
+    fn from(client_id: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::ClientId) -> Self {
         let value = String::from_utf8(client_id.0).unwrap();
         Self(value)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Sequence>
     for ibc::core::ics04_channel::packet::Sequence
 {
-    fn from(sequence: ibc_node::runtime_types::pallet_ibc::event::primitive::Sequence) -> Self {
+    fn from(sequence: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Sequence) -> Self {
         Self::from(sequence.0)
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp>
+impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Timestamp>
     for ibc::timestamp::Timestamp
 {
-    fn from(time_stamp: ibc_node::runtime_types::pallet_ibc::event::primitive::Timestamp) -> Self {
+    fn from(time_stamp: ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Timestamp) -> Self {
         let value = String::from_utf8(time_stamp.time).unwrap();
         Self::from_str(&value).unwrap()
     }
@@ -164,9 +166,9 @@ impl From<Any> for ibc_node::runtime_types::pallet_ibc::Any {
     }
 }
 
-impl Copy for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {}
+impl Copy for ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Height {}
 
-impl Clone for ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
+impl Clone for ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Height {
     fn clone(&self) -> Self {
         Self {
             revision_number: self.revision_number,
