@@ -497,6 +497,25 @@ pub async fn subscribe_ibc_event(client: Client<MyConfig>) -> Result<Vec<IbcEven
 
                     result_events.push(IbcEvent::ChainError(data));
                     break 'outer;
+                },
+                "AppModule" => {
+                    let event =
+                        <ibc_node::ibc::events::AppModule as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                            .unwrap();
+                    println!("In call_ibc: [substrate_events] >> AppModule Event");
+
+                    let app_module =
+                        ibc::events::ModuleEvent {
+                            kind: String::from_utf8(event.0.kind).expect("convert kind error"),
+                            module_name: event.0.module_name.into(),
+                            attributes: event.0.attributes.into_iter().map(|attribute| attribute.into()).collect(),
+                        };
+
+                    result_events.push(IbcEvent::AppModule(app_module));
+
+                    break 'outer;
                 }
                 _ => {
                     println!("In call_ibc: [subscribe_events] >> other event");
@@ -937,6 +956,24 @@ pub fn from_substrate_event_to_ibc_event(raw_events: Vec<RawEventDetails>) -> Ve
 
                     IbcEvent::TimeoutOnClosePacket(timeout_on_close_packet)
                 }
+                "AppModule" => {
+                    let event =
+                        <ibc_node::ibc::events::AppModule as codec::Decode>::decode(
+                            &mut &raw_event.data[..],
+                        )
+                            .unwrap();
+                    println!("In call_ibc: [substrate_events] >> AppModule Event");
+
+                    let app_module =
+                        ibc::events::ModuleEvent {
+                            kind: String::from_utf8(event.0.kind).expect("convert kind error"),
+                            module_name: event.0.module_name.into(),
+                            attributes: event.0.attributes.into_iter().map(|attribute| attribute.into()).collect(),
+                        };
+
+                    IbcEvent::AppModule(app_module)
+
+                },
                 "ChainError" => {
                     let event = <ibc_node::ibc::events::ChainError as codec::Decode>::decode(
                         &mut &raw_event.data[..],
