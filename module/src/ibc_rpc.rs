@@ -102,9 +102,11 @@ pub async fn get_send_packet_event(
         ));
     }
 
-    // let packet = Packet::decode_vec(&*data).unwrap();
-    // Ok(packet)
-    todo!()
+
+    // serde to packet, just is decode to packet
+    let packet: Packet = serde_json::from_str(&String::from_utf8(data)?)?;
+
+    Ok(packet)
 }
 
 /// (port_id, channel_id, sequence), ackHash)
@@ -167,12 +169,41 @@ pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
     let result = api
         .tx()
         .ibc()
-        .deliver(msg, 0)?
+        .deliver(msg)?
         .sign_and_submit_default(&signer)
         .await?;
 
     Ok(result)
 }
+
+
+// process ibc transfer
+pub async fn raw_transfer(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
+    tracing::info!("in call_ibc: [deliver]");
+
+    let msg: Vec<ibc_node::runtime_types::pallet_ibc::Any> = msg
+        .into_iter()
+        .map(|value| ibc_node::runtime_types::pallet_ibc::Any {
+            type_url: value.type_url.as_bytes().to_vec(),
+            value: value.value,
+        })
+        .collect();
+
+    let signer = PairSigner::new(AccountKeyring::Bob.pair());
+
+    let api = client
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+
+    let result = api
+        .tx()
+        .ibc()
+        .raw_transfer(msg)?
+        .sign_and_submit_default(&signer)
+        .await?;
+
+    Ok(result)
+}
+
 
 pub async fn delete_send_packet_event(client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [delete_send_packet_event]");
