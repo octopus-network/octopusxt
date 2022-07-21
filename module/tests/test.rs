@@ -53,9 +53,9 @@ async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
         .build::<MyConfig>()
         .await?;
 
-    let result = get_client_consensus(
+    let result = query_client_consensus(
         &ClientId::new(ClientType::Grandpa, 0).unwrap(),
-        &Height::new(0, 320),
+        &Height::new(8888, 320).unwrap(),
         client,
     )
     .await?;
@@ -870,7 +870,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let mut client_state = ClientState {
         chain_id: chain_id.clone(),
         block_number: u32::default(),
-        frozen_height: Some(Height::default()),
+        frozen_height: Some(Height::new(888, 0).unwrap()),
         block_header: BlockHeader::default(),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.clone().into(),
@@ -961,7 +961,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
     let mut client_state = ClientState {
         chain_id: chain_id.clone(),
         block_number: u32::default(),
-        frozen_height: Some(Height::default()),
+        frozen_height: Some(Height::new(8888, 0).unwrap()),
         block_header: BlockHeader::default(),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.into(),
@@ -1217,7 +1217,7 @@ async fn test_get_client_state() -> Result<(), Box<dyn std::error::Error>> {
         .set_url("ws://localhost:8844")
         .build::<MyConfig>()
         .await?;
-    let client_state = get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
+    let client_state = query_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
         .await
         .unwrap();
 

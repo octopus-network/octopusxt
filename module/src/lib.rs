@@ -193,20 +193,25 @@ impl Clone for ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::He
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::events::ModuleId> for ibc::core::ics26_routing::context::ModuleId {
-    fn from(module_id : ibc_node::runtime_types::pallet_ibc::events::ModuleId) -> Self {
+impl From<ibc_node::runtime_types::pallet_ibc::events::ModuleId>
+    for ibc::core::ics26_routing::context::ModuleId
+{
+    fn from(module_id: ibc_node::runtime_types::pallet_ibc::events::ModuleId) -> Self {
         let inner_module_id = String::from_utf8(module_id.0).expect("convert module id error");
         Self::from_str(&inner_module_id).expect("convert to ibc MoudleId error")
     }
 }
 
-impl From<ibc_node::runtime_types::pallet_ibc::events::ModuleEventAttribute> for ibc::events::ModuleEventAttribute {
-    fn from(module_event_attribute: ibc_node::runtime_types::pallet_ibc::events::ModuleEventAttribute) -> Self {
-        let key = String::from_utf8(module_event_attribute.key).expect("convert ModuleEventAttribute key error");
-        let value = String::from_utf8(module_event_attribute.value).expect("convert ModuleEventAttribute value error");
-        Self {
-            key,
-            value,
-        }
+impl From<ibc_node::runtime_types::pallet_ibc::events::ModuleEventAttribute>
+    for ibc::events::ModuleEventAttribute
+{
+    fn from(
+        module_event_attribute: ibc_node::runtime_types::pallet_ibc::events::ModuleEventAttribute,
+    ) -> Self {
+        let key = String::from_utf8(module_event_attribute.key)
+            .expect("convert ModuleEventAttribute key error");
+        let value = String::from_utf8(module_event_attribute.value)
+            .expect("convert ModuleEventAttribute value error");
+        Self { key, value }
     }
 }
