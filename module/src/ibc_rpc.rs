@@ -3,6 +3,7 @@ use anyhow::Result;
 use beefy_merkle_tree::Hash;
 use codec::Decode;
 use core::str::FromStr;
+use ibc::core::ics04_channel::events::WriteAcknowledgement;
 use ibc::core::ics24_host::identifier::ClientId;
 use ibc::core::ics24_host::Path;
 use ibc::core::{
@@ -93,7 +94,10 @@ pub async fn get_send_packet_event(
         )
         .await?;
 
+    println!("get_send_packet_event packet vec<u8> = {:?}", data);
+
     if data.is_empty() {
+        println!("get_send_packet_event packet vec<u8> is empty!");
         return Err(anyhow::anyhow!(
             "get_send_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id,
@@ -102,9 +106,9 @@ pub async fn get_send_packet_event(
         ));
     }
 
-
     // serde to packet, just is decode to packet
     let packet: Packet = serde_json::from_str(&String::from_utf8(data)?)?;
+    println!("get_send_packet_event packet is = {:?}", packet);
 
     Ok(packet)
 }
@@ -115,7 +119,7 @@ pub async fn get_write_ack_packet_event(
     channel_id: &ChannelId,
     sequence: &Sequence,
     client: Client<MyConfig>,
-) -> Result<Vec<u8>> {
+) -> Result<WriteAcknowledgement> {
     tracing::info!("in call_ibc: [get_write_ack_packet_event]");
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
@@ -144,7 +148,10 @@ pub async fn get_write_ack_packet_event(
         ));
     }
 
-    Ok(data)
+    // serde to packet, just is decode to packet
+    let write_ack: WriteAcknowledgement = serde_json::from_str(&String::from_utf8(data)?)?;
+
+    Ok(write_ack)
 }
 
 /// ibc protocol core function, ics26 deliver function
@@ -176,7 +183,6 @@ pub async fn deliver(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
     Ok(result)
 }
 
-
 // process ibc transfer
 pub async fn raw_transfer(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [deliver]");
@@ -203,7 +209,6 @@ pub async fn raw_transfer(msg: Vec<Any>, client: Client<MyConfig>) -> Result<H25
 
     Ok(result)
 }
-
 
 pub async fn delete_send_packet_event(client: Client<MyConfig>) -> Result<H256> {
     tracing::info!("in call_ibc: [delete_send_packet_event]");
