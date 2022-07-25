@@ -107,7 +107,7 @@ pub async fn get_send_packet_event(
     }
 
     // serde to packet, just is decode to packet
-    let packet: Packet = serde_json::from_str(&String::from_utf8(data)?)?;
+    let packet = Packet::decode_vec(&mut &*data).unwrap();
     println!("get_send_packet_event packet is = {:?}", packet);
 
     Ok(packet)
@@ -149,7 +149,8 @@ pub async fn get_write_ack_packet_event(
     }
 
     // serde to packet, just is decode to packet
-    let write_ack: WriteAcknowledgement = serde_json::from_str(&String::from_utf8(data)?)?;
+
+    let write_ack = WriteAcknowledgement::decode_vec(&mut &*data).unwrap();
 
     Ok(write_ack)
 }
