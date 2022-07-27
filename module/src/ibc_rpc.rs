@@ -120,7 +120,9 @@ pub async fn get_write_ack_packet_event(
     sequence: &Sequence,
     client: Client<MyConfig>,
 ) -> Result<WriteAcknowledgement> {
-    tracing::info!("in call_ibc: [get_write_ack_packet_event]");
+    tracing::info!("in call_ibc: [get_write_ack_packet_event] --> port_id = {}, channel_id = {}, sequence = {}",
+        port_id, channel_id, sequence);
+
     let api = client
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
@@ -142,6 +144,7 @@ pub async fn get_write_ack_packet_event(
         .await?;
 
     if data.is_empty() {
+        eprintln!("get write acknowledgement is empty!");
         return Err(anyhow::anyhow!(
             "get_write_ack_packet_event is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
             port_id, channel_id, sequence
