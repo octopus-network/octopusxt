@@ -1986,6 +1986,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.16.0"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18#36808084c389b0a0bba008723018c5990500f098"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -1996,7 +1997,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "hash-db",
- "ibc-proto 0.19.0",
+ "ibc-proto",
  "ics23",
  "num-traits",
  "parity-scale-codec",
@@ -2017,47 +2018,7 @@ dependencies = [
  "tendermint",
  "tendermint-light-client-verifier",
  "tendermint-proto",
- "time 0.3.12",
- "tracing",
- "uint",
-]
-
-[[package]]
-name = "ibc"
-version = "0.16.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18#ca8ba248aad1bff70f95c56515db5c04651d0d98"
-dependencies = [
- "beefy-light-client",
- "beefy-merkle-tree",
- "blake2-rfc",
- "bytes 1.2.1",
- "derive_more",
- "flex-error",
- "frame-support",
- "frame-system",
- "hash-db",
- "ibc-proto 0.19.0 (git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18)",
- "ics23",
- "num-traits",
- "parity-scale-codec",
- "primitive-types",
- "prost 0.10.4",
- "prost-types 0.10.1",
- "safe-regex",
- "serde",
- "serde_derive",
- "serde_json",
- "sha2 0.10.2",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std 4.0.0",
- "sp-trie",
- "subtle-encoding",
- "tendermint",
- "tendermint-light-client-verifier",
- "tendermint-proto",
- "time 0.3.12",
+ "time 0.3.11",
  "tracing",
  "uint",
 ]
@@ -2065,20 +2026,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.19.0"
-dependencies = [
- "base64",
- "bytes 1.2.1",
- "prost 0.10.4",
- "prost-types 0.10.1",
- "serde",
- "tendermint-proto",
- "tonic",
-]
-
-[[package]]
-name = "ibc-proto"
-version = "0.19.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18#ca8ba248aad1bff70f95c56515db5c04651d0d98"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18#36808084c389b0a0bba008723018c5990500f098"
 dependencies = [
  "base64",
  "bytes 1.2.1",
@@ -3580,8 +3528,8 @@ dependencies = [
  "futures 0.3.21",
  "hex",
  "hex-literal",
- "ibc 0.16.0 (git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18)",
- "ibc-proto 0.19.0 (git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20-davirian-base-0.9.18)",
+ "ibc",
+ "ibc-proto",
  "jsonrpsee",
  "libsecp256k1",
  "pallet-mmr-rpc",
@@ -3607,8 +3555,8 @@ dependencies = [
  "env_logger",
  "futures 0.3.21",
  "hex",
- "ibc 0.16.0",
- "ibc-proto 0.19.0",
+ "ibc",
+ "ibc-proto",
  "octopusxt",
  "parity-scale-codec",
  "sc-cli",
@@ -6447,7 +6395,7 @@ dependencies = [
  "subtle",
  "subtle-encoding",
  "tendermint-proto",
- "time 0.3.12",
+ "time 0.3.11",
  "zeroize",
 ]
 
@@ -6461,7 +6409,7 @@ dependencies = [
  "flex-error",
  "serde",
  "tendermint",
- "time 0.3.12",
+ "time 0.3.11",
 ]
 
 [[package]]
@@ -6479,7 +6427,7 @@ dependencies = [
  "serde",
  "serde_bytes",
  "subtle-encoding",
- "time 0.3.12",
+ "time 0.3.11",
 ]
 
 [[package]]
@@ -6557,11 +6505,10 @@ dependencies = [
 
 [[package]]
 name = "time"
-version = "0.3.12"
+version = "0.3.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "74b7cc93fc23ba97fde84f7eea56c55d1ba183f495c6715defdfc7b9cb8c870f"
+checksum = "72c91f41dcb2f096c05f0873d667dceec1087ce5bcf984ec8ffb19acddbb3217"
 dependencies = [
- "js-sys",
  "libc",
  "num_threads",
  "time-macros",
