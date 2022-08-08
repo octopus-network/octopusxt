@@ -1920,7 +1920,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "hash-db",
- "ibc-proto",
+ "ibc-proto 0.17.1",
  "ics23",
  "log",
  "num-traits",
@@ -1936,6 +1936,47 @@ dependencies = [
  "sp-io",
  "sp-runtime",
  "sp-std 4.0.0-dev",
+ "sp-timestamp",
+ "sp-trie",
+ "subtle-encoding",
+ "tendermint",
+ "tendermint-light-client-verifier",
+ "tendermint-proto",
+ "time 0.3.9",
+ "tracing",
+]
+
+[[package]]
+name = "ibc"
+version = "0.14.1"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/integrate_mmr_srv#b71847a6b4e6b6c5c68894a670607e3450e22462"
+dependencies = [
+ "beefy-light-client",
+ "beefy-merkle-tree",
+ "blake2-rfc",
+ "bytes 1.1.0",
+ "derive_more",
+ "flex-error",
+ "frame-support",
+ "frame-system",
+ "hash-db",
+ "ibc-proto 0.17.1 (git+https://github.com/octopus-network/ibc-rs.git?branch=feature/integrate_mmr_srv)",
+ "ics23",
+ "log",
+ "num-traits",
+ "parity-scale-codec",
+ "prost",
+ "prost-types",
+ "safe-regex",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sha2 0.10.2",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std 4.0.0-dev",
+ "sp-timestamp",
  "sp-trie",
  "subtle-encoding",
  "tendermint",
@@ -1948,6 +1989,20 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.17.1"
+dependencies = [
+ "base64",
+ "bytes 1.1.0",
+ "prost",
+ "prost-types",
+ "serde",
+ "tendermint-proto",
+ "tonic",
+]
+
+[[package]]
+name = "ibc-proto"
+version = "0.17.1"
+source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/integrate_mmr_srv#b71847a6b4e6b6c5c68894a670607e3450e22462"
 dependencies = [
  "base64",
  "bytes 1.1.0",
@@ -3520,8 +3575,8 @@ dependencies = [
  "env_logger",
  "hex",
  "hex-literal",
- "ibc",
- "ibc-proto",
+ "ibc 0.14.1 (git+https://github.com/octopus-network/ibc-rs.git?branch=feature/integrate_mmr_srv)",
+ "ibc-proto 0.17.1 (git+https://github.com/octopus-network/ibc-rs.git?branch=feature/integrate_mmr_srv)",
  "jsonrpsee",
  "libsecp256k1",
  "pallet-mmr-rpc",
@@ -3534,6 +3589,7 @@ dependencies = [
  "structopt",
  "subtle-encoding",
  "subxt",
+ "tendermint",
  "tendermint-proto",
  "tokio",
  "tracing",
@@ -3545,8 +3601,8 @@ version = "0.1.0"
 dependencies = [
  "env_logger",
  "hex",
- "ibc",
- "ibc-proto",
+ "ibc 0.14.1",
+ "ibc-proto 0.17.1",
  "octopusxt",
  "parity-scale-codec",
  "sc-cli",
@@ -5966,6 +6022,22 @@ dependencies = [
  "sp-io",
  "sp-runtime-interface",
  "sp-std 4.0.0-dev",
+]
+
+[[package]]
+name = "sp-timestamp"
+version = "4.0.0-dev"
+source = "git+https://github.com/paritytech/substrate.git?branch=polkadot-v0.9.13#afb74de23dfe2994e7ce38c0870efb9734e966f7"
+dependencies = [
+ "async-trait",
+ "futures-timer 3.0.2",
+ "log",
+ "parity-scale-codec",
+ "sp-api",
+ "sp-inherents",
+ "sp-runtime",
+ "sp-std 4.0.0-dev",
+ "thiserror",
 ]
 
 [[package]]

@@ -10,16 +10,17 @@ pub use ibc_rpc::{
     get_client_consensus, get_client_state, get_clients, get_commitment_packet_state,
     get_connection_channels, get_connection_end, get_connections, get_consensus_state_with_height,
     get_header_by_block_number, get_latest_height, get_mmr_leaf_and_mmr_proof, get_packet_ack,
-    get_packet_commitment, get_packet_receipt, get_send_packet_event, get_unreceipt_packet,
-    subscribe_beefy, subscribe_ibc_event,
+    get_packet_commitment, get_packet_receipt, get_send_packet_event, get_timestamp,
+    get_unreceipt_packet, subscribe_beefy, subscribe_ibc_event,
 };
 
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use prost_types::Any;
 pub use update_client_state::{
-    build_mmr_proof, build_validator_proof, build_mmr_root,get_client_ids, send_update_state_request,
-    update_client_state, update_client_state_service, verify_commitment_signatures,
+    build_mmr_proof, build_mmr_root, build_validator_proof, get_client_ids,
+    send_update_state_request, update_client_state, update_client_state_service,
+    verify_commitment_signatures,
 };
 
 #[derive(Encode, Decode)]

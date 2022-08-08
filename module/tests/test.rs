@@ -18,15 +18,18 @@ use hex_literal::hex;
 
 use ibc::clients::ics10_grandpa::client_state::ClientState;
 use ibc::clients::ics10_grandpa::help;
-use ibc::clients::ics10_grandpa::help::{BlockHeader, Commitment};
+use ibc::clients::ics10_grandpa::help::Commitment;
 use ibc::core::ics02_client::client_state::AnyClientState;
 
+// use chrono::Duration;
 use chrono::Local;
 use ibc::core::ics04_channel::packet::Sequence;
 use octopusxt::update_client_state::MmrProof;
+use std::time::Duration;
 use subxt::sp_core::hexdisplay::HexDisplay;
+use tendermint::time::Time;
 use tendermint_proto::Protobuf;
-use tokio::{self, task, time};
+use tokio::{self, task, time as tktime};
 
 // test API get_block_header
 // use `cargo test -- --captuer` can print content
@@ -40,6 +43,31 @@ async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
     let header = get_header_by_block_number(block_number, client).await?;
 
     println!("convert header = {:?}", header);
+
+    Ok(())
+}
+
+// test API get_timestamp
+// use `cargo test -- --captuer` can print content
+#[tokio::test]
+async fn test_get_timestamp() -> Result<(), Box<dyn std::error::Error>> {
+    let client = ClientBuilder::new()
+        .set_url("ws://localhost:9944")
+        .build::<ibc_node::DefaultConfig>()
+        .await?;
+    let block_number = Some(BlockNumber::from(100));
+    let timestamp = get_timestamp(block_number, client).await?;
+    println!(" timestamp = {:?}", timestamp);
+    // use sp_std::time::Duration;
+    let duration = Duration::from_millis(timestamp);
+    println!(" duration = {:?}", duration);
+
+    let tm_timestamp =
+        Time::from_unix_timestamp(duration.as_secs() as i64, duration.subsec_nanos());
+    println!("tm_timestamp = {:?}", tm_timestamp);
+
+    let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
+    println!("timestamp_str = {:?}", timestamp_str);
 
     Ok(())
 }
@@ -838,7 +866,6 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
     // build mmr root
     let mmr_root = help::MmrRoot {
-        block_header,
         signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
         validator_merkle_proofs: validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
@@ -873,7 +900,6 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
         chain_id: chain_id.clone(),
         block_number: u32::default(),
         frozen_height: Some(Height::default()),
-        block_header: BlockHeader::default(),
         // latest_commitment: lc.latest_commitment.unwrap().into(),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.clone().into(),
@@ -891,8 +917,6 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
     let signed_commitment =
         commitment::SignedCommitment::try_from(receive_mmr_root.signed_commitment).unwrap();
-
-    let block_header = receive_mmr_root.block_header;
 
     let validator_proofs = receive_mmr_root.validator_merkle_proofs;
     let mmr_leaf = receive_mmr_root.mmr_leaf;
@@ -926,7 +950,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
             // update validator_set
             client_state.validator_set = help::ValidatorSet::from(lc.validator_set.clone());
-            client_state.block_header = block_header;
+            // client_state.block_header = block_header;
 
             // mock: save to chain
             //ClientKeeper::store_client_state(client_state)
@@ -964,7 +988,6 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
         chain_id: chain_id.clone(),
         block_number: u32::default(),
         frozen_height: Some(Height::default()),
-        block_header: BlockHeader::default(),
         // latest_commitment: lc.latest_commitment.unwrap().into(),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.into(),
@@ -1030,7 +1053,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
         // build mmr root
         let mmr_root = help::MmrRoot {
-            block_header,
+            // block_header,
             signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
             validator_merkle_proofs: validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
@@ -1123,8 +1146,8 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
                 client_state.validator_set =
                     help::ValidatorSet::from(rebuild_light_client.validator_set.clone());
 
-                // update block header
-                client_state.block_header = receive_mmr_root.block_header;
+                // // update block header
+                // client_state.block_header = receive_mmr_root.block_header;
 
                 // mock: save to chain
                 //ClientKeeper::store_client_state(client_state)
@@ -1291,7 +1314,7 @@ async fn test_tokio_task() -> Result<(), Box<dyn std::error::Error>> {
     async fn task1() {
         loop {
             println!("doing task1: {}", now());
-            time::sleep(time::Duration::from_secs(2)).await;
+            tktime::sleep(tktime::Duration::from_secs(2)).await;
             println!("task1 done: {}", now());
         }
     }
@@ -1299,7 +1322,7 @@ async fn test_tokio_task() -> Result<(), Box<dyn std::error::Error>> {
     async fn task2() {
         loop {
             println!("doing task2: {}", now());
-            time::sleep(time::Duration::from_secs(1)).await;
+            tktime::sleep(tktime::Duration::from_secs(1)).await;
             println!("task2 done: {}", now());
         }
     }

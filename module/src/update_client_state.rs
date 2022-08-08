@@ -16,7 +16,7 @@ use subxt::sp_core::Public;
 use beefy_merkle_tree::{merkle_proof, verify_proof, Keccak256};
 
 use beefy_merkle_tree::Hash;
-use subxt::{SignedCommitment, BeefySubscription, BlockNumber, Client, PairSigner};
+use subxt::{BeefySubscription, BlockNumber, Client, PairSigner, SignedCommitment};
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -129,10 +129,10 @@ pub async fn build_mmr_proof(
         .block_hash(Some(BlockNumber::from(block_number)))
         .await?
         .unwrap();
-    // println!(
-    //     "block number : {} -> block hash : {:?}",
-    //     block_number, block_hash
-    // );
+    println!(
+        "block number : {} -> block hash : {:?}",
+        block_number, block_hash
+    );
 
     //get mmr leaf and proof
     // Note: target_height = signed_commitment.commitment.block_number-1
@@ -140,7 +140,7 @@ pub async fn build_mmr_proof(
     let (block_hash, mmr_leaf, mmr_leaf_proof) =
         get_mmr_leaf_and_mmr_proof(Some(target_height), Some(block_hash), src_client.clone())
             .await?;
-    // println!("generate_proof block hash : {:?}", block_hash);
+    println!("generate_proof block hash : {:?}", block_hash);
 
     let mmr_proof = MmrProof {
         mmr_leaf,
@@ -175,10 +175,10 @@ pub async fn build_mmr_root(
     // println!("signed commitment payload : {:?}", payload);
 
     // get block header by block number
-    let block_header =
-        get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
-            .await
-            .unwrap();
+    // let block_header =
+    //     get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
+    //         .await
+    //         .unwrap();
     // println!("header = {:?}", block_header);
 
     // build validator proof
@@ -193,7 +193,6 @@ pub async fn build_mmr_root(
 
     // build mmr root
     let mmr_root = help::MmrRoot {
-        block_header,
         signed_commitment: help::SignedCommitment::from(signed_commmitment),
         validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
@@ -268,11 +267,11 @@ pub async fn update_client_state(
     println!("signed commitment payload : {:?}", payload);
 
     // get block header by block number
-    let block_header =
-        get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
-            .await
-            .unwrap();
-    println!("header = {:?}", block_header);
+    // let block_header =
+    //     get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
+    //         .await
+    //         .unwrap();
+    // println!("header = {:?}", block_header);
 
     // build validator proof
     let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
@@ -286,7 +285,6 @@ pub async fn update_client_state(
 
     // build mmr root
     let mmr_root = help::MmrRoot {
-        block_header,
         signed_commitment: help::SignedCommitment::from(signed_commmitment),
         validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
@@ -359,11 +357,11 @@ pub async fn update_client_state_service(
         println!("signature :  {:?}", signatures);
 
         // get block header by block number
-        let block_header =
-            get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
-                .await
-                .unwrap();
-        println!("header = {:?}", block_header);
+        // let block_header =
+        //     get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
+        //         .await
+        //         .unwrap();
+        // println!("header = {:?}", block_header);
 
         // build validator proof
         let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
@@ -377,7 +375,6 @@ pub async fn update_client_state_service(
 
         // build mmr root
         let mmr_root = help::MmrRoot {
-            block_header,
             signed_commitment: help::SignedCommitment::from(signed_commmitment),
             validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
@@ -406,7 +403,6 @@ pub async fn update_client_state_service(
             }
         }
     }
-    
 }
 
 // verify commitment signatures,copy from beefy light client
