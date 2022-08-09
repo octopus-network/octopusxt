@@ -17,6 +17,7 @@ use ibc_cli::CliDenomTrace;
 use ibc_cli::IbcModule;
 use substrate::account::Account;
 use substrate::balance::Balance;
+use substrate::beefy::Beefy;
 use substrate::query::Query;
 use substrate::sudo::Sudo;
 use substrate::timestamp::TimeStamp;
@@ -51,6 +52,10 @@ pub enum Command {
     #[structopt(name = "timestamp")]
     /// substrate timestamp module
     TimeStamp(TimeStamp),
+
+    #[structopt(name = "beefy")]
+    /// beefy timestamp module
+    Beefy(Beefy),
 }
 
 #[derive(Debug, StructOpt)]
@@ -68,25 +73,28 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     match opt.command {
         Command::DenomTrace(value) => {
-            let _ = value.run().await?;
+            value.run().await?;
         }
         Command::Balance(value) => {
-            let _ = value.run().await?;
+            value.run().await?;
         }
         Command::Sudo(value) => {
-            let _ = value.run().await?;
+            value.run().await?;
         }
         Command::IbcModule(value) => {
-            let ret = value.run().await?;
+            value.run().await?;
         }
         Command::Account(value) => {
-            let ret = value.run();
+            value.run();
         }
         Command::Query(value) => {
-            let ret = value.run().await?;
+            value.run().await?;
         }
         Command::TimeStamp(value) => {
-            let ret = value.run().await?;
+            value.run().await?;
+        }
+        Command::Beefy(value) => {
+            value.run().await?;
         }
     }
 

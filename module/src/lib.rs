@@ -1,29 +1,27 @@
 // mod codegen;
 #![allow(clippy::too_many_arguments)]
-#![allow(unused_imports)]
-#![allow(unused_variables)]
-
-pub mod ibc_rpc;
-pub mod update_client_state;
-pub use ibc_rpc::{
-    deliver, get_acknowledge_packet_state, get_channel_end, get_channels, get_client_connections,
-    get_client_consensus, get_client_state, get_clients, get_commitment_packet_state,
-    get_connection_channels, get_connection_end, get_connections, get_consensus_state_with_height,
-    get_header_by_block_number, get_latest_height, get_mmr_leaf_and_mmr_proof, get_packet_ack,
-    get_packet_commitment, get_packet_receipt, get_send_packet_event, get_timestamp,
-    get_unreceipt_packet, subscribe_beefy, subscribe_ibc_event,
-};
-
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use prost_types::Any;
-pub use update_client_state::{
-    build_mmr_proof, build_mmr_root, build_validator_proof, get_client_ids,
-    send_update_state_request, update_client_state, update_client_state_service,
-    verify_commitment_signatures,
-};
+use subxt::{Config, DefaultConfig};
 
-#[derive(Encode, Decode)]
+pub mod ibc_rpc;
+pub mod update_client_state;
+pub use ibc_rpc::*;
+pub use update_client_state::*;
+
+/// A struct representing the signed extra and additional parameters required
+/// to construct a transaction for a substrate node template.
+pub type SubstrateNodeTemplateExtrinsicParams<T> =
+    subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
+
+/// A builder which leads to [`SubstrateNodeTemplateExtrinsicParams`] being constructed.
+/// This is what you provide to methods like `sign_and_submit()`.
+pub type SubstrateNodeTemplateExtrinsicParamsBuilder<T> =
+    subxt::extrinsic::BaseExtrinsicParams<T, subxt::extrinsic::PlainTip>;
+
+// use subxt::SubstrateExtrinsicParams;
+#[derive(Debug, Encode, Decode)]
 pub enum ClientType {
     Tendermint,
     Grandpa,
@@ -53,29 +51,24 @@ pub mod ibc_node {
     use beefy_primitives::crypto::Public;
 }
 
-// const _: () = {
-//     use ibc_node::runtime_types::polkadot_parachain::primitives::Id;
-
-//     impl PartialEq for Id {
-//         fn eq(&self, other: &Self) -> bool {
-//             self.0 == other.0
-//         }
-//     }
-
-//     impl Eq for Id {}
-
-//     impl PartialOrd for Id {
-//         fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-//             self.0.partial_cmp(&other.0)
-//         }
-//     }
-
-//     impl Ord for Id {
-//         fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-//             self.0.cmp(&other.0)
-//         }
-//     }
-// };
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+pub struct MyConfig;
+impl Config for MyConfig {
+    // This is different from the default `u32`.
+    //
+    // *Note* that in this example it does differ from the actual `Index` type in the
+    // polkadot runtime used, so some operations will fail. Normally when using a custom `Config`
+    // impl types MUST match exactly those used in the actual runtime.
+    type Index = u64;
+    type BlockNumber = <DefaultConfig as Config>::BlockNumber;
+    type Hash = <DefaultConfig as Config>::Hash;
+    type Hashing = <DefaultConfig as Config>::Hashing;
+    type AccountId = <DefaultConfig as Config>::AccountId;
+    type Address = <DefaultConfig as Config>::Address;
+    type Header = <DefaultConfig as Config>::Header;
+    type Signature = <DefaultConfig as Config>::Signature;
+    type Extrinsic = <DefaultConfig as Config>::Extrinsic;
+}
 
 impl ibc_node::runtime_types::pallet_ibc::event::primitive::Height {
     pub fn to_ibc_height(self) -> ibc::Height {

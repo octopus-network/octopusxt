@@ -2,12 +2,11 @@ use codec::{Decode, Encode};
 use ibc::applications::ics20_fungible_token_transfer::msgs::denom_trace::{
     parse_hex_hash, DenomTrace,
 };
-use octopusxt::ibc_node;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use sp_keyring::AccountKeyring;
 use std::str::FromStr;
 use structopt::StructOpt;
-use subxt::ClientBuilder;
-use subxt::PairSigner;
+use subxt::{ClientBuilder, PairSigner};
 use tendermint_proto::Protobuf;
 
 #[derive(Debug, StructOpt)]
@@ -49,13 +48,6 @@ impl CliDenomTrace {
 
         let result = parse_hex_hash(denom_hash_str).unwrap();
         assert_eq!(ibc_denom_trace.hash(), result);
-        // println!("prase hex hash = {:?}", result);
-
-        // let ret = self.get_chain_denom_trace().await?;
-
-        // for item in ret.iter() {
-        //     println!("ibc_hash = {:?}, ibc_denom = {:?}", item.0, item.1);
-        // }
 
         Ok(())
     }
@@ -65,9 +57,9 @@ impl CliDenomTrace {
     ) -> Result<Vec<(String, DenomTrace)>, Box<dyn std::error::Error>> {
         let api = ClientBuilder::new()
             .set_url("ws://localhost:9944")
-            .build::<ibc_node::DefaultConfig>()
+            .build::<MyConfig>()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
@@ -136,7 +128,7 @@ impl IbcModule {
             .set_url(self.websocket_url.clone())
             .build()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let (alice, ferdie) = ("alice".to_string(), "ferdie".to_string());
         let default_token = "ATOM".to_string();
@@ -160,10 +152,7 @@ impl IbcModule {
         println!("timeout timeout = {:?}", timeout_timestamp);
 
         let sender = PairSigner::new(AccountKeyring::from_str(sender).unwrap().pair());
-        let receiver = AccountKeyring::from_str(receiver)
-            .unwrap()
-            .to_account_id()
-            .into();
+        let receiver = AccountKeyring::from_str(receiver).unwrap().to_account_id();
 
         let encode_receiver = sp_runtime::AccountId32::encode(&receiver);
         let hex_receiver = hex::encode(encode_receiver).as_bytes().to_vec();
@@ -184,8 +173,8 @@ impl IbcModule {
                 hex_receiver,
                 timeout_height,
                 timeout_timestamp,
-            )
-            .sign_and_submit_then_watch(&sender)
+            )?
+            .sign_and_submit_default(&sender)
             .await?;
 
         println!("Balance transfer extrinsic submitted: {:?}", events);

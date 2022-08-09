@@ -1,4 +1,4 @@
-use octopusxt::ibc_node;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use structopt::StructOpt;
 use subxt::ClientBuilder;
 
@@ -13,9 +13,9 @@ impl Sudo {
     pub async fn run(&self) -> Result<(), Box<dyn std::error::Error>> {
         let api = ClientBuilder::new()
             .set_url(self.websocket_url.clone())
-            .build::<ibc_node::DefaultConfig>()
+            .build()
             .await?
-            .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+            .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
         let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 

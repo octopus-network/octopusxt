@@ -1,10 +1,10 @@
 use std::str::FromStr;
 
-use octopusxt::ibc_node;
+use futures::StreamExt;
+use octopusxt::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use sp_keyring::AccountKeyring;
 use structopt::StructOpt;
-use subxt::ClientBuilder;
-use subxt::PairSigner;
+use subxt::{ClientBuilder, PairSigner};
 
 #[derive(Debug, StructOpt)]
 pub enum Balance {
@@ -45,22 +45,35 @@ impl Balance {
                     .to_account_id()
                     .into();
 
-                let api = ClientBuilder::new()
-                    .set_url(value.websocket_url.clone())
-                    .build()
+                let api =
+                    ClientBuilder::new()
+                        .set_url(value.websocket_url.clone())
+                        .build()
+                        .await?
+                        .to_runtime_api::<ibc_node::RuntimeApi<
+                            MyConfig,
+                            SubstrateNodeTemplateExtrinsicParams<MyConfig>,
+                        >>();
+
+                let mut transfer_events = api
+                    .events()
+                    .subscribe()
                     .await?
-                    .to_runtime_api::<ibc_node::RuntimeApi<ibc_node::DefaultConfig>>();
+                    .filter_events::<(ibc_node::balances::events::Transfer,)>();
 
                 let hash = api
                     .tx()
                     .balances()
-                    .transfer(receiver, amoumt)
-                    .sign_and_submit_then_watch(&sender)
+                    .transfer(receiver, amoumt)?
+                    .sign_and_submit_default(&sender)
                     .await?;
 
-                let result_event = hash.find_event_raw("Balances", "Transfer").unwrap();
+                println!("balance transfer Hash : {:?}", hash);
 
-                println!("Balance transfer extrinsic submitted: {:?}", result_event);
+                // Our subscription will see all of the transfer events emitted as a result of this:
+                if let Some(transfer_event) = transfer_events.next().await {
+                    println!("Balance transfer event: {transfer_event:?}");
+                }
             }
         }
 

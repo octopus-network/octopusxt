@@ -6,35 +6,38 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 # subxt call substrate
-subxt = { version = "0.15.0", git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'octopus-v0.9.13' }
+subxt = { git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'master' }
 
-structopt = "0.3.26"
-tokio = { version = "1.0", default-features = false, features = ["rt-multi-thread", "time", "sync"] }
+# handle error
+anyhow = "1.0"
 hex = "0.4.3"
-subtle-encoding = { version = "0.5", default-features = false }
 hex-literal = "0.3.4"
-env_logger = "0.8.3"
-tracing = { version = "0.1.33", default-features = false }
-jsonrpsee = { version = "0.5.1", features = ["macros", "ws-client", "http-client"] }
-prost-types = { version = "0.9.0", default-features = false }
-serde = { version = "1.0.130", default-features = false }
-libsecp256k1 = { version = "0.7.0", features = ["static-context"], default-features = false }
-
-# beefy
-beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "feature/v0.9.13", default-features = false }
+env_logger = "0.9.0"
+structopt = "0.3.26"
+futures = "0.3.13"
+serde = { version = "1.0.130" }
+subtle-encoding = { version = "0.5"}
+tracing = { version = "0.1.33" }
+prost-types = { version = "0.10.1" }
+tokio = { version = "1.0", features = ["rt-multi-thread", "time", "sync"] }
+jsonrpsee = { version = "0.14", features = ["macros", "ws-client", "http-client"] }
+libsecp256k1 = { version = "0.7.0", features = ["static-context"] }
 
 # substrate
-codec = { package = "parity-scale-codec", version = "2.0.0", default-features = false, features = ["derive", "full", "bit-vec"] }
-sp-keyring = { package = "sp-keyring", git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-sp-core = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-sp-runtime = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-beefy-primitives = { git = "https://github.com/paritytech/substrate/", branch = "polkadot-v0.9.13" }
-beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.13", features = ["keccak"], default-features = false }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive", "full", "bit-vec"] }
+sp-keyring = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+beefy-primitives = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
+beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18", features = ["keccak"]}
+# beefy
+beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "main" }
+# beefy-light-client = { path = "../../beefy-light-client", default-features = false }
 
 # ibc
-tendermint = { version ="0.23.6", default-features = false }
-tendermint-proto = { version ="0.23.6", default-features = false }
+tendermint = { version = "0.23.6"}
+tendermint-proto = { version ="0.23.6"}
 ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
 ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
 # ibc = { path = "../../ibc-rs/modules" }
@@ -44,5 +47,3 @@ ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "
 [dev-dependencies]
 hex-literal = "0.3"
 chrono = "0.4"
-
-# [patch.crates-io]
