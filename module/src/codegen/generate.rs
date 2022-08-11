@@ -1165,10 +1165,10 @@ pub mod api {
                         };
                         if runtime_storage_hash
                             == [
-                                32u8, 18u8, 182u8, 213u8, 175u8, 221u8, 137u8, 109u8, 171u8, 13u8,
-                                224u8, 86u8, 133u8, 203u8, 96u8, 63u8, 126u8, 16u8, 145u8, 241u8,
-                                37u8, 97u8, 174u8, 134u8, 243u8, 69u8, 218u8, 16u8, 162u8, 231u8,
-                                204u8, 227u8,
+                                85u8, 240u8, 212u8, 240u8, 160u8, 205u8, 139u8, 127u8, 175u8, 78u8,
+                                211u8, 156u8, 254u8, 79u8, 187u8, 195u8, 86u8, 187u8, 71u8, 83u8,
+                                69u8, 180u8, 5u8, 44u8, 250u8, 212u8, 228u8, 111u8, 128u8, 192u8,
+                                186u8, 157u8,
                             ]
                         {
                             let entry = Events;
@@ -18700,7 +18700,7 @@ pub mod api {
                                 runtime_types::pallet_ibc::module::core::ics24_host::ChannelId,
                             pub data: ::std::vec::Vec<::core::primitive::u8>,
                             pub timeout_height:
-                                runtime_types::pallet_ibc::module::core::ics24_host::Height,
+                                runtime_types::pallet_ibc::module::core::ics24_host::TimeoutHeight,
                             pub timeout_timestamp:
                                 runtime_types::pallet_ibc::module::core::ics24_host::Timestamp,
                         }
@@ -18715,6 +18715,15 @@ pub mod api {
                             Debug,
                         )]
                         pub struct Sequence(pub ::core::primitive::u64);
+                        #[derive(
+                            :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
+                        )]
+                        pub enum TimeoutHeight {
+                            #[codec(index = 0)]
+                            Never,
+                            #[codec(index = 1)]
+                            At(runtime_types::pallet_ibc::module::core::ics24_host::Height),
+                        }
                         #[derive(
                             :: subxt :: codec :: Decode, :: subxt :: codec :: Encode, Debug,
                         )]
@@ -21575,9 +21584,9 @@ pub mod api {
             };
             if runtime_metadata_hash
                 != [
-                    29u8, 100u8, 163u8, 28u8, 222u8, 12u8, 180u8, 171u8, 44u8, 28u8, 143u8, 221u8,
-                    48u8, 175u8, 1u8, 160u8, 190u8, 74u8, 115u8, 32u8, 160u8, 33u8, 249u8, 160u8,
-                    147u8, 1u8, 228u8, 140u8, 100u8, 213u8, 249u8, 119u8,
+                    182u8, 122u8, 58u8, 165u8, 4u8, 20u8, 165u8, 97u8, 215u8, 158u8, 173u8, 156u8,
+                    41u8, 38u8, 179u8, 249u8, 219u8, 204u8, 249u8, 54u8, 253u8, 219u8, 31u8, 56u8,
+                    68u8, 234u8, 122u8, 159u8, 254u8, 196u8, 118u8, 157u8,
                 ]
             {
                 Err(::subxt::MetadataError::IncompatibleMetadata)

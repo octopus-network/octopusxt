@@ -102,9 +102,16 @@ impl From<ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::Packet>
             destination_port: packet.destination_port.into(),
             destination_channel: packet.destination_channel.into(),
             data: packet.data,
-            timeout_height: ibc::core::ics04_channel::timeout::TimeoutHeight::At(
-                packet.timeout_height.into(),
-            ),
+            timeout_height: match packet.timeout_height {
+                ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::TimeoutHeight::Never =>
+                    ibc::core::ics04_channel::timeout::TimeoutHeight::Never,
+                ibc_node::runtime_types::pallet_ibc::module::core::ics24_host::TimeoutHeight::At(value) =>
+                    ibc::core::ics04_channel::timeout::TimeoutHeight::
+                        At(ibc::core::ics02_client::height::Height::new(
+                            value.revision_number,
+                            value.revision_height
+                        ).unwrap()),
+            },
             timeout_timestamp: packet.timeout_timestamp.into(),
         }
     }
