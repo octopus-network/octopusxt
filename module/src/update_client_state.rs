@@ -1,5 +1,5 @@
 use crate::ibc_node::RuntimeApi;
-use crate::ibc_rpc::{get_header_by_block_number, get_mmr_leaf_and_mmr_proof};
+use crate::ibc_rpc::get_mmr_leaf_and_mmr_proof;
 use crate::{get_latest_height, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 
 use anyhow::Result;
@@ -19,9 +19,12 @@ use ibc::{
 };
 use sp_core::{hexdisplay::HexDisplay, ByteArray};
 use sp_keyring::AccountKeyring;
+
+use subxt::{BlockNumber, Client, PairSigner, SignedCommitment};
+
 use std::str::FromStr;
-use subxt::{BlockNumber, Client, PairSigner};
 use tendermint_proto::Protobuf;
+
 
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
@@ -47,14 +50,12 @@ pub async fn build_validator_proof(
 
     //get validator set(authorities)
     let authorities = api.storage().beefy().authorities(block_hash).await?;
-    // println!("get authorities :  {:?}", authorities);
 
     // covert authorities to strings
     let authority_strs: Vec<String> = authorities
         .into_iter()
         .map(|authority| format!("{}", HexDisplay::from(&authority.to_raw_vec())))
         .collect();
-    println!("get authorities strs : {:?}", authority_strs);
 
     // Convert BEEFY secp256k1 public keys into Ethereum addresses
     let validators: Vec<Vec<u8>> = authority_strs
@@ -65,25 +66,14 @@ pub async fn build_validator_proof(
                 .unwrap_or_default()
         })
         .collect();
-    println!("get validators : {:?}", validators);
+
 
     let mut validator_merkle_proofs: Vec<help::ValidatorMerkleProof> = Vec::new();
     for l in 0..validators.len() {
         // when
         let proof = merkle_proof::<Keccak256, _, _>(validators.clone(), l);
+
         println!("get validator proof root = {}", hex::encode(&proof.root));
-
-        println!("get validator proof  = {:?}", proof.proof);
-        println!(
-            "get validator number_of_leaves = {}",
-            proof.number_of_leaves
-        );
-
-        println!("get validator leaf_index = {}", proof.leaf_index);
-        // assert_eq!(proof.leaf_index, l);
-
-        println!("get validator leaf = {}", hex::encode(&proof.leaf));
-        // assert_eq!(&proof.leaf, &eth_addresss[l]);
 
         let validator_merkle_proof =
             help::ValidatorMerkleProof::from(beefy_light_client::ValidatorMerkleProof {
@@ -93,14 +83,8 @@ pub async fn build_validator_proof(
                 leaf: proof.leaf,
             });
 
-        println!("get validator merkle proof = {:?}", validator_merkle_proof);
         validator_merkle_proofs.push(validator_merkle_proof);
     }
-
-    println!(
-        "all of the validator_merkle_proof is : {:?}",
-        validator_merkle_proofs
-    );
 
     Ok(validator_merkle_proofs)
 }
@@ -148,11 +132,53 @@ pub async fn build_mmr_proof(src_client: Client<MyConfig>, block_number: u32) ->
         mmr_leaf,
         mmr_leaf_proof,
     };
-    println!("get mmr proof = {:?}", mmr_proof);
+    // println!("get mmr proof = {:?}", mmr_proof);
 
     Ok(mmr_proof)
 }
 
+/// build mmr root
+pub async fn build_mmr_root(
+    src_client: Client<MyConfig>,
+    raw_signed_commitment: SignedCommitment,
+) -> Result<help::MmrRoot, Box<dyn std::error::Error>> {
+    // decode signed commitment
+    let signed_commmitment: commitment::SignedCommitment =
+        <commitment::SignedCommitment as codec::Decode>::decode(
+            &mut &raw_signed_commitment.0.clone()[..],
+        )
+        .unwrap();
+
+    // get commitment
+    let commitment::Commitment {
+        payload,
+        block_number,
+        validator_set_id: _,
+    } = signed_commmitment.clone().commitment;
+    let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
+    println!("signed commitment payload : {:?}", payload);
+
+
+    // build validator proof
+    let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
+        .await
+        .unwrap();
+
+    // build mmr proof
+    let mmr_proof = build_mmr_proof(src_client.clone(), block_number)
+        .await
+        .unwrap();
+
+    // build mmr root
+    let mmr_root = help::MmrRoot {
+        signed_commitment: help::SignedCommitment::from(signed_commmitment),
+        validator_merkle_proofs,
+        mmr_leaf: mmr_proof.mmr_leaf,
+        mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
+    };
+
+    Ok(mmr_root)
+}
 /// send Update client state request
 pub async fn send_update_state_request(
     client: Client<MyConfig>,
@@ -207,13 +233,6 @@ pub async fn update_client_state(
     let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
     println!("signed commitment payload : {:?}", payload);
 
-    // get block header by block number
-    let block_header =
-        get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
-            .await
-            .unwrap();
-    println!("header = {:?}", block_header);
-
     // build validator proof
     let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
         .await
@@ -226,7 +245,6 @@ pub async fn update_client_state(
 
     // build mmr root
     let mmr_root = help::MmrRoot {
-        block_header,
         signed_commitment: help::SignedCommitment::from(signed_commitment),
         validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
@@ -292,13 +310,6 @@ pub async fn update_client_state_service(
             .collect();
         println!("signature :  {:?}", signatures);
 
-        // get block header by block number
-        let block_header =
-            get_header_by_block_number(Some(BlockNumber::from(block_number)), src_client.clone())
-                .await
-                .unwrap();
-        println!("header = {:?}", block_header);
-
         // build validator proof
         let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
             .await
@@ -311,7 +322,6 @@ pub async fn update_client_state_service(
 
         // build mmr root
         let mmr_root = help::MmrRoot {
-            block_header,
             signed_commitment: help::SignedCommitment::from(signed_commitment),
             validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
@@ -360,7 +370,6 @@ pub fn verify_commitment_signatures(
         .take(interations)
         .flatten()
     {
-        // if let Some(signature) = signature {
         let sig = libsecp256k1::Signature::parse_standard_slice(&signature.0[..64])
             .or(Err(Error::InvalidSignature))?;
         println!("verify_commitment_signatures:signature is {:?}", sig);
@@ -405,7 +414,6 @@ pub fn verify_commitment_signatures(
         if !found {
             return Err(Error::ValidatorNotFound);
         }
-        // }
     }
 
     Ok(())

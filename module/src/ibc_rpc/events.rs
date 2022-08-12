@@ -1,6 +1,5 @@
 use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use anyhow::Result;
-use codec::{Decode, Encode};
 use futures::StreamExt;
 use ibc::events::IbcEvent;
 use subxt::{Client, RawEventDetails};

@@ -382,6 +382,32 @@ pub async fn get_header_by_block_number(
     Ok(header.into())
 }
 
+/// get header by block number
+///
+/// # Usage example
+///
+/// ```rust
+/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
+/// let block_number = Some(BlockNumber::from(2));
+/// let result = get_timestamp(block_number, client).await?;
+/// ```
+///
+pub async fn get_timestamp(
+    block_number: Option<BlockNumber>,
+    client: Client<MyConfig>,
+) -> Result<u64, Box<dyn std::error::Error>> {
+    let api = client
+        .clone()
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let block_hash = api.client.rpc().block_hash(block_number).await?;
+
+    let storage_api = ibc_node::timestamp::storage::StorageApi::new(&client);
+    let timestamp = storage_api.now(block_hash).await?;
+    tracing::info!("in get_timestamp timestamp = {:?}", timestamp);
+
+    Ok(timestamp)
+}
+
 /// convert substrate Header to Ibc Header
 fn convert_substrate_header_to_ibc_header(
     header: subxt::sp_runtime::generic::Header<u32, subxt::sp_runtime::traits::BlakeTwo256>,
