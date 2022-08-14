@@ -25,7 +25,9 @@ use ibc::{
     Height,
 };
 use sp_core::hexdisplay::HexDisplay;
+use std::time::Duration;
 use subxt::{rpc::NumberOrHex, BlockNumber, ClientBuilder};
+use tendermint::Time;
 use tendermint_proto::Protobuf;
 use tokio::{self, task, time as tktime};
 
@@ -52,9 +54,9 @@ async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
 async fn test_get_timestamp() -> Result<(), Box<dyn std::error::Error>> {
     let client = ClientBuilder::new()
         .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
+        .build::<MyConfig>()
         .await?;
-    let block_number = Some(BlockNumber::from(100));
+    let block_number = Some(BlockNumber::from(NumberOrHex::Number(100)));
     let timestamp = get_timestamp(block_number, client).await?;
     println!(" timestamp = {:?}", timestamp);
     // use sp_std::time::Duration;
@@ -484,13 +486,14 @@ async fn verify_leaf_proof_works_2() -> Result<(), Box<dyn std::error::Error>> {
     } = signed_commitment.commitment;
 
     let mmr_root: [u8; 32] = payload.get_decoded(&MMR_ROOT_ID).unwrap();
+    let beefy_height = block_number;
 
     println!(
         "root_hash(signed commitment payload) : {:?}
-signed commitment block_number : {}
-signed commitment validator_set_id : {}",
+        signed commitment block_number : {}
+        signed commitment validator_set_id : {}",
         format!("{}", HexDisplay::from(&mmr_root)),
-        block_number,
+        beefy_height,
         validator_set_id
     );
 
@@ -498,49 +501,58 @@ signed commitment validator_set_id : {}",
         .clone()
         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
+    println!("---------------------test1----------------------------",);
+
     //get block hash by block_number
     let block_hash: sp_core::H256 = api
         .client
         .rpc()
         .block_hash(Some(BlockNumber::from(NumberOrHex::Number(
-            block_number as u64,
+            beefy_height as u64,
         ))))
         .await?
         .unwrap();
     println!(
         "block number : {} -> block hash : {:?}",
-        block_number, block_hash
+        beefy_height, block_hash
     );
 
     //get mmr leaf and proof
     // Note: target height=block_number - 1
-    let target_height = Some(BlockNumber::from(NumberOrHex::Number(block_number as u64)));
-    let (block_hash, mmr_leaf, mmr_leaf_proof) =
-        get_mmr_leaf_and_mmr_proof(target_height, Some(block_hash), client.clone()).await?;
-    println!("generate_proof block hash : {:?}", block_hash);
+    let leaf_index = Some(BlockNumber::from(NumberOrHex::Number(
+        (beefy_height - 1) as u64,
+    )));
+    let (returned_block_hash, mmr_leaf, mmr_leaf_proof) =
+        get_mmr_leaf_and_mmr_proof(leaf_index, Some(block_hash), client.clone()).await?;
+    println!("returned block hash : {:?}", returned_block_hash);
 
     // mmr leaf proof
-    println!(
-        "generated the mmr leaf proof = {:?}",
-        format!("{}", HexDisplay::from(&mmr_leaf_proof))
-    );
+    // println!(
+    //     "generated the mmr leaf proof = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf_proof))
+    // );
     let decode_mmr_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
-    println!("decode the mmr leaf proof = {:?}", decode_mmr_proof);
+    println!("mmr_proof leaf index : {:?}", decode_mmr_proof.leaf_index);
+    println!("mmr_proof leaf count : {:?}", decode_mmr_proof.leaf_count);
+    println!("mmr_proof items count : {:?}", decode_mmr_proof.items.len());
 
+    // for item in decode_mmr_proof.clone().items {
+    //     println!("{:?}", item);
+    // }
     // mmr leaf
-    println!(
-        "generated the mmr leaf  = {:?}",
-        format!("{}", HexDisplay::from(&mmr_leaf))
-    );
+    // println!(
+    //     "generated the mmr leaf  = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf))
+    // );
 
-    let mmr_leaf_1: mmr::MmrLeaf = mmr::MmrLeaf::decode(&mut &mmr_leaf.clone()[..]).unwrap();
-    println!("decode the mmr leaf  = {:?}", mmr_leaf_1);
+    // let mmr_leaf_1: mmr::MmrLeaf = mmr::MmrLeaf::decode(&mut &mmr_leaf.clone()[..]).unwrap();
+    // println!("decode the mmr leaf  = {:?}", mmr_leaf_1);
 
     let mmr_leaf: Vec<u8> = Decode::decode(&mut &mmr_leaf[..]).unwrap();
-    println!(
-        "decode the mmr leaf vec<u8> = {:?}",
-        format!("{}", HexDisplay::from(&mmr_leaf))
-    );
+    // println!(
+    //     "decode the mmr leaf vec<u8> = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf))
+    // );
 
     let mmr_leaf_hash = Keccak256::hash(&mmr_leaf[..]);
     println!(
@@ -548,12 +560,15 @@ signed commitment validator_set_id : {}",
         format!("{}", HexDisplay::from(&mmr_leaf_hash))
     );
 
-    let mmr_leaf_2: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
-    println!("decode the mmr leaf  = {:?}", mmr_leaf_2);
-    println!("parent_number  = {}", mmr_leaf_2.parent_number_and_hash.0);
+    let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
+    // println!("decode the mmr leaf  = {:?}", mmr_leaf);
     println!(
-        "parent_hash  = {:?}",
-        HexDisplay::from(&mmr_leaf_2.parent_number_and_hash.1)
+        "leaf parent_number  = {}",
+        mmr_leaf.parent_number_and_hash.0
+    );
+    println!(
+        "leaf parent_hash  = {:?}",
+        mmr_leaf.parent_number_and_hash.1
     );
 
     let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof);
@@ -569,6 +584,189 @@ signed commitment validator_set_id : {}",
 
         Err(e) => println!("mr::verify_leaf_proof error! : {:?}", e),
     }
+
+    // get block header by block number
+    let block_number = Some(BlockNumber::from(NumberOrHex::Number(
+        (beefy_height - 0) as u64,
+    )));
+    let block_header = get_header_by_block_number(block_number, client.clone())
+        .await
+        .unwrap();
+    println!("header height= {:?}", block_header.block_number);
+    println!("header parent_height= {:?}", block_header.block_number - 1);
+    println!("header parent_hash= {:?}", block_header.parent_hash);
+    let beefy_header = beefy_light_client::header::Header::try_from(block_header).unwrap();
+    let header_hash = beefy_header.hash();
+    println!("header hash= {:?}", header_hash);
+
+    println!("---------------------test2----------------------------",);
+
+    //get block hash by block_number
+    let block_hash: sp_core::H256 = api
+        .client
+        .rpc()
+        .block_hash(Some(BlockNumber::from(NumberOrHex::Number(
+            beefy_height as u64,
+        ))))
+        .await?
+        .unwrap();
+    println!(
+        "block number : {} -> block hash : {:?}",
+        beefy_height, block_hash
+    );
+    //get mmr leaf and proof
+    // Note: target height=block_number - 1
+    let leaf_index = Some(BlockNumber::from(NumberOrHex::Number(
+        (beefy_height - 5) as u64,
+    )));
+    let (returned_block_hash, mmr_leaf, mmr_leaf_proof) =
+        get_mmr_leaf_and_mmr_proof(leaf_index, Some(block_hash), client.clone()).await?;
+    println!("returned block hash : {:?}", returned_block_hash);
+
+    // mmr leaf proof
+    // println!(
+    //     "generated the mmr leaf proof = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf_proof))
+    // );
+    let decode_mmr_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
+    println!("mmr_proof leaf index : {:?}", decode_mmr_proof.leaf_index);
+    println!("mmr_proof leaf count : {:?}", decode_mmr_proof.leaf_count);
+    println!("mmr_proof items count : {:?}", decode_mmr_proof.items.len());
+    let mmr_leaf: Vec<u8> = Decode::decode(&mut &mmr_leaf[..]).unwrap();
+    // println!(
+    //     "decode the mmr leaf vec<u8> = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf))
+    // );
+
+    let mmr_leaf_hash = Keccak256::hash(&mmr_leaf[..]);
+    println!(
+        "the mmr leaf hash = {:?}",
+        format!("{}", HexDisplay::from(&mmr_leaf_hash))
+    );
+
+    let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
+    // println!("decode the mmr leaf  = {:?}", mmr_leaf);
+    println!(
+        "leaf parent_number  = {}",
+        mmr_leaf.parent_number_and_hash.0
+    );
+    println!(
+        "leaf parent_hash  = {:?}",
+        mmr_leaf.parent_number_and_hash.1
+    );
+
+    let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof);
+
+    match result {
+        Ok(b) => {
+            if !b {
+                println!("mmr::verify_leaf_proof failure:InvalidMmrLeafProof! ");
+            } else {
+                println!("mmr::verify_leaf_proof succees! ");
+            }
+        }
+
+        Err(e) => println!("mr::verify_leaf_proof error! : {:?}", e),
+    }
+
+    // get block header by block number
+    let block_number = Some(BlockNumber::from(NumberOrHex::Number(
+        (beefy_height - 5) as u64,
+    )));
+    let block_header = get_header_by_block_number(block_number, client.clone())
+        .await
+        .unwrap();
+    println!("header height= {:?}", block_header.block_number);
+    println!("header parent_height= {:?}", block_header.block_number - 1);
+    println!("header parent_hash= {:?}", block_header.parent_hash);
+    let beefy_header = beefy_light_client::header::Header::try_from(block_header).unwrap();
+    let header_hash = beefy_header.hash();
+    println!("header hash= {:?}", header_hash);
+
+    println!("---------------------test3----------------------------",);
+
+    //get block hash by block_number
+    let block_hash: sp_core::H256 = api
+        .client
+        .rpc()
+        .block_hash(Some(BlockNumber::from(NumberOrHex::Number(
+            beefy_height as u64,
+        ))))
+        .await?
+        .unwrap();
+    println!(
+        "block number : {} -> block hash : {:?}",
+        beefy_height, block_hash
+    );
+    //get mmr leaf and proof
+    // Note: target height=block_number - 1
+    let leaf_index = Some(BlockNumber::from(NumberOrHex::Number(
+        (beefy_height - 10) as u64,
+    )));
+
+    let (returned_block_hash, mmr_leaf, mmr_leaf_proof) =
+        get_mmr_leaf_and_mmr_proof(leaf_index, None, client.clone()).await?;
+    println!("returned block hash : {:?}", returned_block_hash);
+
+    // mmr leaf proof
+    // println!(
+    //     "generated the mmr leaf proof = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf_proof))
+    // );
+    let decode_mmr_proof = mmr::MmrLeafProof::decode(&mut &mmr_leaf_proof[..]).unwrap();
+    println!("mmr_proof leaf index : {:?}", decode_mmr_proof.leaf_index);
+    println!("mmr_proof leaf count : {:?}", decode_mmr_proof.leaf_count);
+    println!("mmr_proof items count : {:?}", decode_mmr_proof.items.len());
+    let mmr_leaf: Vec<u8> = Decode::decode(&mut &mmr_leaf[..]).unwrap();
+    // println!(
+    //     "decode the mmr leaf vec<u8> = {:?}",
+    //     format!("{}", HexDisplay::from(&mmr_leaf))
+    // );
+
+    let mmr_leaf_hash = Keccak256::hash(&mmr_leaf[..]);
+    println!(
+        "the mmr leaf hash = {:?}",
+        format!("{}", HexDisplay::from(&mmr_leaf_hash))
+    );
+
+    let mmr_leaf: mmr::MmrLeaf = Decode::decode(&mut &*mmr_leaf).unwrap();
+    // println!("decode the mmr leaf  = {:?}", mmr_leaf);
+    println!(
+        "leaf parent_number  = {}",
+        mmr_leaf.parent_number_and_hash.0
+    );
+    println!(
+        "leaf parent_hash  = {:?}",
+        mmr_leaf.parent_number_and_hash.1
+    );
+
+    let result = mmr::verify_leaf_proof(mmr_root, mmr_leaf_hash, decode_mmr_proof.clone());
+
+    match result {
+        Ok(b) => {
+            if !b {
+                println!("mmr::verify_leaf_proof failure:InvalidMmrLeafProof! ");
+            } else {
+                println!("mmr::verify_leaf_proof succees! ");
+            }
+        }
+
+        Err(e) => println!("mr::verify_leaf_proof error! : {:?}", e),
+    }
+
+    // get block header by block number
+    let block_number = Some(BlockNumber::from(NumberOrHex::Number(
+        decode_mmr_proof.leaf_count,
+    )));
+    let block_header = get_header_by_block_number(block_number, client.clone())
+        .await
+        .unwrap();
+    println!("header height= {:?}", block_header.block_number);
+    println!("header parent_height= {:?}", block_header.block_number - 1);
+    println!("header parent_hash= {:?}", block_header.parent_hash);
+    let beefy_header = beefy_light_client::header::Header::try_from(block_header).unwrap();
+    let header_hash = beefy_header.hash();
+    println!("header hash= {:?}", header_hash);
 
     Ok(())
 }
@@ -861,7 +1059,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
     // build mmr root
     let mmr_root = help::MmrRoot {
-        signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+        signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
         validator_merkle_proofs: validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
@@ -1008,7 +1206,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
             <commitment::SignedCommitment as codec::Decode>::decode(
                 &mut &raw_signed_commitment.clone().0[..],
             )
-                .unwrap();
+            .unwrap();
 
         // get commitment
         let payload = signed_commitment.commitment.payload.clone();
@@ -1050,7 +1248,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
         // build mmr root
         let mmr_root = help::MmrRoot {
-            signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+            signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
             validator_merkle_proofs: validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
