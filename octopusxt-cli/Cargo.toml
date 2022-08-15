@@ -11,8 +11,8 @@ octopusxt = { path = "../module"}
 
 
 # ibc protocl
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
 # ibc = { path = "../../ibc-rs/modules" }
 # ibc-proto = { path = "../../ibc-rs/proto" }
 tendermint-proto = { version = "0.23.6" }

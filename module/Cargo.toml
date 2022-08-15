@@ -38,8 +38,8 @@ beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-cli
 # ibc
 tendermint = { version = "0.23.6"}
 tendermint-proto = { version ="0.23.6"}
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
 # ibc = { path = "../../ibc-rs/modules" }
 # ibc-proto = { path = "../../ibc-rs/proto" }
 
