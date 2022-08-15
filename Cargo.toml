@@ -4,7 +4,6 @@ members = [
     "octopusxt-cli",
 ]
 
-
 [patch.crates-io]
 # this is for subxt
 sp-keyring = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }

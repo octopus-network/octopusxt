@@ -1,8 +1,5 @@
 // mod codegen;
 #![allow(clippy::too_many_arguments)]
-// #![allow(unused_imports)]
-// #![allow(unused_variables)]
-
 use codec::{Decode, Encode};
 use core::str::FromStr;
 use prost_types::Any;
