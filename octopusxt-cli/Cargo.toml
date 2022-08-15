@@ -11,10 +11,10 @@ octopusxt = { path = "../module"}
 
 
 # ibc protocl
-# ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
-# ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
-ibc = { path = "../../ibc-rs/modules" }
-ibc-proto = { path = "../../ibc-rs/proto" }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/integrate_mmr_srv" }
+# ibc = { path = "../../ibc-rs/modules" }
+# ibc-proto = { path = "../../ibc-rs/proto" }
 tendermint-proto = { version = "0.23.6" }
 
 hex = "0.4.3"
