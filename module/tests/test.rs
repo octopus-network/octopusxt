@@ -78,23 +78,14 @@ async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
         .build::<MyConfig>()
         .await?;
 
-    let result = get_client_consensus(
+    let result = query_client_consensus(
         &ClientId::new(ClientType::Grandpa, 0).unwrap(),
-        &Height::new(0, 320),
+        &Height::new(8888, 320).unwrap(),
         client,
     )
     .await?;
 
     println!("result = {:?}", result);
-
-    Ok(())
-}
-
-#[tokio::test]
-async fn test_get_key() -> Result<(), Box<dyn std::error::Error>> {
-    use subxt::StorageEntry;
-    let ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-    let _result = ibc.key();
 
     Ok(())
 }
@@ -154,14 +145,9 @@ async fn test_get_packet_commitment() -> Result<(), Box<dyn std::error::Error>> 
 // add unit test for get storage key
 #[test]
 fn test_get_storage_key() {
-    let _ibc = crate::ibc_node::ibc::storage::ClientStatesKeys;
-    let _ibc = crate::ibc_node::ibc::storage::ConnectionsKeys;
-    let _ibc = crate::ibc_node::ibc::storage::ChannelsKeys;
-    let _ibc = crate::ibc_node::ibc::storage::AcknowledgementsKeys;
     let _ibc = crate::ibc_node::ibc::storage::ClientCounter;
     let _ibc = crate::ibc_node::ibc::storage::ConnectionCounter;
     let _ibc = crate::ibc_node::ibc::storage::ChannelCounter;
-    let _ibc = crate::ibc_node::ibc::storage::PacketCommitmentKeys;
     let _ibc = crate::ibc_node::ibc::storage::LatestHeight;
     let _ibc = crate::ibc_node::ibc::storage::OldHeight;
 }
@@ -1008,7 +994,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
             <commitment::SignedCommitment as codec::Decode>::decode(
                 &mut &raw_signed_commitment.clone().0[..],
             )
-                .unwrap();
+            .unwrap();
 
         // get commitment
         let payload = signed_commitment.commitment.payload.clone();
@@ -1236,72 +1222,11 @@ async fn test_get_client_state() -> Result<(), Box<dyn std::error::Error>> {
         .set_url("ws://localhost:8844")
         .build::<MyConfig>()
         .await?;
-    let client_state = get_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
+    let client_state = query_client_state(&ClientId::new(ClientType::Grandpa, 0).unwrap(), client)
         .await
         .unwrap();
 
     println!("{:?}", client_state);
-
-    Ok(())
-}
-
-#[tokio::test]
-async fn test_get_client_type() -> Result<(), Box<dyn std::error::Error>> {
-    let client = ClientBuilder::new()
-        .set_url("ws://localhost:9944")
-        .build::<MyConfig>()
-        .await?;
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
-    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-    let block_header = block.next().await.unwrap().unwrap();
-    let block_hash = block_header.hash();
-
-    // vector key-value
-    let mut ret = vec![];
-    // get client_state Keys
-    let client_states_keys: Vec<Vec<u8>> = api
-        .storage()
-        .ibc()
-        .client_states_keys(Some(block_hash))
-        .await?;
-    // assert!(!client_states_keys.is_empty());
-
-    // enumate every item get client_state value
-    for key in client_states_keys {
-        // get client_state value
-        let client_states_value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .client_states(&key, Some(block_hash))
-            .await?;
-        // assert!(!client_states_value.is_empty());
-        // store key-value
-        ret.push((key.clone(), client_states_value));
-    }
-
-    for (client_id, client_state) in ret.iter() {
-        let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-        let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
-
-        let any_client_state = AnyClientState::decode_vec(&*client_state).unwrap();
-        let client_type = any_client_state.client_type();
-
-        let client_state = match any_client_state {
-            AnyClientState::Grandpa(value) => value,
-            _ => unimplemented!(),
-        };
-
-        println!("client_id :  {:?}", client_id);
-        println!("client_type :  {:?}", client_type);
-        println!("client_state : {:?}", client_state);
-    }
-
-    // get client ids by client type
-    let client_ids = get_client_ids(client, ClientType::Grandpa).await.unwrap();
-    println!("client ids :  {:?}", client_ids);
 
     Ok(())
 }

@@ -1,4 +1,10 @@
-use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use crate::{ibc_node, storage_iter, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use anyhow::Result;
+use ibc::core::ics24_host::identifier::ClientId;
+use ibc::core::ics24_host::path::{
+    AcksPath, ChannelEndsPath, CommitmentsPath, ReceiptsPath, SeqRecvsPath,
+};
+use ibc::core::ics24_host::Path;
 use ibc::core::{
     ics04_channel::{
         channel::{ChannelEnd, IdentifiedChannelEnd},
@@ -6,96 +12,48 @@ use ibc::core::{
     },
     ics24_host::identifier::{ChannelId, PortId},
 };
+use ibc_proto::ibc::core::channel::v1::PacketState;
+use sp_core::H256;
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
-use codec::Decode;
-use core::str::FromStr;
-use ibc_proto::ibc::core::channel::v1::PacketState;
-
-use anyhow::Result;
-use sp_core::H256;
-
 /// get key-value pair (connection_id, connection_end) construct IdentifiedConnectionEnd
-///
-/// # Usage example
-///
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_channels;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_channels(client).await?;
-/// ```
-///
 pub async fn get_channels(client: Client<MyConfig>) -> Result<Vec<IdentifiedChannelEnd>> {
     tracing::info!("in call_ibc: [get_channels]");
+    println!("in call_ibc: [get_channels]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let callback = Box::new(
+        |path: Path,
+         result: &mut Vec<IdentifiedChannelEnd>,
+         value: Vec<u8>,
+         _client_id: ClientId| {
+            match path {
+                Path::ChannelEnds(channel_ends_path) => {
+                    let ChannelEndsPath(port_id, channel_id) = channel_ends_path;
+                    let channel_end = ChannelEnd::decode_vec(&*value).unwrap();
 
-    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+                    result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
+                }
+                _ => unimplemented!(),
+            }
+        },
+    );
 
-    let block_header = block.next().await.unwrap().unwrap();
-
-    let block_hash: H256 = block_header.hash();
-
-    // vector key-value
-    let mut ret = vec![];
-
-    let channels_keys: Vec<(Vec<u8>, Vec<u8>)> =
-        api.storage().ibc().channels_keys(Some(block_hash)).await?;
-
-    if channels_keys.is_empty() {
-        return Err(anyhow::anyhow!("get_channels: get empty channels_keys",));
-    }
-
-    for key in channels_keys {
-        // get value
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .channels(&key.0, &key.1, Some(block_hash))
-            .await?;
-
-        // store key-value
-        ret.push((key.0.clone(), key.1.clone(), value));
-    }
     let mut result = vec![];
 
-    for (port_id, channel_id, channel_end) in ret.iter() {
-        let port_id_str = String::from_utf8(port_id.clone()).unwrap();
-        let port_id = PortId::from_str(port_id_str.as_str()).unwrap();
-
-        let channel_id_str = String::from_utf8(channel_id.clone()).unwrap();
-        let channel_id = ChannelId::from_str(channel_id_str.as_str()).unwrap();
-
-        let channel_end = ChannelEnd::decode_vec(channel_end).unwrap();
-
-        result.push(IdentifiedChannelEnd::new(port_id, channel_id, channel_end));
-    }
+    let _ret = storage_iter::<IdentifiedChannelEnd, ibc_node::ibc::storage::Channels>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }
 
-/// get channelEnd according by port_identifier, channel_identifier and read Channles StorageMaps
-///
-/// # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_channel_end;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let result = get_channel_end(&port_id, &channel_id, client).await?;
-/// ```
-///
-pub async fn get_channel_end(
+/// query channelEnd according by port_identifier, channel_identifier and read Channel StorageMaps
+pub async fn query_channel_end(
     port_id: &PortId,
     channel_id: &ChannelId,
     client: Client<MyConfig>,
@@ -111,14 +69,15 @@ pub async fn get_channel_end(
 
     let block_hash: H256 = block_header.hash();
 
+    let channel_end_path = ChannelEndsPath(port_id.clone(), channel_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .channels(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            Some(block_hash),
-        )
+        .channels(&channel_end_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -135,22 +94,6 @@ pub async fn get_channel_end(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
-///
-/// # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_receipt;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(0);
-/// let result = get_packet_receipt(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_receipt(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -167,17 +110,19 @@ pub async fn get_packet_receipt(
 
     let block_hash: H256 = block_header.hash();
 
-    let sequence = u64::from(*sequence);
+    let packet_receipt_path = ReceiptsPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_receipt(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &sequence,
-            Some(block_hash),
-        )
+        .packet_receipt(&packet_receipt_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -188,30 +133,18 @@ pub async fn get_packet_receipt(
         ));
     }
 
-    let _data = String::decode(&mut data.as_slice()).unwrap();
-    if _data.eq("Ok") {
+    let receipt = String::from_utf8(data)?;
+    if receipt.eq("Ok") {
         Ok(Receipt::Ok)
     } else {
-        Err(anyhow::anyhow!("unrecognized packet receipt: {:?}", _data))
+        Err(anyhow::anyhow!(
+            "unrecognized packet receipt: {:?}",
+            receipt
+        ))
     }
 }
 
 /// get packet receipt by port_id, channel_id and sequence
-/// # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_receipt_vec;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(0);
-/// let result = get_packet_receipt_vec(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_receipt_vec(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -228,17 +161,19 @@ pub async fn get_packet_receipt_vec(
 
     let block_hash: H256 = block_header.hash();
 
-    let sequence = u64::from(*sequence);
+    let packet_receipt_path = ReceiptsPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
 
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_receipt(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &sequence,
-            Some(block_hash),
-        )
+        .packet_receipt(&packet_receipt_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -253,21 +188,6 @@ pub async fn get_packet_receipt_vec(
 }
 
 /// get  unreceipt packet
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_unreceipt_packet;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = vec![Sequence::from(12),Sequence::from(13)];
-/// let result = get_unreceipt_packet(&port_id, &channel_id, sequence, client).await?;
-/// ```
-///
 pub async fn get_unreceipt_packet(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -287,22 +207,27 @@ pub async fn get_unreceipt_packet(
 
     let mut result = Vec::new();
 
-    let pair = sequences.into_iter().map(|sequence| {
-        (
-            port_id.clone().as_bytes().to_vec(),
-            format!("{}", channel_id).as_bytes().to_vec(),
-            u64::from(sequence),
-        )
-    });
+    let pair = sequences
+        .into_iter()
+        .map(|sequence| (port_id.clone(), channel_id.clone(), sequence.clone()));
 
     for (port_id, channel_id, sequence) in pair {
+        let packet_receipt_path = ReceiptsPath {
+            port_id: port_id.clone(),
+            channel_id: channel_id.clone(),
+            sequence: sequence.clone(),
+        }
+        .to_string()
+        .as_bytes()
+        .to_vec();
+
         let data: Vec<u8> = api
             .storage()
             .ibc()
-            .packet_receipt(&port_id, &channel_id, &sequence, Some(block_hash))
+            .packet_receipt(&packet_receipt_path, Some(block_hash))
             .await?;
         if data.is_empty() {
-            result.push(sequence);
+            result.push(u64::from(sequence));
         }
     }
 
@@ -310,85 +235,45 @@ pub async fn get_unreceipt_packet(
 }
 
 /// get get_commitment_packet_state
-///
-/// # Usage example
-///
-/// ```rust
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_commitment_packet_state;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_commitment_packet_state(client).await?;
-/// ```
-///
 pub async fn get_commitment_packet_state(client: Client<MyConfig>) -> Result<Vec<PacketState>> {
     tracing::info!("in call_ibc: [get_commitment_packet_state]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let callback = Box::new(
+        |path: Path, result: &mut Vec<PacketState>, value: Vec<u8>, _client_id: ClientId| match path
+        {
+            Path::Commitments(commitments) => {
+                let CommitmentsPath {
+                    port_id,
+                    channel_id,
+                    sequence,
+                } = commitments;
 
-    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-    let block_header = block.next().await.unwrap().unwrap();
-
-    let block_hash: H256 = block_header.hash();
-
-    let mut ret = vec![];
-
-    let packet_commitments_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
-        .storage()
-        .ibc()
-        .packet_commitment_keys(Some(block_hash))
-        .await?;
-
-    for key in packet_commitments_keys {
-        // get value
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .packet_commitment(&key.0, &key.1, &key.2, Some(block_hash))
-            .await?;
-
-        // store key-value
-        ret.push((key.0.clone(), key.1.clone(), key.2, value));
-    }
+                let packet_state = PacketState {
+                    port_id: port_id.to_string(),
+                    channel_id: channel_id.to_string(),
+                    sequence: u64::from(sequence),
+                    data: value,
+                };
+                result.push(packet_state);
+            }
+            _ => unimplemented!(),
+        },
+    );
 
     let mut result = vec![];
 
-    for (port_id, channel_id, sequence, data) in ret.into_iter() {
-        let port_id = String::from_utf8(port_id).unwrap();
-        let channel_id = String::from_utf8(channel_id).unwrap();
-
-        let packet_state = PacketState {
-            port_id,
-            channel_id,
-            sequence,
-            data,
-        };
-        result.push(packet_state);
-    }
+    let _ret = storage_iter::<PacketState, ibc_node::ibc::storage::PacketCommitment>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }
 
 /// get packet commitment by port_id, channel_id and sequence to verify if the packet has been sent by the sending chain
-///
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_commitment;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(23);
-/// let result = get_packet_commitment(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
 pub async fn get_packet_commitment(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -406,15 +291,19 @@ pub async fn get_packet_commitment(
 
     let block_hash: H256 = block_header.hash();
 
+    let packet_commits_path = CommitmentsPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .packet_commitment(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &u64::from(*sequence),
-            Some(block_hash),
-        )
+        .packet_commitment(&packet_commits_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -429,23 +318,7 @@ pub async fn get_packet_commitment(
     }
 }
 
-/// get packet acknowlegement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
-///
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId, Sequence};
-/// use octopusxt::MyConfig;
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_packet_ack;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let port_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let sequence = Sequence::from(12);
-/// let result = get_packet_ack(&port_id, &channel_id, &sequence, client).await?;
-/// ```
-///
+/// get packet acknowledgement by port_id, channel_id and sequence to verify if the packet has been received by the target chain
 pub async fn get_packet_ack(
     port_id: &PortId,
     channel_id: &ChannelId,
@@ -463,15 +336,19 @@ pub async fn get_packet_ack(
 
     let block_hash: H256 = block_header.hash();
 
+    let acks_path = AcksPath {
+        port_id: port_id.clone(),
+        channel_id: channel_id.clone(),
+        sequence: sequence.clone(),
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .acknowledgements(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &u64::from(*sequence),
-            Some(block_hash),
-        )
+        .acknowledgements(&acks_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -487,25 +364,11 @@ pub async fn get_packet_ack(
 }
 
 /// get packet receipt by port_id, channel_id and sequence
-///  # Usage example
-///
-/// ```rust
-/// use ibc::core::ics24_host::identifier::{ChannelId, PortId};
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_next_sequence_recv;
-/// use octopusxt::MyConfig;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let prot_id = PortId::default();
-/// let channel_id = ChannelId::default();
-/// let result = get_next_sequence_recv(&prot_id, &channel_id, client).await?;
-/// ```
-///
 pub async fn get_next_sequence_recv(
     port_id: &PortId,
     channel_id: &ChannelId,
     client: Client<MyConfig>,
-) -> Result<Vec<u8>> {
+) -> Result<Sequence> {
     tracing::info!("in call_ibc: [get_next_sequence_recv]");
 
     let api = client
@@ -517,94 +380,55 @@ pub async fn get_next_sequence_recv(
 
     let block_hash: H256 = block_header.hash();
 
+    let seq_recvs_path = SeqRecvsPath(port_id.clone(), channel_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
+
     let sequence: u64 = api
         .storage()
         .ibc()
-        .next_sequence_recv(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            Some(block_hash),
-        )
+        .next_sequence_recv(&seq_recvs_path, Some(block_hash))
         .await?;
 
-    let data: Vec<u8> = api
-        .storage()
-        .ibc()
-        .packet_commitment(
-            port_id.as_bytes(),
-            format!("{}", channel_id).as_bytes(),
-            &sequence,
-            Some(block_hash),
-        )
-        .await?;
-
-    if data.is_empty() {
-        Err(anyhow::anyhow!(
-            "get_next_sequence_recv is empty! by port_id = ({}), channel_id = ({}), sequence = ({})",
-            port_id, channel_id, sequence
-        ))
-    } else {
-        Ok(data)
-    }
+    Ok(Sequence::from(sequence))
 }
 
 /// get get_commitment_packet_state
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::get_acknowledge_packet_state;
-/// use octopusxt::MyConfig;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_acknowledge_packet_state(client).await?;
-/// ```
-///
 pub async fn get_acknowledge_packet_state(client: Client<MyConfig>) -> Result<Vec<PacketState>> {
     tracing::info!("in call_ibc: [get_acknowledge_packet_state]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let callback = Box::new(
+        |path: Path, result: &mut Vec<PacketState>, value: Vec<u8>, _client_id: ClientId| match path
+        {
+            Path::Acks(acks_path) => {
+                let AcksPath {
+                    port_id,
+                    channel_id,
+                    sequence,
+                } = acks_path;
 
-    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-    let block_header = block.next().await.unwrap().unwrap();
-
-    let block_hash: H256 = block_header.hash();
-
-    let mut ret = vec![];
-
-    let acknowledgements_keys: Vec<(Vec<u8>, Vec<u8>, u64)> = api
-        .storage()
-        .ibc()
-        .acknowledgements_keys(Some(block_hash))
-        .await?;
-
-    for key in acknowledgements_keys {
-        let value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .acknowledgements(&key.0, &key.1, &key.2, Some(block_hash))
-            .await?;
-
-        ret.push((key.0.clone(), key.1.clone(), key.2, value));
-    }
+                let packet_state = PacketState {
+                    port_id: port_id.to_string(),
+                    channel_id: channel_id.to_string(),
+                    sequence: u64::from(sequence),
+                    data: value,
+                };
+                result.push(packet_state);
+            }
+            _ => unimplemented!(),
+        },
+    );
 
     let mut result = vec![];
 
-    for (port_id, channel_id, sequence, data) in ret.into_iter() {
-        let port_id = String::from_utf8(port_id).unwrap();
-        let channel_id = String::from_utf8(channel_id).unwrap();
-
-        let packet_state = PacketState {
-            port_id,
-            channel_id,
-            sequence,
-            data,
-        };
-        result.push(packet_state);
-    }
+    let _ret = storage_iter::<PacketState, ibc_node::ibc::storage::Acknowledgements>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }

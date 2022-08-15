@@ -1,7 +1,6 @@
 use crate::ibc_node::RuntimeApi;
 use crate::ibc_rpc::get_mmr_leaf_and_mmr_proof;
 use crate::{get_latest_height, MyConfig, SubstrateNodeTemplateExtrinsicParams};
-
 use anyhow::Result;
 use beefy_light_client::{
     beefy_ecdsa_to_ethereum,
@@ -10,6 +9,8 @@ use beefy_light_client::{
 };
 use beefy_merkle_tree::{merkle_proof, verify_proof, Hash, Keccak256};
 use codec::{Decode, Encode};
+use ibc::core::ics24_host::path::ClientStatePath;
+use ibc::core::ics24_host::Path;
 use ibc::{
     clients::ics10_grandpa::help,
     core::{
@@ -17,12 +18,13 @@ use ibc::{
         ics24_host::identifier::ClientId,
     },
 };
-use sp_core::{hexdisplay::HexDisplay, ByteArray};
+use sp_core::{hexdisplay::HexDisplay, ByteArray, H256};
 use sp_keyring::AccountKeyring;
 
 use subxt::{BlockNumber, Client, PairSigner, SignedCommitment};
 
 use std::str::FromStr;
+use subxt::storage::StorageClient;
 use tendermint_proto::Protobuf;
 
 
@@ -362,7 +364,7 @@ pub fn verify_commitment_signatures(
 ) -> core::result::Result<(), Error> {
     let msg =
         libsecp256k1::Message::parse_slice(&commitment_hash[..]).or(Err(Error::InvalidMessage))?;
-    println!("verify_commitment_signatures:commiment msg is {:?}", msg);
+    println!("verify_commitment_signatures:comment msg is {:?}", msg);
 
     for signature in signatures
         .iter()
@@ -425,25 +427,44 @@ pub async fn get_client_ids(
     expect_client_type: ClientType,
 ) -> Result<Vec<ClientId>> {
     let api = client
-        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
-    // get client_state Keys
-    let client_states_keys: Vec<Vec<u8>> = api.storage().ibc().client_states_keys(None).await?;
+    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
+
+    let block_header = block.next().await.unwrap().unwrap();
+
+    let block_hash: H256 = block_header.hash();
+
+    // Obtain the storage client wrapper from the API.
+    let storage: StorageClient<_> = api.client.storage();
+
+    let mut iter = storage
+        .iter::<ibc_node::ibc::storage::ClientStates>(Some(block_hash))
+        .await?;
 
     let mut client_ids = vec![];
-    for key in client_states_keys {
-        // get client_state value
-        let client_states_value: Vec<u8> = api.storage().ibc().client_states(&key, None).await?;
 
-        let any_client_state = AnyClientState::decode_vec(&*client_states_value).unwrap();
+    // prefix(32) + hash(data)(16) + data
+    while let Some((key, value)) = iter.next().await? {
+        let raw_key = key.0[48..].to_vec();
+        let raw_key = Vec::<u8>::decode(&mut &*raw_key)?;
+        let client_state_path = String::from_utf8(raw_key)?;
+        // decode key
+        let path =
+            Path::from_str(&client_state_path).map_err(|_| anyhow::anyhow!("decode path error"))?;
+
+        let client_id = match path {
+            Path::ClientState(ClientStatePath(client_id)) => client_id,
+            _ => unimplemented!(),
+        };
+
+        let any_client_state = AnyClientState::decode_vec(&*value).unwrap();
         let client_type = any_client_state.client_type();
         if client_type == expect_client_type {
-            let client_id_str = String::from_utf8(key).unwrap();
-            let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
             client_ids.push(client_id)
         }
     }
-
     println!("client ids :  {:?}", client_ids);
+
     Ok(client_ids)
 }

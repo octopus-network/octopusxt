@@ -1,4 +1,9 @@
+use super::storage_iter;
 use crate::{ibc_node, MyConfig, SubstrateNodeTemplateExtrinsicParams};
+use anyhow::Result;
+use core::str::FromStr;
+use ibc::core::ics24_host::path::{ClientConnectionsPath, ClientConsensusStatePath};
+use ibc::core::ics24_host::Path;
 use ibc::{
     core::{
         ics02_client::{
@@ -6,32 +11,16 @@ use ibc::{
             client_state::{AnyClientState, IdentifiedAnyClientState},
         },
         ics24_host::identifier::{ClientId, ConnectionId},
+        ics24_host::path::ClientStatePath,
     },
     Height as ICSHeight,
 };
+use sp_core::H256;
 use subxt::Client;
 use tendermint_proto::Protobuf;
 
-use anyhow::Result;
-use core::str::FromStr;
-use sp_core::H256;
-
-/// get client_state according by client_id, and read ClientStates StoraageMap
-///  
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_client_state;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let result = get_client_state(&client_id, client).await?;
-/// ```
-///
-pub async fn get_client_state(
+/// query client_state according by client_id, and read ClientStates StorageMap
+pub async fn query_client_state(
     client_id: &ClientId,
     client: Client<MyConfig>,
 ) -> Result<AnyClientState> {
@@ -45,10 +34,15 @@ pub async fn get_client_state(
 
     let block_hash: H256 = block_header.hash();
 
+    let client_state_path = ClientStatePath(client_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
+
     let data: Vec<u8> = api
         .storage()
         .ibc()
-        .client_states(client_id.as_bytes(), Some(block_hash))
+        .client_states(&client_state_path, Some(block_hash))
         .await?;
 
     if data.is_empty() {
@@ -64,25 +58,12 @@ pub async fn get_client_state(
 }
 
 /// get appoint height consensus_state according by client_identifier and height
-/// and read ConsensusStates StoreageMap
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_client_consensus;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let height = ICSHeight::default();
-/// let result = get_client_consensus(&client_id, &height, client).await?;
-/// ```
-///
-pub async fn get_client_consensus(
+/// and read ConsensusStates StorageMap
+/// Performs a query to retrieve the consensus state for a specified height
+/// `consensus_height` that the specified light client stores.
+pub async fn query_client_consensus(
     client_id: &ClientId,
-    height: &ICSHeight,
+    consensus_height: &ICSHeight,
     client: Client<MyConfig>,
 ) -> Result<AnyConsensusState> {
     tracing::info!("in call_ibc: [get_client_consensus]");
@@ -96,27 +77,27 @@ pub async fn get_client_consensus(
 
     let block_hash: H256 = block_header.hash();
 
-    let data: Vec<(Vec<u8>, Vec<u8>)> = api
+    // search key
+    let client_consensus_state_path = ClientConsensusStatePath {
+        client_id: client_id.clone(),
+        epoch: consensus_height.revision_number(),
+        height: consensus_height.revision_height(),
+    }
+    .to_string()
+    .as_bytes()
+    .to_vec();
+
+    let consensus_state: Vec<u8> = api
         .storage()
         .ibc()
-        .consensus_states(client_id.as_bytes(), Some(block_hash))
+        .consensus_states(&client_consensus_state_path, Some(block_hash))
         .await?;
 
-    if data.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_client_consensus is empty! by client_id = ({}), height = ({})",
-            client_id,
-            height
-        ));
-    }
-
-    // get the height consensus_state
-    let mut consensus_state = vec![];
-    for item in data.iter() {
-        if item.0 == height.encode_vec().unwrap() {
-            consensus_state = item.1.clone();
-        }
-    }
+    tracing::info!(
+        "query_client_consensus is empty! by client_id = ({}), consensus_height = ({})",
+        client_id,
+        consensus_height
+    );
 
     let consensus_state = if consensus_state.is_empty() {
         // TODO
@@ -131,139 +112,82 @@ pub async fn get_client_consensus(
 }
 
 /// get consensus state with height
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_consensus_state_with_height;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let result = get_consensus_state_with_height(&client_id, client).await?;
-/// ```
-///
 pub async fn get_consensus_state_with_height(
     client_id: &ClientId,
     client: Client<MyConfig>,
 ) -> Result<Vec<(ICSHeight, AnyConsensusState)>> {
     tracing::info!("in call_ibc: [get_consensus_state_with_height]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let callback = Box::new(
+        |path: Path,
+         result: &mut Vec<(ICSHeight, AnyConsensusState)>,
+         value: Vec<u8>,
+         client_id: ClientId| {
+            match path {
+                Path::ClientConsensusState(client_consensus_state) => {
+                    let ClientConsensusStatePath {
+                        client_id: read_client_id,
+                        epoch,
+                        height,
+                    } = client_consensus_state;
 
-    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-    let block_header = block.next().await.unwrap().unwrap();
-
-    let block_hash: H256 = block_header.hash();
-
-    // vector<height, consensus_state>
-    let data: Vec<(Vec<u8>, Vec<u8>)> = api
-        .storage()
-        .ibc()
-        .consensus_states(client_id.as_bytes(), Some(block_hash))
-        .await?;
-
-    if data.is_empty() {
-        return Err(anyhow::anyhow!(
-            "get_consensus_state_with_height is empty! by client_id = ({})",
-            client_id
-        ));
-    }
+                    if read_client_id == client_id.clone() {
+                        let height = ICSHeight::new(epoch, height).unwrap();
+                        let consensus_state = AnyConsensusState::decode_vec(&*value).unwrap();
+                        // store key-value
+                        result.push((height, consensus_state));
+                    }
+                }
+                _ => unimplemented!(),
+            }
+        },
+    );
 
     let mut result = vec![];
-    for (height, consensus_state) in data.iter() {
-        let height = ICSHeight::decode_vec(height).unwrap();
-        let consensus_state = AnyConsensusState::decode_vec(consensus_state).unwrap();
-        result.push((height, consensus_state));
-    }
+
+    let _ret = storage_iter::<
+        (ICSHeight, AnyConsensusState),
+        ibc_node::ibc::storage::ConsensusStates,
+    >(client.clone(), &mut result, client_id.clone(), callback)
+    .await?;
 
     Ok(result)
 }
 
-/// get key-value pair (client_identifier, client_state) construct IdentifieredAnyClientstate
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use octopusxt::get_clients;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let result = get_clients(client).await?;
-/// ```
-///
+/// get key-value pair (client_identifier, client_state) construct IdentifierAny Client state
 pub async fn get_clients(client: Client<MyConfig>) -> Result<Vec<IdentifiedAnyClientState>> {
     tracing::info!("in call_ibc: [get_clients]");
 
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+    let callback = Box::new(
+        |path: Path,
+         result: &mut Vec<IdentifiedAnyClientState>,
+         value: Vec<u8>,
+         _client_id: ClientId| {
+            match path {
+                Path::ClientState(ClientStatePath(ibc_client_id)) => {
+                    let client_state = AnyClientState::decode_vec(&*value).unwrap();
 
-    let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
-
-    let block_header = block.next().await.unwrap().unwrap();
-
-    let block_hash: H256 = block_header.hash();
-
-    // vector key-value
-    let mut ret = vec![];
-
-    // get client_state Keys
-    let client_states_keys: Vec<Vec<u8>> = api
-        .storage()
-        .ibc()
-        .client_states_keys(Some(block_hash))
-        .await?;
-    if client_states_keys.is_empty() {
-        return Err(anyhow::anyhow!("get_clients: get empty client_states_keys"));
-    }
-
-    // enumate every item get client_state value
-    for key in client_states_keys {
-        // get client_state value
-        let client_states_value: Vec<u8> = api
-            .storage()
-            .ibc()
-            .client_states(&key, Some(block_hash))
-            .await?;
-        // store key-value
-        ret.push((key.clone(), client_states_value));
-    }
+                    result.push(IdentifiedAnyClientState::new(ibc_client_id, client_state));
+                }
+                _ => unimplemented!(),
+            }
+        },
+    );
 
     let mut result = vec![];
 
-    for (client_id, client_state) in ret.iter() {
-        let client_id_str = String::from_utf8(client_id.clone()).unwrap();
-        let client_id = ClientId::from_str(client_id_str.as_str()).unwrap();
-
-        let client_state = AnyClientState::decode_vec(client_state).unwrap();
-
-        result.push(IdentifiedAnyClientState::new(client_id, client_state));
-    }
+    let _ret = storage_iter::<IdentifiedAnyClientState, ibc_node::ibc::storage::ClientStates>(
+        client.clone(),
+        &mut result,
+        ClientId::default(),
+        callback,
+    )
+    .await?;
 
     Ok(result)
 }
 
 /// get connection_identifier vector according by client_identifier
-///
-///
-/// # Usage example
-///
-/// ```rust
-/// use subxt::ClientBuilder;
-/// use octopusxt::MyConfig;
-/// use ibc::core::ics24_host::identifier::{ClientId, ConnectionId};
-/// use octopusxt::get_client_connections;
-///
-/// let client = ClientBuilder::new().set_url("ws://localhost:9944").build::<MyConfig>().await?;
-/// let client_id = ClientId::default();
-/// let result = get_client_connections(&client_id, client).await?;
-/// ```
-///
 pub async fn get_client_connections(
     client_id: &ClientId,
     client: Client<MyConfig>,
@@ -279,11 +203,16 @@ pub async fn get_client_connections(
 
     let block_hash: H256 = block_header.hash();
 
+    let client_connection_paths = ClientConnectionsPath(client_id.clone())
+        .to_string()
+        .as_bytes()
+        .to_vec();
+
     // client_id <-> connection_id
     let connection_id: Vec<u8> = api
         .storage()
         .ibc()
-        .connection_client(client_id.as_bytes(), Some(block_hash))
+        .connection_client(&client_connection_paths, Some(block_hash))
         .await?;
 
     if connection_id.is_empty() {
