@@ -1,4 +1,4 @@
-use crate::ibc_node::RuntimeApi;
+use crate::ibc_node::{self, RuntimeApi};
 use crate::ibc_rpc::get_mmr_leaf_and_mmr_proof;
 use crate::{get_latest_height, MyConfig, SubstrateNodeTemplateExtrinsicParams};
 use anyhow::Result;
@@ -427,7 +427,7 @@ pub async fn get_client_ids(
     expect_client_type: ClientType,
 ) -> Result<Vec<ClientId>> {
     let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+        .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let mut block = api.client.rpc().subscribe_finalized_blocks().await?;
 
