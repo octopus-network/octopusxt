@@ -1996,9 +1996,9 @@ dependencies = [
 
 [[package]]
 name = "iana-time-zone"
-version = "0.1.44"
+version = "0.1.45"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "808cf7d67cf4a22adc5be66e75ebdf769b3f2ea032041437a7061f97a63dad4b"
+checksum = "ef5528d9c2817db4e10cc78f8d4c8228906e5854f389ff6b076cee3572a09d35"
 dependencies = [
  "android_system_properties",
  "core-foundation-sys",
@@ -2434,7 +2434,7 @@ dependencies = [
  "http",
  "jsonrpsee-core",
  "jsonrpsee-types",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "rustls-native-certs 0.6.2",
  "soketto",
  "thiserror",
@@ -2624,7 +2624,7 @@ dependencies = [
  "libp2p-yamux",
  "multiaddr",
  "parking_lot 0.11.2",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "smallvec",
  "wasm-timer",
 ]
@@ -2650,7 +2650,7 @@ dependencies = [
  "multihash 0.14.0",
  "multistream-select",
  "parking_lot 0.11.2",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "prost 0.9.0",
  "prost-build",
  "rand 0.8.5",
@@ -2891,7 +2891,7 @@ checksum = "0f1a458bbda880107b5b36fcb9b5a1ef0c329685da0e203ed692a8ebe64cc92c"
 dependencies = [
  "futures 0.3.23",
  "log",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "rand 0.7.3",
  "salsa20",
  "sha3 0.9.1",
@@ -2910,7 +2910,7 @@ dependencies = [
  "libp2p-core",
  "libp2p-swarm",
  "log",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "prost 0.9.0",
  "prost-build",
  "rand 0.7.3",
@@ -3217,9 +3217,9 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "memmap2"
-version = "0.5.6"
+version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8e2e4455be2010e8c5e77f0d10234b30f3a636a5305725609b5a71ad00d22577"
+checksum = "95af15f345b17af2efc8ead6080fb8bc376f8cec1b35277b935637595fe77498"
 dependencies = [
  "libc",
 ]
@@ -3411,7 +3411,7 @@ dependencies = [
  "bytes 1.2.1",
  "futures 0.3.23",
  "log",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "smallvec",
  "unsigned-varint 0.7.1",
 ]
@@ -3908,11 +3908,11 @@ dependencies = [
 
 [[package]]
 name = "pin-project"
-version = "1.0.11"
+version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "78203e83c48cffbe01e4a2d35d566ca4de445d79a85372fc64e378bfc812a260"
+checksum = "ad29a609b6bcd67fee905812e544992d216af9d755757c05ed2d0e15a74c6ecc"
 dependencies = [
- "pin-project-internal 1.0.11",
+ "pin-project-internal 1.0.12",
 ]
 
 [[package]]
@@ -3928,9 +3928,9 @@ dependencies = [
 
 [[package]]
 name = "pin-project-internal"
-version = "1.0.11"
+version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "710faf75e1b33345361201d36d04e98ac1ed8909151a017ed384700836104c74"
+checksum = "069bdb1e05adc7a8990dce9cc75370895fbe4e3d58b9b73bf1aee56359344a55"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -4865,7 +4865,7 @@ dependencies = [
  "lru 0.7.8",
  "parity-scale-codec",
  "parking_lot 0.12.1",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "prost 0.9.0",
  "prost-build",
  "rand 0.7.3",
@@ -5021,7 +5021,7 @@ dependencies = [
  "parity-scale-codec",
  "parity-util-mem",
  "parking_lot 0.12.1",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "rand 0.7.3",
  "sc-block-builder",
  "sc-chain-spec",
@@ -5092,7 +5092,7 @@ dependencies = [
  "libp2p",
  "log",
  "parking_lot 0.12.1",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "rand 0.7.3",
  "serde",
  "serde_json",
@@ -6720,7 +6720,7 @@ dependencies = [
  "hyper",
  "hyper-timeout",
  "percent-encoding 2.1.0",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "prost 0.10.4",
  "prost-derive 0.10.1",
  "tokio",
@@ -6742,7 +6742,7 @@ dependencies = [
  "futures-core",
  "futures-util",
  "indexmap",
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "pin-project-lite 0.2.9",
  "rand 0.8.5",
  "slab",
@@ -6824,7 +6824,7 @@ version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "97d095ae15e245a057c8e8451bab9b3ee1e1f68e9ba2b4fbc18d0ac5237835f2"
 dependencies = [
- "pin-project 1.0.11",
+ "pin-project 1.0.12",
  "tracing",
 ]
 
