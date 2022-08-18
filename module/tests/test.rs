@@ -15,7 +15,7 @@ use hex_literal::hex;
 use ibc::{
     clients::ics10_grandpa::{
         client_state::ClientState,
-        help::{self, BlockHeader, Commitment},
+        help::{self, Commitment},
     },
     core::{
         ics02_client::{client_state::AnyClientState, client_type::ClientType},
@@ -1091,7 +1091,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let chain_id = ChainId::new("10-grandpa-0".to_string(), epoch_number);
     let mut client_state = ClientState {
         chain_id: chain_id.clone(),
-        block_number: u32::default(),
+        latest_height: u32::default(),
         frozen_height: Some(Height::default()),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.clone().into(),
@@ -1138,7 +1138,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
             // update client_state by lc state
             let latest_commitment = lc.latest_commitment.unwrap();
             // let latest_commitment = signed_commitment.commitment;
-            client_state.block_number = latest_commitment.block_number;
+            client_state.latest_height = latest_commitment.block_number;
             client_state.latest_commitment = help::Commitment::from(latest_commitment);
 
             // update validator_set
@@ -1179,7 +1179,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
     let chain_id = ChainId::new("10-grandpa-0".to_string(), epoch_number);
     let mut client_state = ClientState {
         chain_id: chain_id.clone(),
-        block_number: u32::default(),
+        latest_height: u32::default(),
         frozen_height: Some(Height::default()),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.into(),
@@ -1335,7 +1335,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
                 // update client_client by lc state
                 let latest_commitment = rebuild_light_client.latest_commitment.unwrap();
-                client_state.block_number = latest_commitment.block_number;
+                client_state.latest_height = latest_commitment.block_number;
                 client_state.latest_commitment = help::Commitment::from(latest_commitment);
 
                 // update validator_set
