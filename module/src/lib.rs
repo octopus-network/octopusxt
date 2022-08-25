@@ -29,7 +29,7 @@ impl From<ibc::core::ics02_client::client_type::ClientType>
         match client_type {
             ibc::core::ics02_client::client_type::ClientType::Tendermint => Self::Tendermint,
             ibc::core::ics02_client::client_type::ClientType::Grandpa => Self::Grandpa,
-            _ => todo!()
+            _ => todo!(),
         }
     }
 }
@@ -60,7 +60,7 @@ pub mod ibc_node {
 
     #[subxt(substitute_type = "beefy_primitives::crypto::Public")]
     use beefy_primitives::crypto::Public;
-use ibc::core::ics02_client::client_type::ClientType;
+    use ibc::core::ics02_client::client_type::ClientType;
 }
 
 #[derive(Clone, Debug, Default, Eq, PartialEq)]

@@ -11,11 +11,11 @@ octopusxt = { path = "../module"}
 
 
 # ibc protocl
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
+ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/merge-master" }
+ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "feature/merge-master" }
 # ibc = { path = "../../ibc-rs/modules" }
 # ibc-proto = { path = "../../ibc-rs/proto" }
-tendermint-proto = { version = "0.23.7" }
+tendermint-proto = { version = "0.23.9" }
 
 hex = "0.4.3"
 env_logger = "0.9.0"
