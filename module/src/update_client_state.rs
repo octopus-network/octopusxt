@@ -27,7 +27,6 @@ use std::str::FromStr;
 use subxt::storage::StorageClient;
 use tendermint_proto::Protobuf;
 
-
 /// mmr proof struct
 #[derive(Clone, Debug, Default)]
 pub struct MmrProof {
@@ -68,7 +67,6 @@ pub async fn build_validator_proof(
                 .unwrap_or_default()
         })
         .collect();
-
 
     let mut validator_merkle_proofs: Vec<help::ValidatorMerkleProof> = Vec::new();
     for l in 0..validators.len() {
@@ -159,7 +157,6 @@ pub async fn build_mmr_root(
     } = signed_commmitment.clone().commitment;
     let payload = format!("{:?}", payload.get_raw(&MMR_ROOT_ID));
     println!("signed commitment payload : {:?}", payload);
-
 
     // build validator proof
     let validator_merkle_proofs = build_validator_proof(src_client.clone(), block_number)
