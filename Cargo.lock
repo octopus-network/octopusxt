@@ -2189,7 +2189,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.16.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dev#0556541e0457993831bba65bcce2a8cf1037e0b4"
+source = "git+https://github.com/livelybug/ibc-rs.git?branch=dev#0556541e0457993831bba65bcce2a8cf1037e0b4"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -2200,7 +2200,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "hash-db",
- "ibc-proto",
+ "ibc-proto 0.19.0 (git+https://github.com/livelybug/ibc-rs.git?branch=dev)",
  "ics23",
  "num-traits",
  "parity-scale-codec",
@@ -2229,7 +2229,20 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.19.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dev#0556541e0457993831bba65bcce2a8cf1037e0b4"
+source = "git+https://github.com/livelybug/ibc-rs.git?branch=dev#0556541e0457993831bba65bcce2a8cf1037e0b4"
+dependencies = [
+ "base64",
+ "bytes",
+ "prost",
+ "prost-types",
+ "serde",
+ "tendermint-proto",
+]
+
+[[package]]
+name = "ibc-proto"
+version = "0.19.0"
+source = "git+https://github.com/octopus-network/ibc-proto-rs.git?branch=ics10#2c501e9766a5f294fa30d71550aa868972be3d66"
 dependencies = [
  "base64",
  "bytes",
@@ -3831,7 +3844,7 @@ dependencies = [
  "hex",
  "hex-literal",
  "ibc",
- "ibc-proto",
+ "ibc-proto 0.19.0 (git+https://github.com/octopus-network/ibc-proto-rs.git?branch=ics10)",
  "jsonrpsee 0.14.0",
  "libsecp256k1",
  "pallet-mmr-rpc",
@@ -3859,7 +3872,7 @@ dependencies = [
  "futures",
  "hex",
  "ibc",
- "ibc-proto",
+ "ibc-proto 0.19.0 (git+https://github.com/octopus-network/ibc-proto-rs.git?branch=ics10)",
  "octopusxt",
  "parity-scale-codec",
  "sc-cli",
@@ -7072,9 +7085,9 @@ dependencies = [
 
 [[package]]
 name = "tower-layer"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "343bc9466d3fe6b0f960ef45960509f84480bf4fd96f92901afe7ff3df9d3a62"
+checksum = "c20c8dbed6283a09604c3e69b4b7eeb54e298b8a600d4d5ecb5ad39de609f1d0"
 
 [[package]]
 name = "tower-service"

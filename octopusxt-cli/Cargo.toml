@@ -11,8 +11,8 @@ octopusxt = { path = "../module"}
 
 
 # ibc protocl
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
+ibc = { git  = "https://github.com/livelybug/ibc-rs.git", branch = "dev" }
+ibc-proto = { git = "https://github.com/octopus-network/ibc-proto-rs.git", branch = "ics10" }
 # ibc = { path = "../../ibc-rs/modules" }
 # ibc-proto = { path = "../../ibc-rs/proto" }
 tendermint-proto = { version = "0.23.7" }
