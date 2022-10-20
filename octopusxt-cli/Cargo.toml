@@ -15,7 +15,7 @@ ibc = { git  = "https://github.com/livelybug/ibc-rs.git", branch = "dev" }
 ibc-proto = { git = "https://github.com/octopus-network/ibc-proto-rs.git", branch = "ics10" }
 # ibc = { path = "../../ibc-rs/modules" }
 # ibc-proto = { path = "../../ibc-rs/proto" }
-tendermint-proto = { version = "0.23.7" }
+tendermint-proto = { version = "0.23.9" }
 
 hex = "0.4.3"
 env_logger = "0.9.0"
