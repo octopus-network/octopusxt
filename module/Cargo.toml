@@ -33,16 +33,13 @@ pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate.git", branch =
 beefy-primitives = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.28" }
 beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.28", features = ["keccak"]}
 # beefy
-beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "main" }
-# beefy-light-client = { path = "../../beefy-light-client", default-features = false }
+beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "feature/v0.9.28" }
 
 # ibc
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
+ibc = { git  = "https://github.com/octopus-network/hermes.git", branch = "cs/for-hermes-1.0" }
+ibc-proto = { git  = "https://github.com/octopus-network/hermes.git", branch = "cs/for-hermes-1.0" }
 tendermint = { version = "0.23.7"}
 tendermint-proto = { version ="0.23.7"}
-# ibc = { path = "../../ibc-rs/modules" }
-# ibc-proto = { path = "../../ibc-rs/proto" }
 
 
 [dev-dependencies]

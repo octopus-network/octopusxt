@@ -438,6 +438,21 @@ dependencies = [
 [[package]]
 name = "beefy-light-client"
 version = "0.1.0"
+source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=feature/v0.9.28#000b420c0e6de0100b706fd7acdd8ce3ed4a8617"
+dependencies = [
+ "beefy-merkle-tree",
+ "blake2-rfc",
+ "borsh",
+ "ckb-merkle-mountain-range",
+ "hex",
+ "libsecp256k1",
+ "parity-scale-codec",
+ "scale-info",
+]
+
+[[package]]
+name = "beefy-light-client"
+version = "0.1.0"
 source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=main#fba8bc13d5bed32d0cd1588a3376a032626d315b"
 dependencies = [
  "beefy-merkle-tree",
@@ -2189,9 +2204,9 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.16.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dev#0556541e0457993831bba65bcce2a8cf1037e0b4"
+source = "git+https://github.com/octopus-network/hermes.git?branch=cs/for-hermes-1.0#fb7e728c81a040d2865226507b9f40fdf914d00f"
 dependencies = [
- "beefy-light-client",
+ "beefy-light-client 0.1.0 (git+https://github.com/octopus-network/beefy-light-client.git?branch=main)",
  "beefy-merkle-tree",
  "blake2-rfc",
  "bytes",
@@ -2229,7 +2244,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.19.0"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=dev#0556541e0457993831bba65bcce2a8cf1037e0b4"
+source = "git+https://github.com/octopus-network/hermes.git?branch=cs/for-hermes-1.0#fb7e728c81a040d2865226507b9f40fdf914d00f"
 dependencies = [
  "base64",
  "bytes",
@@ -3822,7 +3837,7 @@ name = "octopusxt"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "beefy-light-client",
+ "beefy-light-client 0.1.0 (git+https://github.com/octopus-network/beefy-light-client.git?branch=feature/v0.9.28)",
  "beefy-merkle-tree",
  "beefy-primitives",
  "chrono",
