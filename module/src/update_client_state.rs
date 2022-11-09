@@ -193,7 +193,8 @@ pub async fn send_update_state_request(
         .to_runtime_api::<RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
     let encode_client_id = client_id.as_bytes().to_vec();
-    let encode_mmr_root = help::MmrRoot::encode(&mmr_root);
+
+    let encode_mmr_root = codec::Encode::encode(&mmr_root);
     println!("encode mmr root is {:?}", encode_mmr_root);
 
     let result = api
