@@ -37,8 +37,8 @@ beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-cli
 # beefy-light-client = { path = "../../beefy-light-client", default-features = false }
 
 # ibc
-ibc = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
-ibc-proto = { git  = "https://github.com/octopus-network/ibc-rs.git", branch = "dev" }
+ibc = { git  = "https://github.com/octopus-network/hermes.git", branch = "feature/m4v2-hermes1.0" }
+ibc-proto = { git  = "https://github.com/octopus-network/hermes.git", branch = "feature/m4v2-hermes1.0" }
 tendermint = { version = "0.23.7"}
 tendermint-proto = { version ="0.23.7"}
 # ibc = { path = "../../ibc-rs/modules" }
