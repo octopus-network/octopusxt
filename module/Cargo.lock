@@ -1219,59 +1219,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ibc"
-version = "0.14.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#f01a0d5a33f455f680878770236cdfa3654d1a55"
-dependencies = [
- "beefy-light-client",
- "beefy-merkle-tree",
- "blake2-rfc",
- "bytes",
- "derive_more",
- "flex-error",
- "frame-support",
- "frame-system",
- "hash-db",
- "ibc-proto",
- "ics23",
- "log",
- "num-traits",
- "parity-scale-codec",
- "prost",
- "prost-types",
- "safe-regex",
- "serde",
- "serde_derive",
- "serde_json",
- "sha2 0.10.2",
- "sp-core",
- "sp-io",
- "sp-runtime",
- "sp-std 4.0.0-dev",
- "sp-trie",
- "subtle-encoding",
- "tendermint",
- "tendermint-light-client-verifier",
- "tendermint-proto",
- "time 0.3.9",
- "tracing",
-]
-
-[[package]]
-name = "ibc-proto"
-version = "0.17.1"
-source = "git+https://github.com/octopus-network/ibc-rs.git?branch=feature/ics20#f01a0d5a33f455f680878770236cdfa3654d1a55"
-dependencies = [
- "base64",
- "bytes",
- "prost",
- "prost-types",
- "serde",
- "tendermint-proto",
- "tonic",
-]
-
-[[package]]
 name = "ics23"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
