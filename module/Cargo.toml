@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [dependencies]
 # subxt call substrate
-subxt = { git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'master' }
+subxt = { git = "https://github.com/octopus-network/substrate-subxt.git", branch = 'old-subxt' }
 
 # handle error
 anyhow = "1.0"
