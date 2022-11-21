@@ -183,7 +183,7 @@ dependencies = [
 [[package]]
 name = "beefy-light-client"
 version = "0.1.0"
-source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=feature/v0.9.13#8f6282aaf665d96c32c39e69d7c90ba656f55d56"
+source = "git+https://github.com/octopus-network/beefy-light-client.git?branch=main#113215ed340d3cc3f61dd9f4e8b8a6138f5ab736"
 dependencies = [
  "beefy-merkle-tree",
  "blake2-rfc",

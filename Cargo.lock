@@ -2010,6 +2010,60 @@ dependencies = [
 ]
 
 [[package]]
+name = "ibc"
+version = "0.16.0"
+source = "git+https://github.com/octopus-network/hermes.git?branch=feature/m4v2-hermes1.0#c14e76ba7f7d36612509c2c87d259af0d83d845e"
+dependencies = [
+ "beefy-light-client",
+ "beefy-merkle-tree",
+ "blake2-rfc",
+ "bytes 1.2.1",
+ "derive_more",
+ "flex-error",
+ "frame-support",
+ "frame-system",
+ "hash-db",
+ "ibc-proto",
+ "ics23",
+ "num-traits",
+ "parity-scale-codec",
+ "primitive-types",
+ "prost 0.10.4",
+ "prost-types 0.10.1",
+ "safe-regex",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "sha2 0.10.2",
+ "sp-core",
+ "sp-io",
+ "sp-runtime",
+ "sp-std 4.0.0",
+ "sp-trie",
+ "subtle-encoding",
+ "tendermint",
+ "tendermint-light-client-verifier",
+ "tendermint-proto",
+ "time 0.3.11",
+ "tracing",
+ "uint",
+]
+
+[[package]]
+name = "ibc-proto"
+version = "0.19.0"
+source = "git+https://github.com/octopus-network/hermes.git?branch=feature/m4v2-hermes1.0#c14e76ba7f7d36612509c2c87d259af0d83d845e"
+dependencies = [
+ "base64",
+ "bytes 1.2.1",
+ "prost 0.10.4",
+ "prost-types 0.10.1",
+ "serde",
+ "tendermint-proto",
+ "tonic",
+]
+
+[[package]]
 name = "ics23"
 version = "0.8.0-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
