@@ -286,37 +286,37 @@ pub async fn get_mmr_leaf_and_mmr_proof(
 }
 
 /// get header by block hash
-pub async fn get_header_by_block_hash(
-    block_hash: Option<H256>,
-    client: Client<MyConfig>,
-) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
-    let api = client
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+// pub async fn get_header_by_block_hash(
+//     block_hash: Option<H256>,
+//     client: Client<MyConfig>,
+// ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
+//     let api = client
+//         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
-    let header = api.client.rpc().header(block_hash).await?.unwrap();
+//     let header = api.client.rpc().header(block_hash).await?.unwrap();
 
-    let header = convert_substrate_header_to_ibc_header(header);
+//     let header = convert_substrate_header_to_ibc_header(header);
 
-    Ok(header.into())
-}
+//     Ok(header.into())
+// }
 
 /// get header by block number
-pub async fn get_header_by_block_number(
-    block_number: Option<BlockNumber>,
-    client: Client<MyConfig>,
-) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
-    let api = client
-        .clone()
-        .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
+// pub async fn get_header_by_block_number(
+//     block_number: Option<BlockNumber>,
+//     client: Client<MyConfig>,
+// ) -> Result<ibc::clients::ics10_grandpa::help::BlockHeader> {
+//     let api = client
+//         .clone()
+//         .to_runtime_api::<ibc_node::RuntimeApi<MyConfig, SubstrateNodeTemplateExtrinsicParams<MyConfig>>>();
 
-    let block_hash = api.client.rpc().block_hash(block_number).await?;
+//     let block_hash = api.client.rpc().block_hash(block_number).await?;
 
-    let header = api.client.rpc().header(block_hash).await?.unwrap();
+//     let header = api.client.rpc().header(block_hash).await?.unwrap();
 
-    let header = convert_substrate_header_to_ibc_header(header);
+//     let header = convert_substrate_header_to_ibc_header(header);
 
-    Ok(header.into())
-}
+//     Ok(header.into())
+// }
 
 /// get header by block number
 ///

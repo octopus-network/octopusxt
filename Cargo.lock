@@ -3857,6 +3857,7 @@ dependencies = [
  "sp-core",
  "sp-keyring",
  "sp-runtime",
+ "sp-trie",
  "structopt",
  "subtle-encoding",
  "subxt",
