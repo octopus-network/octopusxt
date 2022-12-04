@@ -10,6 +10,7 @@ use beefy_light_client::{
 use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
 use chrono::Local;
 use codec::{Decode, Encode};
+use tendermint::Time;
 use core::str::FromStr;
 use hex_literal::hex;
 use ibc::{
@@ -24,7 +25,7 @@ use ibc::{
     },
     Height,
 };
-use sp_core::hexdisplay::HexDisplay;
+use sp_core::{hexdisplay::HexDisplay, sp_std};
 use subxt::{rpc::NumberOrHex, BlockNumber, ClientBuilder};
 use tendermint_proto::Protobuf;
 use tokio::{self, task, time as tktime};
@@ -1393,4 +1394,15 @@ fn test_state_proof_verification() {
     let timestamp: u64 = codec::Decode::decode(&mut &value[..]).unwrap();
 
     println!("timestamp from proof: {}", timestamp);
+    // println!(" timestamp = {:?}", timestamp);
+    use sp_std::time::Duration;
+    let duration = Duration::from_millis(timestamp);
+    println!(" duration = {:?}", duration);
+
+    let tm_timestamp =
+        Time::from_unix_timestamp(duration.as_secs() as i64, duration.subsec_nanos());
+    println!("tm_timestamp = {:?}", tm_timestamp);
+
+    let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
+    println!("timestamp_str = {:?}", timestamp_str);
 }
