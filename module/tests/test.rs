@@ -48,28 +48,28 @@ async fn test_get_block_header() -> Result<(), Box<dyn std::error::Error>> {
 
 // test API get_timestamp
 // use `cargo test -- --captuer` can print content
-#[tokio::test]
-async fn test_get_timestamp() -> Result<(), Box<dyn std::error::Error>> {
-    let client = ClientBuilder::new()
-        .set_url("ws://localhost:9944")
-        .build::<ibc_node::DefaultConfig>()
-        .await?;
-    let block_number = Some(BlockNumber::from(100));
-    let timestamp = get_timestamp(block_number, client).await?;
-    println!(" timestamp = {:?}", timestamp);
-    // use sp_std::time::Duration;
-    let duration = Duration::from_millis(timestamp);
-    println!(" duration = {:?}", duration);
+// #[tokio::test]
+// async fn test_get_timestamp() -> Result<(), Box<dyn std::error::Error>> {
+//     let client = ClientBuilder::new()
+//         .set_url("ws://localhost:9944")
+//         .build::<ibc_node::DefaultConfig>()
+//         .await?;
+//     let block_number = Some(BlockNumber::from(100));
+//     let timestamp = get_timestamp(block_number, client).await?;
+//     println!(" timestamp = {:?}", timestamp);
+//     // use sp_std::time::Duration;
+//     let duration = Duration::from_millis(timestamp);
+//     println!(" duration = {:?}", duration);
 
-    let tm_timestamp =
-        Time::from_unix_timestamp(duration.as_secs() as i64, duration.subsec_nanos());
-    println!("tm_timestamp = {:?}", tm_timestamp);
+//     let tm_timestamp =
+//         Time::from_unix_timestamp(duration.as_secs() as i64, duration.subsec_nanos());
+//     println!("tm_timestamp = {:?}", tm_timestamp);
 
-    let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
-    println!("timestamp_str = {:?}", timestamp_str);
+//     let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
+//     println!("timestamp_str = {:?}", timestamp_str);
 
-    Ok(())
-}
+//     Ok(())
+// }
 
 #[tokio::test]
 async fn test_get_client_consensus() -> Result<(), Box<dyn std::error::Error>> {
@@ -847,7 +847,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
 
     // build mmr root
     let mmr_root = help::MmrRoot {
-        signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+        signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
         validator_merkle_proofs: validator_merkle_proofs,
         mmr_leaf: mmr_proof.mmr_leaf,
         mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
@@ -879,8 +879,8 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
     let chain_id = ChainId::new("10-grandpa-0".to_string(), epoch_number);
     let mut client_state = ClientState {
         chain_id: chain_id.clone(),
-        block_number: u32::default(),
-        frozen_height: Some(Height::default()),
+        latest_height: u32::default(),
+        frozen_height: Some(Height::new(0, epoch_number).unwrap()),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.clone().into(),
     };
@@ -926,7 +926,7 @@ async fn mock_verify_and_update_stateless() -> Result<(), Box<dyn std::error::Er
             // update client_state by lc state
             let latest_commitment = lc.latest_commitment.unwrap();
             // let latest_commitment = signed_commitment.commitment;
-            client_state.block_number = latest_commitment.block_number;
+            client_state.latest_height = latest_commitment.block_number;
             client_state.latest_commitment = help::Commitment::from(latest_commitment);
 
             // update validator_set
@@ -967,8 +967,8 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
     let chain_id = ChainId::new("10-grandpa-0".to_string(), epoch_number);
     let mut client_state = ClientState {
         chain_id: chain_id.clone(),
-        block_number: u32::default(),
-        frozen_height: Some(Height::default()),
+        latest_height: u32::default(),
+        frozen_height: Some(Height::new(0, epoch_number).unwrap()),
         latest_commitment: Commitment::default(),
         validator_set: lc.validator_set.into(),
     };
@@ -1036,7 +1036,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
         // build mmr root
         let mmr_root = help::MmrRoot {
-            signed_commitment: help::SignedCommitment::from(signed_commmitment.clone()),
+            signed_commitment: help::SignedCommitment::from(signed_commitment.clone()),
             validator_merkle_proofs: validator_merkle_proofs,
             mmr_leaf: mmr_proof.mmr_leaf,
             mmr_leaf_proof: mmr_proof.mmr_leaf_proof,
@@ -1123,7 +1123,7 @@ async fn mock_verify_and_update_stateful() -> Result<(), Box<dyn std::error::Err
 
                 // update client_client by lc state
                 let latest_commitment = rebuild_light_client.latest_commitment.unwrap();
-                client_state.block_number = latest_commitment.block_number;
+                client_state.latest_height = latest_commitment.block_number;
                 client_state.latest_commitment = help::Commitment::from(latest_commitment);
 
                 // update validator_set
