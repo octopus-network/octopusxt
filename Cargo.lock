@@ -2012,7 +2012,7 @@ dependencies = [
 [[package]]
 name = "ibc"
 version = "0.16.0"
-source = "git+https://github.com/octopus-network/hermes.git?branch=feature/m4v2-hermes1.0#c14e76ba7f7d36612509c2c87d259af0d83d845e"
+source = "git+https://github.com/octopus-network/hermes.git?branch=feature/m4v3-hermes1.0#c9d40df2482b6fdac9f8274a456aa07f69863f2a"
 dependencies = [
  "beefy-light-client",
  "beefy-merkle-tree",
@@ -2052,7 +2052,7 @@ dependencies = [
 [[package]]
 name = "ibc-proto"
 version = "0.19.0"
-source = "git+https://github.com/octopus-network/hermes.git?branch=feature/m4v2-hermes1.0#c14e76ba7f7d36612509c2c87d259af0d83d845e"
+source = "git+https://github.com/octopus-network/hermes.git?branch=feature/m4v3-hermes1.0#c9d40df2482b6fdac9f8274a456aa07f69863f2a"
 dependencies = [
  "base64",
  "bytes 1.2.1",
