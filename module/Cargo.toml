@@ -33,7 +33,7 @@ pallet-mmr-rpc = { git = "https://github.com/paritytech/substrate.git", branch =
 beefy-primitives = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
 beefy-merkle-tree = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18", features = ["keccak"]}
 # beefy
-beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "feature/v0.9.18-m4" }
+beefy-light-client = { git = "https://github.com/octopus-network/beefy-light-client.git", branch = "main" }
 # beefy-light-client = { path = "../../beefy-light-client", default-features = false }
 
 # ibc
