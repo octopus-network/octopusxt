@@ -10,7 +10,6 @@ use beefy_light_client::{
 use beefy_merkle_tree::{merkle_proof, merkle_root, verify_proof, Keccak256};
 use chrono::Local;
 use codec::{Decode, Encode};
-use tendermint::Time;
 use core::str::FromStr;
 use hex_literal::hex;
 use ibc::{
@@ -25,13 +24,14 @@ use ibc::{
     },
     Height,
 };
-use sp_core::{hexdisplay::HexDisplay, sp_std};
-use subxt::{rpc::NumberOrHex, BlockNumber, ClientBuilder};
-use tendermint_proto::Protobuf;
-use tokio::{self, task, time as tktime};
 use sp_core::H256;
+use sp_core::{hexdisplay::HexDisplay, sp_std};
 use sp_runtime::traits::BlakeTwo256;
 use sp_trie::Trie;
+use subxt::{rpc::NumberOrHex, BlockNumber, ClientBuilder};
+use tendermint::Time;
+use tendermint_proto::Protobuf;
+use tokio::{self, task, time as tktime};
 
 // test API get_block_header
 // use `cargo test -- --captuer` can print content
@@ -1373,7 +1373,7 @@ use sp_trie::Trie;
 // }
 
 #[test]
-fn test_state_proof_verification() {
+fn test_state_proof_verification1() {
     let key = hex!("f0c365c3cf59d671eb72da0e7a4113c49f1f0515f462cdcf84e0f1d6045dfcbb").to_vec();
     let state_root = H256::from(hex!(
         "dc4887669c2a6b3462e9557aa3105a66a02b6ec3b21784613de78c95dc3cbbe0"
@@ -1386,8 +1386,49 @@ fn test_state_proof_verification() {
     ];
     let db = sp_trie::StorageProof::new(proof).into_memory_db();
 
-    let trie =
-        sp_trie::TrieDB::<sp_trie::LayoutV0<BlakeTwo256>>::new(&db, &state_root).unwrap();
+    let trie = sp_trie::TrieDB::<sp_trie::LayoutV0<BlakeTwo256>>::new(&db, &state_root).unwrap();
+    // let trie = sp_trie::TrieDB::<sp_trie::LayoutV1<BlakeTwo256>>::new(&db, &state_root).unwrap();
+
+    let value = trie.get(&key).unwrap().unwrap(); // actually gets the value from the trie proof
+    println!("the key value: {:?}", value);
+
+    let timestamp: u64 = codec::Decode::decode(&mut &value[..]).unwrap();
+    println!("timestamp from proof: {}", timestamp);
+
+    use sp_std::time::Duration;
+    let duration = Duration::from_millis(timestamp);
+    println!(" duration = {:?}", duration);
+
+    let tm_timestamp =
+        Time::from_unix_timestamp(duration.as_secs() as i64, duration.subsec_nanos());
+    println!("tm_timestamp = {:?}", tm_timestamp);
+
+    let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
+    println!("timestamp_str = {:?}", timestamp_str);
+}
+
+#[test]
+fn test_state_proof_verification2() {
+    let key = hex!("f0c365c3cf59d671eb72da0e7a4113c4bbd108c4899964f707fdaffb82636065").to_vec();
+
+    let state_root = H256::from(hex!(
+        "5e1eb8e577ea88deaa94b456da24ab0c9f4c0c6d9372af1568edd7aeef3b4c4e"
+    ));
+
+    // let proof = vec![
+    //     hex!("80fffd8028b54b9a0a90d41b7941c43e6a0597d5914e3b62bdcb244851b9fc806c28ea2480d5ba6d50586692888b0c2f5b3c3fc345eb3a2405996f025ed37982ca396f5ed580bd281c12f20f06077bffd56b2f8b6431ee6c9fd11fed9c22db86cea849aeff2280afa1e1b5ce72ea1675e5e69be85e98fbfb660691a76fee9229f758a75315f2bc80aafc60caa3519d4b861e6b8da226266a15060e2071bba4184e194da61dfb208e809d3f6ae8f655009551de95ae1ef863f6771522fd5c0475a50ff53c5c8169b5888024a760a8f6c27928ae9e2fed9968bc5f6e17c3ae647398d8a615e5b2bb4b425f8085a0da830399f25fca4b653de654ffd3c92be39f3ae4f54e7c504961b5bd00cf80c2d44d371e5fc1f50227d7491ad65ad049630361cefb4ab1844831237609f08380c644938921d14ae611f3a90991af8b7f5bdb8fa361ee2c646c849bca90f491e6806e729ad43a591cd1321762582782bbe4ed193c6f583ec76013126f7f786e376280509bb016f2887d12137e73d26d7ddcd7f9c8ff458147cb9d309494655fe68de180009f8697d760fbe020564b07f407e6aad58ba9451b3d2d88b3ee03e12db7c47480952dcc0804e1120508a1753f1de4aa5b7481026a3320df8b48e918f0cecbaed3803360bf948fddc403d345064082e8393d7a1aad7a19081f6d02d94358f242b86c").to_vec(),
+    //     hex!("9ec365c3cf59d671eb72da0e7a4113c41002505f0e7b9012096b41c4eb3aaf947f6ea429080000685f0f1f0515f462cdcf84e0f1d6045dfcbb20865c4a2b7f010000").to_vec(),
+    //     hex!("8005088076c66e2871b4fe037d112ebffb3bfc8bd83a4ec26047f58ee2df7be4e9ebe3d680c1638f702aaa71e4b78cc8538ecae03e827bb494cc54279606b201ec071a5e24806d2a1e6d5236e1e13c5a5c84831f5f5383f97eba32df6f9faf80e32cf2f129bc").to_vec(),
+    // ];
+    let proof = vec![
+        
+        hex!("80fffd8028b54b9a0a90d41b7941c43e6a0597d5914e3b62bdcb244851b9fc806c28ea2480e2f0847174b6f8ea15133a8d70de58d1a6174b7542e8e12028154c611bc3ee5280ddd81bdda149a8bc6990d3548a719d4a90ddbe5ea4a598211aacf6afd0b23bf58038fe7e08c8e684bd600f25631f32e6510ed7d37f43fce0d5aa974009857aeb5b80aafc60caa3519d4b861e6b8da226266a15060e2071bba4184e194da61dfb208e80b34a4ee6e2f949f58b7cb7f4a7fb1aaea8cdc2a5cb27557d32da7096fdf157c58024a760a8f6c27928ae9e2fed9968bc5f6e17c3ae647398d8a615e5b2bb4b425f8085a0da830399f25fca4b653de654ffd3c92be39f3ae4f54e7c504961b5bd00cf80c2d44d371e5fc1f50227d7491ad65ad049630361cefb4ab1844831237609f08380c8ae6a1e8df858b43e050a3959a25b90d711413ee1a863622c3914d45250738980b5955ff982ab818fcba39b2d507a6723504cef4969fc7c722ee175df95a33ae280509bb016f2887d12137e73d26d7ddcd7f9c8ff458147cb9d309494655fe68de180009f8697d760fbe020564b07f407e6aad58ba9451b3d2d88b3ee03e12db7c47480952dcc0804e1120508a1753f1de4aa5b7481026a3320df8b48e918f0cecbaed380fff4f175da5ff30200fabfdc2bbdd45f864d84f339ec2432f80b5749ac35bbfc").to_vec(),
+        hex!("9ec365c3cf59d671eb72da0e7a4113c41002505f0e7b9012096b41c4eb3aaf947f6ea429080000685f0f1f0515f462cdcf84e0f1d6045dfcbb2056145f077f010000").to_vec(),
+        hex!("80050880149156720805d0ad098ae52fcffae34ff637b1d1f1a0fa8e7f94201b8615695580c1638f702aaa71e4b78cc8538ecae03e827bb494cc54279606b201ec071a5e24806d2a1e6d5236e1e13c5a5c84831f5f5383f97eba32df6f9faf80e32cf2f129bc").to_vec(),
+    ];
+    let db = sp_trie::StorageProof::new(proof).into_memory_db();
+
+    let trie = sp_trie::TrieDB::<sp_trie::LayoutV1<BlakeTwo256>>::new(&db, &state_root).unwrap();
 
     let value = trie.get(&key).unwrap().unwrap(); // actually gets the value from the trie proof
 
@@ -1406,3 +1447,44 @@ fn test_state_proof_verification() {
     let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
     println!("timestamp_str = {:?}", timestamp_str);
 }
+
+#[test]
+fn test_state_proof_verification3() {
+    let key = hex!("08c41974a97dbf15cfbec28365bea2da5e0621c4869aa60c02be9adcc98a0d1d").to_vec();
+
+    let state_root = H256::from(hex!(
+        "530d7f7829761fe8d5d6a7491d0bfec238b599995fbb0fc4374a63c1b9c2590d"
+    ));
+
+
+    let proof = vec![
+        
+        hex!("5f0e0621c4869aa60c02be9adcc98a0d1d0d0108020a1091341fe5664bfa1782d5e04779689068c916b04cb365ec3153755684d9a10390084fdbf27d2b79d26a4f13f0ccd982cb755a661969143c37cbc49ef5b91f27").to_vec(),
+        hex!("80101080751598edb99372ee96e97e51c4b12920de4bd8c9c15579c3b52d315ecd7f259280de9bc8146a88d2c43a27c51d859b79fe0978cb449a7eec0099a7b0b700b96367").to_vec(),
+        hex!("804001808f555192d233d23287109c58713abcff53d517a44669ecc9f1b07d91c0fa440980fc2ef28fbd46ddd7c42f006ceb2eaeb8ceaad8fe09657231f816cfc21786da94").to_vec(),
+        hex!("80ffbe80b426a9e5c88d14588f6ef2fa103714d6916b240065d8e8da3e5e1cc3e6710b4280f1d004806f011e6f792c2e794b8c77ac2a360a33b55f5d186acbff28a96042f58002a863f9ce9149380a0299f64d252a06421c23c6f0a4fbd822120d3e1fdcc3fb80823896f2488f926b8c4376d65d6879244433e72f5a6c6754e296d1d4d663d7c0803298a18710d5dbe277f8807acb66711c83e7e389697be25bda6e7a2497c28c5a80032c044a257f8cdea0910f07404b6affd801ed41b5f92d2741798bbad46499ea80f1089dc8969501efbf50b94482eab81f24657e4c3aaf7c78077736cef4034d7c80b1f4de7c3ac5665016d561a60659cd2d8f2d3e0a97e2ea9749279bd8e35eb1f18069afa784f1e33e03abe0de46c9d796d33f7b9e7f0bfd1450b640243695d7207d80ed92b63809a2a874b54328294ee4086bfc4c1d2b227203b6fe0da08c2139e90480ef74282e32f18b4178d875d71156e560fea146a099de663941c700fd7dca6b21800dd4873b8bd4dd57f321cb5849798976cb2ef7ccd4cd9c1afcbf41106a9cfb8880f71c624f55c6909f01cade3142d0c18c0eb2c67815405716bc8071acc2f800788095a4b3cd3c52c569bea4f2119c009b00f787f1531d9ee4164ec964bd30d776c0").to_vec(),
+        hex!("9d041974a97dbf15cfbec28365bea2da3005505f0e7b9012096b41c4eb3aaf947f6ea4290800008051b37e412ebb4ccf319a0ced502241963efe91a19506007ce479b2276dd353c2685f0f05bccc2f70ec66a32999c5761156be203b0000000000000080009186629eba38667903184a814e20a33af3926785282f36d8bf68f0c32d7a16").to_vec(),
+    ];
+    let db = sp_trie::StorageProof::new(proof).into_memory_db();
+
+    let trie = sp_trie::TrieDB::<sp_trie::LayoutV1<BlakeTwo256>>::new(&db, &state_root).unwrap();
+
+    let value = trie.get(&key).unwrap().unwrap(); // actually gets the value from the trie proof
+
+    println!("value from proof: {:?}", value);
+    // let timestamp: u64 = codec::Decode::decode(&mut &value[..]).unwrap();
+
+    // println!("timestamp from proof: {}", timestamp);
+    // // println!(" timestamp = {:?}", timestamp);
+    // use sp_std::time::Duration;
+    // let duration = Duration::from_millis(timestamp);
+    // println!(" duration = {:?}", duration);
+
+    // let tm_timestamp =
+    //     Time::from_unix_timestamp(duration.as_secs() as i64, duration.subsec_nanos());
+    // println!("tm_timestamp = {:?}", tm_timestamp);
+
+    // let timestamp_str = tm_timestamp.unwrap().to_rfc3339();
+    // println!("timestamp_str = {:?}", timestamp_str);
+}
+
